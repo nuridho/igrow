@@ -5,7 +5,7 @@ Dipicu cron quarterly atau user minta review.
 ## Langkah
 1. Baca: `igrow/wiki/careers/` (semua), `wiki/learning/skill-map.md`,
    `wiki/tests/` (skor), `igrow/log.md` kuartal berjalan.
-2. Analisis: Learned / Experienced / Improved / Weak (format iGROW_FINAL.md UC6).
+2. Analisis 4 bagian: Learned (skill baru terdokumentasi kuartal ini), Experienced (insiden/pengalaman), Improved (skor tests/ naik), Weak (target skill-map yg masih rendah/belum tersentuh).
 3. Skill Inventory — hitung, bukan kira-kira:
    % per area = (topik mastered [skor>=5] di area itu) / (total topik target
    skill-map.md di level 1 di atas posisi sekarang).

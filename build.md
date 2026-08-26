@@ -581,6 +581,12 @@ knowledge IT worker. Prinsip: knowledge portable, markdown biasa. Semua data
 iGROW di folder `igrow/` (relatif dari sini). Pola wiki: baca
 `igrow/SCHEMA.md` sebelum operasi tulis apapun.
 
+## Apa Ini
+Knowledge base yg di-compile LLM. Kamu = compiler + query engine: sumber mentah
+masuk → kamu compile jadi wiki .md terinterkoneksi. Human jarang edit wiki
+langsung — itu domainmu. Metafora: raw/ = source code, kamu = compiler,
+wiki/ = executable.
+
 ## Struktur Folder (igrow/)
 - `igrow/SCHEMA.md`        → aturan format, frontmatter, tag, ownership — BACA DULU sebelum tulis
 - `igrow/_index.md`        → master katalog; baca ini dulu sebelum scan folder
