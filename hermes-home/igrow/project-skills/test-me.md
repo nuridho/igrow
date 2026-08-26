@@ -18,7 +18,7 @@ Kalau soal 100% topik baru, hasil gagalnya tidak informatif untuk gap analysis.
    normalisasi topik sekarang lewat taxonomy + igrow/_index.md).
 3. Jalankan: `python igrow/project-skills/scripts/confidence_calc.py --topic <topik> --result correct|wrong --date today`
 4. Simpan hasil ke `igrow/wiki/tests/<kategori>/<topik>-<tanggal>.md`, frontmatter:
-   topic / source_type / date / result / score / mastered (dari output script).
+   topic / source_type / date / result / score / mastered / last_increment_date (dari output script).
 5. Tampilkan skor terbaru ("skor: 4, belum mastered").
 6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: test).
 
