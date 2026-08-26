@@ -1,7 +1,7 @@
 # iGROW + Pola Wiki — Rancangan (to-be)
 
-> Status: DIIMPLEMENTASIKAN di `migrationToNvkWikiLLM/hermes-home/` (2026-08-25), deployed ke VPS via `scp -r migrationToNvkWikiLLM/hermes-home/. nuridho@<vps>:~/whatsinsidegit/igrow-hermes/hermes-home/` + chown (2026-08-26). Testing berjalan (test-flow.md).
-> Dasar: gist Karpathy + nvk/llm-wiki AGENTS.md (copy: `migrationToNvkWikiLLM/AGENTSnvk.md`).
+> Status: DIIMPLEMENTASIKAN di `hermes-home/` (2026-08-25), deployed ke VPS via `scp -r hermes-home/. nuridho@<vps>:~/whatsinsidegit/igrow-hermes/hermes-home/` + chown (2026-08-26). Testing berjalan (`testing/test-flow.md`).
+> Dasar: gist Karpathy + nvk/llm-wiki AGENTS.md (copy: `AGENTSnvk.md`).
 > Prinsip: Hermes tetap otaknya. Wiki pattern merapikan cara nyimpen & navigasi di `igrow/`.
 > Analogi: `igrow/` = nvk `topics/<nama>/` — satu topik (karier kamu), bukan hub multi-topik.
 > KEPUTUSAN: varian **B** — layer compiled dipisah fisik di `igrow/wiki/` (faithful nvk).
