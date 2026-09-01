@@ -13,7 +13,7 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 - `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `raw/inbox/`, agent proses → pindah `.processed/`.
 - `wiki/` — semua konten compiled, agent-owned.
 - `output/` — laporan turunan (career review, dst).
-- Pengecualian human-owned (agent update cuma kalau diminta): `wiki/learning/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md`.
+- Pengecualian human-owned (agent update cuma kalau diminta): `wiki/roadmap/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md`.
 
 ## Tiap operasi tulis WAJIB diakhiri
 1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
@@ -67,7 +67,7 @@ mastered: false                # dari confidence_calc.py
 last_increment_date: YYYY-MM-DD  # dari confidence_calc.py — WAJIB, penanda max +1/hari
 ---
 ```
-Data file (`learning/`, `profile/`) → body list/key:value, bukan narasi.
+Data file (`roadmap/`, `profile/`) → body list/key:value, bukan narasi.
 
 ## Tag taxonomy (tambah baru di sini DULU)
 linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve, interview-prep

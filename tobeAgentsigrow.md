@@ -53,7 +53,7 @@ hermes-home/                          # host → /opt/data (HERMES_HOME), 1 volu
     │   ├── _index.md      ← BARU: katalog level wiki/
     │   ├── careers/           (pindah dari igrow/careers/)
     │   ├── self-development/  (pindah)
-    │   ├── learning/          (pindah)
+    │   ├── roadmap/          (pindah)
     │   ├── tests/             (pindah)
     │   └── profile/           (pindah)
     ├── output/            ← BARU: laporan turunan (UC6 career review, dst) + _index.md
@@ -62,7 +62,7 @@ hermes-home/                          # host → /opt/data (HERMES_HOME), 1 volu
 
 Ownership:
 - Agent nulis: `wiki/**`, `_index.md`, `log.md`, `raw/_index.md`, `output/`
-- Human-owned (agent update cuma kalau diminta): `wiki/learning/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md`
+- Human-owned (agent update cuma kalau diminta): `wiki/roadmap/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md`
 - Tak tersentuh siapa pun setelah masuk: `raw/` (kecuali .processed/)
 - Aturan DILARANG KERAS berlaku juga ke raw/ — redact SEBELUM ingest, raw immutable.
 

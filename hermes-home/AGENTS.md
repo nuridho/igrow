@@ -19,7 +19,7 @@ wiki/ = executable.
 - `igrow/wiki/`            → semua konten compiled, kamu yang maintain
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
-  - `learning/`            → roadmap, skill-map.md (target skill per level), weak-topics
+  - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
   - `tests/`               → hasil simulasi troubleshooting + metadata skor
   - `profile/`             → ringkasan gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)

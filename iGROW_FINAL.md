@@ -170,7 +170,7 @@ Soal bukan cuma dari topik yang sudah dipelajari, dan juga bukan cuma topik baru
 | Sumber Soal | Porsi | Tujuan |
 |---|---|---|
 | Knowledge yang **sudah terdokumentasi** (`wiki/self-development/`, `wiki/careers/*/knowledge/`) | ~70% | Validasi pemahaman beneran mendalam, bukan cuma pernah dicatat sekilas |
-| Target di `wiki/learning/skill-map.md` yang **belum ada filenya sama sekali** | ~20% | Proaktif nemuin gap yang ditarget tapi belum pernah disentuh, sebelum kamu sadar sendiri |
+| Target di `wiki/roadmap/skill-map.md` yang **belum ada filenya sama sekali** | ~20% | Proaktif nemuin gap yang ditarget tapi belum pernah disentuh, sebelum kamu sadar sendiri |
 | Topik **berdekatan/adjacent** dari yang sudah dipelajari, tapi belum eksplisit ditulis | ~10% | Nemuin blind spot yang nggak kelihatan dari knowledge base saja (misal sudah paham `iowait`, tapi belum pernah ditest soal `load average` yang berkaitan) |
 
 > ⚠️ Kalau soal 100% dari hal yang benar-benar baru/belum pernah dipelajari sama sekali, hasil gagalnya **tidak informatif** untuk gap analysis — wajar gagal karena memang belum pernah diajarkan, bukan sinyal kelemahan yang berarti. Makanya porsi terbesar tetap dari knowledge yang sudah ada.
@@ -200,7 +200,7 @@ last_increment_date: 2026-08-11
 ---
 ```
 
-> `source_type: untouched-target` artinya topik ini **tercantum sebagai target skill** di `wiki/learning/skill-map.md` tapi **belum pernah didokumentasikan sama sekali** — beda dengan `adjacent` yang artinya topik ini berkaitan dengan sesuatu yang sudah pernah dipelajari, tapi belum eksplisit ditulis (lihat tabel "Dari Mana Soal Test Diambil" di atas).
+> `source_type: untouched-target` artinya topik ini **tercantum sebagai target skill** di `wiki/roadmap/skill-map.md` tapi **belum pernah didokumentasikan sama sekali** — beda dengan `adjacent` yang artinya topik ini berkaitan dengan sesuatu yang sudah pernah dipelajari, tapi belum eksplisit ditulis (lihat tabel "Dari Mana Soal Test Diambil" di atas).
 
 ---
 
@@ -249,13 +249,13 @@ Kemudian: *"Karena kamu sudah pernah mengalami timeout dan packet loss, kita mul
 ### Output
 
 ```
-wiki/learning/
+wiki/roadmap/
 ├── roadmap.md
 ├── completed.md
 └── weak-topics.md
 ```
 
-*(Nama file sama persis dengan tree kanonik di bagian Implementasi Teknis — lihat di sana untuk daftar lengkap isi `wiki/learning/`.)*
+*(Nama file sama persis dengan tree kanonik di bagian Implementasi Teknis — lihat di sana untuk daftar lengkap isi `wiki/roadmap/`.)*
 
 **Target:** belajar menjadi adaptive, bukan sekadar mengikuti tutorial random.
 
@@ -419,7 +419,7 @@ Recommended Next:
 
 Selain narasi review di atas, tiap quarterly review juga menghasilkan **skill inventory** dalam bentuk bar — tapi barnya **bukan skala 0-100% asal-asalan**, dan **bukan hasil "kira-kira" LLM**, biar konsisten tiap dihitung ulang untuk data yang sama. Formulanya sengaja dibuat simpel (counting, bukan script terpisah dulu — cukup jalan dulu, presisi, gak over-engineered):
 
-> **% per skill area = (jumlah topik dengan skor ≥ 5 di area itu) ÷ (jumlah total topik target di `wiki/learning/skill-map.md` untuk area itu, di level 1 di atas level kamu sekarang)**
+> **% per skill area = (jumlah topik dengan skor ≥ 5 di area itu) ÷ (jumlah total topik target di `wiki/roadmap/skill-map.md` untuk area itu, di level 1 di atas level kamu sekarang)**
 >
 > Kalau kamu sekarang **L1**, maka pembandingnya adalah target skill **L2** (bukan target L1). Kalau kamu sudah **L2**, pembandingnya jadi target **L3**. Ini tinggal hitung (jumlah file/topik "mastered" dibagi jumlah baris target), gak butuh reasoning subjektif — kalau nanti dirasa kurang, baru upgrade ke script Python seperti `confidence_calc.py`.
 
@@ -441,7 +441,7 @@ Kalau nanti sudah naik ke **L2**, bar yang sama akan **direset ukurannya** karen
 
 ### Dari Mana Angka Persentase Ini Didapat
 
-Ini bagian dari mekanisme yang sama seperti [🔍 Mekanisme: Bagaimana Hermes Menemukan Knowledge Gap](#-mekanisme-bagaimana-hermes-menemukan-knowledge-gap) — sumbernya tetap `wiki/learning/skill-map.md` (target per level) dibandingkan dengan `wiki/self-development/`, `wiki/careers/*/knowledge/`, dan `wiki/tests/`. Supaya "1 level di atas" ini bisa dihitung otomatis, `wiki/learning/skill-map.md` perlu punya target **per level**, bukan cuma satu daftar generik. Contoh isinya:
+Ini bagian dari mekanisme yang sama seperti [🔍 Mekanisme: Bagaimana Hermes Menemukan Knowledge Gap](#-mekanisme-bagaimana-hermes-menemukan-knowledge-gap) — sumbernya tetap `wiki/roadmap/skill-map.md` (target per level) dibandingkan dengan `wiki/self-development/`, `wiki/careers/*/knowledge/`, dan `wiki/tests/`. Supaya "1 level di atas" ini bisa dihitung otomatis, `wiki/roadmap/skill-map.md` perlu punya target **per level**, bukan cuma satu daftar generik. Contoh isinya:
 
 ```markdown
 ---
@@ -496,12 +496,12 @@ Format insight ini yang jadi isi bagian "Skill Developed" dan "Weak/Knowledge Ga
 |---|---|---|---|
 | 1 | **Knowledge yang sudah terdokumentasi** | `wiki/careers/*/knowledge/`, `wiki/self-development/`, `wiki/careers/*/skills.md` | "Apa yang sudah saya punya?" |
 | 2 | **Hasil uji/simulasi** | `wiki/tests/` (dari Use Case 2) | "Apa yang sudah *terbukti* bisa saya lakukan?" |
-| 3 | **Target skill yang seharusnya dikuasai** | `wiki/learning/skill-map.md` *(baru)* | "Apa yang *seharusnya* saya kuasai di level ini?" |
+| 3 | **Target skill yang seharusnya dikuasai** | `wiki/roadmap/skill-map.md` *(baru)* | "Apa yang *seharusnya* saya kuasai di level ini?" |
 
 ### Diagram Alur
 
 ```
-wiki/learning/skill-map.md
+wiki/roadmap/skill-map.md
 (target skill utk level L1/L2/dst)
                     │
                     ▼
@@ -532,9 +532,9 @@ Maka outputnya:
 
 ### ⚠️ Prasyarat — Fitur Ini Butuh Bahan
 
-Kalau `wiki/tests/` kosong dan `wiki/learning/skill-map.md` belum diisi, Hermes **tidak punya pembanding**, jadi output gap analysis akan generik/tidak akurat. Urutan prioritas supaya fitur ini jalan dengan baik:
+Kalau `wiki/tests/` kosong dan `wiki/roadmap/skill-map.md` belum diisi, Hermes **tidak punya pembanding**, jadi output gap analysis akan generik/tidak akurat. Urutan prioritas supaya fitur ini jalan dengan baik:
 
-1. Isi `wiki/learning/skill-map.md` di awal — daftar skill target untuk level saat ini (L1) dan level tujuan (L2), bisa disusun manual atau minta Hermes riset dari job description industri
+1. Isi `wiki/roadmap/skill-map.md` di awal — daftar skill target untuk level saat ini (L1) dan level tujuan (L2), bisa disusun manual atau minta Hermes riset dari job description industri
 2. Rutin capture pengalaman kerja & belajar mandiri (Use Case 1 & 5) — supaya `wiki/self-development/` & `wiki/careers/*/knowledge/` terisi
 3. Sesekali minta diuji (Use Case 2) — supaya `wiki/tests/` punya data
 4. Baru minta gap analysis (Use Case 3/6) — karena sekarang ada bahan pembanding yang jelas
@@ -665,7 +665,7 @@ Kalau suatu hari:
 
 Repo `igrow/` di-push otomatis ke GitHub (private repo) secara terjadwal, bukan manual satu-satu.
 
-> Sesuai struktur folder di [🛠️ Implementasi Teknis — Hermes Agent](#-implementasi-teknis--hermes-agent-image-resmi), yang di-sync ke Git **hanya subfolder `igrow/`** di dalam `HERMES_HOME` (isinya `wiki/`, `raw/`, `learning/`, dst) — **bukan** seluruh `HERMES_HOME`, karena folder itu juga isinya session/state internal Hermes (`sessions/`, `memories/`, `logs/`, dll) yang bukan knowledge dan tidak perlu (bahkan sebaiknya tidak) ikut di-push ke Git.
+> Sesuai struktur folder di [🛠️ Implementasi Teknis — Hermes Agent](#-implementasi-teknis--hermes-agent-image-resmi), yang di-sync ke Git **hanya subfolder `igrow/`** di dalam `HERMES_HOME` (isinya `wiki/`, `raw/`, `roadmap/`, dst) — **bukan** seluruh `HERMES_HOME`, karena folder itu juga isinya session/state internal Hermes (`sessions/`, `memories/`, `logs/`, dll) yang bukan knowledge dan tidak perlu (bahkan sebaiknya tidak) ikut di-push ke Git.
 
 **Script** (`~/whatsinsidegit/igrow-hermes/hermes-home/igrow/sync.sh`):
 
@@ -739,7 +739,7 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 | `study.md` | 5 | Dokumentasi belajar mandiri (perintah `/study`) → note terstruktur |
 | `career-review.md` | 6 | Review quarterly + hitung skill inventory |
 
-`wiki/learning/skill-map.md` tetap wajib diisi manual di awal (bukan referensi prosedur, tapi **data**) — semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
+`wiki/roadmap/skill-map.md` tetap wajib diisi manual di awal (bukan referensi prosedur, tapi **data**) — semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
 
 ### Confidence Score — Kenapa Tetap Butuh Script, Meski Sudah Disederhanakan
 
@@ -752,7 +752,7 @@ File referensi `test-me.md` yang mengarahkan Hermes memanggil script ini setiap 
 
 ### Format File — Markdown + YAML Frontmatter (bukan JSON terpisah)
 
-Note naratif (`wiki/careers/`, `wiki/self-development/`) dan hasil test (`wiki/tests/`) memakai pola gabungan metadata di YAML frontmatter + narasi di badan markdown — contoh di bagian Confidence Level di atas. Data file (`wiki/learning/`, `wiki/profile/`) pakai frontmatter minimal + body list; cuma `about.md` & `careers/*/skills.md` yang plain `Key: value` (lihat "Tipe File & Formatnya" di bawah). Alasan dipilih dibanding JSON terpisah:
+Note naratif (`wiki/careers/`, `wiki/self-development/`) dan hasil test (`wiki/tests/`) memakai pola gabungan metadata di YAML frontmatter + narasi di badan markdown — contoh di bagian Confidence Level di atas. Data file (`wiki/roadmap/`, `wiki/profile/`) pakai frontmatter minimal + body list; cuma `about.md` & `careers/*/skills.md` yang plain `Key: value` (lihat "Tipe File & Formatnya" di bawah). Alasan dipilih dibanding JSON terpisah:
 
 - Tetap bisa dibaca langsung tanpa tool/script apa pun (selaras prinsip "knowledge portable, tidak bergantung 1 provider")
 - Tetap gampang di-parse otomatis (library YAML/frontmatter biasa) untuk kebutuhan script seperti `confidence_calc.py`
@@ -819,7 +819,7 @@ last_increment_date: 2026-08-22
 <!-- narasi singkat: jawaban + feedback -->
 ```
 
-3. **Data file** (`wiki/learning/`, `wiki/profile/`) → frontmatter minimal (`title`, `type: data`, `date`) + body list/key:value, bukan narasi:
+3. **Data file** (`wiki/roadmap/`, `wiki/profile/`) → frontmatter minimal (`title`, `type: data`, `date`) + body list/key:value, bukan narasi:
 
 ```markdown
 ---
@@ -883,7 +883,7 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │   │   ├── Bootcamp/             # kursus/platform belajar — {nama-bootcamp}/, dst
     │   │   └── Dokumentasi/          # belajar dari docs/artikel — {nama-topik}/, dst
     │   │
-    │   ├── learning/                 # roadmap belajar, lintas career (Use Case 3)
+    │   ├── roadmap/                 # roadmap belajar, lintas career (Use Case 3)
     │   │   ├── roadmap.md
     │   │   ├── completed.md
     │   │   ├── weak-topics.md
@@ -982,11 +982,13 @@ wiki/ = executable.
 - `igrow/wiki/`            → semua konten compiled, kamu yang maintain
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
-  - `learning/`            → roadmap, skill-map.md (target skill per level), weak-topics
+  - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
   - `tests/`               → hasil simulasi troubleshooting + metadata skor
   - `profile/`             → ringkasan gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
+
+`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
 
 ## Aturan Penempatan Cepat
 | Cerita soal...                    | Taruh di                                        |
@@ -1019,6 +1021,7 @@ masuk ke career itu.
 - igrow/project-skills/daily-briefing.md     → dipicu cron 07:00
 - igrow/project-skills/study.md              → user /study
 - igrow/project-skills/career-review.md      → cron quarterly / user minta review
+- igrow/project-skills/lint.md               → dipicu cron Minggu 08:00
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,
@@ -1036,7 +1039,7 @@ Dipakai kalau user minta diuji/simulasi troubleshooting
 ## Sumber Soal (WAJIB ikuti porsi ini)
 - 70% dari knowledge yang SUDAH terdokumentasi (wiki/careers/*/knowledge/,
   wiki/self-development/) — source_type: documented
-- 20% dari wiki/learning/skill-map.md yang BELUM ada filenya sama sekali —
+- 20% dari wiki/roadmap/skill-map.md yang BELUM ada filenya sama sekali —
   source_type: untouched-target
 - 10% topik adjacent yang berkaitan tapi belum eksplisit ditulis —
   source_type: adjacent
@@ -1049,7 +1052,7 @@ Kasih 1 skenario incident, JANGAN kasih hint/petunjuk.
 2. Nama topik: fuzzy-match ke tag taxonomy di igrow/SCHEMA.md (bukan topics-registry —
    normalisasi topik sekarang lewat taxonomy + igrow/_index.md)
 3. Jalankan: `python igrow/project-skills/scripts/confidence_calc.py
-   --topic <topik> --result correct|wrong --date today`
+   --topic <topik> --result correct|wrong --date $(date +%F)`
 4. Simpan hasil ke igrow/wiki/tests/<kategori>/<topik>-<tanggal>.md dengan
    frontmatter dari output script di atas
 5. Tampilkan skor terbaru topik itu ke user (mis. "skor: 4, belum mastered")

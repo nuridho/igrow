@@ -288,11 +288,11 @@ Jawab dengan benar.
 ## 4.1 Skill-map kosong → jujur
 **Prompt:** "Saya harus belajar apa biar naik L2?"
 
-**Expected:** Hermes bilang bahan belum cukup, minta isi `wiki/learning/skill-map.md` dulu (tawarkan bantu riset dari jobdesc L2).
+**Expected:** Hermes bilang bahan belum cukup, minta isi `wiki/roadmap/skill-map.md` dulu (tawarkan bantu riset dari jobdesc L2).
 ❌ Gagal kalau: langsung keluar roadmap generik.
 
 ## 4.2 Skill-map terisi → roadmap dari data
-Isi manual `wiki/learning/skill-map.md` (contoh di iGROW_FINAL.md: target L2 = automation/Ansible, networking lanjutan, dst). **Prompt:**
+Isi manual `wiki/roadmap/skill-map.md` (contoh di iGROW_FINAL.md: target L2 = automation/Ansible, networking lanjutan, dst). **Prompt:**
 > "Oke skill-map sudah saya isi. Sekarang, saya harus belajar apa biar naik L2?"
 
 **Expected:** roadmap menyebut gap **nyata** dari data testing ini: Linux/systemd sudah ada (Fase 1–2), automation & networking kosong → diprioritaskan. Menyebut file sumbernya.
@@ -322,10 +322,10 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 **Expected:** rekomendasi inti sama (sumbernya file, bukan memori sesi).
 ❌ Gagal kalau: jawaban berubah total untuk data yang sama.
 
-## 4.7 Tulis roadmap ke learning/
-**Prompt:** "Oke, catat roadmap yang tadi ke learning/."
+## 4.7 Tulis roadmap ke roadmap/
+**Prompt:** "Oke, catat roadmap yang tadi ke roadmap/."
 
-**Expected:** `wiki/learning/roadmap.md` (dan/atau `weak-topics.md`) ditulis/diupdate, _index + log.md (op: update).
+**Expected:** `wiki/roadmap/roadmap.md` (dan/atau `weak-topics.md`) ditulis/diupdate, _index + log.md (op: update).
 ❌ Gagal kalau: file tertulis tapi log/index tidak.
 
 ## 4.8 Menolak ngarang saat data tipis

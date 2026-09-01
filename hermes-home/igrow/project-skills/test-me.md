@@ -4,7 +4,7 @@ Dipakai kalau user minta diuji ("uji saya soal Linux", "test networking dong").
 
 ## Sumber Soal (WAJIB ikuti porsi ini)
 - 70% knowledge SUDAH terdokumentasi (wiki/careers/*/knowledge/, wiki/self-development/) — source_type: documented
-- 20% target di wiki/learning/skill-map.md yg BELUM ada filenya sama sekali — source_type: untouched-target
+- 20% target di wiki/roadmap/skill-map.md yg BELUM ada filenya sama sekali — source_type: untouched-target
 - 10% topik adjacent yg berkaitan tapi belum eksplisit ditulis — source_type: adjacent
 
 Kalau soal 100% topik baru, hasil gagalnya tidak informatif untuk gap analysis.

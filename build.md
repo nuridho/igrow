@@ -502,7 +502,7 @@ whatsinsidegit/
             ├── log.md              #   jurnal aksi append-only
             ├── raw/                #   sumber IMMUTABLE (inbox/, articles/, notes/)
             ├── wiki/               #   semua konten compiled: careers/, self-development/,
-            │                       #   learning/, tests/, profile/
+            │                       #   roadmap/, tests/, profile/
             ├── output/             #   laporan turunan (career review, dst)
             └── project-skills/  # markdown prosedur per use case, di-refer dari AGENTS.md
                                   #   (BUKAN sistem Skill resmi Hermes — cukup markdown biasa)
@@ -568,7 +568,7 @@ docker compose restart igrow-hermes
 
 Bikin folder `igrow/` + `AGENTS.md` (di **root** `hermes-home/`, bukan di dalam `igrow/` — karena working directory Hermes di mode gateway/Telegram = `/opt/data`, ini terkonfirmasi lewat GitHub Issue resmi `NousResearch/hermes-agent#5200`):
 ```bash
-mkdir -p ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/{raw/{inbox,articles,notes},wiki/{careers,self-development,learning,tests,profile},output,project-skills}
+mkdir -p ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/{raw/{inbox,articles,notes},wiki/{careers,self-development,roadmap,tests,profile},output,project-skills}
 nano ~/whatsinsidegit/igrow-hermes/hermes-home/AGENTS.md
 ```
 Isi `AGENTS.md` (lengkap + contoh, lihat `iGROW_FINAL.md` bagian "Implementasi Teknis").
@@ -595,11 +595,13 @@ wiki/ = executable.
 - `igrow/wiki/`            → semua konten compiled, kamu yang maintain
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
-  - `learning/`            → roadmap, skill-map.md (target skill per level), weak-topics
+  - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
   - `tests/`               → hasil simulasi troubleshooting + metadata skor
   - `profile/`             → ringkasan gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
+
+`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
 
 ## Aturan Penempatan Cepat
 | Cerita soal...                    | Taruh di                                        |
@@ -632,6 +634,7 @@ masuk ke career itu.
 - igrow/project-skills/daily-briefing.md     → dipicu cron 07:00
 - igrow/project-skills/study.md              → user /study
 - igrow/project-skills/career-review.md      → cron quarterly / user minta review
+- igrow/project-skills/lint.md               → dipicu cron Minggu 08:00
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,
