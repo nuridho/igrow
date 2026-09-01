@@ -100,7 +100,7 @@ Project infrastruktur pribadi dan lab berbasis Docker untuk self-hosting, Linux,
 | **Dozzle** | Log viewer real-time semua container, ringan (~20–30MB RAM) | "Apa yang sebenarnya terjadi di dalam service?" |
 | **igrow-hermes** | Bot Telegram + LLM — satu-satunya yang bisa nulis ke knowledge base (capture note, test, dst) | — |
 | **igrow-api** | Jembatan read-only — baca `igrow-hermes/hermes-home/igrow/`, serve JSON ke dashboard. Nggak nyambung Telegram, nggak manggil LLM, jadi refresh dashboard nggak numpuk beban/token ke `igrow-hermes` | "Gimana caranya dashboard nampilin data tanpa ganggu bot?" |
-| **igrow-web** | Dashboard visualisasi read-only di `igrow.haehaer.in` | "Skill apa aja yang udah saya kuasai?" |
+| **igrow-web** | Dashboard visualisasi read-only di `igrow.njzlabs.com` | "Skill apa aja yang udah saya kuasai?" |
 | **CouchDB (Obsidian LiveSync)** | Sync vault Obsidian (`igrow-hermes/hermes-home/igrow/`) antar device lewat plugin LiveSync, bukan web viewer | "Gimana caranya buka knowledge base yang sama dari laptop & HP?" |
 
 ### Catatan penting
@@ -302,7 +302,7 @@ Obsidian LiveSync (CouchDB) → sync vault ke device (laptop/HP), bukan web inte
      Glance                Portainer               Homepage
     Dashboard            Docker Management         Portofolio
 
-        (NPM Custom Location routing dari igrow.haehaer.in)
+        (NPM Custom Location routing dari igrow.njzlabs.com)
         │                                               │
         ▼                                               ▼
    igrow-web                                      igrow-api
