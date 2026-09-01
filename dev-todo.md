@@ -1,7 +1,7 @@
 # dev-todo — hermes-home
 
 ## Critical
-- [ ] Tulis `lint.md` + daftarkan di AGENTS.md File Referensi — cron lint-mingguan sekarang jalan tanpa aturan.
+- [x] ~~Tulis `lint.md` + daftarkan di AGENTS.md File Referensi~~ — dibuat `project-skills/lint.md` (5 cek: orphan, broken link kecuali placeholder, frontmatter, tag, index vs fs) + 1 baris di AGENTS.md + prompt cron lint di build.md dipersingkat jadi point ke file
 - [x] ~~Catat job backup di AGENTS.md / project-skills~~ — 1 baris di AGENTS.md: "`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`."
 - [ ] SCHEMA.md:16 — `skill-map.md` human-owned vs mentor.md auto-generate. Ubah jadi: "agent generate pertama kali; setelah itu human-owned".
 - [x] ~~test-me.md:19 — `--date today` salah~~ → `--date $(date +%F)`

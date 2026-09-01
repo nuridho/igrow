@@ -687,7 +687,7 @@ docker exec -it igrow-hermes hermes cron create '0 3 * * 0' \
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 8 * * 0' \
   --name lint-mingguan \
-  --prompt 'Lint igrow/wiki/: cek (1) orphan page (file .md tidak tercatat di _index.md), (2) broken wikilink ([[slug]] tanpa file target), (3) frontmatter 8 field lengkap di tiap note, (4) tag di luar taxonomy SCHEMA, (5) _index.md vs filesystem mismatch. Append hasil ke igrow/log.md (op: lint). Kirim ringkasannya; kalau semua bersih cukup "wiki sehat".'
+  --prompt 'Baca igrow/project-skills/lint.md lalu kerjakan.'
 ```
 
 ```bash
