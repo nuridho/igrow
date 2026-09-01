@@ -10,7 +10,7 @@ updated: 2026-08-25
 Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 
 ## Layer
-- `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `raw/inbox/`, agent proses → pindah `.processed/`.
+- `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `raw/inbox/`, agent proses → pindah `raw/articles/` (inbox kosong = semua sudah diproses).
 - `wiki/` — semua konten compiled, agent-owned.
 - `output/` — laporan turunan (career review, dst).
 - Pengecualian human-owned (agent update cuma kalau diminta): `wiki/roadmap/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md`.
@@ -55,7 +55,8 @@ Sumber (URL / raw/... / sesi) — buat napak tilas.
 Min 2 dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
 ```
 Khusus incident di careers/, Detail diganti alur: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
-`wiki/tests/` tanpa section baku — frontmatter skor + narasi singkat jawaban & feedback:
+`wiki/tests/` tanpa section baku — frontmatter skor + narasi singkat jawaban & feedback.
+Subfolder `<kategori>` = tag dari taxonomy di atas (`wiki/tests/linux/`, `wiki/tests/docker/`):
 ```yaml
 ---
 topic: iowait                  # nama topik baku — fuzzy-match ke taxonomy

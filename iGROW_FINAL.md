@@ -978,7 +978,7 @@ wiki/ = executable.
 - `igrow/SCHEMA.md`        → aturan format, frontmatter, tag, ownership — BACA DULU sebelum tulis
 - `igrow/_index.md`        → master katalog; baca ini dulu sebelum scan folder
 - `igrow/log.md`           → jurnal aksi append-only: `## [YYYY-MM-DD] op | subjek`
-- `igrow/raw/`             → sumber IMMUTABLE (inbox/ → proses → .processed/)
+- `igrow/raw/`             → sumber IMMUTABLE (inbox/ → proses → articles/)
 - `igrow/wiki/`            → semua konten compiled, kamu yang maintain
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
@@ -997,13 +997,13 @@ wiki/ = executable.
 | Knowledge kerjaan (SOP/cara/setup)| igrow/wiki/careers/career-N/knowledge/ (flat .md) |
 | Lesson dari incident              | igrow/wiki/careers/career-N/lessons-learned/     |
 | Belajar mandiri (bukan kerjaan)   | igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama> |
-| Artikel/dok belajar (mentah)      | igrow/raw/inbox/ → proses → raw/articles/        |
+| Artikel/dok belajar (mentah)      | igrow/raw/inbox/ → proses → raw/articles/ (inbox kosong = sudah diproses) |
 | Screenshot/gambar (sudah redact)  | igrow/raw/assets/YYYYMMDD-deskripsi.png          |
 | Laporan career review             | igrow/output/                                    |
 
 ## Tiap operasi tulis WAJIB diakhiri
 1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
-2. Update master `igrow/_index.md`.
+2. Update master `igrow/_index.md` (termasuk "Total pages" + "Last updated").
 3. Append `igrow/log.md`.
 
 ## Career Aktif

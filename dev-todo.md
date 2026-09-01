@@ -8,11 +8,11 @@
 - [x] ~~Exclude `_*.json` dari lint~~ — lint.md skip file berawalan `_`; cache tetap di tests/. Pindah ke `igrow/.cache/` kalau `_*.json` bertambah.
 
 ## Warning
-- [ ] `_index.md` "Total pages: N" — tidak ada aturan kapan counter di-update → drift.
+- [x] ~~`_index.md` "Total pages: N"~~ — AGENTS step 2 sekarang eksplisit update counter tiap operasi tulis.
 - [ ] SCHEMA.md:31 `sources:` — tentukan satu konvensi (field wajib, boleh `[]`).
-- [ ] test-me.md:20 `wiki/tests/<kategori>/` — `<kategori>` tidak terdefinisi di mana pun.
-- [ ] raw pipeline: AGENTS/SCHEMA pakai `inbox/ → .processed/`, study.md dump langsung `raw/articles/` — satukan.
-- [ ] career-review.md step 3 — `confidence_calc.py` cuma per-topik; tambah flag `--all` atau parse tests/ langsung.
+- [x] ~~test-me.md:20 `<kategori>`~~ — SCHEMA: subfolder tests/ = tag taxonomy (`wiki/tests/linux/`).
+- [x] ~~raw pipeline dua jalur~~ — `.processed/` dibuang (folder + AGENTS/SCHEMA/study); inbox → articles/ satu-satunya jalur.
+- [x] ~~career-review perlu semua skor~~ — `confidence_calc.py --all` dump JSON semua topik (demo-tested); career-review.md step 3 point ke flag itu.
 - [ ] Op `query` di SCHEMA tidak pernah dipakai — /recall tidak disuruh append log.
 
 - [ ] Definisikan format isi skill-map.md (per-area, subskill, bobot?) — sekarang cuma "daftar skill per level", belum ada template baku.

@@ -3,7 +3,7 @@
 Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 
 ## Langkah
-1. Sumber mentah (link/PDF/artikel)? → dump/tulis ke `igrow/raw/articles/` slug
+1. Sumber mentah (link/PDF/artikel)? → dump ke `igrow/raw/inbox/` (ikut pipeline AGENTS: inbox → articles/)
    `YYYY-MM-DD-nama.md` + frontmatter raw (source_url, ingested).
 2. Note terstruktur → `igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama>/`
    Frontmatter ikut SCHEMA (type: learning, sources: [igrow/raw/...]).

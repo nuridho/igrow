@@ -46,29 +46,41 @@ def load():
     return st
 
 
+def dump_all(index: dict):
+    rows = [{"topic": t, "score": e["score"], "last_increment_date": e["last_increment_date"]}
+            for t, e in sorted(index.items())]
+    print(json.dumps(rows, ensure_ascii=False))
+
+
 def main():
-    p = argparse.ArgumentParser()
-    p.add_argument("--topic", required=True)
-    p.add_argument("--result", choices=["correct", "wrong"], required=True)
-    p.add_argument("--date", required=True)
-    a = p.parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--topic")
+    ap.add_argument("--result", choices=["correct", "wrong"])
+    ap.add_argument("--date")
+    ap.add_argument("--all", action="store_true", help="dump semua topik (untuk career review)")
+    args = ap.parse_args()
 
-    st = load()
-    e = st.get(a.topic, {"score": 0, "last_increment_date": None})
+    index = load()
+    if args.all:
+        dump_all(index)
+        return
+    if not (args.topic and args.result and args.date):
+        ap.error("--topic/--result/--date wajib (atau pakai --all)")
+    e = index.get(args.topic, {"score": 0, "last_increment_date": None})
 
-    if a.result == "correct":
-        if e["last_increment_date"] == a.date:
+    if args.result == "correct":
+        if e["last_increment_date"] == args.date:
             pass  # max +1/topik/hari — sudah naik hari ini, skip
         else:
             e["score"] += 1
-            e["last_increment_date"] = a.date
+            e["last_increment_date"] = args.date
     else:
         e["score"] = max(0, e["score"] - 1)
 
-    st[a.topic] = e
-    CACHE.write_text(json.dumps(st, indent=1), encoding="utf-8")
+    index[args.topic] = e
+    CACHE.write_text(json.dumps(index, indent=1), encoding="utf-8")
 
-    print(f"topic: {a.topic}")
+    print(f"topic: {args.topic}")
     print(f"score: {e['score']}")
     print(f"mastered: {str(e['score'] >= MASTERED).lower()}")
     print(f"last_increment_date: {e['last_increment_date']}")
@@ -101,6 +113,12 @@ def _demo():
                 sys.argv = ["x", "--topic", "iowait", "--result", "wrong", "--date", f"2026-08-1{i}"]
                 main()
             assert load()["iowait"]["score"] == 0, "floor 0 dilanggar"
+            sys.argv = ["x", "--all"]
+            with contextlib.redirect_stdout(io.StringIO()) as buf:
+                main()
+            rows = json.loads(buf.getvalue())
+            assert rows == [{"topic": "iowait", "score": 0,
+                             "last_increment_date": "2026-08-02"}]
         print("demo OK")
     finally:
         TESTS, CACHE = orig_t, orig_c

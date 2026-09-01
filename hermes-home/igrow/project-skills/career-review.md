@@ -8,8 +8,8 @@ Dipicu cron quarterly atau user minta review.
 2. Analisis 4 bagian: Learned (skill baru terdokumentasi kuartal ini), Experienced (insiden/pengalaman), Improved (skor tests/ naik), Weak (target skill-map yg masih rendah/belum tersentuh).
 3. Skill Inventory — hitung, bukan kira-kira:
    % per area = (topik mastered [skor>=5] di area itu) / (total topik target
-   skill-map.md di level 1 di atas posisi sekarang).
-   Angka dari confidence_calc.py, bukan reasoning.
+   `wiki/roadmap/skill-map.md`, `wiki/tests/` (semua). Angka dari
+   `python igrow/project-skills/scripts/confidence_calc.py --all`, bukan reasoning.
    Tiap bar + insight singkat (kenapa segitu, langkah berikutnya).
 4. Tulis laporan ke `igrow/output/career-review-<YYYY>-Q<n>.md`.
 5. Update `wiki/profile/skills.md` + `career-summary.md`.
