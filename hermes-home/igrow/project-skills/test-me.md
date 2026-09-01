@@ -16,7 +16,7 @@ Kalau soal 100% topik baru, hasil gagalnya tidak informatif untuk gap analysis.
 1. Evaluasi jawaban, kasih score /10 + poin kejawab/kelewat.
 2. Nama topik: fuzzy-match ke tag taxonomy di igrow/SCHEMA.md (bukan topics-registry —
    normalisasi topik sekarang lewat taxonomy + igrow/_index.md).
-3. Jalankan: `python igrow/project-skills/scripts/confidence_calc.py --topic <topik> --result correct|wrong --date today`
+3. Jalankan: `python igrow/project-skills/scripts/confidence_calc.py --topic <topik> --result correct|wrong --date $(date +%F)`
 4. Simpan hasil ke `igrow/wiki/tests/<kategori>/<topik>-<tanggal>.md`, frontmatter:
    topic / source_type / date / result / score / mastered / last_increment_date (dari output script).
 5. Tampilkan skor terbaru ("skor: 4, belum mastered").

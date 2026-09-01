@@ -25,6 +25,8 @@ wiki/ = executable.
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
 
+`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
+
 ## Aturan Penempatan Cepat
 | Cerita soal...                    | Taruh di                                        |
 |------------------------------------|--------------------------------------------------|

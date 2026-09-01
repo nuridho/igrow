@@ -32,11 +32,11 @@ Supaya kamu bisa **lihat dan backup datanya langsung** lewat `ls`, `cp`, `tar`, 
 
 | Subdomain | Fungsi | Service (compose) |
 |---|---|---|
-| `whatsinsidegit.my.id` | Portofolio (root domain) | `home` |
-| `portainer.whatsinsidegit.my.id` | Manage Docker | `portainer` |
-| `dash.whatsinsidegit.my.id` | Glance dashboard | `glance` |
-| `npm.whatsinsidegit.my.id` | Nginx Proxy Manager (admin UI) | `nginx-proxy-manager` |
-| `igrow.whatsinsidegit.my.id` | Dashboard visualisasi knowledge iGROW (read-only) | `igrow-web` + `igrow-api` (path `/api`) |
+| `haehaer.in` | Portofolio (root domain) | `home` |
+| `portainer.haehaer.in` | Manage Docker | `portainer` |
+| `dash.haehaer.in` | Glance dashboard | `glance` |
+| `npm.haehaer.in` | Nginx Proxy Manager (admin UI) | `nginx-proxy-manager` |
+| `igrow.haehaer.in` | Dashboard visualisasi knowledge iGROW (read-only) | `igrow-web` + `igrow-api` (path `/api`) |
 
 ---
 
@@ -176,9 +176,9 @@ pages:
             title: Status
             sites:
               - title: Homepage
-                url: https://whatsinsidegit.my.id
+                url: https://haehaer.in
               - title: Portainer
-                url: https://portainer.whatsinsidegit.my.id
+                url: https://portainer.haehaer.in
 
           - type: docker-containers
             hide-by-default: false
@@ -188,11 +188,11 @@ pages:
               - title: Infra
                 links:
                   - title: Portainer
-                    url: https://portainer.whatsinsidegit.my.id
+                    url: https://portainer.haehaer.in
                   - title: Nginx Proxy Manager
-                    url: https://npm.whatsinsidegit.my.id
+                    url: https://npm.haehaer.in
                   - title: Glance
-                    url: https://dash.whatsinsidegit.my.id
+                    url: https://dash.haehaer.in
 ```
 
 > **`name` vs `slug`:** `name` bebas pakai karakter apa aja (termasuk `'` atau `?`) karena cuma buat tampilan di nav bar. Tapi Glance otomatis generate URL dari `name` itu — kalau ada karakter aneh, URL-nya bisa rusak dan berujung 404. Solusinya: set `slug` manual (huruf/angka/strip aja) buat kontrol URL-nya terpisah dari nama tampilan.
@@ -296,7 +296,7 @@ TTL: default / auto
 Cek DNS udah propagate sebelum lanjut ke step SSL:
 
 ```bash
-dig portainer.whatsinsidegit.my.id
+dig portainer.haehaer.in
 ```
 Pastikan hasilnya nunjuk ke IP VPS kamu. Propagasi biasanya 5 menit–1 jam, kadang bisa sampai 24 jam.
 
@@ -317,7 +317,7 @@ Password: changeme
 (langsung diminta ganti password saat login pertama)
 
 Di menu **Proxy Hosts → Add Proxy Host**:
-- Domain Names: `portainer.whatsinsidegit.my.id`
+- Domain Names: `portainer.haehaer.in`
 - Forward Hostname/IP: `portainer` (nama service di compose)
 - Forward Port: `9443`
 - Tab **SSL** → pilih **Request a new SSL Certificate**
@@ -648,6 +648,60 @@ Chat ke bot kamu, coba beberapa hal:
 
 ---
 
+### Setup 4 Cron Job (maintenance rutin iGROW)
+
+4 job dibuat **sekali** dari shell host pakai `hermes cron create` di dalam container (scheduler-nya jalan di dalam gateway `igrow-hermes`, jadi job tetap hidup selama container jalan; delivery auto ke Telegram kamu).
+
+| # | Job | Schedule | Yang dikerjakan |
+|---|-----|----------|-----------------|
+| 1 | Daily Briefing | `0 7 * * *` (tiap hari 07:00) | Web research 5 berita infra → kirim ringkasan ke Telegram |
+| 2 | Backup Knowledge | `0 3 * * 0` (tiap Minggu 03:00) | Push `igrow/` ke GitHub repo privat `igrow-backup` (via https://igrow.haehaer.in) |
+| 3 | Lint Mingguan | `0 8 * * 0` (tiap Minggu 08:00) | Cek kesehatan wiki (orphan, broken link, dll) → lapor ke Telegram |
+| 4 | Career Review | `0 9 1 1,4,7,10 *` (tgl 1 tiap kuartal, 09:00) | Review kuartalan → laporan ke `output/` + ringkasan ke Telegram |
+
+**Prasyarat Job 2 — repo backup (sekali saja):**
+```bash
+docker exec -it igrow-hermes bash
+cd /opt/data/igrow && git init && git add -A && git commit -m "init"
+git config --global credential.helper store
+git remote add origin https://<TOKEN>@github.com/nuridho/igrow-backup.git
+git push -u origin main
+exit
+```
+(`<TOKEN>` = GitHub personal access token scope `repo`. Kalau network Docker nge-block push ke `github.com`, ganti host di URL remote jadi `igrow.haehaer.in` — domain kamu sendiri, sudah lolos whitelist.)
+
+**Buat 4 job (copy-paste per blok ke shell host):**
+
+```bash
+docker exec -it igrow-hermes hermes cron create '0 7 * * *' \
+  --name daily-briefing \
+  --prompt 'Baca igrow/project-skills/daily-briefing.md lalu kerjakan.'
+```
+
+```bash
+docker exec -it igrow-hermes hermes cron create '0 3 * * 0' \
+  --name backup-knowledge \
+  --prompt 'cd igrow && git add -A && git commit -m "backup $(date +%F)" && git push. Kalau tidak ada perubahan, jangan kirim pesan apapun (silent). Kalau push gagal, laporkan error-nya.'
+```
+
+```bash
+docker exec -it igrow-hermes hermes cron create '0 8 * * 0' \
+  --name lint-mingguan \
+  --prompt 'Lint igrow/wiki/: cek (1) orphan page (file .md tidak tercatat di _index.md), (2) broken wikilink ([[slug]] tanpa file target), (3) frontmatter 8 field lengkap di tiap note, (4) tag di luar taxonomy SCHEMA, (5) _index.md vs filesystem mismatch. Append hasil ke igrow/log.md (op: lint). Kirim ringkasannya; kalau semua bersih cukup "wiki sehat".'
+```
+
+```bash
+docker exec -it igrow-hermes hermes cron create '0 9 1 1,4,7,10 *' \
+  --name career-review \
+  --prompt 'Baca igrow/project-skills/career-review.md lalu kerjakan untuk kuartal yang baru selesai.'
+```
+
+Kalau format argumennya beda di versi Hermes kamu, cek `docker exec -it igrow-hermes hermes cron create --help` — atau fallback ke chat Telegram: `/cron` → create, isi schedule + prompt yang sama.
+
+Cek hasilnya kapan aja: `docker exec -it igrow-hermes hermes cron list` dari host, atau `/cron` lewat Telegram.
+
+---
+
 ## Phase 3 — Observability Ringan *(nanti)*
 
 Bagian Dozzle nyusul setelah Phase 2 (`igrow-hermes`) selesai & stabil.
@@ -711,14 +765,14 @@ Value: 43.156.50.9
 
 Cek propagasi:
 ```bash
-dig igrow.whatsinsidegit.my.id
+dig igrow.haehaer.in
 ```
 
 Di NPM → Add Proxy Host:
 
 | Field | Value |
 |---|---|
-| Domain Names | `igrow.whatsinsidegit.my.id` |
+| Domain Names | `igrow.haehaer.in` |
 | Scheme | `http` |
 | Forward Hostname/IP | `igrow-web` |
 | Forward Port | `80` |
@@ -728,7 +782,7 @@ Tab SSL → Request new SSL Certificate → Force SSL, HTTP/2, agree terms → e
 #### Test
 
 ```
-https://igrow.whatsinsidegit.my.id
+https://igrow.haehaer.in
 ```
 
 Dashboard-nya udah bisa diakses, isinya masih data dummy — banner "⚠ Data dummy" jadi penanda tahap ini belum tersambung ke backend apa pun.
@@ -772,11 +826,11 @@ Frontend & API sengaja dijadiin **satu domain** (bukan `api.igrow...` terpisah),
 
 | Path | Forward ke | Catatan |
 |---|---|---|
-| `igrow.whatsinsidegit.my.id/` (default) | `igrow-web:80` | Static dashboard — udah ada dari 4a |
-| `igrow.whatsinsidegit.my.id/api/*` | `igrow-api:<port>` | Custom Location — port sesuaikan API kamu. **Bukan** forward ke `igrow-hermes` |
+| `igrow.haehaer.in/` (default) | `igrow-web:80` | Static dashboard — udah ada dari 4a |
+| `igrow.haehaer.in/api/*` | `igrow-api:<port>` | Custom Location — port sesuaikan API kamu. **Bukan** forward ke `igrow-hermes` |
 
 **Langkah bikin Custom Location:**
-1. Edit proxy host `igrow.whatsinsidegit.my.id` yang udah ada dari 4a (default forward-nya tetap ke `igrow-web`)
+1. Edit proxy host `igrow.haehaer.in` yang udah ada dari 4a (default forward-nya tetap ke `igrow-web`)
 2. Tab **Custom Locations** → **Add Location**
 3. Location: `/api`
 4. Forward Hostname: `igrow-api`, Forward Port: sesuai port API kamu
@@ -811,7 +865,7 @@ Frontend & API sengaja dijadiin **satu domain** (bukan `api.igrow...` terpisah),
 
 **Fungsi:** sync folder `igrow-hermes/hermes-home/igrow/` (vault iGROW) ke Obsidian app di laptop/HP kamu, biar bisa dibuka pakai Obsidian native (graph view, backlinks, plugin) — bukan lewat browser.
 
-**Kenapa bukan web viewer:** fungsi "baca knowledge base dari browser" udah dicover dashboard `igrow.whatsinsidegit.my.id` (malah lebih terstruktur). Fitur andalan Obsidian (graph view, backlinks) juga lebih maksimal dinikmati di app native ketimbang versi web. LiveSync cuma nyambungin vault yang sama ke banyak device, tanpa expose apa pun ke publik.
+**Kenapa bukan web viewer:** fungsi "baca knowledge base dari browser" udah dicover dashboard `igrow.haehaer.in` (malah lebih terstruktur). Fitur andalan Obsidian (graph view, backlinks) juga lebih maksimal dinikmati di app native ketimbang versi web. LiveSync cuma nyambungin vault yang sama ke banyak device, tanpa expose apa pun ke publik.
 
 **Cara kerja singkat:** plugin **Self-hosted LiveSync** di Obsidian app connect ke backend **CouchDB** yang di-host sendiri di VPS. Vault di-sync real-time antar device lewat CouchDB itu — bukan lewat HTTP/browser biasa.
 
@@ -843,8 +897,8 @@ Detail konfigurasi CouchDB + setup plugin LiveSync di Obsidian app menyusul kala
 - [x] Portainer bisa diakses & akun admin udah dibuat (sebelum timeout 5 menit, pakai setup token dari log)
 - [x] Nginx Proxy Manager bisa diakses, minimal 1 proxy host + SSL Let's Encrypt berhasil dibuat
 - [x] Semua proxy host (Portainer, Glance) pakai Scheme yang sesuai (https untuk Portainer, http untuk yang lain)
-- [x] Glance bisa diakses di `dash.whatsinsidegit.my.id`, nampilin bookmarks, status monitoring (`monitor`), status container (`docker-containers`), dan resource server (`server-stats`)
-- [x] Homepage (`index.html`) bisa diakses di `whatsinsidegit.my.id` tanpa 403
+- [x] Glance bisa diakses di `dash.haehaer.in`, nampilin bookmarks, status monitoring (`monitor`), status container (`docker-containers`), dan resource server (`server-stats`)
+- [x] Homepage (`index.html`) bisa diakses di `haehaer.in` tanpa 403
 
 ## Checklist Phase 2 (`igrow-hermes`)
 
@@ -862,20 +916,21 @@ Detail konfigurasi CouchDB + setup plugin LiveSync di Obsidian app menyusul kala
 - [ ] Tes capture 1 cerita/pengalaman lewat Telegram, cek file baru muncul di `igrow-hermes/hermes-home/igrow/` sesuai aturan penempatan
 - [ ] `igrow-hermes` nggak publish port & nggak disebut di proxy host manapun — murni diakses via Telegram
 - [ ] (Opsional) alias/bash function shortcut (`docker-igrow-hermes-setup`, `docker-logs`, dst) udah ditambahin ke `~/.bashrc` — lihat bagian "Shortcut CLI" di bawah
+- [ ] 4 cron job dibuat dari shell host pakai `hermes cron create` (daily-briefing, backup-knowledge, lint-mingguan, career-review) — lihat "Setup 4 Cron Job"; cek `hermes cron list` muncul 4 job
 
 ## Checklist Phase 4 (`igrow-api` + `igrow-web`)
 
 **4a — Static dashboard:**
 - [ ] Folder `igrow-web/` berisi `index.html` langsung (bukan di subfolder)
 - [ ] Service `igrow-web` ditambah ke `docker-compose.yml`, `docker compose up -d igrow-web` jalan tanpa error
-- [ ] DNS `igrow` udah propagate, proxy host `igrow.whatsinsidegit.my.id` default forward ke `igrow-web`
-- [ ] Dashboard bisa diakses di `https://igrow.whatsinsidegit.my.id`, masih nampilin data dummy
+- [ ] DNS `igrow` udah propagate, proxy host `igrow.haehaer.in` default forward ke `igrow-web`
+- [ ] Dashboard bisa diakses di `https://igrow.haehaer.in`, masih nampilin data dummy
 
 **4b — Sambungin ke backend:**
 - [ ] `igrow-api/` punya `Dockerfile` sendiri (custom code, pakai `build:`)
 - [ ] `docker compose up -d --build igrow-api` jalan tanpa error
 - [ ] `igrow-api` mount `igrow-hermes/hermes-home/igrow` (bukan seluruh `hermes-home/`, dan bukan bikin volume baru), pakai `:ro`
-- [ ] Custom Location `/api` di proxy host `igrow.whatsinsidegit.my.id`, forward ke `igrow-api` (**bukan** `igrow-hermes`)
+- [ ] Custom Location `/api` di proxy host `igrow.haehaer.in`, forward ke `igrow-api` (**bukan** `igrow-hermes`)
 - [ ] `igrow-hermes` tetap nggak disebut di proxy host manapun — cuma nerima chat dari Telegram
 - [ ] `index.html` diupdate pakai `fetch('/api/...')`, data dummy diganti data asli
 - [ ] Dipastikan `igrow-api` cuma baca file (nggak ada panggilan LLM), biar refresh dashboard nggak numpuk beban/token ke Hermes
