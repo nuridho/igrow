@@ -35,6 +35,7 @@ wiki/ = executable.
 | Lesson dari incident              | igrow/wiki/careers/career-N/lessons-learned/     |
 | Belajar mandiri (bukan kerjaan)   | igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama> |
 | Artikel/dok belajar (mentah)      | igrow/raw/inbox/ → proses → raw/articles/        |
+| Screenshot/gambar (sudah redact)  | igrow/raw/assets/YYYYMMDD-deskripsi.png          |
 | Laporan career review             | igrow/output/                                    |
 
 ## Tiap operasi tulis WAJIB diakhiri

@@ -5,7 +5,7 @@
 - [x] ~~Catat job backup di AGENTS.md / project-skills~~ — 1 baris di AGENTS.md: "`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`."
 - [ ] SCHEMA.md:16 — `skill-map.md` human-owned vs mentor.md auto-generate. Ubah jadi: "agent generate pertama kali; setelah itu human-owned".
 - [x] ~~test-me.md:19 — `--date today` salah~~ → `--date $(date +%F)`
-- [ ] Exclude `_*.json` dari lint / pindah cache ke `igrow/.cache/` — `_index.json` jadi false-positive orphan tiap Minggu.
+- [x] ~~Exclude `_*.json` dari lint~~ — lint.md skip file berawalan `_`; cache tetap di tests/. Pindah ke `igrow/.cache/` kalau `_*.json` bertambah.
 
 ## Warning
 - [ ] `_index.md` "Total pages: N" — tidak ada aturan kapan counter di-update → drift.
@@ -14,6 +14,8 @@
 - [ ] raw pipeline: AGENTS/SCHEMA pakai `inbox/ → .processed/`, study.md dump langsung `raw/articles/` — satukan.
 - [ ] career-review.md step 3 — `confidence_calc.py` cuma per-topik; tambah flag `--all` atau parse tests/ langsung.
 - [ ] Op `query` di SCHEMA tidak pernah dipakai — /recall tidak disuruh append log.
+
+- [ ] Definisikan format isi skill-map.md (per-area, subskill, bobot?) — sekarang cuma "daftar skill per level", belum ada template baku.
 
 ## Improvement
 - [ ] AGENTS.md File Referensi — rapikan kata kunci pemicu per baris.
