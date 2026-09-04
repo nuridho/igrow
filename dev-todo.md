@@ -1,25 +1,220 @@
-# dev-todo — hermes-home
+# dev-todo — iGROW template
+
+> Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
+> Nomor berikutnya: C14 / W37 / I20. `W4` void (item aslinya dibuang, kode lain dijaga stabil).
+> `FIN` = `iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
+> **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
+> Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
+> Semua temuan sudah diverifikasi ke file / CLI / eksekusi. Yang tidak bisa dipastikan ditandai "(belum diverifikasi)".
 
 ## Critical
-- [x] ~~Tulis `lint.md` + daftarkan di AGENTS.md File Referensi~~ — dibuat `project-skills/lint.md` (5 cek: orphan, broken link kecuali placeholder, frontmatter, tag, index vs fs) + 1 baris di AGENTS.md + prompt cron lint di build.md dipersingkat jadi point ke file
-- [x] ~~Catat job backup di AGENTS.md / project-skills~~ — 1 baris di AGENTS.md: "`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`."
-- [ ] SCHEMA.md:16 — `skill-map.md` human-owned vs mentor.md auto-generate. Ubah jadi: "agent generate pertama kali; setelah itu human-owned".
-- [x] ~~test-me.md:19 — `--date today` salah~~ → `--date $(date +%F)`
-- [x] ~~Exclude `_*.json` dari lint~~ — lint.md skip file berawalan `_`; cache tetap di tests/. Pindah ke `igrow/.cache/` kalau `_*.json` bertambah.
 
-## Warning
-- [x] ~~`_index.md` "Total pages: N"~~ — AGENTS step 2 sekarang eksplisit update counter tiap operasi tulis.
-- [ ] SCHEMA.md:31 `sources:` — tentukan satu konvensi (field wajib, boleh `[]`).
-- [x] ~~test-me.md:20 `<kategori>`~~ — SCHEMA: subfolder tests/ = tag taxonomy (`wiki/tests/linux/`).
-- [x] ~~raw pipeline dua jalur~~ — `.processed/` dibuang (folder + AGENTS/SCHEMA/study); inbox → articles/ satu-satunya jalur.
-- [x] ~~career-review perlu semua skor~~ — `confidence_calc.py --all` dump JSON semua topik (demo-tested); career-review.md step 3 point ke flag itu.
-- [ ] Op `query` di SCHEMA tidak pernah dipakai — /recall tidak disuruh append log.
+- [x] **C1** ~~`lint.md` belum ada padahal cron lint mingguan dijanjikan~~
+  - Act: dibuat `project-skills/lint.md` (5 cek: orphan, broken link kecuali placeholder, frontmatter, tag, index vs fs) + 1 baris di AGENTS.md File Referensi; prompt cron lint di build.md dipersingkat jadi point ke file.
+  - Impact: job lint punya aturan yang ikut ke VPS — bisa dibenerin tanpa bikin ulang job.
+- [x] **C2** ~~Job backup tidak tercermin di file runtime — agent bisa utak-atik `.git/` tanpa tahu~~
+  - Act: 1 baris di AGENTS.md: "`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`."
+  - Impact: agent tahu `.git/` bukan wilayahnya; backup nggak rusak gara-gara operasi tulis biasa.
+- [ ] **C3** Ownership `skill-map.md` beda di 3 file: SCHEMA.md:16 = human-owned, mentor.md:5 = "AUTO-GENERATE kalau belum ada", FIN:742 = "wajib diisi manual di awal".
+  - Act: SCHEMA:16 buang `skill-map.md` dari daftar human-owned; mentor.md step 1 jadi "regenerate kalau belum ada ATAU `about.md` lebih baru"; FIN:742 jadi agent-owned + human cuma edit 1 baris `Target:` di `about.md`.
+  - Impact: UC3 berhenti nunggu manusia ngisi file; porsi 20% untouched-target (UC2) dan pembagi % Skill Inventory (UC6) punya sumber pasti.
+- [x] **C4** ~~test-me.md:19 `--date today` (string literal) matikan guard max +1/hari~~
+  - Act: `--date today` → `--date $(date +%F)`.
+  - Impact: skor nggak bisa digelembungkan dengan jawab benar berkali-kali di 1 sesi.
+- [x] **C5** ~~`_index.json` cache kebaca lint sebagai orphan page (false positive tiap minggu)~~
+  - Act: lint.md diminta skip file berawalan `_`; cache tetap tinggal di `tests/`.
+  - Impact: laporan lint bersih; pindah ke `igrow/.cache/` cuma kalau `_*.json` bertambah banyak.
+- [ ] **C6** build.md "Setup 4 Cron Job" — flag `--prompt` tidak ada. CLI: `hermes cron create [opts] schedule [prompt]`, prompt POSITIONAL. Ke-4 command argparse-error. (Diverifikasi di CLI host; versi di container VPS belum diverifikasi.)
+  - Act: 4 blok itu diubah jadi `hermes cron create '0 7 * * *' 'Baca igrow/project-skills/daily-briefing.md lalu kerjakan.' --name daily-briefing`.
+  - Impact: 4 job maintenance beneran kebuat — sekarang nol job jalan, jadi briefing/backup/lint/review semua mati.
+- [ ] **C7** build.md klaim "delivery auto ke Telegram kamu" padahal ke-4 command tanpa `--deliver`; job dari shell host tidak punya chat asal.
+  - Act: tambah `--deliver telegram` di 4 command yang sama.
+  - Impact: output job sampai ke HP, bukan cuma nyangkut di penyimpanan job.
+- [ ] **C8** Deploy `scp -r hermes-home/.` menimpa per-file → `igrow/_index.md`, `log.md`, `wiki/_index.md` versi VPS (34 page + riwayat ingest) ketimpa template kosong, sementara file wiki tetap ada.
+  - Act: build.md ganti perintah deploy jadi per-file, atau `rsync --exclude '_index.md' --exclude 'log.md'`; tandai 3 file itu "jangan pernah ikut deploy".
+  - Impact: katalog + audit trail VPS nggak ke-reset; lint nggak lapor orphan massal palsu tiap habis deploy.
+- [ ] **C9** `wiki/tests/_index.json` yang ke-commit isinya `{}` dan `load` percaya cache yang ada tanpa rebuild dari markdown. Terbukti lewat eksekusi: 1 file test `score: 4` + cache `{}` → output `score: 1`.
+  - Act: `_*.json` nggak ikut deploy + guard di `load`: kalau entri cache lebih sedikit dari hasil `scan`, rebuild. Assert-nya masuk `_demo`.
+  - Impact: riwayat skor UC2 nggak hilang tanpa error — kalau nggak, ketahuannya baru pas career review angkanya aneh.
+- [ ] **C10** build.md Phase 2 tidak punya langkah membuat `SCHEMA.md`, 4 `_index.md`, `log.md`, `project-skills/*` — cuma `mkdir` + `AGENTS.md`.
+  - Act: sisipin 1 langkah sesudah `mkdir`: kirim/tulis 7 file itu sebelum tes chat pertama.
+  - Impact: AGENTS.md nggak nyuruh baca file yang nggak pernah dibuat; setup dari nol beneran reproducible.
+- [ ] **C11** VPS masih pra-fix: AGENTS.md tanpa blok "Apa Ini" / baris git-repo / screenshot assets / lint.md; SCHEMA+AGENTS masih `learning/` & `.processed/`; folder `wiki/learning/` + `raw/inbox/.processed/` masih ada. (Basis snapshot 2026-08-26; kondisi terkini belum diverifikasi.)
+  - Act: deploy ulang file runtime yang berubah, lalu di VPS `mv wiki/learning wiki/roadmap` + hapus `raw/inbox/.processed/`.
+  - Impact: agent di VPS dipandu aturan versi sekarang, bukan aturan yang sudah dibuang 2 batch lalu.
+- [ ] **C12** Dua spek backup bentrok: FIN:664-696 (`igrow/sync.sh` + crontab host, `0 23 */3 * *`, script tidak eksis) vs build.md (hermes cron `0 3 * * 0`).
+  - Act: hapus blok "Implementasi: Cron Job Push ke GitHub" + `sync.sh` dari FIN, ganti 1 baris yang nunjuk job #2 di build.md.
+  - Impact: satu mekanisme backup; nggak ada script yang disuruh dipakai tapi nggak ada filenya.
+- [ ] **C13** testing/check.sh:15 masih cek `wiki/learning` (FAIL palsu) + seluruh file CRLF → `$'\r': command not found` begitu jalan di VPS.
+  - Act: `wiki/learning` → `wiki/roadmap` + simpan file pakai LF.
+  - Impact: harness verifikasi jalan lagi; sekarang mati sebelum ngecek apa pun.
 
-- [ ] Definisikan format isi skill-map.md (per-area, subskill, bobot?) — sekarang cuma "daftar skill per level", belum ada template baku.
+## Warning — inkonsistensi spec antar file
+
+- [x] **W1** ~~`_index.md` "Total pages: N" tidak ada aturan update — counter basi tanpa ada yang salah~~
+  - Act: AGENTS step 2 dibikin eksplisit "(termasuk "Total pages" + "Last updated")".
+  - Impact: counter master index ikut gerak tiap operasi tulis, bukan angka mati dari hari pertama.
+- [ ] **W2** SCHEMA.md:31 `sources:` — belum diputus satu konvensi (selalu ada boleh `[]`, atau dihapus kalau kosong).
+  - Act: pilih "selalu ada, boleh `[]`" di SCHEMA + tambah 1 kalimat kenapa.
+  - Impact: `igrow-api` bisa asumsi field-nya ada; lint nggak salah lapor note tanpa sumber.
+- [x] **W3** ~~test-me.md:20 `<kategori>` tidak terdefinisi — subfolder tests/ bisa dikarang tiap sesi~~
+  - Act: SCHEMA:59 dieja: subfolder `tests/` = tag taxonomy (`wiki/tests/linux/`).
+  - Impact: hasil test topik sama selalu mendarat di folder sama; skor nggak pecah per folder karangan.
+- [x] **W5** ~~raw/ punya 2 jalur (inbox→`.processed/` vs articles/ langsung) — agent bisa pilih beda tiap sesi~~
+  - Act: `.processed/` dibuang total (folder + AGENTS + SCHEMA + study.md); sisa 1 jalur `inbox/ → articles/`.
+  - Impact: "inbox kosong = semua sudah diproses" jadi indikator yang bisa dipercaya.
+- [x] **W6** ~~career-review butuh skor semua topik tapi script cuma bisa 1 topik per panggilan~~
+  - Act: `confidence_calc.py --all` dump JSON semua topik (demo-tested); career-review.md step 3 point ke flag itu.
+  - Impact: % Skill Inventory dihitung dari 1 command, bukan buka puluhan file test satu-satu.
+- [ ] **W7** Op `query` terdaftar di SCHEMA:21 tapi tidak pernah dipakai — `/recall` tidak disuruh append log.
+  - Act: pilih satu — buang `query` dari daftar ops, atau AGENTS `/recall` tambah "append log op: query".
+  - Impact: daftar ops = ops yang beneran ada; lint nggak perlu nebak op sah.
+- [ ] **W8** Format isi `skill-map.md` belum ada template baku (per-area? subskill? bobot?), padahal jadi pembagi persentase Skill Inventory UC6.
+  - Act: 1 blok contoh di SCHEMA: `## Target L<n>` + `- Area: topik, topik` (bentuk yang sudah dipakai FIN:453-466).
+  - Impact: % per area dihitung dari struktur yang pasti, bukan tebakan format tiap kuartal.
+- [ ] **W9** FIN:873-877 tree masih `knowledge/linux|networking|monitoring/` — bentrok aturan FLAT di AGENTS.md + capture-experience.md. Tree FIN diklaim (FIN:82, FIN:511) "satu-satunya acuan".
+  - Act: hapus 3 baris subfolder itu, sisakan `knowledge/` + `incidents/` + `<slug>.md`.
+  - Impact: acuan tunggal nggak lagi ngajarin pola yang dilarang file runtime.
+- [ ] **W10** FIN:864 tree raw/ masih `.processed/`.
+  - Act: ganti komentar jadi `inbox/ → proses → articles/`.
+  - Impact: nggak ada sisa folder mati di acuan tree.
+- [ ] **W11** FIN:895 `tests/incident-response/` bukan tag taxonomy (yang ada: `incident`). SCHEMA:59 mewajibkan subfolder = tag.
+  - Act: ganti jadi `incident/`.
+  - Impact: contoh nggak bikin folder di luar taxonomy → skor nggak pecah per folder.
+- [ ] **W12** `raw/assets/` tidak ada di tree FIN, padahal ada di disk + 3 dokumen aturan (AGENTS:38, build:614, capture-experience:12).
+  - Act: 1 baris `assets/` di tree raw/ FIN.
+  - Impact: screenshot punya rumah resmi di acuan, bukan cuma di aturan penempatan.
+- [ ] **W13** `lint.md` hilang dari tabel File referensi FIN:733-741 (6 baris) + tree project-skills FIN:907-915 (6 file) — disk & AGENTS punya 7.
+  - Act: tambah 1 baris tabel + 1 baris tree.
+  - Impact: jumlah project-skills sama di semua dokumen; cron lint punya dasar di blueprint.
+- [ ] **W14** `type: data` (FIN:449, 822-828) di luar enum SCHEMA:29; SCHEMA tidak mendefinisikan frontmatter data file sama sekali.
+  - Act: SCHEMA tambah `data` ke enum + 3 baris frontmatter data file (`title`, `type: data`, `updated`).
+  - Impact: `roadmap/` & `profile/` lolos cek frontmatter lint, nggak dilaporin tiap minggu.
+- [ ] **W15** Prefix `sources:` dua bentuk: SCHEMA:31 + FIN:775 = `raw/...`; capture-experience:12 + study.md:9 = `igrow/raw/...`.
+  - Act: pilih `raw/...` (relatif dari `igrow/`), samakan 2 file project-skills.
+  - Impact: `igrow-api` resolve path pakai 1 aturan; backlink nggak putus separuh.
+- [ ] **W16** Hitungan field wajib beda 3 versi: lint.md:11 tulis "8 field" lalu menyebut 7; check.sh:34 cuma cek 5 (tanpa `title` & `sources`); SCHEMA:23-34 = 7 + 1 opsional.
+  - Act: samain ke 7 di lint.md, tambah `title` + `sources` ke loop check.sh.
+  - Impact: lint & check.sh & SCHEMA ngukur hal yang sama — sekarang bisa "lolos" di satu alat, gagal di alat lain.
+- [ ] **W17** FIN:360 (UC5) masih format pra-nvk: "Topic, Summary, What I learned, Examples, References, Date".
+  - Act: ganti jadi template SCHEMA (Ringkasan / Detail / Contoh / Referensi / See Also) + `sources`.
+  - Impact: UC5 nggak ngajarin field yang sudah dibuang; note /study seragam sama sisanya.
+- [ ] **W18** FIN kontradiksi sendiri soal `confidence_calc.py`: :420-424 "counting, bukan script terpisah dulu"; :744-751 "Kenapa Tetap Butuh Script"; :1131 masih TODO.
+  - Act: :420-424 diubah jadi "angka dari `confidence_calc.py --all`"; hapus TODO :1131.
+  - Impact: satu jawaban soal siapa yang ngitung — nggak ada sesi yang bongkar ulang keputusan ini.
+- [ ] **W19** Contoh `test-me.md` yang tertanam di FIN:1035-1060 drift dari file asli (judul, wording, section "Aturan skor" hilang).
+  - Act: replace blok itu dengan isi file asli verbatim, sama perlakuannya seperti blok AGENTS.md.
+  - Impact: contoh di blueprint = file yang beneran dibaca agent; nggak ada 2 versi aturan skor.
+- [ ] **W20** `igrow/_index.md` runtime masih section `## Learning` (kelewat saat rename → roadmap) + tidak punya `## Output`.
+  - Act: `## Learning` → `## Roadmap`, tambah `## Output`.
+  - Impact: laporan career review punya tempat di master index; nggak jadi orphan permanen.
+- [ ] **W21** `raw/inbox/` satu-satunya folder tanpa `.gitkeep` (9 folder lain punya).
+  - Act: `touch hermes-home/igrow/raw/inbox/.gitkeep`.
+  - Impact: pintu masuk pipeline raw ikut ke-restore dari backup git, nggak hilang senyap.
+- [ ] **W22** `wiki/tests/_index.json` + `scripts/__pycache__/*.pyc` ke-track git, tidak ada `.gitignore`.
+  - Act: `.gitignore` isi `__pycache__/`, `_index.json`, `*.zip`; `git rm --cached` 2 file itu.
+  - Impact: cache turunan nggak pernah nimpa state VPS (ini akar C9); repo bersih dari artefak build.
+- [ ] **W23** `confidence_calc.py` regex `^topic:\s*(\S+)` motong topik multi-kata — terbukti: `topic: load average` → key `load`.
+  - Act: ganti jadi `^topic:\s*(.+?)\s*$` + 1 assert topik 2 kata di `_demo`.
+  - Impact: skor topik multi-kata nggak pecah diam-diam (`load average` vs `load`).
+- [ ] **W24** test-flow 2.1 Expected masih "sumber mentah → `raw/articles/`" — study.md:6 sekarang dump ke `raw/inbox/` dulu.
+  - Act: Expected 2.1 jadi "inbox → diproses → articles/".
+  - Impact: test nggak nge-FAIL-in behavior yang justru benar.
+- [ ] **W25** `roadmap.md` + `completed.md` (FIN:253-255, 837-838, 887-888) tidak jadi tanggung jawab siapa pun; mentor.md cuma nulis `weak-topics.md`, test-flow 4.7 harap `roadmap.md`.
+  - Act: mentor.md Output tambah "tulis/update `roadmap.md`"; `completed.md` dibuang dari FIN kalau nggak ada yang nulis.
+  - Impact: file yang dijanjikan blueprint beneran terisi; test 4.7 punya dasar.
+- [ ] **W26** TODO ganda: FIN:1127-1132 (4 item, sebagian sudah selesai, tak pernah dicentang) vs dev-todo.md ini.
+  - Act: hapus section TODO di FIN, sisakan 1 baris "TODO dilacak di `dev-todo.md`".
+  - Impact: satu tempat status; nggak ada item "belum" yang sebenarnya sudah beres.
+- [ ] **W27** portfolio.html masih domain lama: `<title>` :6, `dash.whatsinsidegit.my.id` :258 & :331, email :329. File ini yang di-serve sebagai `index.html` di root domain njzlabs.com.
+  - Act: replace 4 tempat itu ke njzlabs.com.
+  - Impact: halaman publik nggak nunjuk domain yang sudah nggak dipegang.
+- [ ] **W28** build.md:675 fallback backup "ganti host remote jadi igrow.njzlabs.com" mustahil — domain sendiri bukan mirror GitHub.
+  - Act: hapus kalimat fallback itu; ganti "kalau ke-block, cek DNS/proxy container".
+  - Impact: nggak ada instruksi yang dijamin gagal saat panik jam 3 pagi.
+- [ ] **W29** build.md:672 `git push -u origin main` tapi `git init` menghasilkan `master`.
+  - Act: `git branch -M main` sebelum push, atau push `master`.
+  - Impact: prasyarat backup nggak berhenti di "src refspec main does not match any".
+- [ ] **W30** Job backup satu-satunya yang tidak point-to-file (shell inline panjang di prompt LLM); aturannya cuma hidup di build.md yang tidak ikut ke VPS.
+  - Act: bikin `project-skills/backup.md` (3 langkah + aturan silent), prompt cron jadi "Baca … lalu kerjakan."
+  - Impact: 4 job pola sama; aturan backup ikut ke VPS, bisa diperbaiki tanpa bikin ulang job.
+- [ ] **W31** build.md:922 rujuk bagian "Shortcut CLI" — section itu tidak ada di file.
+  - Act: hapus rujukannya (atau tulis section-nya kalau memang mau).
+  - Impact: nggak ada instruksi nyuruh cari bagian yang nggak ada.
+- [ ] **W32** build.md checklist Phase 2 masih 8 item `[ ]` termasuk hal yang sudah jalan (folder igrow/, AGENTS.md, project-skills, tes chat).
+  - Act: centang yang sudah terbukti dari hasil testing, sisakan yang beneran belum (4 cron job).
+  - Impact: checklist kepakai buat tau sisa kerjaan, bukan diabaikan karena isinya salah.
+- [ ] **W33** setupvps.sh:30 set timezone `Asia/Jakarta`, tapi Glance & seluruh konteks project pakai `Asia/Kuala_Lumpur`.
+  - Act: ganti ke `Asia/Kuala_Lumpur`.
+  - Impact: cron `0 7 * * *` bunyi jam 7 tempatmu, bukan jam 6.
+- [ ] **W34** setupvps.sh:1-5 komentar cara pakai ditaruh SEBELUM `#!/bin/bash` (baris 7) → shebang tidak berlaku.
+  - Act: pindah shebang ke baris 1, komentar di bawahnya.
+  - Impact: `./setupvps.sh` jalan, nggak cuma `bash setupvps.sh`.
+- [ ] **W35** setupvps.sh:21 `hostnamectl set-hostname whatsinsidegit` — nama lama.
+  - Act: putuskan ikut folder (biarkan + 1 komentar "sengaja, ikut nama folder") atau ganti `njzlabs`.
+  - Impact: nggak ada yang ragu "ini ketinggalan atau disengaja" saat rebuild VPS.
+- [ ] **W36** `raw/notes/` ada di disk + tree FIN tapi tidak disebut satu pun file runtime.
+  - Act: kasih 1 baris pemilik di SCHEMA (mis. "catatan mentah dari chat panjang"), atau hapus folder + baris tree-nya.
+  - Impact: nggak ada folder tanpa aturan yang kepakai sembarangan lalu jadi tempat sampah.
 
 ## Improvement
-- [ ] AGENTS.md File Referensi — rapikan kata kunci pemicu per baris.
-- [ ] `_index.md` raw/wiki/output boilerplate identik — cukup tabel di master, subfolder opsional sampai >20 entri.
-- [ ] log.md entry pertama pakai op `init` — tidak ada di daftar ops SCHEMA.
-- [ ] Hapus `.gitkeep` begitu folder terisi file asli.
-- [ ] Definisi "Career Aktif" dobel (AGENTS.md:44 + capture-experience.md:6) — pindah ke SCHEMA, AGENTS link.
+
+- [ ] **I1** AGENTS.md File Referensi — kata kunci pemicu per baris masih campur.
+  - Act: rapikan jadi 1 pemicu jelas per baris.
+  - Impact: agent lebih jarang salah pilih file referensi.
+- [ ] **I2** Boilerplate `_index.md` raw/wiki/output identik 3x.
+  - Act: sisakan tabel di master, subfolder index opsional sampai >20 entri.
+  - Impact: 3 file lebih sedikit yang harus di-update tiap tulis.
+- [ ] **I3** log.md:5 pakai `op: init` — tidak ada di daftar ops SCHEMA:21.
+  - Act: tambah `init` ke daftar ops, atau ganti entry-nya jadi `ingest`.
+  - Impact: `grep` per-op nggak ada entry yang lolos dari klasifikasi.
+- [ ] **I4** `.gitkeep` masih ada di folder yang sudah terisi file asli (di VPS).
+  - Act: hapus saat folder itu punya file nyata.
+  - Impact: `ls` bersih; nggak ada penanda yang sudah nggak ada gunanya.
+- [ ] **I5** Definisi "Career Aktif" dobel (AGENTS.md:45 + capture-experience.md:6).
+  - Act: pindah ke SCHEMA, dua file itu tinggal 1 baris rujukan.
+  - Impact: kalau aturannya berubah, cukup 1 tempat — nggak bisa drift.
+- [ ] **I6** FIN:753 rujuk "bagian Confidence Level di atas" — section-nya bernama "Confidence Score".
+  - Act: samakan nama section-nya.
+  - Impact: rujukan internal nggak menggantung.
+- [ ] **I7** test-flow.md judul "FASE 1 — UC1 (10 case)" isinya 17 case (1.1-1.16 + 1.7b). FASE 4 "8 case" sudah benar.
+  - Act: ganti angkanya.
+  - Impact: tau porsi kerjaan testing sebelum mulai.
+- [ ] **I8** test-flow.md:158-160 fence ``` di dalam blok ``` → rendering rusak.
+  - Act: blok luarnya pakai 4-backtick.
+  - Impact: contoh note kebaca utuh, nggak kepotong separuh.
+- [ ] **I9** Semua file hermes-home/ CRLF termasuk `confidence_calc.py` → `./confidence_calc.py` gagal `bad interpreter: ^M`.
+  - Act: simpan LF (minimal file `.py` + `.sh`).
+  - Impact: script bisa dieksekusi langsung, nggak harus lewat `python file.py`.
+- [ ] **I10** test-me.md manggil `python` — belum diverifikasi binary `python` (bukan cuma `python3`) ada di image container.
+  - Act: `docker exec igrow-hermes which python python3`, sesuaikan command-nya.
+  - Impact: step 3 UC2 nggak gagal di `command not found` saat pertama dipakai.
+- [ ] **I11** `confidence_calc.py` `_demo` tidak punya jalur pemanggil (`--demo` tidak ada di argparse); docstring Usage belum sebut `--all`.
+  - Act: tambah `--demo` ke argparse + 1 baris Usage.
+  - Impact: self-check bisa dijalankan tanpa trik `python -c`.
+- [ ] **I12** build.md:662 tabel cron tulis backup "(via https://igrow.njzlabs.com)" — itu URL dashboard, bukan remote git.
+  - Act: hapus keterangan itu dari kolom job backup.
+  - Impact: nggak ada yang nyangka dashboard bagian dari jalur backup.
+- [ ] **I13** igrow-dashboard.html dummy tulis "2 career archived" / "142 knowledge entries" — angka mustahil dari struktur sekarang (1 career aktif). Banner "Data dummy" sudah ada.
+  - Act: turunkan angkanya ke skala nyata (mis. 34 entries, 1 career).
+  - Impact: preview nggak bikin salah paham progres saat dibuka lagi nanti.
+- [ ] **I14** Prinsip Besar beda di 2 tempat FIN: :5 "bangun iGROW" vs :1150 "bangun Personal Infra Engineer OS".
+  - Act: pilih satu kalimat, pakai di dua tempat.
+  - Impact: satu tagline; nggak ada sesi yang ngira ini 2 project beda.
+- [ ] **I15** build.md Step 7 minta A record untuk `portainer, npm, dash, igrow` — root domain (service `home`) tidak disebut, padahal ada di Domain Map & checklist.
+  - Act: tambahkan root domain di daftar A record.
+  - Impact: portofolio nggak 404 gara-gara DNS-nya kelewat.
+- [ ] **I16** Tidak ada `TZ` di service compose mana pun; container jalan UTC. (Belum diverifikasi apakah host VPS sudah di-set.)
+  - Act: cek `docker exec igrow-hermes date`; kalau UTC, tambah `TZ=Asia/Kuala_Lumpur` di service `igrow-hermes`.
+  - Impact: cron `0 7`, `0 3`, `0 8`, `0 9` bunyi di jam yang dimaksud.
+- [ ] **I17** `wiki/profile/` punya 5 file di spec tapi career-review.md cuma update 2 (`skills.md`, `career-summary.md`). `me.md` & `achievements.md` tanpa penulis.
+  - Act: career-review.md step 5 tambah 2 file itu, atau buang dari spec.
+  - Impact: `profile/` nggak separuh kosong permanen setelah beberapa kuartal.
+- [ ] **I18** `AGENTSnvk.md` (1.058 baris, referensi eksternal nvk) + `tobeAgentsigrow.md` (semua TODO `[x]`) masih di root dan masih menyebut `.processed/` + `learning/`.
+  - Act: 1 baris header "ARSIP — bukan spec aktif" di dua file itu.
+  - Impact: sesi baru nggak salah ambil spec mati sebagai acuan.
+- [ ] **I19** `.audit.py` / `.cmp.py` / `.probe.py` / `.probe2.py` — script bantu analisa, untracked di root.
+  - Act: hapus.
+  - Impact: root cuma isi file project.
+
+
