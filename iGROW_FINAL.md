@@ -357,7 +357,7 @@ wiki/self-development/
 
 ### Prinsip Penting
 
-Source tetap dicatat. Knowledge hasil belajar sebaiknya menyimpan: **Topic, Summary, What I learned, Examples, References, Date** — supaya beberapa tahun kemudian tahu informasi tersebut berasal dari mana.
+Source tetap dicatat. Note hasil belajar ikut format baku `igrow/SCHEMA.md`: frontmatter (`title`, `created`, `updated`, `type: learning`, `tags`, `sources`, `confidence`) + body **Ringkasan / Detail / Contoh / Referensi / See Also** — supaya beberapa tahun kemudian tahu informasi tersebut berasal dari mana.
 
 ---
 
@@ -417,11 +417,11 @@ Recommended Next:
 
 ### 📊 Skill Inventory (Bagian dari Career Review Quarterly)
 
-Selain narasi review di atas, tiap quarterly review juga menghasilkan **skill inventory** dalam bentuk bar — tapi barnya **bukan skala 0-100% asal-asalan**, dan **bukan hasil "kira-kira" LLM**, biar konsisten tiap dihitung ulang untuk data yang sama. Formulanya sengaja dibuat simpel (counting, bukan script terpisah dulu — cukup jalan dulu, presisi, gak over-engineered):
+Selain narasi review di atas, tiap quarterly review juga menghasilkan **skill inventory** dalam bentuk bar — tapi barnya **bukan skala 0-100% asal-asalan**, dan **bukan hasil "kira-kira" LLM**, biar konsisten tiap dihitung ulang untuk data yang sama. Angka `mastered` per topik diambil dari `python igrow/project-skills/scripts/confidence_calc.py --all` (dump JSON semua topik), lalu dibagi jumlah target:
 
 > **% per skill area = (jumlah topik dengan skor ≥ 5 di area itu) ÷ (jumlah total topik target di `wiki/roadmap/skill-map.md` untuk area itu, di level 1 di atas level kamu sekarang)**
 >
-> Kalau kamu sekarang **L1**, maka pembandingnya adalah target skill **L2** (bukan target L1). Kalau kamu sudah **L2**, pembandingnya jadi target **L3**. Ini tinggal hitung (jumlah file/topik "mastered" dibagi jumlah baris target), gak butuh reasoning subjektif — kalau nanti dirasa kurang, baru upgrade ke script Python seperti `confidence_calc.py`.
+> Kalau kamu sekarang **L1**, maka pembandingnya adalah target skill **L2** (bukan target L1). Kalau kamu sudah **L2**, pembandingnya jadi target **L3**. Pembilang dari output script, pembagi dari jumlah baris target — dua-duanya angka, bukan reasoning subjektif.
 
 Contoh — posisi saat ini **L1**, jadi semua bar diukur terhadap target **L2**:
 
@@ -447,7 +447,7 @@ Ini bagian dari mekanisme yang sama seperti [🔍 Mekanisme: Bagaimana Hermes Me
 ---
 title: Skill Map
 type: data
-date: 2026-08-22
+updated: 2026-08-22
 ---
 
 # Skill Map — Infra Engineer
@@ -738,6 +738,7 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 | `daily-briefing.md` | 4 | Dipicu cron 07:00, format ringkasan |
 | `study.md` | 5 | Dokumentasi belajar mandiri (perintah `/study`) → note terstruktur |
 | `career-review.md` | 6 | Review quarterly + hitung skill inventory |
+| `lint.md` | — | Dipicu cron Minggu 08:00, cek kesehatan struktur wiki |
 
 `wiki/roadmap/skill-map.md` tetap wajib diisi manual di awal (bukan referensi prosedur, tapi **data**) — semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
 
@@ -770,9 +771,9 @@ Tiap file note pakai **frontmatter standar** (metadata yang di-parse `igrow-api`
 title: "Judul singkat & deskriptif"
 created: 2026-08-22
 updated: 2026-08-22
-type: learning              # knowledge | incident | lesson | test | learning | profile | query
+type: learning              # knowledge | incident | lesson | test | learning | profile | query | data
 tags: [linux, systemd]      # dari taxonomy igrow/SCHEMA.md
-sources: [raw/articles/2026-08-22-kodekloud-systemd.md]  # kosongkan kalau murni cerita
+sources: [igrow/raw/articles/2026-08-22-kodekloud-systemd.md]  # selalu ada; `[]` kalau murni cerita
 confidence: medium          # high | medium | low — dukungan SUMBER, beda dari skor tests/
 ---
 
@@ -790,7 +791,7 @@ Poin berbobot (bullet oke) — padat, bukan narasi kosong.
 Minimal 1 contoh nyata (command / config / kasus).
 
 ## Referensi
-Sumber (URL / raw/... / sesi) — buat napak tilas.
+Sumber (URL / igrow/raw/... / sesi) — buat napak tilas.
 
 ## See Also
 Min 2 dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
@@ -819,13 +820,13 @@ last_increment_date: 2026-08-22
 <!-- narasi singkat: jawaban + feedback -->
 ```
 
-3. **Data file** (`wiki/roadmap/`, `wiki/profile/`) → frontmatter minimal (`title`, `type: data`, `date`) + body list/key:value, bukan narasi:
+3. **Data file** (`wiki/roadmap/`, `wiki/profile/`) → frontmatter minimal (`title`, `type: data`, `updated`) + body list/key:value, bukan narasi:
 
 ```markdown
 ---
 title: Roadmap
 type: data
-date: 2026-08-22
+updated: 2026-08-22
 ---
 
 # Roadmap
@@ -861,8 +862,9 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │
     ├── raw/                          # sumber IMMUTABLE (asli, tidak pernah diedit)
     │   ├── _index.md                 # katalog sumber
-    │   ├── inbox/                    # drop zone → diproses → .processed/
+    │   ├── inbox/                    # drop zone → diproses → articles/ (inbox kosong = sudah diproses)
     │   ├── articles/                 # artikel/dok belajar
+    │   ├── assets/                   # screenshot/gambar (sudah redact): YYYYMMDD-deskripsi.png
     │   └── notes/                    # catatan mentah
     │
     ├── wiki/                         # SEMUA konten compiled, agent-owned
@@ -870,11 +872,8 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │   ├── careers/                  # 🗂️ arsip PER PEKERJAAN — saat ini cuma 1 main job aktif
     │   │   └── career-1-pt-abc-infra-l1/
     │   │       ├── about.md          # company, role, periode, jobdesc — TANPA tanggal selesai = aktif
-    │   │       ├── knowledge/
-    │   │       │   ├── linux/
-    │   │       │   ├── networking/
-    │   │       │   ├── monitoring/
-    │   │       │   └── incidents/    # incident hanya ada di sini
+    │   │       ├── knowledge/         # knowledge kerjaan FLAT: <slug>.md — topik lewat tags, JANGAN subfolder per topik
+    │   │       │   └── incidents/     # incident hanya ada di sini
     │   │       ├── lessons-learned/  # lesson hanya ada di sini
     │   │       └── skills.md         # skill yang terpakai di posisi ini
     │   │
@@ -890,9 +889,9 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │   │   └── skill-map.md          # target skill per level — dasar gap analysis & skill inventory
     │   │
     │   ├── tests/                    # hasil simulasi/uji troubleshooting (Use Case 2)
-    │   │   ├── linux/
+    │   │   ├── linux/                # subfolder = tag taxonomy SCHEMA
     │   │   ├── networking/
-    │   │   └── incident-response/
+    │   │   └── incident/
     │   │
     │   └── profile/                  # ringkasan & tujuan karier — GABUNGAN semua career
     │       ├── me.md                 # "tentang saya" — gabungan about.md SEMUA career
@@ -911,6 +910,7 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
         ├── daily-briefing.md
         ├── study.md
         ├── career-review.md
+        ├── lint.md
         └── scripts/
             └── confidence_calc.py
 ```
@@ -1126,9 +1126,8 @@ Hermes balas ke user via Telegram
 
 ## 🧩 TODO (setelah MVP jalan)
 
-- [ ] Command tracing/koreksi — cari & perbaiki note salah di KB yang udah besar (nama command: `/cek`/`/audit`, tentukan nanti)
+- [ ] Command tracing/koreksi — cari & benerin note salah di KB yang udah besar (nama command: `/cek`/`/audit`, tentukan nanti)
 - [ ] `/explore` — kalau ternyata `/recall` perlu dibedakan dari riset sumber baru
-- [ ] `confidence_calc.py` → hitung otomatis (kalau counting manual kurang)
 - [ ] Export PDF career review (UC6)
 
 ## 🎯 Hasil Akhir Proyek

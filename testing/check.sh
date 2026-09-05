@@ -31,7 +31,7 @@ n_inc=$(ls wiki/careers/*/knowledge/incidents/*.md 2>/dev/null | xargs grep -l "
 echo "== 4. Frontmatter =="
 f=$(ls wiki/careers/*/knowledge/incidents/*.md 2>/dev/null | head -1)
 if [ -n "$f" ]; then
-  for field in created updated type tags confidence; do
+  for field in title created updated type tags sources confidence; do
     head -15 "$f" | grep -q "^$field:" && ok "incident fm $field" || bad "incident $f tanpa $field"
   done
 else bad "tidak ada file incident"; fi

@@ -8,8 +8,9 @@ ulang isi konten.
    terdekat. Abaikan file berawalan `_` (`_index.md`, `_index.json`).
 2. Broken wikilink: `[[slug]]` tanpa file target — KECUALI slug tercatat di
    `_index.md` dengan tanda `(placeholder)` (unresolved sengaja, lewati).
-3. Frontmatter note: 8 field wajib SCHEMA (title, created, updated, type,
-   tags, sources, confidence) — `tests/` pakai field skor sendiri, lewati.
+3. Frontmatter note: 7 field wajib SCHEMA (title, created, updated, type,
+   tags, sources, confidence) — `contradictions` opsional; `tests/` pakai field
+   skor sendiri, lewati.
 4. Tag di luar taxonomy SCHEMA.
 5. `_index.md` vs filesystem: entri index yang file-nya sudah tidak ada.
 

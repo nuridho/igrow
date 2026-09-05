@@ -251,7 +251,7 @@ systemctl status nginx && journalctl -u nginx -b -p err
 
 **Expected:**
 - Sumber mentah → `raw/articles/YYYY-MM-DD-kodekloud-systemd.md` (immutable)
-- Note → `wiki/self-development/Bootcamp/kodekloud-systemd/`, `type: learning`, `sources: [raw/articles/...]`
+- Note → `wiki/self-development/Bootcamp/kodekloud-systemd/`, `type: learning`, `sources: [igrow/raw/articles/...]`
 - Body ikut template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also (min 2 dual-link)
 - _index + log (op: ingest)
 **Test:** `ls igrow/raw/articles/ && head -8 igrow/wiki/self-development/Bootcamp/kodekloud-systemd/*.md`
@@ -260,7 +260,7 @@ systemctl status nginx && journalctl -u nginx -b -p err
 **Prompt:**
 > "/study bandingkan systemd service dengan Docker container kapan pakai yang mana."
 
-**Expected:** note di `wiki/self-development/Dokumentasi/<nama>/`, `sources:` boleh kosong (murni rangkuman). Body tetap ikut template.
+**Expected:** note di `wiki/self-development/Dokumentasi/<nama>/`, `sources: []` (field tetap ada, isi kosong — murni rangkuman). Body tetap ikut template.
 ❌ Gagal kalau: Hermes ngotot minta URL padahal kamu tidak punya.
 **Test:** `ls igrow/wiki/self-development/Dokumentasi/`
 

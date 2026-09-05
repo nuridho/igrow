@@ -54,9 +54,9 @@
 - [x] **W1** ~~`_index.md` "Total pages: N" tidak ada aturan update — counter basi tanpa ada yang salah~~
   - Act: AGENTS step 2 dibikin eksplisit "(termasuk "Total pages" + "Last updated")".
   - Impact: counter master index ikut gerak tiap operasi tulis, bukan angka mati dari hari pertama.
-- [ ] **W2** SCHEMA.md:31 `sources:` — belum diputus satu konvensi (selalu ada boleh `[]`, atau dihapus kalau kosong).
-  - Act: pilih "selalu ada, boleh `[]`" di SCHEMA + tambah 1 kalimat kenapa.
-  - Impact: `igrow-api` bisa asumsi field-nya ada; lint nggak salah lapor note tanpa sumber.
+- [x] **W2** ~~SCHEMA.md:31 `sources:` belum diputus satu konvensi~~
+  - Act: SCHEMA jadi "selalu ada; `[]` kalau murni cerita user"; test-flow 2.2 diperjelas `sources: []` (field tetap ada).
+  - Impact: `igrow-api` bisa asumsi field-nya selalu ada; lint nggak salah lapor note tanpa sumber.
 - [x] **W3** ~~test-me.md:20 `<kategori>` tidak terdefinisi — subfolder tests/ bisa dikarang tiap sesi~~
   - Act: SCHEMA:59 dieja: subfolder `tests/` = tag taxonomy (`wiki/tests/linux/`).
   - Impact: hasil test topik sama selalu mendarat di folder sama; skor nggak pecah per folder karangan.
@@ -72,35 +72,35 @@
 - [ ] **W8** Format isi `skill-map.md` belum ada template baku (per-area? subskill? bobot?), padahal jadi pembagi persentase Skill Inventory UC6.
   - Act: 1 blok contoh di SCHEMA: `## Target L<n>` + `- Area: topik, topik` (bentuk yang sudah dipakai FIN:453-466).
   - Impact: % per area dihitung dari struktur yang pasti, bukan tebakan format tiap kuartal.
-- [ ] **W9** FIN:873-877 tree masih `knowledge/linux|networking|monitoring/` — bentrok aturan FLAT di AGENTS.md + capture-experience.md. Tree FIN diklaim (FIN:82, FIN:511) "satu-satunya acuan".
-  - Act: hapus 3 baris subfolder itu, sisakan `knowledge/` + `incidents/` + `<slug>.md`.
-  - Impact: acuan tunggal nggak lagi ngajarin pola yang dilarang file runtime.
-- [ ] **W10** FIN:864 tree raw/ masih `.processed/`.
-  - Act: ganti komentar jadi `inbox/ → proses → articles/`.
-  - Impact: nggak ada sisa folder mati di acuan tree.
-- [ ] **W11** FIN:895 `tests/incident-response/` bukan tag taxonomy (yang ada: `incident`). SCHEMA:59 mewajibkan subfolder = tag.
-  - Act: ganti jadi `incident/`.
-  - Impact: contoh nggak bikin folder di luar taxonomy → skor nggak pecah per folder.
-- [ ] **W12** `raw/assets/` tidak ada di tree FIN, padahal ada di disk + 3 dokumen aturan (AGENTS:38, build:614, capture-experience:12).
-  - Act: 1 baris `assets/` di tree raw/ FIN.
-  - Impact: screenshot punya rumah resmi di acuan, bukan cuma di aturan penempatan.
-- [ ] **W13** `lint.md` hilang dari tabel File referensi FIN:733-741 (6 baris) + tree project-skills FIN:907-915 (6 file) — disk & AGENTS punya 7.
-  - Act: tambah 1 baris tabel + 1 baris tree.
-  - Impact: jumlah project-skills sama di semua dokumen; cron lint punya dasar di blueprint.
-- [ ] **W14** `type: data` (FIN:449, 822-828) di luar enum SCHEMA:29; SCHEMA tidak mendefinisikan frontmatter data file sama sekali.
-  - Act: SCHEMA tambah `data` ke enum + 3 baris frontmatter data file (`title`, `type: data`, `updated`).
+- [x] **W9** ~~FIN:873-877 tree masih `knowledge/linux|networking|monitoring/` — bentrok aturan FLAT di hermes-home~~
+  - Act: tree FIN jadi `knowledge/` + komentar "FLAT: `<slug>.md` — topik lewat tags, JANGAN subfolder per topik" + `incidents/`; hermes-home yang menang.
+  - Impact: acuan tree = perilaku capture-experience; agent nggak dapat 2 instruksi beda.
+- [x] **W10** ~~FIN:864 tree raw/ masih `.processed/`~~
+  - Act: komentar jadi `inbox/ → diproses → articles/ (inbox kosong = sudah diproses)`.
+  - Impact: nol sisa `.processed` di seluruh project (FIN + runtime).
+- [x] **W11** ~~FIN:895 `tests/incident-response/` bukan tag taxonomy~~
+  - Act: → `incident/` + komentar "subfolder = tag taxonomy SCHEMA".
+  - Impact: contoh nggak nyontohin folder di luar taxonomy → skor nggak pecah per folder.
+- [x] **W12** ~~`raw/assets/` tidak ada di tree FIN padahal ada di disk + 3 dokumen aturan~~
+  - Act: 1 baris `assets/` + format `YYYYMMDD-deskripsi.png` di tree raw/.
+  - Impact: screenshot punya rumah di acuan tree, bukan cuma di tabel penempatan.
+- [x] **W13** ~~`lint.md` hilang dari tabel File referensi + tree project-skills FIN~~
+  - Act: 1 baris tabel (Use Case `—`, cron Minggu 08:00) + 1 baris tree.
+  - Impact: 7 project-skills konsisten di FIN, AGENTS, dan disk.
+- [x] **W14** ~~`type: data` di luar enum SCHEMA; frontmatter data file tak terdefinisi~~
+  - Act: `data` masuk enum SCHEMA + blok frontmatter minimal (`title`, `type: data`, `updated`); 2 contoh FIN `date:` → `updated:`.
   - Impact: `roadmap/` & `profile/` lolos cek frontmatter lint, nggak dilaporin tiap minggu.
-- [ ] **W15** Prefix `sources:` dua bentuk: SCHEMA:31 + FIN:775 = `raw/...`; capture-experience:12 + study.md:9 = `igrow/raw/...`.
-  - Act: pilih `raw/...` (relatif dari `igrow/`), samakan 2 file project-skills.
+- [x] **W15** ~~Prefix `sources:` dua bentuk: `raw/...` vs `igrow/raw/...`~~
+  - Act: dipilih `igrow/raw/...` (lengkap dari root) — SCHEMA layer + frontmatter + Referensi, FIN contoh + Referensi, test-flow 2.1.
   - Impact: `igrow-api` resolve path pakai 1 aturan; backlink nggak putus separuh.
-- [ ] **W16** Hitungan field wajib beda 3 versi: lint.md:11 tulis "8 field" lalu menyebut 7; check.sh:34 cuma cek 5 (tanpa `title` & `sources`); SCHEMA:23-34 = 7 + 1 opsional.
-  - Act: samain ke 7 di lint.md, tambah `title` + `sources` ke loop check.sh.
-  - Impact: lint & check.sh & SCHEMA ngukur hal yang sama — sekarang bisa "lolos" di satu alat, gagal di alat lain.
-- [ ] **W17** FIN:360 (UC5) masih format pra-nvk: "Topic, Summary, What I learned, Examples, References, Date".
-  - Act: ganti jadi template SCHEMA (Ringkasan / Detail / Contoh / Referensi / See Also) + `sources`.
+- [x] **W16** ~~Hitungan field wajib beda 3 versi (lint.md "8", isinya 7, check.sh cek 5)~~
+  - Act: lint.md → "7 field wajib" + `contradictions` disebut opsional; check.sh loop +`title` +`sources`.
+  - Impact: SCHEMA, lint, dan check.sh ngukur hal yang sama — nggak bisa lolos di satu alat lalu gagal di alat lain.
+- [x] **W17** ~~FIN:360 (UC5) masih format pra-nvk: "Topic, Summary, What I learned, Examples, References, Date"~~
+  - Act: diganti frontmatter SCHEMA (7 field) + body Ringkasan/Detail/Contoh/Referensi/See Also.
   - Impact: UC5 nggak ngajarin field yang sudah dibuang; note /study seragam sama sisanya.
-- [ ] **W18** FIN kontradiksi sendiri soal `confidence_calc.py`: :420-424 "counting, bukan script terpisah dulu"; :744-751 "Kenapa Tetap Butuh Script"; :1131 masih TODO.
-  - Act: :420-424 diubah jadi "angka dari `confidence_calc.py --all`"; hapus TODO :1131.
+- [x] **W18** ~~FIN kontradiksi sendiri soal `confidence_calc.py` (3 tempat beda)~~
+  - Act: :420-424 jadi "angka `mastered` dari `confidence_calc.py --all`"; TODO :1131 dihapus.
   - Impact: satu jawaban soal siapa yang ngitung — nggak ada sesi yang bongkar ulang keputusan ini.
 - [ ] **W19** Contoh `test-me.md` yang tertanam di FIN:1035-1060 drift dari file asli (judul, wording, section "Aturan skor" hilang).
   - Act: replace blok itu dengan isi file asli verbatim, sama perlakuannya seperti blok AGENTS.md.

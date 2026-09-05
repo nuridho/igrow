@@ -10,7 +10,7 @@ updated: 2026-08-25
 Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 
 ## Layer
-- `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `raw/inbox/`, agent proses → pindah `raw/articles/` (inbox kosong = semua sudah diproses).
+- `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `igrow/raw/inbox/`, agent proses → pindah `igrow/raw/articles/` (inbox kosong = semua sudah diproses). Path di frontmatter & body SELALU lengkap dari root: `igrow/raw/...`.
 - `wiki/` — semua konten compiled, agent-owned.
 - `output/` — laporan turunan (career review, dst).
 - Pengecualian human-owned (agent update cuma kalau diminta): `wiki/roadmap/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md`.
@@ -26,9 +26,9 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 title: Judul
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-type: knowledge | incident | lesson | test | learning | profile | query
+type: knowledge | incident | lesson | test | learning | profile | query | data
 tags: [dari taxonomy]
-sources: [raw/articles/xxxx.md]   # kosongkan kalau murni cerita user
+sources: [igrow/raw/articles/xxxx.md]   # selalu ada; `[]` kalau murni cerita user
 confidence: high | medium | low   # dukungan SUMBER, beda dari skor tests/
 contradictions: [slug-lain]       # opsional
 ---
@@ -49,7 +49,7 @@ Poin berbobot (bullet oke) — padat, bukan narasi kosong.
 Minimal 1 contoh nyata (command / config / kasus).
 
 ## Referensi
-Sumber (URL / raw/... / sesi) — buat napak tilas.
+Sumber (URL / igrow/raw/... / sesi) — buat napak tilas.
 
 ## See Also
 Min 2 dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
@@ -68,7 +68,14 @@ mastered: false                # dari confidence_calc.py
 last_increment_date: YYYY-MM-DD  # dari confidence_calc.py — WAJIB, penanda max +1/hari
 ---
 ```
-Data file (`roadmap/`, `profile/`) → body list/key:value, bukan narasi.
+Data file (`roadmap/`, `profile/`) → body list/key:value, bukan narasi. Frontmatter minimal:
+```yaml
+---
+title: Skill Map
+type: data
+updated: YYYY-MM-DD
+---
+```
 
 ## Tag taxonomy (tambah baru di sini DULU)
 linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve, interview-prep
