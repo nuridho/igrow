@@ -73,5 +73,25 @@ chk('What I learned' not in FIN, 'W17: FIN masih pakai field pra-nvk (What I lea
 chk('bukan script terpisah' not in FIN, 'W18: FIN masih bilang counting-bukan-script')
 chk('confidence_calc.py` → hitung otomatis' not in FIN, 'W18: TODO confidence_calc masih ada')
 
-print('\n'.join(fails) if fails else 'OK — W9-W18 konsisten')
+# W19 blok verbatim: AGENTS.md + test-me.md harus byte-identik di FIN & build.md
+BUILD = rd('build.md')
+for name, src, pat in [
+    ('AGENTS.md', AGENTS, r'```markdown\n(# iGROW — Aturan Inti.*?screenshot yang belum di-redact\.)\n```'),
+    ('test-me.md', rd('hermes-home/igrow/project-skills/test-me.md'),
+     r'```markdown\n(# Referensi: Uji Troubleshooting.*?Script yg hitung — bukan kamu\.)\n```'),
+]:
+    want = src.replace('\r\n', '\n').strip(' \n')
+    for tgt, txt in [('FIN', FIN), ('build.md', BUILD)]:
+        m = re.search(pat, txt.replace('\r\n', '\n'), re.S)
+        if name == 'test-me.md' and tgt == 'build.md':
+            continue  # ponytail: build.md sengaja tidak embed test-me
+        chk(m and m.group(1).strip(' \n') == want, 'W19: blok %s di %s tidak identik' % (name, tgt))
+
+# W20 master _index.md section = folder wiki/ + output/
+IDX = rd('hermes-home/igrow/_index.md')
+secs = set(s.lower(**{}) for s in re.findall(r'^## (.+)$', IDX, re.M))
+chk(secs == {'careers', 'self-development', 'roadmap', 'tests', 'profile', 'output'},
+    'W20: section master _index.md: %s' % sorted(secs))
+
+print('\n'.join(fails) if fails else 'OK — W9-W20 konsisten')
 sys.exit(len(fails))
