@@ -1,7 +1,7 @@
 # Referensi: Daily Briefing (UC4)
 
 Dipicu cron 07:00. Topik: linux, windows-server, kubernetes, docker, vmware,
-cloud, networking, infrastructure, monitoring, devops, sre, security, CVE.
+cloud, networking, monitoring, devops, sre, security, cve (= tag taxonomy SCHEMA).
 
 ## Langkah
 1. Web research berita terbaru (maks 5 info penting).

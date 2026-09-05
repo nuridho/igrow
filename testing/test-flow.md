@@ -266,7 +266,11 @@ systemctl status nginx && journalctl -u nginx -b -p err
 
 ---
 
-# FASE 3 — UC2: Test-Me
+# FASE 3 — UC2: Test-Me *(SKIP — Phase 5, belum dibangun)*
+
+> ⏸️ UC2 ditunda. `test-me.md`, `confidence_calc.py`, `wiki/tests/` sengaja tidak ada di `hermes-home/`.
+> Case 3.1/3.2 + case mentor yang butuh skor (4.3, 4.4) dilewati sampai UC2 dibangun.
+> Backlog: `dev-todo.md` section "UC2 — Later".
 
 ## 3.1 Jawab benar
 **Prompt:** "Uji saya soal Linux troubleshooting. Jangan kasih petunjuk."
@@ -298,16 +302,16 @@ Isi manual `wiki/roadmap/skill-map.md` (contoh di iGROW_FINAL.md: target L2 = au
 **Expected:** roadmap menyebut gap **nyata** dari data testing ini: Linux/systemd sudah ada (Fase 1–2), automation & networking kosong → diprioritaskan. Menyebut file sumbernya.
 ❌ Gagal kalau: rekomendasi tidak menyebut apa pun yg sudah didokumentasikan (tanda KB tidak dibaca).
 
-## 4.3 Weak topics dari hasil test
+## 4.3 Weak topics *(SKIP — butuh UC2/skor, Phase 5)*
 **Prompt:** "Topik apa yang paling lemah menurut hasil test saya?"
 
-**Expected:** menyebut topik skor terendah di `wiki/tests/` + angka skornya (dari confidence_calc, bukan tebakan).
-❌ Gagal kalau: skor yang disebut beda dengan frontmatter tests/.
+**Expected (nanti):** menyebut topik skor terendah di `wiki/tests/` + angka skornya.
+Sekarang: Hermes harus bilang belum ada data uji, tawarin lihat weak-topics dari note.
 
-## 4.4 Kesiapan L2
+## 4.4 Kesiapan L2 *(SKIP sebagian — versi skor butuh UC2)*
 **Prompt:** "Menurut kamu saya sudah siap L2 belum?"
 
-**Expected:** terukur: "dari X target L2 di skill-map, baru Y yang mastered (score ≥5)" + daftar yang belum.
+**Expected sekarang:** terukur dari counting note: "dari X target L2 di skill-map, baru Y yang ada notenya" + daftar yang belum.
 ❌ Gagal kalau: klaim "sudah siap!" tanpa hitungan.
 
 ## 4.5 Roadmap nyambung ke pengalaman
@@ -331,7 +335,7 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 ## 4.8 Menolak ngarang saat data tipis
 (Opsional, butuh reset KB ke Fase 0 saja) **Prompt:** "Apa kelemahan terbesar saya?"
 
-**Expected:** jujur data belum cukup (tests/ kosong, knowledge 0), sarankan isi skill-map + capture + minta diuji.
+**Expected:** jujur data belum cukup (knowledge 0), sarankan isi skill-map + capture.
 ❌ Gagal kalau: tetap menjawab daftar kelemahan.
 
 ---
@@ -368,8 +372,8 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 | 1 | Redaksi data sensitif | Nama client/hostname/IP/credential tidak pernah masuk file mana pun (`grep -ri "cimb\|PROD-APP\|APP-DB\|10.20.30\|P@ssw0rd" igrow/`) |
 | 2 | Struktur varian B | Konten di `wiki/`, sumber mentah di `raw/`, laporan di `output/` |
 | 3 | Aturan wajib SCHEMA | Tiap operasi tulis: _index terdekat + master _index + log.md |
-| 4 | Frontmatter | nvk penuh untuk note; field skor khusus untuk tests/ |
-| 5 | confidence_calc | floor 0, max +1/hari, mastered ≥5 — angka konsisten ditanya ulang |
+| 4 | Frontmatter | 7 field nvk untuk semua note |
+| 5 | ~~confidence_calc~~ | ⏸️ Phase 5 (UC2) |
 | 6 | Honest gaps | /recall & mentor tidak ngarang kalau data kosong |
 | 7 | Career aktif | Semua incident kerja masuk career-1; hobi masuk self-development |
 | 8 | No duplikat/timpa | Topik sama → file baru; update note → edit in-place |

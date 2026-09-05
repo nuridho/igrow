@@ -502,7 +502,7 @@ whatsinsidegit/
             ├── log.md              #   jurnal aksi append-only
             ├── raw/                #   sumber IMMUTABLE (inbox/, articles/, notes/)
             ├── wiki/               #   semua konten compiled: careers/, self-development/,
-            │                       #   roadmap/, tests/, profile/
+            │                       #   roadmap/, profile/
             ├── output/             #   laporan turunan (career review, dst)
             └── project-skills/  # markdown prosedur per use case, di-refer dari AGENTS.md
                                   #   (BUKAN sistem Skill resmi Hermes — cukup markdown biasa)
@@ -568,7 +568,7 @@ docker compose restart igrow-hermes
 
 Bikin folder `igrow/` + `AGENTS.md` (di **root** `hermes-home/`, bukan di dalam `igrow/` — karena working directory Hermes di mode gateway/Telegram = `/opt/data`, ini terkonfirmasi lewat GitHub Issue resmi `NousResearch/hermes-agent#5200`):
 ```bash
-mkdir -p ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/{raw/{inbox,articles,notes},wiki/{careers,self-development,roadmap,tests,profile},output,project-skills}
+mkdir -p ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/{raw/{inbox,articles,notes,assets},wiki/{careers,self-development,roadmap,profile},output,project-skills}
 nano ~/whatsinsidegit/igrow-hermes/hermes-home/AGENTS.md
 ```
 Isi `AGENTS.md` (lengkap + contoh, lihat `iGROW_FINAL.md` bagian "Implementasi Teknis").
@@ -596,7 +596,6 @@ wiki/ = executable.
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
   - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
-  - `tests/`               → hasil simulasi troubleshooting + metadata skor
   - `profile/`             → ringkasan gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
@@ -630,7 +629,6 @@ masuk ke career itu.
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)
 - igrow/project-skills/capture-experience.md → user cerita incident/pengalaman
-- igrow/project-skills/test-me.md            → user minta diuji/simulasi
 - igrow/project-skills/mentor.md             → user tanya roadmap/kelemahan belajar
 - igrow/project-skills/daily-briefing.md     → dipicu cron 07:00
 - igrow/project-skills/study.md              → user /study
@@ -915,7 +913,7 @@ Detail konfigurasi CouchDB + setup plugin LiveSync di Obsidian app menyusul kala
 - [x] `hermes doctor` jalan tanpa error, `docker exec -it igrow-hermes ls /opt/data` nampilin `.env`, `config.yaml`, `SOUL.md`, dst
 - [ ] Folder `igrow-hermes/hermes-home/igrow/` udah dibuat manual (subfolder `raw/`, `wiki/`, `output/`, `project-skills/`)
 - [ ] `AGENTS.md` ada di **root** `hermes-home/` (`hermes-home/AGENTS.md`), **bukan** di dalam `igrow/` — sudah diisi (lihat `iGROW_FINAL.md`)
-- [ ] `igrow-hermes/hermes-home/igrow/project-skills/` udah ada minimal 1 file markdown (`test-me.md` atau `capture-experience.md`), di-refer dari `AGENTS.md`
+- [ ] `igrow-hermes/hermes-home/igrow/project-skills/` udah ada minimal 1 file markdown (`capture-experience.md` atau `mentor.md`), di-refer dari `AGENTS.md`
 - [ ] Tes chat lewat Telegram: Hermes bisa jawab dia lagi di direktori mana & nyebut aturan iGROW dari `AGENTS.md`
 - [ ] Tes capture 1 cerita/pengalaman lewat Telegram, cek file baru muncul di `igrow-hermes/hermes-home/igrow/` sesuai aturan penempatan
 - [ ] `igrow-hermes` nggak publish port & nggak disebut di proxy host manapun — murni diakses via Telegram

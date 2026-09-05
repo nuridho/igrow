@@ -108,7 +108,9 @@ Dengan begini, tiap knowledge/incident otomatis ketahuan **konteksnya dari caree
 
 ---
 
-## Use Case 2 — 🧪 "Uji Saya, Jangan Ajari Saya"
+## Use Case 2 — 🧪 "Uji Saya, Jangan Ajari Saya" *(PHASE 5 — belum dibangun)*
+
+> ⏸️ **Ditunda ke Phase 5.** Core (UC1/3/4/5/6) diselesaikan dulu. Semua yang ada di section ini adalah **rancangan**, belum ada di `hermes-home/` — `project-skills/test-me.md`, `scripts/confidence_calc.py`, dan folder `wiki/tests/` sengaja TIDAK dibuat. Backlog + keputusan desainnya di `dev-todo.md` section "UC2 — Later".
 
 **Tujuan:** menggunakan Hermes sebagai simulator troubleshooting/interview untuk meningkatkan kemampuan L1 → L2. Bukan memberikan jawaban langsung.
 
@@ -417,11 +419,13 @@ Recommended Next:
 
 ### 📊 Skill Inventory (Bagian dari Career Review Quarterly)
 
-Selain narasi review di atas, tiap quarterly review juga menghasilkan **skill inventory** dalam bentuk bar — tapi barnya **bukan skala 0-100% asal-asalan**, dan **bukan hasil "kira-kira" LLM**, biar konsisten tiap dihitung ulang untuk data yang sama. Angka `mastered` per topik diambil dari `python igrow/project-skills/scripts/confidence_calc.py --all` (dump JSON semua topik), lalu dibagi jumlah target:
+Selain narasi review di atas, tiap quarterly review juga menghasilkan **skill inventory** dalam bentuk bar — tapi barnya **bukan skala 0-100% asal-asalan**, dan **bukan hasil "kira-kira" LLM**, biar konsisten tiap dihitung ulang untuk data yang sama. Dihitung dengan counting file, bukan reasoning:
 
-> **% per skill area = (jumlah topik dengan skor ≥ 5 di area itu) ÷ (jumlah total topik target di `wiki/roadmap/skill-map.md` untuk area itu, di level 1 di atas level kamu sekarang)**
+> **% per skill area = (jumlah topik target yang sudah ada notenya di area itu) ÷ (jumlah total topik target di `wiki/roadmap/skill-map.md` untuk area itu, di level 1 di atas level kamu sekarang)**
 >
-> Kalau kamu sekarang **L1**, maka pembandingnya adalah target skill **L2** (bukan target L1). Kalau kamu sudah **L2**, pembandingnya jadi target **L3**. Pembilang dari output script, pembagi dari jumlah baris target — dua-duanya angka, bukan reasoning subjektif.
+> Kalau kamu sekarang **L1**, maka pembandingnya adalah target skill **L2** (bukan target L1). Kalau kamu sudah **L2**, pembandingnya jadi target **L3**. Dua-duanya angka hasil counting, bukan reasoning subjektif.
+>
+> ⏸️ Kalau UC2 dibangun (Phase 5), pembilang naik jadi "topik dengan skor ≥ 5" — lebih ketat karena terbukti lewat uji, bukan cuma tertulis.
 
 Contoh — posisi saat ini **L1**, jadi semua bar diukur terhadap target **L2**:
 
@@ -477,9 +481,8 @@ Automation             ████░░░░░░  40%
 
 Networking             ██████░░░░  60%
 → Routing & VLAN sudah pernah ditangani di 2 incident,
-   tapi belum pernah diuji lewat Use Case 2 (wiki/tests/networking/
-   masih kosong untuk topik ini).
-   Rekomendasi: minta Hermes uji topik routing.
+   tapi belum ada note khusus yang ngebahas konsepnya.
+   Rekomendasi: tulis note routing dari 2 incident itu.
 ```
 
 Format insight ini yang jadi isi bagian "Skill Developed" dan "Weak/Knowledge Gaps" di contoh output Career Review di atas — bukan section terpisah, tapi hasil langsung dari skill inventory + insight ini.
@@ -495,8 +498,9 @@ Format insight ini yang jadi isi bagian "Skill Developed" dan "Weak/Knowledge Ga
 | # | Sumber | Lokasi File | Menjawab pertanyaan |
 |---|---|---|---|
 | 1 | **Knowledge yang sudah terdokumentasi** | `wiki/careers/*/knowledge/`, `wiki/self-development/`, `wiki/careers/*/skills.md` | "Apa yang sudah saya punya?" |
-| 2 | **Hasil uji/simulasi** | `wiki/tests/` (dari Use Case 2) | "Apa yang sudah *terbukti* bisa saya lakukan?" |
-| 3 | **Target skill yang seharusnya dikuasai** | `wiki/roadmap/skill-map.md` *(baru)* | "Apa yang *seharusnya* saya kuasai di level ini?" |
+| 2 | **Target skill yang seharusnya dikuasai** | `wiki/roadmap/skill-map.md` | "Apa yang *seharusnya* saya kuasai di level ini?" |
+
+> Sumber ke-3 (`wiki/tests/` — hasil uji, "apa yang sudah *terbukti*") menyusul kalau UC2 dibangun di Phase 5.
 
 ### Diagram Alur
 
@@ -532,12 +536,11 @@ Maka outputnya:
 
 ### ⚠️ Prasyarat — Fitur Ini Butuh Bahan
 
-Kalau `wiki/tests/` kosong dan `wiki/roadmap/skill-map.md` belum diisi, Hermes **tidak punya pembanding**, jadi output gap analysis akan generik/tidak akurat. Urutan prioritas supaya fitur ini jalan dengan baik:
+Kalau `wiki/roadmap/skill-map.md` belum diisi, Hermes **tidak punya pembanding**, jadi output gap analysis akan generik/tidak akurat. Urutan prioritas supaya fitur ini jalan dengan benar:
 
 1. Isi `wiki/roadmap/skill-map.md` di awal — daftar skill target untuk level saat ini (L1) dan level tujuan (L2), bisa disusun manual atau minta Hermes riset dari job description industri
 2. Rutin capture pengalaman kerja & belajar mandiri (Use Case 1 & 5) — supaya `wiki/self-development/` & `wiki/careers/*/knowledge/` terisi
-3. Sesekali minta diuji (Use Case 2) — supaya `wiki/tests/` punya data
-4. Baru minta gap analysis (Use Case 3/6) — karena sekarang ada bahan pembanding yang jelas
+3. Baru minta gap analysis (Use Case 3/6) — karena sekarang ada bahan pembanding yang jelas
 
 > ⚠️ **Penamaan topik perlu konsisten** — kalau topik yang sama ditulis beda nama tiap kali dites (misal "iowait" vs "IO wait"), skor & gap analysis-nya jadi kepecah dan gak akurat. Solusinya: **tag taxonomy di `igrow/SCHEMA.md`** — daftar tag baku yang wajib dipakai. Sebelum bikin topik baru, Hermes cek dulu ke taxonomy + fuzzy-match nama yang mirip di `igrow/_index.md`. LLM yang tetap memutuskan normalisasinya, file-file itu cuma jadi rujukan biar keputusannya konsisten dari sesi ke sesi.
 
@@ -566,8 +569,8 @@ Ini bagian yang **paling penting**. Use case-nya jangan dibuat sebagai 6 sistem 
                                 │
                ┌────────────────┼────────────────┐
                ↓                ↓                ↓
-          Test Yourself      Mentor        Daily Briefing
-               │                │                │
+      (Test Yourself)      Mentor        Daily Briefing
+        ⏸️ Phase 5            │                │
                └────────────────┼────────────────┘
                                 ↓
                      Career Review (Quarterly)
@@ -580,7 +583,7 @@ Ini bagian yang **paling penting**. Use case-nya jangan dibuat sebagai 6 sistem 
 Jadi semuanya saling memberi makan. Contoh: kamu mengalami incident → Use Case 1 mencatatnya. Incident itu kemudian:
 
 - → masuk knowledge base
-- → menjadi bahan Use Case 2 untuk membuat soal
+- → (Phase 5) menjadi bahan Use Case 2 untuk membuat soal
 - → Use Case 3 mengetahui kamu sudah punya pengalaman tersebut
 - → Use Case 6 memasukkannya ke career review quarterly + skill inventory
 
@@ -733,23 +736,25 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 | File referensi | Use Case | Isi instruksi |
 |---|---|---|
 | `capture-experience.md` | 1 | Cerita pengalaman kerja → markdown terstruktur |
-| `test-me.md` | 2 | Rules sourcing soal (70/20/10%), cara evaluasi, cara update confidence score |
-| `mentor.md` | 3 | Gap analysis dari 3 sumber data |
+| `mentor.md` | 3 | Gap analysis dari 2 sumber data |
 | `daily-briefing.md` | 4 | Dipicu cron 07:00, format ringkasan |
 | `study.md` | 5 | Dokumentasi belajar mandiri (perintah `/study`) → note terstruktur |
 | `career-review.md` | 6 | Review quarterly + hitung skill inventory |
 | `lint.md` | — | Dipicu cron Minggu 08:00, cek kesehatan struktur wiki |
+| ~~`test-me.md`~~ | ~~2~~ | ⏸️ Phase 5 — belum dibuat |
 
 `wiki/roadmap/skill-map.md` tetap wajib diisi manual di awal (bukan referensi prosedur, tapi **data**) — semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
 
-### Confidence Score — Kenapa Tetap Butuh Script, Meski Sudah Disederhanakan
+### Confidence Score — Kenapa Nanti Butuh Script *(PHASE 5, bareng UC2)*
 
-Meski sekarang cuma 1 angka running score (bukan state machine 3 tingkat lagi), tetap **tidak diserahkan ke reasoning LLM tiap kali** — dihitung oleh script kecil (`project-skills/scripts/confidence_calc.py`) yang dipanggil Hermes lewat tool terminal. Alasannya dobel:
+> ⏸️ `project-skills/scripts/confidence_calc.py` **belum ada** di `hermes-home/`. Section ini rancangan buat Phase 5.
+
+Kalau UC2 dibangun, skor jangan diserahkan ke reasoning LLM tiap kali — dihitung script kecil (`project-skills/scripts/confidence_calc.py`) yang dipanggil lewat tool terminal. Alasannya dobel:
 
 1. **Presisi** — LLM lemah untuk hitungan berulang yang harus konsisten dari waktu ke waktu, apalagi kalau riwayat test sudah menumpuk bertahun-tahun. Termasuk logic "max +1 per hari" — ini butuh cek tanggal terakhir topik itu naik skor, gampang salah kalau diserahkan ke LLM tiap kali.
 2. **Efisiensi token** — tanpa script, Hermes harus buka & baca ulang **semua** file test di topik itu ke context tiap kali mau update skor. Dengan script, Hermes cukup panggil satu command, dapat hasil jadi (`score: 4, mastered: false`) tanpa loading semua riwayat mentah.
 
-File referensi `test-me.md` yang mengarahkan Hermes memanggil script ini setiap kali ada hasil test baru, lalu LLM tinggal menulis narasi/feedback berdasarkan angka yang sudah pasti dari script. Skill Inventory di Use Case 6 juga pakai script yang sama sebagai sumber angka `mastered` per topik, biar konsisten dengan Use Case 2.
+`test-me.md` yang bakal ngarahin Hermes manggil script ini tiap ada hasil test baru; Skill Inventory UC6 ikut pakai angka yang sama biar konsisten.
 
 ### Format File — Markdown + YAML Frontmatter (bukan JSON terpisah)
 
@@ -888,7 +893,7 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │   │   ├── weak-topics.md
     │   │   └── skill-map.md          # target skill per level — dasar gap analysis & skill inventory
     │   │
-    │   ├── tests/                    # hasil simulasi/uji troubleshooting (Use Case 2)
+    │   ├── tests/                    # ⏸️ PHASE 5 (UC2) — belum dibuat
     │   │   ├── linux/                # subfolder = tag taxonomy SCHEMA
     │   │   ├── networking/
     │   │   └── incident/
@@ -905,13 +910,13 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │
     └── project-skills/               # file referensi prosedur per use case (dibaca situasional)
         ├── capture-experience.md
-        ├── test-me.md
         ├── mentor.md
         ├── daily-briefing.md
         ├── study.md
         ├── career-review.md
         ├── lint.md
-        └── scripts/
+        ├── test-me.md                # ⏸️ PHASE 5 (UC2) — belum dibuat
+        └── scripts/                  # ⏸️ PHASE 5 (UC2) — belum dibuat
             └── confidence_calc.py
 ```
 
@@ -983,7 +988,6 @@ wiki/ = executable.
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
   - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
-  - `tests/`               → hasil simulasi troubleshooting + metadata skor
   - `profile/`             → ringkasan gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
@@ -1017,7 +1021,6 @@ masuk ke career itu.
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)
 - igrow/project-skills/capture-experience.md → user cerita incident/pengalaman
-- igrow/project-skills/test-me.md            → user minta diuji/simulasi
 - igrow/project-skills/mentor.md             → user tanya roadmap/kelemahan belajar
 - igrow/project-skills/daily-briefing.md     → dipicu cron 07:00
 - igrow/project-skills/study.md              → user /study

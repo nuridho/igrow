@@ -1,7 +1,7 @@
 # dev-todo — iGROW template
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C14 / W37 / I20. Void: `W4` `W22`(→C9) `W31` `I1` `I2` `I4` `I7` `I8` `I13` `I14` `I16`(→W33) `I19`.
+> Nomor berikutnya: C14 / W37 / I20 / U13. Void: `W4` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
 > `FIN` = `iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
@@ -35,9 +35,9 @@
 - [ ] **C8** Deploy `scp -r hermes-home/.` menimpa per-file → `igrow/_index.md`, `log.md`, `wiki/_index.md` versi VPS (34 page + riwayat ingest) ketimpa template kosong, sementara file wiki tetap ada.
   - Act: build.md ganti perintah deploy jadi per-file, atau `rsync --exclude '_index.md' --exclude 'log.md'`; tandai 3 file itu "jangan pernah ikut deploy".
   - Impact: katalog + audit trail VPS nggak ke-reset; lint nggak lapor orphan massal palsu tiap habis deploy.
-- [ ] **C9** `wiki/tests/_index.json` + `scripts/__pycache__/*.pyc` ke-track git (`git ls-files` = 2), tidak ada `.gitignore`. `load` percaya cache yang ada tanpa rebuild — terbukti: 1 file test `score: 4` + cache `{}` → output `score: 1`. Deploy cache kosong = riwayat skor UC2 hilang senyap. (gabung eks-W22, akarnya sama)
-  - Act: `.gitignore` (`__pycache__/`, `_index.json`, `*.zip`) + `git rm --cached` 2 file itu + guard di `load`: entri cache < hasil `scan` → rebuild. Assert masuk `_demo`.
-  - Impact: skor UC2 nggak bisa ke-reset diam-diam; repo bersih dari artefak build.
+- [ ] **C9** Tidak ada `.gitignore` — artefak build gampang ke-track lagi (dulu `_index.json` + `__pycache__/*.pyc` ikut, dan cache `{}` bisa reset skor senyap; file-nya sudah kehapus bareng UC2, staged `D`).
+  - Act: `.gitignore` isi `__pycache__/`, `_index.json`, `*.zip`.
+  - Impact: artefak turunan nggak bisa balik ke repo diam-diam. Guard `load` pindah ke U2.
 - [ ] **C10** build.md Phase 2 tidak punya langkah membuat `SCHEMA.md`, 4 `_index.md`, `log.md`, `project-skills/*` — cuma `mkdir` + `AGENTS.md`.
   - Act: sisipin 1 langkah sesudah `mkdir`: kirim/tulis 7 file itu sebelum tes chat pertama.
   - Impact: AGENTS.md nggak nyuruh baca file yang nggak pernah dibuat; setup dari nol beneran reproducible.
@@ -113,9 +113,6 @@
 - [x] **W21** ~~`raw/inbox/` satu-satunya folder tanpa `.gitkeep` (9 folder lain punya)~~
   - Act: `touch hermes-home/igrow/raw/inbox/.gitkeep` — 10/10 folder skeleton sekarang punya.
   - Impact: struktur utuh setelah clone/restore. `.gitkeep` permanen, JANGAN dihapus walau folder terisi (inbox kosong = kondisi normal).
-- [ ] **W23** `confidence_calc.py` regex `^topic:\s*(\S+)` motong topik multi-kata — terbukti: `topic: load average` → key `load`.
-  - Act: ganti jadi `^topic:\s*(.+?)\s*$` + 1 assert topik 2 kata di `_demo`.
-  - Impact: skor topik multi-kata nggak pecah diam-diam (`load average` vs `load`).
 - [ ] **W24** test-flow 2.1 Expected masih "sumber mentah → `raw/articles/`" — study.md:6 sekarang dump ke `raw/inbox/` dulu.
   - Act: Expected 2.1 jadi "inbox → diproses → articles/".
   - Impact: test nggak nge-FAIL-in behavior yang justru benar.
@@ -153,6 +150,58 @@
   - Act: kasih 1 baris pemilik di SCHEMA (mis. "catatan mentah dari chat panjang"), atau hapus folder + baris tree-nya.
   - Impact: nggak ada folder tanpa aturan yang kepakai sembarangan lalu jadi tempat sampah.
 
+## UC2 — Later (Phase 5)
+
+> UC2 ("Uji Saya") **dihapus dari hermes-home** 2026-09-04 — core UC1/3/4/5/6 dulu. Backup lokal ada di kamu.
+> Yang dihapus: `project-skills/test-me.md`, `project-skills/scripts/` (confidence_calc.py), `wiki/tests/`.
+> Yang ikut disesuaikan: AGENTS (folder+File Referensi), SCHEMA (`type: test`, blok frontmatter skor, op `test`),
+> mentor.md (3 sumber → 2), career-review.md (Skill Inventory dari counting note), lint.md, master `_index.md`,
+> FIN + build.md + test-flow.md + check.sh (ditandai ⏸️ Phase 5, bukan dihapus).
+> `iGROW_FINAL.md` UC2 tetap jadi rancangan — jangan dianggap sudah ada.
+
+### Critical
+- [ ] **U1** Putuskan bentuk UC2 sebelum bangun ulang: (A) chat-only nol state, (B) skor di 1 file `wiki/roadmap/scores.md` (`- iowait: 4 (2026-08-11)`), (C) balik ke folder `tests/` + script.
+  - Act: pilih satu, tulis 3 baris keputusan di sini sebelum nulis file apa pun.
+  - Impact: nggak bangun ulang 11 item bug yang sama (C4 C5 C9 W3 W11 W18 W19 W23 I9 I10 I11 lahir dari versi C).
+- [ ] **U2** Kalau pilih B/C: cache turunan JANGAN ke-track git (akar C9 — cache `{}` reset skor senyap).
+  - Act: `.gitignore` dulu, baru bikin file state.
+  - Impact: riwayat skor nggak bisa hilang tanpa error saat deploy.
+
+### Warning
+- [ ] **U3** `type: test` + op `test` sudah dibuang dari SCHEMA — kalau UC2 balik, tambahin lagi ke enum + daftar ops.
+  - Act: 2 baris di SCHEMA, jangan lupa `wiki/tests/` di lint pengecualian.
+  - Impact: note hasil test nggak dilaporin lint sebagai frontmatter invalid.
+- [ ] **U4** mentor.md sekarang 2 sumber (target + terdokumentasi). Sumber ke-3 "terbukti" hilang.
+  - Act: balikin baris 3 + kolom Known di Output kalau UC2 jalan.
+  - Impact: gap analysis bisa bedain "pernah nulis" vs "terbukti bisa".
+- [ ] **U5** career-review.md Skill Inventory sekarang counting note. Versi skor (≥5) lebih ketat.
+  - Act: ganti pembilang ke "topik skor ≥5" + rujuk sumber angkanya.
+  - Impact: % bar nggak ke-inflate gara-gara note yang cuma ditulis sekali.
+- [ ] **U6** test-flow: FASE 3 (3.1, 3.2) + 4.3 + 4.4 ditandai SKIP.
+  - Act: buka lagi + sesuaikan Expected ke bentuk yang dipilih di U1.
+  - Impact: harness testing nyata lagi buat UC2.
+- [ ] **U7** check.sh blok frontmatter tests/ dihapus (sekarang cuma print SKIP).
+  - Act: balikin loop field sesuai bentuk U1.
+  - Impact: verifikasi otomatis nutup UC2 juga.
+
+- [ ] **U10** `confidence_calc.py` regex `^topic:\s*(\S+)` motong topik multi-kata — terbukti eksekusi: `topic: load average` → key `load`. (eks-W23, pindah karena script sudah dihapus)
+  - Act: kalau UC2 pakai script lagi: `^topic:\s*(.+?)\s*$` + assert topik 2 kata di `_demo`.
+  - Impact: skor topik multi-kata nggak pecah diam-diam.
+- [ ] **U11** `_demo` di confidence_calc.py tak punya jalur pemanggil (`--demo` nggak ada di argparse); docstring Usage nggak sebut `--all`. (eks-I11)
+  - Act: tambah `--demo` + 1 baris Usage saat script dibangkitkan lagi.
+  - Impact: self-check jalan tanpa trik `python -c`.
+- [ ] **U12** `python` vs `python3` di container belum diverifikasi (eks-I10) — script UC2 manggil `python`.
+  - Act: `docker exec igrow-hermes which python python3` sebelum nulis command di test-me.md.
+  - Impact: step UC2 nggak gagal `command not found` saat pertama dipakai.
+
+### Improvement
+- [x] **U8** ~~`interview-prep` masih di tag taxonomy SCHEMA padahal cuma kepakai UC2~~
+  - Act: dibuang dari taxonomy (16 tag sisa); 0 hit di FIN & test-flow, jadi nggak ada yang putus.
+  - Impact: taxonomy = tag yang beneran kepakai. Tambahin lagi kalau UC2 dibangun.
+- [ ] **U9** FIN UC2 masih panjang (70/20/10, confidence score, contoh test-me) — sudah ditandai rancangan.
+  - Act: biarkan sebagai spec Phase 5; jangan sync ke hermes-home sampai U1 diputus.
+  - Impact: rancangan nggak hilang, tapi juga nggak disalahsangka sudah jalan.
+
 ## Improvement
 
 - [ ] **I3** log.md:5 pakai `op: init` — tidak ada di daftar ops SCHEMA:21.
@@ -164,15 +213,9 @@
 - [ ] **I6** FIN:753 rujuk "bagian Confidence Level di atas" — section-nya bernama "Confidence Score".
   - Act: samakan nama section-nya.
   - Impact: rujukan internal nggak menggantung.
-- [ ] **I9** Semua file hermes-home/ CRLF termasuk `confidence_calc.py` → `./confidence_calc.py` gagal `bad interpreter: ^M`.
-  - Act: simpan LF (minimal file `.py` + `.sh`).
-  - Impact: script bisa dieksekusi langsung, nggak harus lewat `python file.py`.
-- [ ] **I10** test-me.md manggil `python` — belum diverifikasi binary `python` (bukan cuma `python3`) ada di image container.
-  - Act: `docker exec igrow-hermes which python python3`, sesuaikan command-nya.
-  - Impact: step 3 UC2 nggak gagal di `command not found` saat pertama dipakai.
-- [ ] **I11** `confidence_calc.py` `_demo` tidak punya jalur pemanggil (`--demo` tidak ada di argparse); docstring Usage belum sebut `--all`.
-  - Act: tambah `--demo` ke argparse + 1 baris Usage.
-  - Impact: self-check bisa dijalankan tanpa trik `python -c`.
+- [ ] **I9** File `.md` hermes-home/ semua CRLF. Aman buat markdown; yang pecah cuma `.py`/`.sh` (`bad interpreter: ^M`) dan dua-duanya sudah nggak ada di hermes-home.
+  - Act: pastikan LF kalau file executable balik ke hermes-home.
+  - Impact: script bisa dieksekusi langsung.
 - [ ] **I12** build.md:662 tabel cron tulis backup "(via https://igrow.njzlabs.com)" — itu URL dashboard, bukan remote git.
   - Act: hapus keterangan itu dari kolom job backup.
   - Impact: nggak ada yang nyangka dashboard bagian dari jalur backup.

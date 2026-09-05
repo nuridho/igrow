@@ -20,7 +20,6 @@ wiki/ = executable.
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
   - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
-  - `tests/`               → hasil simulasi troubleshooting + metadata skor
   - `profile/`             → ringkasan gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
@@ -54,7 +53,6 @@ masuk ke career itu.
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)
 - igrow/project-skills/capture-experience.md → user cerita incident/pengalaman
-- igrow/project-skills/test-me.md            → user minta diuji/simulasi
 - igrow/project-skills/mentor.md             → user tanya roadmap/kelemahan belajar
 - igrow/project-skills/daily-briefing.md     → dipicu cron 07:00
 - igrow/project-skills/study.md              → user /study

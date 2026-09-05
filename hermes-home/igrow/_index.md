@@ -9,8 +9,6 @@
 
 ## Roadmap
 
-## Tests
-
 ## Profile
 
 ## Output

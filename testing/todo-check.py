@@ -5,9 +5,9 @@ fh = io.open('dev-todo.md', encoding='utf-8')
 t = fh.read(9999999)
 fh.close(**{})
 
-items = re.findall(r'^- \[([ x])\] \*\*([CWI]\d+)\*\*', t, re.M)
+items = re.findall(r'^- \[([ x])\] \*\*([CWIU]\d+)\*\*', t, re.M)
 codes = [c for _, c in items]
-void = set(re.findall(r'`([CWI]\d+)`', re.search(r'^> Nomor berikutnya:.*$', t, re.M).group(0)))
+void = set(re.findall(r'`([CWIU]\d+)`', re.search(r'^> Nomor berikutnya:.*$', t, re.M).group(0)))
 acts = len(re.findall(r'^  - Act:', t, re.M))
 imps = len(re.findall(r'^  - Impact:', t, re.M))
 

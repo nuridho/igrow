@@ -18,7 +18,7 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 ## Tiap operasi tulis WAJIB diakhiri
 1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
 2. Update master `igrow/_index.md`.
-3. Append `log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: ingest, update, query, test, lint, review, archive.
+3. Append `log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, query, lint, review, archive.
 
 ## Frontmatter page wiki/
 ```yaml
@@ -26,10 +26,10 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 title: Judul
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-type: knowledge | incident | lesson | test | learning | profile | query | data
+type: knowledge | incident | lesson | learning | profile | query | data
 tags: [dari taxonomy]
 sources: [igrow/raw/articles/xxxx.md]   # selalu ada; `[]` kalau murni cerita user
-confidence: high | medium | low   # dukungan SUMBER, beda dari skor tests/
+confidence: high | medium | low   # dukungan SUMBER (bukan penguasaanmu)
 contradictions: [slug-lain]       # opsional
 ---
 ```
@@ -55,19 +55,6 @@ Sumber (URL / igrow/raw/... / sesi) — buat napak tilas.
 Min 2 dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
 ```
 Khusus incident di careers/, Detail diganti alur: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
-`wiki/tests/` tanpa section baku — frontmatter skor + narasi singkat jawaban & feedback.
-Subfolder `<kategori>` = tag dari taxonomy di atas (`wiki/tests/linux/`, `wiki/tests/docker/`):
-```yaml
----
-topic: iowait                  # nama topik baku — fuzzy-match ke taxonomy
-source_type: documented        # documented | untouched-target | adjacent
-date: YYYY-MM-DD               # tanggal test (bukan created/updated — file ini tak pernah diedit)
-result: correct | wrong
-score: 4                       # dari confidence_calc.py
-mastered: false                # dari confidence_calc.py
-last_increment_date: YYYY-MM-DD  # dari confidence_calc.py — WAJIB, penanda max +1/hari
----
-```
 Data file (`roadmap/`, `profile/`) → body list/key:value, bukan narasi. Frontmatter minimal:
 ```yaml
 ---
@@ -78,7 +65,7 @@ updated: YYYY-MM-DD
 ```
 
 ## Tag taxonomy (tambah baru di sini DULU)
-linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve, interview-prep
+linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve
 
 ## Link
 - Antar-page: `[[slug]]` minimal 2 outbound per page.

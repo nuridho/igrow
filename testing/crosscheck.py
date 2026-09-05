@@ -33,23 +33,28 @@ chk('JANGAN bikin subfolder per topik' in CAP, 'W9: capture-experience kehilanga
 chk('.processed' not in FIN, 'W10: .processed masih ada di FIN')
 chk('.processed' not in SCHEMA + AGENTS, 'W10: .processed masih ada di runtime')
 
-# W11 subfolder tests/ harus tag taxonomy
-tst = re.search(r'tests/ +# hasil simulasi.*?\n(.*?)\n *│ +└── profile/', tree, re.S).group(1)
-bad = [s for s in re.findall(r'([a-z-]+)/', tst) if s not in TAGS]
-chk(not bad, 'W11: subfolder tests/ di luar taxonomy: %s' % bad)
+# W11 subfolder tests/ harus tag taxonomy — UC2 ditunda ke Phase 5, tree FIN ditandai
+chk('PHASE 5' in re.search(r'tests/.*', tree).group(0), 'W11: tree tests/ belum ditandai Phase 5')
+chk(not [p for p in ('test-me', 'confidence_calc', 'wiki/tests', 'source_type', 'mastered')
+         if p in SCHEMA + AGENTS + CAP + rd('hermes-home/igrow/project-skills/mentor.md')
+         + rd('hermes-home/igrow/project-skills/career-review.md')
+         + rd('hermes-home/igrow/project-skills/lint.md')],
+    'W11/UC2: hermes-home masih ada jejak UC2')
 
 # W12 raw/assets/ ada di tree
 chk('assets/' in tree, 'W12: raw/assets/ tidak ada di tree FIN')
 
-# W13 lint.md di tabel + tree FIN, konsisten dgn AGENTS
+# W13 lint.md di tabel + tree FIN; project-skills FIN (minus yg ditandai Phase 5) == AGENTS
 chk(FIN.count('lint.md') >= 2, 'W13: lint.md belum di tabel + tree FIN')
-ps_fin = set(re.findall(r'([a-z-]+\.md)', re.search(r'project-skills/.*?\n(.*?)scripts/', tree, re.S).group(1)))
+ps_blk = re.search(r'project-skills/.*?\n(.*?)scripts/', tree, re.S).group(1)
+ps_fin = set(re.findall(r'([a-z-]+\.md)', re.sub(r'.*PHASE 5.*', '', ps_blk)))
 ps_ag = set(re.findall(r'project-skills/([a-z-]+\.md)', AGENTS))
 chk(ps_fin == ps_ag, 'W13: project-skills FIN vs AGENTS beda: %s' % (ps_fin ^ ps_ag))
 
 # W14 type: data masuk enum, dan tidak ada `date:` di contoh data file
 enum = re.search(r'^type: (.+)$', SCHEMA, re.M).group(1)
 chk('data' in [x.strip(**{}) for x in enum.split('|')], 'W14: type data belum di enum SCHEMA')
+chk('test' not in [x.strip(**{}) for x in enum.split('|')], 'W14/UC2: type test masih di enum')
 chk(not re.search(r'type: data\ndate:', FIN), 'W14: contoh data file FIN masih pakai date:')
 
 # W15 sources: selalu prefix igrow/raw/
@@ -73,24 +78,18 @@ chk('What I learned' not in FIN, 'W17: FIN masih pakai field pra-nvk (What I lea
 chk('bukan script terpisah' not in FIN, 'W18: FIN masih bilang counting-bukan-script')
 chk('confidence_calc.py` → hitung otomatis' not in FIN, 'W18: TODO confidence_calc masih ada')
 
-# W19 blok verbatim: AGENTS.md + test-me.md harus byte-identik di FIN & build.md
+# W19 blok verbatim: AGENTS.md byte-identik di FIN & build.md (test-me: UC2 ditunda, blok FIN = rancangan)
 BUILD = rd('build.md')
-for name, src, pat in [
-    ('AGENTS.md', AGENTS, r'```markdown\n(# iGROW — Aturan Inti.*?screenshot yang belum di-redact\.)\n```'),
-    ('test-me.md', rd('hermes-home/igrow/project-skills/test-me.md'),
-     r'```markdown\n(# Referensi: Uji Troubleshooting.*?Script yg hitung — bukan kamu\.)\n```'),
-]:
-    want = src.replace('\r\n', '\n').strip(' \n')
-    for tgt, txt in [('FIN', FIN), ('build.md', BUILD)]:
-        m = re.search(pat, txt.replace('\r\n', '\n'), re.S)
-        if name == 'test-me.md' and tgt == 'build.md':
-            continue  # ponytail: build.md sengaja tidak embed test-me
-        chk(m and m.group(1).strip(' \n') == want, 'W19: blok %s di %s tidak identik' % (name, tgt))
+want = AGENTS.replace('\r\n', '\n').strip(' \n')
+for tgt, txt in [('FIN', FIN), ('build.md', BUILD)]:
+    m = re.search(r'```markdown\n(# iGROW — Aturan Inti.*?screenshot yang belum di-redact\.)\n```',
+                  txt.replace('\r\n', '\n'), re.S)
+    chk(m and m.group(1).strip(' \n') == want, 'W19: blok AGENTS.md di %s tidak identik' % tgt)
 
 # W20 master _index.md section = folder wiki/ + output/
 IDX = rd('hermes-home/igrow/_index.md')
 secs = set(s.lower(**{}) for s in re.findall(r'^## (.+)$', IDX, re.M))
-chk(secs == {'careers', 'self-development', 'roadmap', 'tests', 'profile', 'output'},
+chk(secs == {'careers', 'self-development', 'roadmap', 'profile', 'output'},
     'W20: section master _index.md: %s' % sorted(secs))
 
 print('\n'.join(fails) if fails else 'OK — W9-W20 konsisten')

@@ -12,7 +12,7 @@ hits=$(grep -ril "cimb\|PROD-APP\|APP-DB\|10\.20\.30\.\|P@ssw0rd" . 2>/dev/null)
 [ -z "$hits" ] && ok "tidak ada data sensitif bocor" || { bad "bocor di:"; echo "$hits"; }
 
 echo "== 2. Struktur =="
-for d in raw/inbox raw/articles raw/notes wiki/careers wiki/self-development wiki/learning wiki/tests wiki/profile output project-skills; do
+for d in raw/inbox raw/articles raw/notes raw/assets wiki/careers wiki/self-development wiki/roadmap wiki/profile output project-skills; do
   [ -d "$d" ] && ok "dir $d" || bad "dir $d hilang"
 done
 for f in SCHEMA.md _index.md log.md ../AGENTS.md; do
@@ -35,16 +35,11 @@ if [ -n "$f" ]; then
     head -15 "$f" | grep -q "^$field:" && ok "incident fm $field" || bad "incident $f tanpa $field"
   done
 else bad "tidak ada file incident"; fi
-t=$(ls wiki/tests/*/*.md 2>/dev/null | head -1)
-if [ -n "$t" ]; then
-  for field in topic source_type date result score mastered last_increment_date; do
-    head -15 "$t" | grep -q "^$field:" && ok "tests fm $field" || bad "tests $t tanpa $field (max +1/hari butuh last_increment_date)"
-  done
-else echo "SKIP | tests/ masih kosong (Fase 3 belum jalan)"; fi
+echo "SKIP | tests/ — UC2 ditunda ke Phase 5"
 
 echo "== 5. Aturan wajib: _index + log =="
 grep -qi "careers" wiki/_index.md 2>/dev/null && ok "wiki/_index menyebut careers" || bad "wiki/_index kosong/stale"
-for op in ingest test; do
+for op in ingest update; do
   grep -qi "op\b.*$op\|$op" log.md 2>/dev/null && ok "log.md ada op $op" || echo "WARN | log.md belum ada op $op (belum jalan?)"
 done
 
