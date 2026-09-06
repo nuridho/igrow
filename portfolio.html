@@ -39,7 +39,10 @@
     width:100%; height:100%; object-fit:cover; display:block;
     filter:grayscale(100%);
     transition:filter 0.4s ease;
+    /* hide empty img flash */
+    visibility:hidden;
   }
+  .split img.loaded{ visibility:visible; }
   .split .col:hover img,
   .split .col:focus-within img{ filter:grayscale(0); }
   @media (prefers-reduced-motion:reduce){ .split img{ transition:none; } }
@@ -97,11 +100,14 @@
 </footer>
 
 <script>
-  (function(){ var s=["src/1.jpg", "src/2.jpg", "src/3.jpg", "src/4.jpg", "src/5.jpg", 
-  "src/6.jpg", "src/7.jpg", "src/8.jpg","src/9.jpg", "src/10.jpg", "src/11.jpg", "src/12.jpg",
-  "src/13.jpg", "src/14.jpg", "src/15.jpg", "src/16.jpg", "src/17.jpg", "src/18.jpg",
-  "src/19.jpg", "src/20.jpg", "src/21.jpg", "src/22.jpg", "src/23.jpg", "src/24.jpg"
-  ],m=s.length;while(m){var i=~~(Math.random()*m),t=s[--m];s[m]=s[i];s[i]=t};var c=document.getElementById("split").querySelectorAll(".col img");for(var i=0;i<4;i++){c[i].src=s[i];c[i].alt="Ahyeon Babymonster - photo "+(i+1)}})();
+  (function(){ var s=["src/1.jpg","src/2.jpg","src/3.jpg","src/4.jpg","src/5.jpg",
+  "src/6.jpg","src/7.jpg","src/8.jpg","src/9.jpg","src/10.jpg","src/11.jpg","src/12.jpg",
+  "src/13.jpg","src/14.jpg","src/15.jpg","src/16.jpg","src/17.jpg","src/18.jpg",
+  "src/19.jpg","src/20.jpg","src/21.jpg","src/22.jpg","src/23.jpg","src/24.jpg"
+  ],m=s.length;while(m){var i=~~(Math.random()*m),t=s[--m];s[m]=s[i];s[i]=t};
+  var c=document.getElementById("split").querySelectorAll(".col img");
+  for(var i=0;i<4;i++){c[i].alt="Ahyeon Babymonster - photo "+(i+1);
+  (function(el,f){var im=new Image();im.onload=function(){el.src=f;el.classList.add("loaded")};im.src=f})(c[i],s[i])}})();
 </script>
 
 </body>
