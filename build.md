@@ -32,11 +32,11 @@ Supaya kamu bisa **lihat dan backup datanya langsung** lewat `ls`, `cp`, `tar`, 
 
 | Subdomain | Fungsi | Service (compose) |
 |---|---|---|
-| `njzlabs.com` | Portofolio (root domain) | `home` |
-| `portainer.njzlabs.com` | Manage Docker | `portainer` |
-| `dash.njzlabs.com` | Glance dashboard | `glance` |
-| `npm.njzlabs.com` | Nginx Proxy Manager (admin UI) | `nginx-proxy-manager` |
-| `igrow.njzlabs.com` | Dashboard visualisasi knowledge iGROW (read-only) | `igrow-web` + `igrow-api` (path `/api`) |
+| `yeonlabs.com` | Portofolio (root domain) | `home` |
+| `portainer.yeonlabs.com` | Manage Docker | `portainer` |
+| `dash.yeonlabs.com` | Glance dashboard | `glance` |
+| `npm.yeonlabs.com` | Nginx Proxy Manager (admin UI) | `nginx-proxy-manager` |
+| `igrow.yeonlabs.com` | Dashboard visualisasi knowledge iGROW (read-only) | `igrow-web` + `igrow-api` (path `/api`) |
 
 ---
 
@@ -176,9 +176,9 @@ pages:
             title: Status
             sites:
               - title: Homepage
-                url: https://njzlabs.com
+                url: https://yeonlabs.com
               - title: Portainer
-                url: https://portainer.njzlabs.com
+                url: https://portainer.yeonlabs.com
 
           - type: docker-containers
             hide-by-default: false
@@ -188,11 +188,11 @@ pages:
               - title: Infra
                 links:
                   - title: Portainer
-                    url: https://portainer.njzlabs.com
+                    url: https://portainer.yeonlabs.com
                   - title: Nginx Proxy Manager
-                    url: https://npm.njzlabs.com
+                    url: https://npm.yeonlabs.com
                   - title: Glance
-                    url: https://dash.njzlabs.com
+                    url: https://dash.yeonlabs.com
 ```
 
 > **`name` vs `slug`:** `name` bebas pakai karakter apa aja (termasuk `'` atau `?`) karena cuma buat tampilan di nav bar. Tapi Glance otomatis generate URL dari `name` itu — kalau ada karakter aneh, URL-nya bisa rusak dan berujung 404. Solusinya: set `slug` manual (huruf/angka/strip aja) buat kontrol URL-nya terpisah dari nama tampilan.
@@ -296,7 +296,7 @@ TTL: default / auto
 Cek DNS udah propagate sebelum lanjut ke step SSL:
 
 ```bash
-dig portainer.njzlabs.com
+dig portainer.yeonlabs.com
 ```
 Pastikan hasilnya nunjuk ke IP VPS kamu. Propagasi biasanya 5 menit–1 jam, kadang bisa sampai 24 jam.
 
@@ -317,7 +317,7 @@ Password: changeme
 (langsung diminta ganti password saat login pertama)
 
 Di menu **Proxy Hosts → Add Proxy Host**:
-- Domain Names: `portainer.njzlabs.com`
+- Domain Names: `portainer.yeonlabs.com`
 - Forward Hostname/IP: `portainer` (nama service di compose)
 - Forward Port: `9443`
 - Tab **SSL** → pilih **Request a new SSL Certificate**
@@ -657,7 +657,7 @@ Chat ke bot kamu, coba beberapa hal:
 | # | Job | Schedule | Yang dikerjakan |
 |---|-----|----------|-----------------|
 | 1 | Daily Briefing | `0 7 * * *` (tiap hari 07:00) | Web research 5 berita infra → kirim ringkasan ke Telegram |
-| 2 | Backup Knowledge | `0 3 * * 0` (tiap Minggu 03:00) | Push `igrow/` ke GitHub repo privat `igrow-backup` (via https://igrow.njzlabs.com) |
+| 2 | Backup Knowledge | `0 3 * * 0` (tiap Minggu 03:00) | Push `igrow/` ke GitHub repo privat `igrow-backup` (via https://igrow.yeonlabs.com) |
 | 3 | Lint Mingguan | `0 8 * * 0` (tiap Minggu 08:00) | Cek kesehatan wiki (orphan, broken link, dll) → lapor ke Telegram |
 | 4 | Career Review | `0 9 1 1,4,7,10 *` (tgl 1 tiap kuartal, 09:00) | Review kuartalan → laporan ke `output/` + ringkasan ke Telegram |
 
@@ -670,7 +670,7 @@ git remote add origin https://<TOKEN>@github.com/nuridho/igrow-backup.git
 git push -u origin main
 exit
 ```
-(`<TOKEN>` = GitHub personal access token scope `repo`. Kalau network Docker nge-block push ke `github.com`, ganti host di URL remote jadi `igrow.njzlabs.com` — domain kamu sendiri, sudah lolos whitelist.)
+(`<TOKEN>` = GitHub personal access token scope `repo`. Kalau network Docker nge-block push ke `github.com`, ganti host di URL remote jadi `igrow.yeonlabs.com` — domain kamu sendiri, sudah lolos whitelist.)
 
 **Buat 4 job (copy-paste per blok ke shell host):**
 
@@ -767,14 +767,14 @@ Value: 43.156.50.9
 
 Cek propagasi:
 ```bash
-dig igrow.njzlabs.com
+dig igrow.yeonlabs.com
 ```
 
 Di NPM → Add Proxy Host:
 
 | Field | Value |
 |---|---|
-| Domain Names | `igrow.njzlabs.com` |
+| Domain Names | `igrow.yeonlabs.com` |
 | Scheme | `http` |
 | Forward Hostname/IP | `igrow-web` |
 | Forward Port | `80` |
@@ -784,7 +784,7 @@ Tab SSL → Request new SSL Certificate → Force SSL, HTTP/2, agree terms → e
 #### Test
 
 ```
-https://igrow.njzlabs.com
+https://igrow.yeonlabs.com
 ```
 
 Dashboard-nya udah bisa diakses, isinya masih data dummy — banner "⚠ Data dummy" jadi penanda tahap ini belum tersambung ke backend apa pun.
@@ -828,11 +828,11 @@ Frontend & API sengaja dijadiin **satu domain** (bukan `api.igrow...` terpisah),
 
 | Path | Forward ke | Catatan |
 |---|---|---|
-| `igrow.njzlabs.com/` (default) | `igrow-web:80` | Static dashboard — udah ada dari 4a |
-| `igrow.njzlabs.com/api/*` | `igrow-api:<port>` | Custom Location — port sesuaikan API kamu. **Bukan** forward ke `igrow-hermes` |
+| `igrow.yeonlabs.com/` (default) | `igrow-web:80` | Static dashboard — udah ada dari 4a |
+| `igrow.yeonlabs.com/api/*` | `igrow-api:<port>` | Custom Location — port sesuaikan API kamu. **Bukan** forward ke `igrow-hermes` |
 
 **Langkah bikin Custom Location:**
-1. Edit proxy host `igrow.njzlabs.com` yang udah ada dari 4a (default forward-nya tetap ke `igrow-web`)
+1. Edit proxy host `igrow.yeonlabs.com` yang udah ada dari 4a (default forward-nya tetap ke `igrow-web`)
 2. Tab **Custom Locations** → **Add Location**
 3. Location: `/api`
 4. Forward Hostname: `igrow-api`, Forward Port: sesuai port API kamu
@@ -867,7 +867,7 @@ Frontend & API sengaja dijadiin **satu domain** (bukan `api.igrow...` terpisah),
 
 **Fungsi:** sync folder `igrow-hermes/hermes-home/igrow/` (vault iGROW) ke Obsidian app di laptop/HP kamu, biar bisa dibuka pakai Obsidian native (graph view, backlinks, plugin) — bukan lewat browser.
 
-**Kenapa bukan web viewer:** fungsi "baca knowledge base dari browser" udah dicover dashboard `igrow.njzlabs.com` (malah lebih terstruktur). Fitur andalan Obsidian (graph view, backlinks) juga lebih maksimal dinikmati di app native ketimbang versi web. LiveSync cuma nyambungin vault yang sama ke banyak device, tanpa expose apa pun ke publik.
+**Kenapa bukan web viewer:** fungsi "baca knowledge base dari browser" udah dicover dashboard `igrow.yeonlabs.com` (malah lebih terstruktur). Fitur andalan Obsidian (graph view, backlinks) juga lebih maksimal dinikmati di app native ketimbang versi web. LiveSync cuma nyambungin vault yang sama ke banyak device, tanpa expose apa pun ke publik.
 
 **Cara kerja singkat:** plugin **Self-hosted LiveSync** di Obsidian app connect ke backend **CouchDB** yang di-host sendiri di VPS. Vault di-sync real-time antar device lewat CouchDB itu — bukan lewat HTTP/browser biasa.
 
@@ -899,8 +899,8 @@ Detail konfigurasi CouchDB + setup plugin LiveSync di Obsidian app menyusul kala
 - [x] Portainer bisa diakses & akun admin udah dibuat (sebelum timeout 5 menit, pakai setup token dari log)
 - [x] Nginx Proxy Manager bisa diakses, minimal 1 proxy host + SSL Let's Encrypt berhasil dibuat
 - [x] Semua proxy host (Portainer, Glance) pakai Scheme yang sesuai (https untuk Portainer, http untuk yang lain)
-- [x] Glance bisa diakses di `dash.njzlabs.com`, nampilin bookmarks, status monitoring (`monitor`), status container (`docker-containers`), dan resource server (`server-stats`)
-- [x] Homepage (`index.html`) bisa diakses di `njzlabs.com` tanpa 403
+- [x] Glance bisa diakses di `dash.yeonlabs.com`, nampilin bookmarks, status monitoring (`monitor`), status container (`docker-containers`), dan resource server (`server-stats`)
+- [x] Homepage (`index.html`) bisa diakses di `yeonlabs.com` tanpa 403
 
 ## Checklist Phase 2 (`igrow-hermes`)
 
@@ -925,14 +925,14 @@ Detail konfigurasi CouchDB + setup plugin LiveSync di Obsidian app menyusul kala
 **4a — Static dashboard:**
 - [ ] Folder `igrow-web/` berisi `index.html` langsung (bukan di subfolder)
 - [ ] Service `igrow-web` ditambah ke `docker-compose.yml`, `docker compose up -d igrow-web` jalan tanpa error
-- [ ] DNS `igrow` udah propagate, proxy host `igrow.njzlabs.com` default forward ke `igrow-web`
-- [ ] Dashboard bisa diakses di `https://igrow.njzlabs.com`, masih nampilin data dummy
+- [ ] DNS `igrow` udah propagate, proxy host `igrow.yeonlabs.com` default forward ke `igrow-web`
+- [ ] Dashboard bisa diakses di `https://igrow.yeonlabs.com`, masih nampilin data dummy
 
 **4b — Sambungin ke backend:**
 - [ ] `igrow-api/` punya `Dockerfile` sendiri (custom code, pakai `build:`)
 - [ ] `docker compose up -d --build igrow-api` jalan tanpa error
 - [ ] `igrow-api` mount `igrow-hermes/hermes-home/igrow` (bukan seluruh `hermes-home/`, dan bukan bikin volume baru), pakai `:ro`
-- [ ] Custom Location `/api` di proxy host `igrow.njzlabs.com`, forward ke `igrow-api` (**bukan** `igrow-hermes`)
+- [ ] Custom Location `/api` di proxy host `igrow.yeonlabs.com`, forward ke `igrow-api` (**bukan** `igrow-hermes`)
 - [ ] `igrow-hermes` tetap nggak disebut di proxy host manapun — cuma nerima chat dari Telegram
 - [ ] `index.html` diupdate pakai `fetch('/api/...')`, data dummy diganti data asli
 - [ ] Dipastikan `igrow-api` cuma baca file (nggak ada panggilan LLM), biar refresh dashboard nggak numpuk beban/token ke Hermes

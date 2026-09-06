@@ -150,6 +150,33 @@
   - Act: kasih 1 baris pemilik di SCHEMA (mis. "catatan mentah dari chat panjang"), atau hapus folder + baris tree-nya.
   - Impact: nggak ada folder tanpa aturan yang kepakai sembarangan lalu jadi tempat sampah.
 
+## Improvement
+
+- [ ] **I3** log.md:5 pakai `op: init` — tidak ada di daftar ops SCHEMA:21.
+  - Act: tambah `init` ke daftar ops, atau ganti entry-nya jadi `ingest`.
+  - Impact: `grep` per-op nggak ada entry yang lolos dari klasifikasi.
+- [ ] **I5** Definisi "Career Aktif" dobel (AGENTS.md:45 + capture-experience.md:6) — pindah ke SCHEMA, AGENTS tinggal rujuk.
+  - Act: pindah ke SCHEMA, dua file itu tinggal 1 baris rujukan.
+  - Impact: kalau aturannya berubah, cukup 1 tempat — nggak bisa drift.
+- [ ] **I6** FIN:753 rujuk "bagian Confidence Level di atas" — section-nya bernama "Confidence Score".
+  - Act: samakan nama section-nya.
+  - Impact: rujukan internal nggak menggantung.
+- [ ] **I9** File `.md` hermes-home/ semua CRLF. Aman buat markdown; yang pecah cuma `.py`/`.sh` (`bad interpreter: ^M`) dan dua-duanya sudah nggak ada di hermes-home.
+  - Act: pastikan LF kalau file executable balik ke hermes-home.
+  - Impact: script bisa dieksekusi langsung.
+- [ ] **I12** build.md:662 tabel cron tulis backup "(via https://igrow.njzlabs.com)" — itu URL dashboard, bukan remote git.
+  - Act: hapus keterangan itu dari kolom job backup.
+  - Impact: nggak ada yang nyangka dashboard bagian dari jalur backup.
+- [ ] **I15** build.md Step 7 minta A record untuk `portainer, npm, dash, igrow` — root domain (service `home`) tidak disebut, padahal ada di Domain Map & checklist.
+  - Act: tambahkan root domain di daftar A record.
+  - Impact: portofolio nggak 404 gara-gara DNS-nya kelewat.
+- [ ] **I17** `wiki/profile/` punya 5 file di spec tapi career-review.md cuma update 2 (`skills.md`, `career-summary.md`). `me.md` & `achievements.md` tanpa penulis.
+  - Act: career-review.md step 5 tambah 2 file itu, atau buang dari spec.
+  - Impact: `profile/` nggak separuh kosong permanen setelah beberapa kuartal.
+- [ ] **I18** `AGENTSnvk.md` (1.058 baris, referensi eksternal nvk) + `tobeAgentsigrow.md` (semua TODO `[x]`) masih di root dan masih menyebut `.processed/` + `learning/`.
+  - Act: 1 baris header "ARSIP — bukan spec aktif" di dua file itu.
+  - Impact: sesi baru nggak salah ambil spec mati sebagai acuan.
+
 ## UC2 — Later (Phase 5)
 
 > UC2 ("Uji Saya") **dihapus dari hermes-home** 2026-09-04 — core UC1/3/4/5/6 dulu. Backup lokal ada di kamu.
@@ -201,32 +228,3 @@
 - [ ] **U9** FIN UC2 masih panjang (70/20/10, confidence score, contoh test-me) — sudah ditandai rancangan.
   - Act: biarkan sebagai spec Phase 5; jangan sync ke hermes-home sampai U1 diputus.
   - Impact: rancangan nggak hilang, tapi juga nggak disalahsangka sudah jalan.
-
-## Improvement
-
-- [ ] **I3** log.md:5 pakai `op: init` — tidak ada di daftar ops SCHEMA:21.
-  - Act: tambah `init` ke daftar ops, atau ganti entry-nya jadi `ingest`.
-  - Impact: `grep` per-op nggak ada entry yang lolos dari klasifikasi.
-- [ ] **I5** Definisi "Career Aktif" dobel (AGENTS.md:45 + capture-experience.md:6) — pindah ke SCHEMA, AGENTS tinggal rujuk.
-  - Act: pindah ke SCHEMA, dua file itu tinggal 1 baris rujukan.
-  - Impact: kalau aturannya berubah, cukup 1 tempat — nggak bisa drift.
-- [ ] **I6** FIN:753 rujuk "bagian Confidence Level di atas" — section-nya bernama "Confidence Score".
-  - Act: samakan nama section-nya.
-  - Impact: rujukan internal nggak menggantung.
-- [ ] **I9** File `.md` hermes-home/ semua CRLF. Aman buat markdown; yang pecah cuma `.py`/`.sh` (`bad interpreter: ^M`) dan dua-duanya sudah nggak ada di hermes-home.
-  - Act: pastikan LF kalau file executable balik ke hermes-home.
-  - Impact: script bisa dieksekusi langsung.
-- [ ] **I12** build.md:662 tabel cron tulis backup "(via https://igrow.njzlabs.com)" — itu URL dashboard, bukan remote git.
-  - Act: hapus keterangan itu dari kolom job backup.
-  - Impact: nggak ada yang nyangka dashboard bagian dari jalur backup.
-- [ ] **I15** build.md Step 7 minta A record untuk `portainer, npm, dash, igrow` — root domain (service `home`) tidak disebut, padahal ada di Domain Map & checklist.
-  - Act: tambahkan root domain di daftar A record.
-  - Impact: portofolio nggak 404 gara-gara DNS-nya kelewat.
-- [ ] **I17** `wiki/profile/` punya 5 file di spec tapi career-review.md cuma update 2 (`skills.md`, `career-summary.md`). `me.md` & `achievements.md` tanpa penulis.
-  - Act: career-review.md step 5 tambah 2 file itu, atau buang dari spec.
-  - Impact: `profile/` nggak separuh kosong permanen setelah beberapa kuartal.
-- [ ] **I18** `AGENTSnvk.md` (1.058 baris, referensi eksternal nvk) + `tobeAgentsigrow.md` (semua TODO `[x]`) masih di root dan masih menyebut `.processed/` + `learning/`.
-  - Act: 1 baris header "ARSIP — bukan spec aktif" di dua file itu.
-  - Impact: sesi baru nggak salah ambil spec mati sebagai acuan.
-
-
