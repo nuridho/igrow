@@ -72,6 +72,18 @@
     footer{ padding:min(1.14vw,10px) min(2.08vw,40px) min(2.08vw,38px); }
     footer p{ text-align:left; font-size:min(.94vw,18px); }
   }
+
+  /* ---------- mobile: vertical stack, scrollable ---------- */
+  @media screen and (max-width:768px){
+    html,body{ overflow:auto; }
+    .body{ flex-direction:column; overflow-y:auto; gap:3vw; padding:3vw 4vw; }
+    .split{ flex:1; flex-direction:column; gap:4px; }
+    .split .col{ flex:1; aspect-ratio:3/4; }
+    .logo-section{ flex:0; order:1; }
+    .logo-section .logomark{ width:45vw; height:auto; }
+    footer{ order:2; padding:0 4vw 4vw; }
+    footer p{ font-size:4vw; text-align:center; }
+  }
 </style>
 </head>
 <body>
