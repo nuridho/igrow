@@ -2,6 +2,24 @@
 
 Dipakai kalau user cerita incident/pengalaman kerja (bukan /study).
 
+## Daftar Kerjaan Baru
+Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru:
+1. Tanya 1 ronde: company, role, vendor/client, lokasi, period start, jobdesc singkat.
+2. Cek career aktif sebelumnya → tambah `Period: <start> s/d <hari ini>` di `about.md`-nya.
+3. Bikin folder baru: `igrow/wiki/careers/career-N-{company}-{role}/` (N = urutan berikutnya).
+4. Tulis `about.md`:
+   ```
+   Company: <nama>
+   Role: <role>
+   Vendor/Client: <nama> (kalau ada)
+   Lokasi: <kota>
+   Period: <start> s/d
+   Jobdesc: <1-3 kalimat>
+   ```
+5. Tulis `skills.md` kosong (placeholder untuk UC1 nanti).
+6. Career baru = aktif (about.md tanpa tanggal selesai).
+7. Tutup: update wiki/_index.md + master + log.md (op: update).
+
 ## Langkah
 1. Tentukan career aktif: `igrow/wiki/careers/*/about.md` yg belum ada tanggal selesai.
 2. Rapikan cerita jadi note terstruktur:

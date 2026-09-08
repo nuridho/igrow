@@ -13,7 +13,7 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 - `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `igrow/raw/inbox/`, agent proses → pindah `igrow/raw/articles/` (inbox kosong = semua sudah diproses). Path di frontmatter & body SELALU lengkap dari root: `igrow/raw/...`.
 - `wiki/` — semua konten compiled, agent-owned.
 - `output/` — laporan turunan (career review, dst).
-- Pengecualian human-owned (agent update cuma kalau diminta): `wiki/roadmap/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md`.
+|- Pengecualian human-owned (agent update cuma kalau diminta): `wiki/roadmap/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md` (kecuali saat daftar kerjaan baru — agent boleh auto-tutup career lama & auto-bikin about.md career baru).
 
 ## Tiap operasi tulis WAJIB diakhiri
 1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).

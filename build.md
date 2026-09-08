@@ -612,6 +612,7 @@ wiki/ = executable.
 | Belajar mandiri (bukan kerjaan)   | igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama> |
 | Artikel/dok belajar (mentah)      | igrow/raw/inbox/ → proses → raw/articles/ (inbox kosong = sudah diproses) |
 | Screenshot/gambar (sudah redact)  | igrow/raw/assets/YYYYMMDD-deskripsi.png          |
+| Daftar kerjaan baru               | igrow/wiki/careers/career-N-{company}-{role}/     |
 | Laporan career review             | igrow/output/                                    |
 
 ## Tiap operasi tulis WAJIB diakhiri

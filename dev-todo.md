@@ -1,7 +1,7 @@
 # dev-todo — iGROW template
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C14 / W37 / I20 / U13. Void: `W4` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
+> Nomor berikutnya: C14 / W37 / I20 / U13 / I21. Void: `W4` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
 > `FIN` = `iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
@@ -222,6 +222,9 @@
 - [ ] **I15** build.md Step 7 minta A record untuk `portainer, npm, dash, igrow` — root domain (service `home`) tidak disebut, padahal ada di Domain Map & checklist.
   - Act: tambahkan root domain di daftar A record.
   - Impact: portofolio nggak 404 gara-gara DNS-nya kelewat.
+- [x] **I21** ~~`capture-experience.md` cuma handle incident/knowledge/lesson — belum ada flow "daftar kerjaan baru" (UC1.5)~~
+  - Act: tambah section "Daftar Kerjaan Baru" di `hermes-home/igrow/project-skills/capture-experience.md` (tanya 1 ronde → bikin folder + about.md + skills.md) + Aturan Penempatan Cepat di 3 file (FIN/build/AGENTS byte-identik).
+  - Impact: UC1 lengkap — bukan cuma simpan incident, tapi juga daftar career baru.
 - [ ] **I17** `wiki/profile/` punya 5 file di spec tapi career-review.md cuma update 2 (`skills.md`, `career-summary.md`). `me.md` & `achievements.md` tanpa penulis.
   - Act: career-review.md step 5 tambah 2 file itu, atau buang dari spec.
   - Impact: `profile/` nggak separuh kosong permanen setelah beberapa kuartal.
