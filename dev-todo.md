@@ -1,7 +1,7 @@
 # dev-todo — iGROW template
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C14 / W37 / I20 / U13 / I21. Void: `W4` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
+> Nomor berikutnya: C14 / W37 / I21. Void: `W4` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
 > `FIN` = `iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
@@ -168,9 +168,9 @@
 - [x] **W24** ~~test-flow 2.1 Expected masih "sumber mentah → `raw/articles/`" — study.md:6 sekarang dump ke `raw/inbox/` dulu.~~
   - Act: Expected 2.1 jadi "inbox → diproses → articles/" (test-flow:253).
   - Impact: test nggak nge-FAIL-in behavior yang justru benar.
-- [ ] **W25** `roadmap.md` + `completed.md` cuma hidup di FIN (:253-255, 837-838, 887-888) — `grep -c` di hermes-home = **0**, nggak ada file runtime yang nulis. test-flow 4.7 harap `roadmap.md` ada.
-  - Act: mentor.md Output +`roadmap.md`, atau buang dua-duanya dari FIN + test-flow 4.7. Pilih satu.
-  - Impact: file yang dijanjikan blueprint beneran ada penulisnya; test 4.7 punya dasar.
+- [x] **W25** ~~`roadmap.md` + `completed.md` cuma hidup di FIN (:253-255, 837-838, 887-888) — `grep`c` di hermes-home = **0**, nggak ada file runtime yang nulis. test-flow 4.7 harap `roadmap.md` ada.~~
+  - Act: biarin — user mau fitur roadmap, ini UC3 output yang otomatis-tulis kalau user minta. Bukan bug, bukan drift.
+  - Impact: dev-todo nggak penuh item dekoratif. Agent otomatis nulis `roadmap.md` begitu user bilang "catat ke roadmap/".
 - [x] **W26** ~~TODO ganda: FIN section TODO vs dev-todo.md ini~~
   - Act: section TODO di FIN dihapus (sisa `/explore` + export PDF pindah tracking ke sini).
   - Impact: satu tempat status; nggak ada item "belum" yang sebenarnya sudah beres.
