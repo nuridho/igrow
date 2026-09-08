@@ -120,11 +120,11 @@
 - [x] **W6** ~~career-review butuh skor semua topik tapi script cuma bisa 1 topik per panggilan~~
   - Act: `confidence_calc.py --all` dump JSON semua topik (demo-tested); career-review.md step 3 point ke flag itu.
   - Impact: % Skill Inventory dihitung dari 1 command, bukan buka puluhan file test satu-satu.
-- [ ] **W7** Op `query` terdaftar di SCHEMA:21 tapi tidak pernah dipakai — `/recall` tidak disuruh append log.
-  - Act: pilih satu — buang `query` dari daftar ops, atau AGENTS `/recall` tambah "append log op: query".
+- [x] **W7** ~~Op `query` terdaftar di SCHEMA:21 tapi tidak pernah dipakai — `/recall` tidak disuruh append log.~~
+  - Act: buang `query` dari daftar ops SCHEMA (recall = baca doang, nggak perlu log).
   - Impact: daftar ops = ops yang beneran ada; lint nggak perlu nebak op sah.
-- [ ] **W8** Format isi `skill-map.md` belum ada template baku (per-area? subskill? bobot?), padahal jadi pembagi persentase Skill Inventory UC6.
-  - Act: 1 blok contoh di SCHEMA: `## Target L<n>` + `- Area: topik, topik` (bentuk yang sudah dipakai FIN:453-466).
+- [x] **W8** ~~Format isi `skill-map.md` belum ada template baku (per-area? subskill? bobot?), padahal jadi pembagi persentase Skill Inventory UC6.~~
+  - Act: tambah section `## skill-map.md format` di SCHEMA — template baku `## Target L<n>` + `- Area: topik, topik` (sesuai FIN:457-466).
   - Impact: % per area dihitung dari struktur yang pasti, bukan tebakan format tiap kuartal.
 - [x] **W9** ~~FIN:873-877 tree masih `knowledge/linux|networking|monitoring/` — bentrok aturan FLAT di hermes-home~~
   - Act: tree FIN jadi `knowledge/` + komentar "FLAT: `<slug>.md` — topik lewat tags, JANGAN subfolder per topik" + `incidents/`; hermes-home yang menang.
@@ -165,8 +165,8 @@
 - [x] **W21** ~~`raw/inbox/` satu-satunya folder tanpa `.gitkeep` (9 folder lain punya)~~
   - Act: `touch hermes-home/igrow/raw/inbox/.gitkeep` — 10/10 folder skeleton sekarang punya.
   - Impact: struktur utuh setelah clone/restore. `.gitkeep` permanen, JANGAN dihapus walau folder terisi (inbox kosong = kondisi normal).
-- [ ] **W24** test-flow 2.1 Expected masih "sumber mentah → `raw/articles/`" — study.md:6 sekarang dump ke `raw/inbox/` dulu.
-  - Act: Expected 2.1 jadi "inbox → diproses → articles/".
+- [x] **W24** ~~test-flow 2.1 Expected masih "sumber mentah → `raw/articles/`" — study.md:6 sekarang dump ke `raw/inbox/` dulu.~~
+  - Act: Expected 2.1 jadi "inbox → diproses → articles/" (test-flow:253).
   - Impact: test nggak nge-FAIL-in behavior yang justru benar.
 - [ ] **W25** `roadmap.md` + `completed.md` cuma hidup di FIN (:253-255, 837-838, 887-888) — `grep -c` di hermes-home = **0**, nggak ada file runtime yang nulis. test-flow 4.7 harap `roadmap.md` ada.
   - Act: mentor.md Output +`roadmap.md`, atau buang dua-duanya dari FIN + test-flow 4.7. Pilih satu.

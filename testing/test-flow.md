@@ -250,7 +250,7 @@ systemctl status nginx && journalctl -u nginx -b -p err
 > "/study baru selesai modul systemd di KodeKloud: service unit, target, journalctl. Sumber: https://kodekloud.com/courses (contoh)"
 
 **Expected:**
-- Sumber mentah → `raw/articles/YYYY-MM-DD-kodekloud-systemd.md` (immutable)
+- Sumber mentah → `raw/inbox/YYYY-MM-DD-kodekloud-systemd.md` → diproses → `raw/articles/YYYY-MM-DD-kodekloud-systemd.md` (immutable)
 - Note → `wiki/self-development/Bootcamp/kodekloud-systemd/`, `type: learning`, `sources: [igrow/raw/articles/...]`
 - Body ikut template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also (min 2 dual-link)
 - _index + log (op: ingest)

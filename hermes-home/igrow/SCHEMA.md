@@ -18,7 +18,7 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 ## Tiap operasi tulis WAJIB diakhiri
 1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
 2. Update master `igrow/_index.md`.
-3. Append `log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, query, lint, review, archive.
+3. Append `log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, lint, review, archive.
 
 ## Frontmatter page wiki/
 ```yaml
@@ -76,6 +76,15 @@ linux, networking, monitoring, incident, docker, kubernetes, cloud, security, st
 - Bikin page: topik muncul 2+ sumber ATAU sentral di 1 sumber.
 - Split page >200 baris.
 - Master `_index.md` >200 baris → split index per subfolder wiki/.
+
+## skill-map.md format
+```markdown
+# Skill Map — <Level>
+## Target L<n>
+- Area: topik, topik, topik
+```
+- Template baku untuk `wiki/roadmap/skill-map.md` (human-owned).
+- `% Skill Inventory` = (topik mastered) / (total topik di skill-map) per area.
 
 ## Honest gaps
 Wiki gak punya jawaban → bilang jujur + usulkan ingest apa.
