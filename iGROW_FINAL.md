@@ -536,9 +536,7 @@ Maka outputnya:
 
 ### ⚠️ Prasyarat — Fitur Ini Butuh Bahan
 
-Kalau `wiki/roadmap/skill-map.md` belum diisi, Hermes **tidak punya pembanding**, jadi output gap analysis akan generik/tidak akurat. Urutan prioritas supaya fitur ini jalan dengan benar:
-
-1. Isi `wiki/roadmap/skill-map.md` di awal — daftar skill target untuk level saat ini (L1) dan level tujuan (L2), bisa disusun manual atau minta Hermes riset dari job description industri
+Hermes otomatis generate `wiki/roadmap/skill-map.md` dari `about.md` + careers — jadi fitur gap analysis & skill inventory jalan tanpa perlu setup awal. Outputnya bisa generik kalau data careers masih kosong, bukan karena skill-map belum ada.
 2. Rutin capture pengalaman kerja & belajar mandiri (Use Case 1 & 5) — supaya `wiki/self-development/` & `wiki/careers/*/knowledge/` terisi
 3. Baru minta gap analysis (Use Case 3/6) — karena sekarang ada bahan pembanding yang jelas
 
@@ -745,7 +743,7 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 | `backup.md` | — | Dipicu cron Minggu 03:00, push `igrow/` ke GitHub privat |
 | ~~`test-me.md`~~ | ~~2~~ | ⏸️ Phase 5 — belum dibuat |
 
-`wiki/roadmap/skill-map.md` tetap wajib diisi manual di awal (bukan referensi prosedur, tapi **data**) — semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
+`wiki/roadmap/skill-map.md` = AUTO-GENERATE dari `about.md` + careers + self-development (bukan manual input). User boleh edit, tapi bukan keharusan. Semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
 
 ### Confidence Score — Kenapa Nanti Butuh Script *(PHASE 5, bareng UC2)*
 

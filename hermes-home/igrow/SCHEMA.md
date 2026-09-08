@@ -13,7 +13,9 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 - `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `igrow/raw/inbox/`, agent proses → pindah `igrow/raw/articles/` (inbox kosong = semua sudah diproses). Path di frontmatter & body SELALU lengkap dari root: `igrow/raw/...`.
 - `wiki/` — semua konten compiled, agent-owned.
 - `output/` — laporan turunan (career review, dst).
-|- Pengecualian human-owned (agent update cuma kalau diminta): `wiki/roadmap/skill-map.md`, `wiki/profile/career-goals.md`, semua `about.md` (kecuali saat daftar kerjaan baru — agent boleh auto-tutup career lama & auto-bikin about.md career baru).
+|- Pengecualian human-owned (agent update cuma kalau diminta): semua `about.md` (kecuali saat daftar kerjaan baru — agent boleh auto-tutup career lama & auto-bikin about.md career baru).
+|- Pengecualian human-owned lain: `wiki/profile/career-goals.md` (user edit goal 1-3-5 tahun).
+|- `skill-map.md` = AUTO-GENERATE (bukan human-owned). Agent baca `about.md` + seluruh `careers/` + `self-development/` + `lessons-learned/` → generate skill map per level + role-fit matching. User boleh edit manual, tapi bukan keharusan.
 
 ## Tiap operasi tulis WAJIB diakhiri
 1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
@@ -33,7 +35,9 @@ confidence: high | medium | low   # dukungan SUMBER (bukan penguasaanmu)
 contradictions: [slug-lain]       # opsional
 ---
 ```
-`about.md` & `careers/*/skills.md` tetap plain `Key: value` (bukan frontmatter).
+- `about.md` & `careers/*/skills.md` tetap plain `Key: value` (bukan frontmatter).
+- `skill-map.md` → frontmatter minimal + body list/key:value per level (bukan data type — auto-generate, bukan manual input).
+- `career-goals.md` → plain `Key: value` (user input manual, bukan auto).
 
 ## Body note (wiki/careers/, wiki/self-development/)
 ```markdown
@@ -83,8 +87,9 @@ linux, networking, monitoring, incident, docker, kubernetes, cloud, security, st
 ## Target L<n>
 - Area: topik, topik, topik
 ```
-- Template baku untuk `wiki/roadmap/skill-map.md` (human-owned).
+- Template baku untuk `wiki/roadmap/skill-map.md` (AUTO-GENERATE, bukan manual input).
 - `% Skill Inventory` = (topik mastered) / (total topik di skill-map) per area.
+- `skill-map.md` juga punya section `## Role Fit` — daftar role yang user cocok (persentase kecocokan berdasarkan skill yang ada) + gap per role.
 
 ## Honest gaps
 Wiki gak punya jawaban → bilang jujur + usulkan ingest apa.
