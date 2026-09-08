@@ -1,10 +1,9 @@
+#!/bin/bash
 # - install vim dlu
 # - vim setupvps.sh
 # - paste bashnya
 # - chmod +x setupvps.sh
 # - sudo bash setupvps.sh
-
-#!/bin/bash
 set -e
 
 echo "=== 1. Membuat user nuridho ==="
@@ -27,7 +26,7 @@ sudo systemctl start fail2ban
 sudo systemctl status fail2ban --no-pager
 
 echo "=== 4. Set timezone ==="
-sudo timedatectl set-timezone Asia/Jakarta
+sudo timedatectl set-timezone Asia/Kuala_Lumpur
 
 echo "=== 5. Update & upgrade sistem ==="
 sudo apt update && sudo apt upgrade -y

@@ -679,6 +679,7 @@ cd ~/whatsinsidegit/igrow-hermes/hermes-home/igrow || exit 1
 if [[ -n $(git status --porcelain) ]]; then
   git add .
   git commit -m "sync: $(date '+%Y-%m-%d') - scheduled backup"
+  git branch -M main
   git push origin main
   echo "$(date): pushed to GitHub" >> ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/.sync.log
 else
@@ -741,6 +742,7 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 | `study.md` | 5 | Dokumentasi belajar mandiri (perintah `/study`) → note terstruktur |
 | `career-review.md` | 6 | Review quarterly + hitung skill inventory |
 | `lint.md` | — | Dipicu cron Minggu 08:00, cek kesehatan struktur wiki |
+| `backup.md` | — | Dipicu cron Minggu 03:00, push `igrow/` ke GitHub privat |
 | ~~`test-me.md`~~ | ~~2~~ | ⏸️ Phase 5 — belum dibuat |
 
 `wiki/roadmap/skill-map.md` tetap wajib diisi manual di awal (bukan referensi prosedur, tapi **data**) — semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
@@ -915,6 +917,7 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
         ├── study.md
         ├── career-review.md
         ├── lint.md
+        ├── backup.md
         ├── test-me.md                # ⏸️ PHASE 5 (UC2) — belum dibuat
         └── scripts/                  # ⏸️ PHASE 5 (UC2) — belum dibuat
             └── confidence_calc.py
@@ -1026,6 +1029,7 @@ masuk ke career itu.
 - igrow/project-skills/study.md              → user /study
 - igrow/project-skills/career-review.md      → cron quarterly / user minta review
 - igrow/project-skills/lint.md               → dipicu cron Minggu 08:00
+- igrow/project-skills/backup.md             → dipicu cron Minggu 03:00
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,

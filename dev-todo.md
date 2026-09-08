@@ -9,6 +9,58 @@
 > Isi list = bug + kontradiksi antar file. Kosmetik dokumen sengaja dibuang, jangan ditambahkan lagi.
 > `hermes-home/` = source of truth. Kalau FIN/build/testing bentrok, yang nurut mereka.
 
+## Urutan prioritas (urut dependency → dampak)
+
+> Urut di bawah = urutan kerjaan. Item yang sudah `[x]` tidak muncul.
+> Kalau ada item baru, sisipkan di posisi yang sesuai dependency chain, bukan di akhir.
+
+**Phase 1 — Core infrastructure (blok semuanya):**
+1. ~~C6~~ → selesai 2026-09-06
+2. ~~C7~~ → selesai 2026-09-06
+3. ~~W33~~ → selesai 2026-09-06
+4. ~~W34~~ → selesai 2026-09-06
+
+**Phase 2 — Backup & deploy (setelah cron & timezone aman):**
+5. W29 — Git branch main vs master, push backup mati
+6. W30 — Backup job inline, harus point-to-file
+7. W35 — Hostname setupvps.sh nama lama
+8. C8 — Deploy scp overwrite, file VPS ke-reset
+9. C12 — Spek backup ganda, hapus sync.sh
+10. C11 — VPS kondisi pra-fix, deploy ulang
+
+**Phase 3 — Spec cleanup (dokumen bentrok):**
+11. W7 — op `query` terdaftar tapi tidak dipakai
+12. W8 — skill-map format belum baku
+13. W24 — test-flow Expected masih raw lama
+14. W25 — roadmap.md + completed.md 0 file runtime
+15. W28 — Fallback backup domain mustahil
+16. C3 — Ownership skill-map.md 3 versi
+17. I3 — op: init tidak ada di daftar ops
+
+**Phase 4 — Improvement (kosmetik dokumen):**
+18. I5 — Definisi "Career Aktif" dobel
+19. I6 — FIN rujukan nama section salah
+20. I9 — CRLF di hermes-home
+21. I12 — build.md tabel cron URL dashboard
+22. I15 — A record root domain tidak disebut
+23. I17 — profile/ separuh kosong
+24. I18 — AGENTSnvk.md + tobeAgentsigrow.md header ARSIP
+
+**Phase 5 — UC2 Later (tidak urgent, U1 prerequisite semua):**
+25. U1 — Putuskan bentuk UC2 (A/B/C)
+26. U2 — Git ignore cache skor
+27. U3 — Tambah type:test + op:test ke SCHEMA
+28. U4 — Balikin sumber ke-3 mentor.md
+29. U5 — Ganti pembilang Skill Inventory
+30. U6 — Buka test-flow FASE 3 + 4.x
+31. U7 — Balik check.sh frontmatter tests/
+32. U10 — Regex confidence_calc.py topik multi-kata
+33. U11 — Tambah --demo confidence_calc.py
+34. U12 — python vs python3 di container
+35. U9 — FIN UC2 tetap spec Phase 5
+
+---
+
 ## Critical
 
 - [x] **C1** ~~`lint.md` belum ada padahal cron lint mingguan dijanjikan~~
@@ -26,11 +78,11 @@
 - [x] **C5** ~~`_index.json` cache kebaca lint sebagai orphan page (false positive tiap minggu)~~
   - Act: lint.md diminta skip file berawalan `_`; cache tetap tinggal di `tests/`.
   - Impact: laporan lint bersih; pindah ke `igrow/.cache/` cuma kalau `_*.json` bertambah banyak.
-- [ ] **C6** build.md "Setup 4 Cron Job" — flag `--prompt` tidak ada. CLI: `hermes cron create [opts] schedule [prompt]`, prompt POSITIONAL. Ke-4 command argparse-error. (Diverifikasi di CLI host; versi di container VPS belum diverifikasi.)
-  - Act: 4 blok itu diubah jadi `hermes cron create '0 7 * * *' 'Baca igrow/project-skills/daily-briefing.md lalu kerjakan.' --name daily-briefing`.
+- [x] **C6** ~~build.md "Setup 4 Cron Job" — flag `--prompt` tidak ada. CLI: `hermes cron create [opts] schedule [prompt]`, prompt POSITIONAL. Ke-4 command argparse-error. (Diverifikasi di CLI host; versi di container VPS belum diverifikasi.)~~
+  - Act: 4 blok itu diubah jadi `hermes cron create '0 7 * * *' 'Baca igrow/project-skills/daily-briefing.md lalu kerjakan.' --name daily-briefing`; +catatan "prompt POSITIONAL, tidak ada flag `--prompt`".
   - Impact: 4 job maintenance beneran kebuat — sekarang nol job jalan, jadi briefing/backup/lint/review semua mati.
-- [ ] **C7** build.md klaim "delivery auto ke Telegram kamu" padahal ke-4 command tanpa `--deliver`; job dari shell host tidak punya chat asal.
-  - Act: tambah `--deliver telegram` di 4 command yang sama.
+- [x] **C7** ~~build.md klaim "delivery auto ke Telegram kamu" padahal ke-4 command tanpa `--deliver`; job dari shell host tidak punya chat asal.~~
+  - Act: `--deliver telegram` ditambahkan di 4 command yang sama; kalimat "delivery auto" diganti penjelasan kenapa flag-nya wajib.
   - Impact: output job sampai ke HP, bukan cuma nyangkut di penyimpanan job.
 - [ ] **C8** Deploy `scp -r hermes-home/.` menimpa per-file → `igrow/_index.md`, `log.md`, `wiki/_index.md` versi VPS (34 page + riwayat ingest) ketimpa template kosong, sementara file wiki tetap ada.
   - Act: build.md ganti perintah deploy jadi per-file, atau `rsync --exclude '_index.md' --exclude 'log.md'`; tandai 3 file itu "jangan pernah ikut deploy".
@@ -128,21 +180,21 @@
 - [ ] **W28** build.md:675 fallback backup "ganti host remote jadi igrow.njzlabs.com" mustahil — domain sendiri bukan mirror GitHub.
   - Act: hapus kalimat fallback itu; ganti "kalau ke-block, cek DNS/proxy container".
   - Impact: nggak ada instruksi yang dijamin gagal saat panik jam 3 pagi.
-- [ ] **W29** build.md:672 `git push -u origin main` tapi `git init` menghasilkan `master`.
-  - Act: `git branch -M main` sebelum push, atau push `master`.
-  - Impact: prasyarat backup nggak berhenti di "src refspec main does not match any".
-- [ ] **W30** Job backup satu-satunya yang tidak point-to-file (shell inline panjang di prompt LLM); aturannya cuma hidup di build.md yang tidak ikut ke VPS.
-  - Act: bikin `project-skills/backup.md` (3 langkah + aturan silent), prompt cron jadi "Baca … lalu kerjakan."
+- [x] **W29** ~~build.md:672 `git push -u origin main` tapi `git init` menghasilkan `master`.~~
+  - Act: tambah `git branch -M main` sebelum push di build.md; juga di FIN sync.sh untuk konsistensi.
+  - Impact: backup job nggak mati di "src refspec main does not match any".
+- [x] **W30** ~~Job backup satu-satunya yang tidak point-to-file (shell inline panjang di prompt LLM); aturannya cuma hidup di build.md yang tidak ikut ke VPS.~~
+  - Act: bikin `project-skills/backup.md` (3 langkah + aturan silent), ganti prompt cron jadi "Baca igrow/project-skills/backup.md lalu kerjakan." di build.md; tambah ke AGENTS di 3 file.
   - Impact: 4 job pola sama; aturan backup ikut ke VPS, bisa dibenerin tanpa bikin ulang job.
 - [ ] **W32** build.md checklist Phase 2 masih 8 item `[ ]` termasuk hal yang sudah jalan (folder igrow/, AGENTS.md, project-skills, tes chat).
   - Act: centang yang sudah terbukti dari hasil testing, sisakan yang beneran belum (4 cron job).
   - Impact: checklist kepakai buat tau sisa kerjaan, bukan diabaikan karena isinya salah.
-- [ ] **W33** Timezone nggak konsisten 3 lapis: setupvps.sh:30 `Asia/Jakarta`, Glance & konteks project `Asia/Kuala_Lumpur`, container compose tanpa `TZ` (default UTC). Cron `0 7 * * *` bisa meleset 1-8 jam. (gabung eks-I16)
-  - Act: setupvps.sh → `Asia/Kuala_Lumpur`; cek `docker exec igrow-hermes date`, kalau UTC tambah `TZ=Asia/Kuala_Lumpur` di service `igrow-hermes`.
+- [x] **W33** ~~Timezone nggak konsisten 3 lapis: setupvps.sh:30 `Asia/Jakarta`, Glance & konteks project `Asia/Kuala_Lumpur`, container compose tanpa `TZ` (default UTC). Cron `0 7 * * *` bisa meleset 1-8 jam. (gabung eks-I16)~~
+  - Act: setupvps.sh → `Asia/Kuala_Lumpur`; `TZ=Asia/Kuala_Lumpur` ditambahkan di service `igrow-hermes` (compose contoh build.md:525).
   - Impact: 4 cron (`0 7`, `0 3`, `0 8`, `0 9`) bunyi di jam yang dimaksud.
-- [ ] **W34** setupvps.sh:1-5 komentar cara pakai ditaruh SEBELUM `#!/bin/bash` (baris 7) → shebang tidak berlaku.
-  - Act: pindah shebang ke baris 1, komentar di bawahnya.
-  - Impact: `./setupvps.sh` jalan, nggak cuma `bash setupvps.sh`.
+- [x] **W34** ~~setupvps.sh:1-5 komentar cara pakai ditaruh SEBELUM `#!/bin/bash` (baris 7) → shebang tidak berlaku.~~
+  - Act: shebang ke baris 1, komentar di bawahnya; CRLF → LF (shebang + CRLF = `bad interpreter` di Linux).
+  - Impact: `./setupvps.sh` jalan, bukan cuma `bash setupvps.sh`.
 - [ ] **W35** setupvps.sh:21 `hostnamectl set-hostname whatsinsidegit` — nama lama. Keputusan kamu: ikut nama folder VPS (`~/whatsinsidegit/`, sengaja nggak di-rename) atau ikut domain (`njzlabs`).
   - Act: pilih satu, kalau biarkan tambah 1 komentar "sengaja, ikut nama folder".
   - Impact: nggak ada yang ragu "ini ketinggalan atau disengaja" saat rebuild VPS.

@@ -522,6 +522,7 @@ whatsinsidegit/
     environment:
       - HERMES_UID=${HERMES_UID}        # samain ownership file dengan user host — cek nilainya: `id -u` / `id -g`
       - HERMES_GID=${HERMES_GID}
+      - TZ=Asia/Kuala_Lumpur            # timezone cron & container — wajib agar cron `0 7` bunyi jam benar
     volumes:
       - ./igrow-hermes/hermes-home:/opt/data     # SATU-SATUNYA volume — path resmi Hermes, jangan diubah
 ```
@@ -634,6 +635,7 @@ masuk ke career itu.
 - igrow/project-skills/study.md              → user /study
 - igrow/project-skills/career-review.md      → cron quarterly / user minta review
 - igrow/project-skills/lint.md               → dipicu cron Minggu 08:00
+- igrow/project-skills/backup.md             → dipicu cron Minggu 03:00
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,
@@ -652,7 +654,7 @@ Chat ke bot kamu, coba beberapa hal:
 
 ### Setup 4 Cron Job (maintenance rutin iGROW)
 
-4 job dibuat **sekali** dari shell host pakai `hermes cron create` di dalam container (scheduler-nya jalan di dalam gateway `igrow-hermes`, jadi job tetap hidup selama container jalan; delivery auto ke Telegram kamu).
+4 job dibuat **sekali** dari shell host pakai `hermes cron create` di dalam container (scheduler-nya jalan di dalam gateway `igrow-hermes`, jadi job tetap hidup selama container jalan; `--deliver telegram` wajib — job dari shell host tidak punya chat asal, tanpa flag ini output bisa tersimpan tanpa terkirim).
 
 | # | Job | Schedule | Yang dikerjakan |
 |---|-----|----------|-----------------|
@@ -667,6 +669,7 @@ docker exec -it igrow-hermes bash
 cd /opt/data/igrow && git init && git add -A && git commit -m "init"
 git config --global credential.helper store
 git remote add origin https://<TOKEN>@github.com/nuridho/igrow-backup.git
+git branch -M main
 git push -u origin main
 exit
 ```
@@ -676,29 +679,29 @@ exit
 
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 7 * * *' \
-  --name daily-briefing \
-  --prompt 'Baca igrow/project-skills/daily-briefing.md lalu kerjakan.'
+  'Baca igrow/project-skills/daily-briefing.md lalu kerjakan.' \
+  --name daily-briefing --deliver telegram
 ```
 
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 3 * * 0' \
-  --name backup-knowledge \
-  --prompt 'cd igrow && git add -A && git commit -m "backup $(date +%F)" && git push. Kalau tidak ada perubahan, jangan kirim pesan apapun (silent). Kalau push gagal, laporkan error-nya.'
+  'Baca igrow/project-skills/backup.md lalu kerjakan.' \
+  --name backup-knowledge --deliver telegram
 ```
 
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 8 * * 0' \
-  --name lint-mingguan \
-  --prompt 'Baca igrow/project-skills/lint.md lalu kerjakan.'
+  'Baca igrow/project-skills/lint.md lalu kerjakan.' \
+  --name lint-mingguan --deliver telegram
 ```
 
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 9 1 1,4,7,10 *' \
-  --name career-review \
-  --prompt 'Baca igrow/project-skills/career-review.md lalu kerjakan untuk kuartal yang baru selesai.'
+  'Baca igrow/project-skills/career-review.md lalu kerjakan untuk kuartal yang baru selesai.' \
+  --name career-review --deliver telegram
 ```
 
-Kalau format argumennya beda di versi Hermes kamu, cek `docker exec -it igrow-hermes hermes cron create --help` — atau fallback ke chat Telegram: `/cron` → create, isi schedule + prompt yang sama.
+Prompt itu POSITIONAL (`hermes cron create [opts] SCHEDULE PROMPT`) — tidak ada flag `--prompt`. Kalau format argumennya beda di versi Hermes kamu, cek `docker exec -it igrow-hermes hermes cron create --help` — atau fallback ke chat Telegram: `/cron` → create, isi schedule + prompt yang sama.
 
 Cek hasilnya kapan aja: `docker exec -it igrow-hermes hermes cron list` dari host, atau `/cron` lewat Telegram.
 
