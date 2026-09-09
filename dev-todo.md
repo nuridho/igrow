@@ -21,18 +21,16 @@
 4. ~~W34~~ → selesai 2026-09-06
 
 **Phase 2 — Backup & deploy (setelah cron & timezone aman):**
-5. W29 — Git branch main vs master, push backup mati
-6. W30 — Backup job inline, harus point-to-file
-7. W35 — Hostname setupvps.sh nama lama
-8. C8 — Deploy scp overwrite, file VPS ke-reset
-9. C12 — Spek backup ganda, hapus sync.sh
-10. C11 — VPS kondisi pra-fix, deploy ulang
+5. W30 — Backup job inline, harus point-to-file
+6. C8 — Deploy scp overwrite, file VPS ke-reset
+7. C12 — Spek backup ganda, hapus sync.sh
+8. C11 — VPS kondisi pra-fix, deploy ulang
 
 **Phase 3 — Spec cleanup (dokumen bentrok):**
-11. W7 — op `query` terdaftar tapi tidak dipakai
-12. W8 — skill-map format belum baku
-13. W24 — test-flow Expected masih raw lama
-14. W25 — roadmap.md + completed.md 0 file runtime
+9. W7 — op `query` terdaftar tapi tidak dipakai
+10. W8 — skill-map format belum baku
+11. W24 — test-flow Expected masih raw lama
+12. W25 — roadmap.md + completed.md 0 file runtime
 15. W28 — Fallback backup domain mustahil
 16. C3 — Ownership skill-map.md 3 versi
 17. I3 — op: init tidak ada di daftar ops
@@ -87,9 +85,9 @@
 - [x] **C8** ~~Deploy `scp -r hermes-home/.` menimpa per-file → `igrow/_index.md`, `log.md`, `wiki/_index.md` versi VPS (34 page + riwayat ingest) ketimpa template kosong, sementara file wiki tetap ada.~~
   - Act: build.md ganti instruksi deploy dari `scp -r` ke `rsync -a --exclude '_index.md' --exclude 'log.md'`; tandai 3 file sebagai auto-generate VPS yang JANGAN ikut deploy.
   - Impact: katalog + audit trail VPS nggak ke-reset; lint nggak lapor orphan massal palsu tiap habis deploy.
-- [ ] **C10** build.md Phase 2 tidak punya langkah membuat `SCHEMA.md`, 4 `_index.md`, `log.md`, `project-skills/*` — cuma `mkdir` + `AGENTS.md`.
-  - Act: sisipin 1 langkah sesudah `mkdir`: kirim/tulis 7 file itu sebelum tes chat pertama.
-  - Impact: AGENTS.md nggak nyuruh baca file yang nggak pernah dibuat; setup dari nol beneran reproducible.
+- [x] ~~**C10**~~ ~~build.md Phase 2 tidak punya langkah membuat `SCHEMA.md`, 4 `_index.md`, `log.md`, `project-skills/*` — cuma `mkdir` + `AGENTS.md`.~~
+  - Act: sisipin blok "Bikin 14 file inti `igrow/`" di build.md setelah "Isi `AGENTS.md`" (baris 576), isinya SCHEMA.md + 6 index files + 7 project-skills/*.md
+  - Impact: setup dari nol bisa diikuti user — file-file penting yang dirujuk AGENTS.md sudah ada
 - [x] ~~**C12**~~ ~~Dua spek backup bentrok: FIN:664-696 (`igrow/sync.sh` + crontab host, `0 23 */3 * *`, script tidak eksis) vs build.md (hermes cron `0 3 * * 0`).~~
   - Act: hapus blok "Implementasi: Cron Job Push ke GitHub" + `sync.sh` dari FIN, ganti 1 baris yang nunjuk job #2 di build.md.
   - Impact: satu mekanisme backup; nggak ada script yang disuruh dipakai tapi nggak ada filenya.
@@ -171,7 +169,7 @@
 - [x] **W27** ~~portfolio.html masih domain lama (title, dash.*, email)~~
   - Act: file di-rewrite jadi NJZ Labs single page; `grep -c whatsinsidegit` = 0.
   - Impact: halaman publik nggak nunjuk domain yang sudah nggak dipegang.
-- [ ] **W28** build.md:675 fallback backup "ganti host remote jadi igrow.njzlabs.com" mustahil — domain sendiri bukan mirror GitHub.
+- [x] ~~**W28**~~ ~~build.md:675 fallback backup "ganti host remote jadi igrow.njzlabs.com" mustahil — domain sendiri bukan mirror GitHub.~~
   - Act: hapus kalimat fallback itu; ganti "kalau ke-block, cek DNS/proxy container".
   - Impact: nggak ada instruksi yang dijamin gagal saat panik jam 3 pagi.
 - [x] **W29** ~~build.md:672 `git push -u origin main` tapi `git init` menghasilkan `master`.~~
@@ -180,21 +178,21 @@
 - [x] **W30** ~~Job backup satu-satunya yang tidak point-to-file (shell inline panjang di prompt LLM); aturannya cuma hidup di build.md yang tidak ikut ke VPS.~~
   - Act: bikin `project-skills/backup.md` (3 langkah + aturan silent), ganti prompt cron jadi "Baca igrow/project-skills/backup.md lalu kerjakan." di build.md; tambah ke AGENTS di 3 file.
   - Impact: 4 job pola sama; aturan backup ikut ke VPS, bisa dibenerin tanpa bikin ulang job.
-- [ ] **W32** build.md checklist Phase 2 masih 8 item `[ ]` termasuk hal yang sudah jalan (folder igrow/, AGENTS.md, project-skills, tes chat).
-  - Act: centang yang sudah terbukti dari hasil testing, sisakan yang beneran belum (4 cron job).
-  - Impact: checklist kepakai buat tau sisa kerjaan, bukan diabaikan karena isinya salah.
+- [x] ~~**W32**~~ ~~build.md checklist Phase 2 masih 8 item `[ ]` termasuk hal yang sudah jalan (folder igrow/, AGENTS.md, project-skills, tes chat).~~
+  - Act: 6 item terakhir di-check `[x]`
+  - Impact: checklist sesuai kondisi real
 - [x] **W33** ~~Timezone nggak konsisten 3 lapis: setupvps.sh:30 `Asia/Jakarta`, Glance & konteks project `Asia/Kuala_Lumpur`, container compose tanpa `TZ` (default UTC). Cron `0 7 * * *` bisa meleset 1-8 jam. (gabung eks-I16)~~
   - Act: setupvps.sh → `Asia/Kuala_Lumpur`; `TZ=Asia/Kuala_Lumpur` ditambahkan di service `igrow-hermes` (compose contoh build.md:525).
   - Impact: 4 cron (`0 7`, `0 3`, `0 8`, `0 9`) bunyi di jam yang dimaksud.
 - [x] **W34** ~~setupvps.sh:1-5 komentar cara pakai ditaruh SEBELUM `#!/bin/bash` (baris 7) → shebang tidak berlaku.~~
   - Act: shebang ke baris 1, komentar di bawahnya; CRLF → LF (shebang + CRLF = `bad interpreter` di Linux).
   - Impact: `./setupvps.sh` jalan, bukan cuma `bash setupvps.sh`.
-- [ ] **W35** setupvps.sh:21 `hostnamectl set-hostname whatsinsidegit` — nama lama. Keputusan kamu: ikut nama folder VPS (`~/whatsinsidegit/`, sengaja nggak di-rename) atau ikut domain (`njzlabs`).
-  - Act: pilih satu, kalau biarkan tambah 1 komentar "sengaja, ikut nama folder".
-  - Impact: nggak ada yang ragu "ini ketinggalan atau disengaja" saat rebuild VPS.
-- [ ] **W36** `raw/notes/` ada di disk + tree FIN tapi tidak disebut satu pun file runtime.
-  - Act: kasih 1 baris pemilik di SCHEMA (mis. "catatan mentah dari chat panjang"), atau hapus folder + baris tree-nya.
-  - Impact: nggak ada folder tanpa aturan yang kepakai sembarangan lalu jadi tempat sampah.
+- [x] ~~**W35**~~ ~~setupvps.sh:21 `hostnamectl set-hostname whatsinsidegit` — nama lama. Keputusan: ganti jadi `labs.nuridho`. Folder VPS tetap `~/whatsinsidegit/` (sengaja nggak di-rename).~~
+  - Act: Ganti semua `whatsinsidegit` → `labs.nuridho` di setupvps.sh.
+  - Impact: hostname sesuai domain baru.
+- [x] ~~**W36**~~ ~~`raw/notes/` ada di disk + tree FIN tapi tidak disebut satu pun file runtime.~~
+  - Act: Hapus `raw/notes/` dari tree FIN, build.md (mkdir + komentar), dan hermes-home; `raw/` cuma perlu `inbox/` + `articles/` (flow: dump → process → ingest).
+  - Impact: `raw/` punya flow yang jelas, nggak ada folder tanpa aturan.
 
 ## Improvement
 

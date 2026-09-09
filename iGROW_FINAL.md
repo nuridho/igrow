@@ -858,7 +858,6 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │   ├── inbox/                    # drop zone → diproses → articles/ (inbox kosong = sudah diproses)
     │   ├── articles/                 # artikel/dok belajar
     │   ├── assets/                   # screenshot/gambar (sudah redact): YYYYMMDD-deskripsi.png
-    │   └── notes/                    # catatan mentah
     │
     ├── wiki/                         # SEMUA konten compiled, agent-owned
     │   ├── _index.md                 # katalog level wiki/

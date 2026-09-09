@@ -500,7 +500,7 @@ whatsinsidegit/
             ├── SCHEMA.md           #   aturan format/frontmatter/tag — dibaca Hermes sebelum tulis
             ├── _index.md           #   master katalog
             ├── log.md              #   jurnal aksi append-only
-            ├── raw/                #   sumber IMMUTABLE (inbox/, articles/, notes/)
+            ├── raw/                #   sumber IMMUTABLE (inbox/, articles/)
             ├── wiki/               #   semua konten compiled: careers/, self-development/,
             │                       #   roadmap/, profile/
             ├── output/             #   laporan turunan (career review, dst)
@@ -569,10 +569,410 @@ docker compose restart igrow-hermes
 
 Bikin folder `igrow/` + `AGENTS.md` (di **root** `hermes-home/`, bukan di dalam `igrow/` — karena working directory Hermes di mode gateway/Telegram = `/opt/data`, ini terkonfirmasi lewat GitHub Issue resmi `NousResearch/hermes-agent#5200`):
 ```bash
-mkdir -p ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/{raw/{inbox,articles,notes,assets},wiki/{careers,self-development,roadmap,profile},output,project-skills}
+mkdir -p ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/{raw/{inbox,articles,assets},wiki/{careers,self-development,roadmap,profile},output,project-skills}
 nano ~/whatsinsidegit/igrow-hermes/hermes-home/AGENTS.md
 ```
 Isi `AGENTS.md` (lengkap + contoh, lihat `iGROW_FINAL.md` bagian "Implementasi Teknis").
+**Bikin 14 file inti `igrow/` (WAJIB sebelum test Telegram):**
+
+Salin semua file ini ke VPS. Path tujuan sama persis dengan yang sudah ada di `hermes-home/`:
+
+### `SCHEMA.md`
+
+```markdown
+---
+title: iGROW Schema
+schema_state: advisory
+created: 2026-08-25
+updated: 2026-08-25
+---
+
+# iGROW Schema
+
+Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
+
+## Layer
+- `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `igrow/raw/inbox/`, agent proses → pindah `igrow/raw/articles/` (inbox kosong = semua sudah diproses). Path di frontmatter & body SELALU lengkap dari root: `igrow/raw/...`.
+- `wiki/` — semua konten compiled, agent-owned.
+- `output/` — laporan turunan (career review, dst).
+|- Pengecualian human-owned (agent update cuma kalau diminta): semua `about.md` (kecuali saat daftar kerjaan baru — agent boleh auto-tutup career lama & auto-bikin about.md career baru).
+|- Pengecualian human-owned lain: `wiki/profile/career-goals.md` (user edit goal 1-3-5 tahun).
+|- `skill-map.md` = AUTO-GENERATE (bukan human-owned). Agent baca `about.md` + seluruh `careers/` + `self-development/` + `lessons-learned/` → generate skill map per level + role-fit matching. User boleh edit manual, tapi bukan keharusan.
+
+## Tiap operasi tulis WAJIB diakhiri
+1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
+2. Update master `igrow/_index.md`.
+3. Append `log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, lint, review, archive.
+
+## Frontmatter page wiki/
+```yaml
+---
+title: Judul
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+type: knowledge | incident | lesson | learning | profile | query | data
+tags: [dari taxonomy]
+sources: [igrow/raw/articles/xxxx.md]   # selalu ada; `[]` kalau murni cerita user
+confidence: high | medium | low   # dukungan SUMBER (bukan penguasaanmu)
+contradictions: [slug-lain]       # opsional
+---
+```
+- `about.md` & `careers/*/skills.md` tetap plain `Key: value` (bukan frontmatter).
+- `skill-map.md` → frontmatter minimal + body list/key:value per level (bukan data type — auto-generate, bukan manual input).
+- `career-goals.md` → plain `Key: value` (user input manual, bukan auto).
+
+## Body note (wiki/careers/, wiki/self-development/)
+```markdown
+# <title>
+
+## Ringkasan
+1–3 kalimat: apa ini & kenapa penting.
+
+## Detail
+Poin berbobot (bullet oke) — padat, bukan narasi kosong.
+
+## Contoh
+Minimal 1 contoh nyata (command / config / kasus).
+
+## Referensi
+Sumber (URL / igrow/raw/... / sesi) — buat napak tilas.
+
+## See Also
+Min 2 dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
+```
+Khusus incident di careers/, Detail diganti alur: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
+Data file (`roadmap/`, `profile/`) → body list/key:value, bukan narasi. Frontmatter minimal:
+```yaml
+---
+title: Skill Map
+type: data
+updated: YYYY-MM-DD
+---
+```
+
+## Tag taxonomy (tambah baru di sini DULU)
+linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve
+
+## Link
+- Antar-page: `[[slug]]` minimal 2 outbound per page.
+- Section `## See Also` wajib dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
+- Narasi biasa cukup `[[slug]]`.
+
+## Threshold
+- Bikin page: topik muncul 2+ sumber ATAU sentral di 1 sumber.
+- Split page >200 baris.
+- Master `_index.md` >200 baris → split index per subfolder wiki/.
+
+## skill-map.md format
+```markdown
+# Skill Map — <Level>
+## Target L<n>
+- Area: topik, topik, topik
+```
+- Template baku untuk `wiki/roadmap/skill-map.md` (AUTO-GENERATE, bukan manual input).
+- `% Skill Inventory` = (topik mastered) / (total topik di skill-map) per area.
+- `skill-map.md` juga punya section `## Role Fit` — daftar role yang user cocok (persentase kecocokan berdasarkan skill yang ada) + gap per role.
+
+## Honest gaps
+Wiki gak punya jawaban → bilang jujur + usulkan ingest apa.
+
+## DILARANG KERAS (berlaku juga raw/)
+Credential, API key/token, IP internal, hostname sensitif, data client, screenshot tanpa redact.
+```
+
+### `_index.md`
+
+```markdown
+# iGROW — Master Index
+
+> Katalog seluruh page. Baca ini dulu sebelum scan folder.
+> Last updated: 2026-08-25 | Total pages: 0
+
+## Careers
+
+## Self-Development
+
+## Roadmap
+
+## Profile
+
+## Output
+```
+
+### `log.md`
+
+```markdown
+# iGROW Log
+
+> Append-only. Format: `## [YYYY-MM-DD] op | subjek`
+
+## [2026-08-25] init | Struktur igrow/ dibuat (pola wiki varian B)
+```
+
+### `raw/_index.md`
+
+```markdown
+# Raw Index
+
+> Sumber immutable.
+> Last updated: 2026-08-25
+
+| File | Summary | Tags | Updated |
+|------|---------|------|---------|
+```
+
+### `wiki/_index.md`
+
+```markdown
+# Wiki Index
+
+> Konten compiled, agent-owned.
+> Last updated: 2026-08-25
+
+| File | Summary | Tags | Updated |
+|------|---------|------|---------|
+```
+
+### `output/_index.md`
+
+```markdown
+# Output Index
+
+> Laporan turunan (career review, dst).
+> Last updated: 2026-08-25
+
+| File | Summary | Tags | Updated |
+|------|---------|------|---------|
+```
+
+### `project-skills/capture-experience.md`
+
+```markdown
+# Referensi: Capture Experience (UC1)
+
+Dipakai kalau user cerita incident/pengalaman kerja (bukan /study).
+
+## Daftar Kerjaan Baru
+Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru:
+1. Tanya 1 ronde: company, role, vendor/client, lokasi, period start, jobdesc singkat.
+2. Cek career aktif sebelumnya → tambah `Period: <start> s/d <hari ini>` di `about.md`-nya.
+3. Bikin folder baru: `igrow/wiki/careers/career-N-{company}-{role}/` (N = urutan berikutnya).
+4. Tulis `about.md`:
+   ```
+   Company: <nama>
+   Role: <role>
+   Vendor/Client: <nama> (kalau ada)
+   Lokasi: <kota>
+   Period: <start> s/d
+   Jobdesc: <1-3 kalimat>
+   ```
+5. Tulis `skills.md` kosong (placeholder untuk UC1 nanti).
+6. Career baru = aktif (about.md tanpa tanggal selesai).
+7. Tutup: update wiki/_index.md + master + log.md (op: update).
+
+## Langkah
+1. Tentukan career aktif: `igrow/wiki/careers/*/about.md` yg belum ada tanggal selesai.
+2. Rapikan cerita jadi note terstruktur:
+   - Incident → `igrow/wiki/careers/career-N/knowledge/incidents/`
+   - Knowledge umum (SOP, cara kerja, setup — tanpa kejadian) → `igrow/wiki/careers/career-N/knowledge/<slug>.md` (FLAT, JANGAN bikin subfolder per topik — topik lewat tags)
+   - Lesson → `igrow/wiki/careers/career-N/lessons-learned/`
+   - Skill terpakai → update `igrow/wiki/careers/career-N/skills.md`
+   - Screenshot → `igrow/raw/assets/YYYYMMDD-deskripsi.png` (WAJIB redact); rujuk dari note via `sources: [igrow/raw/assets/...]` + `![](../../raw/assets/...)` di body
+3. Format frontmatter ikut `igrow/SCHEMA.md` (type: incident|lesson|knowledge).
+   Body incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
+4. See Also: minimal 2 link (dual-link format).
+5. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: ingest/update).
+
+## Larangan
+Ikut DILARANG KERAS di AGENTS.md — redact data client sebelum nulis.
+
+## Kontradiksi dgn note lama
+Kalau cerita baru bertentangan dgn lesson/incident lama: JANGAN diam-diam timpa.
+Tanya klarifikasi singkat (1x), catat apa adanya, lalu isi field `contradictions: [slug-lama]`
+di frontmatter (SCHEMA). Lesson lama TIDAK dihapus — dua-duanya hidup, kontradiksi terdokumentasi.
+```
+
+### `project-skills/mentor.md`
+
+```markdown
+# Referensi: Mentor (UC3)
+
+Dipakai kalau user tanya roadmap belajar, kelemahan, "harus belajar apa", atau "role apa cocok buat saya".
+
+## Input data
+1. Target: `igrow/wiki/roadmap/skill-map.md` — AUTO-GENERATE kalau belum ada:
+   baca `about.md` career aktif (role + jobdesc), seluruh `careers/*/knowledge/`, `careers/*/lessons-learned/`,
+   `self-development/`, `tests/` → generate skill map per level + role-fit matching.
+   Human boleh edit manual, tapi bukan keharusan (agent auto-update setiap ada data baru).
+2. Terdokumentasi: `igrow/_index.md` (katalog careers + self-development)
+
+Knowledge gap = topik target yg TIDAK ada di index, ATAU cuma disebut sekali lewat.
+
+## Output
+
+### A. Jika user tanya "harus belajar apa" / roadmap
+- Known / Weak / Experience — tabel 3 kolom: skill yg ada notenya + dipakai di incident, skill target yg cuma disebut sekali, skill target yg belum tersentuh sama sekali
+- Update `wiki/roadmap/weak-topics.md` kalau ada temuan baru
+- Rekomendasi personal ("kamu sudah pernah kena X, mulai dari Y"), BUKAN roadmap generik
+
+### B. Jika user tanya "role apa cocok" / kecocokan karier
+- Role Fit — tabel: role A (X% cocok, kurang: Y, Z), role B (W% cocok, kurang: U, V), dst
+- Persentase dihitung dari: topik skill yang sudah ada / topik yang dibutuhkan role tsb
+- Sertakan 2 role paling cocok + 2 role paling jauh, masing-masing dengan gap spesifik
+- Rekomendasi personal ("kamu cocok X% untuk SRE karena sudah punya networking + incident, tapi kurang cloud — mulai dari AWS fundamentals")
+
+## Prasyarat jujur
+Kalau careers/ belum ada isi → bilang bahannya belum cukup,
+jangan ngarang gap analysis generik. (skill-map kosong BUKAN alasan menolak — generate dulu.)
+
+## Tutup
+Kalau ada file ditulis/diupdate (skill-map, weak-topics): ikut aturan wajib SCHEMA
+(update wiki/_index.md + master _index.md + log.md, op: update).
+```
+
+### `project-skills/daily-briefing.md`
+
+```markdown
+# Referensi: Daily Briefing (UC4)
+
+Dipicu cron 07:00. Topik: linux, windows-server, kubernetes, docker, vmware,
+cloud, networking, monitoring, devops, sre, security, cve (= tag taxonomy SCHEMA).
+
+## Langkah
+1. Web research berita terbaru (maks 5 info penting).
+2. Format output:
+
+```
+DAILY INFRA BRIEFING
+<tanggal>
+
+1. <Topik>
+   <berita>
+   Why it matters: ...
+```
+
+3. Prinsip: 5 info penting + alasan peduli. Bukan berita banyak.
+4. Kirim ke Telegram. Tidak menulis ke wiki/ kecuali ada yg layak jadi page
+   (kalau iya, ikut aturan wajib SCHEMA, op: ingest).
+```
+
+### `project-skills/study.md`
+
+```markdown
+# Referensi: Dokumentasi Belajar (UC5)
+
+Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
+
+## Langkah
+1. Sumber mentah (link/PDF/artikel)? → dump ke `igrow/raw/inbox/` (ikut pipeline AGENTS: inbox → articles/)
+   `YYYY-MM-DD-nama.md` + frontmatter raw (source_url, ingested).
+2. Note terstruktur → `igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama>/`
+   Frontmatter ikut SCHEMA (type: learning, sources: [igrow/raw/...]).
+   Body ikut template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also.
+3. Topik fuzzy-match ke taxonomy SCHEMA (konsisten lintas sesi).
+4. See Also: min 2 dual-link.
+5. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md + master + log.md (op: ingest).
+
+## Perintah
+"/study baru selesai materi X di KodeKloud: ..." → strukturkan.
+"/study bandingkan A dengan B" → page komparasi, tetap di folder sumber yg relevan.
+```
+
+### `project-skills/career-review.md`
+
+```markdown
+# Referensi: Career Review Quarterly (UC6)
+
+Dipicu cron quarterly atau user minta review.
+
+## Langkah
+1. Baca: `igrow/wiki/careers/` (semua), `wiki/roadmap/skill-map.md` (AUTO-GENERATE dari `about.md` + careers + self-dev),
+   `igrow/log.md` kuartal berjalan.
+2. Analisis 4 bagian: Learned (skill baru terdokumentasi kuartal ini), Experienced (insiden/pengalaman), Improved (topik yang notenya makin dalam), Weak (target skill-map yg belum tersentuh).
+3. Skill Inventory — hitung, bukan kira-kira:
+   % per area = (topik target yang sudah ada notenya di area itu) / (total topik
+   target `wiki/roadmap/skill-map.md` untuk area itu). Angka dari counting file,
+   bukan reasoning. Tiap bar + insight singkat (kenapa segitu, langkah berikutnya).
+4. Role Fit Trend — bandingkan % kecocokan role dari skill-map tahun lalu vs sekarang (naik/turun? Kenapa?).
+5. Tulis laporan ke `igrow/output/career-review-<YYYY>-Q<n>.md`.
+6. Update `wiki/profile/skills.md` + `career-summary.md`.
+7. Tutup dgn aturan wajib SCHEMA: update output/_index.md + master + log.md (op: review).
+```
+
+### `project-skills/lint.md`
+
+```markdown
+# Referensi: Lint Mingguan
+
+Dipicu cron Minggu 08:00. Cek kesehatan struktur `igrow/wiki/` — BUKAN baca
+ulang isi konten.
+
+## Cek (laporkan temuan saja, JANGAN ubah isi note)
+1. Orphan page: file `*.md` di wiki/ yang tidak tercatat di `_index.md`
+   terdekat. Lewati file berawalan `_` dan `.gitkeep`.
+2. Broken wikilink: `[[slug]]` tanpa file target — KECUALI slug tercatat di
+   `_index.md` dengan tanda `(placeholder)` (unresolved sengaja, lewati).
+3. Frontmatter note: 7 field wajib SCHEMA (title, created, updated, type,
+   tags, sources, confidence) — `contradictions` opsional.
+4. Tag di luar taxonomy SCHEMA.
+5. `_index.md` vs filesystem: entri index yang file-nya sudah tidak ada.
+
+## Tutup
+Append ringkasan ke `igrow/log.md` (op: lint). Kirim ke Telegram; semua
+bersih → cukup "wiki sehat".
+```
+
+### `project-skills/backup.md`
+
+```markdown
+# Backup Knowledge (UC4 — Cron Mingguan)
+
+Dipicu cron Minggu 03:00. Push `igrow/` ke GitHub privat `igrow-backup`.
+
+## Langkah
+
+1. Jalankan `igrow/project-skills/bash/backup.sh` — script handle add/commit/push, silent kalau no-change.
+2. Exit non-zero → laporkan error ke Telegram.
+3. Exit 0 + output "no changes" → jangan kirim pesan.
+
+## Aturan
+
+- Script cuma backup subfolder `igrow/`, bukan seluruh `HERMES_HOME/`.
+- Jangan utak-atik `.git/` manual.
+- Prasyarat: repo sudah diinisialisasi + remote (`git remote add origin`).
+```
+
+### `project-skills/bash/backup.sh`
+
+```bash
+#!/usr/bin/env bash
+# backup.sh — push igrow/ ke GitHub repo privat igrow-backup.
+# Dipicu via cron `hermes cron create` → baca backup.md → jalankan script ini.
+# Exit 0 = sukses atau silent (no-change). Exit non-zero = error.
+set -euo pipefail
+
+cd /opt/data/igrow || { echo "ERROR: cannot cd to igrow"; exit 1; }
+
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+  echo "ERROR: igrow/ bukan git repo — jalankan: git init && git add -A && git commit -m init"
+  exit 1
+fi
+
+git add -A
+if git diff --cached --quiet; then
+  echo "backup: no changes, skipping" >&2
+  exit 0
+fi
+
+git commit -m "backup $(date +%F)"
+
+if git push; then
+  echo "backup: pushed successfully"
+else
+  echo "ERROR: git push gagal" >&2
+  exit 1
+fi
+```
 
 ```markdown
 # iGROW — Aturan Inti
@@ -915,12 +1315,12 @@ Detail konfigurasi CouchDB + setup plugin LiveSync di Obsidian app menyusul kala
 - [x] `hermes setup` & `hermes gateway setup` udah dijalanin sekali di dalam container (secret otomatis ketulis ke `hermes-home/.env`, bukan file yang dibuat manual)
 - [x] Ownership `igrow-hermes/hermes-home/` di host sudah milik user kamu (bukan `root`) — cek `ls -la`
 - [x] `hermes doctor` jalan tanpa error, `docker exec -it igrow-hermes ls /opt/data` nampilin `.env`, `config.yaml`, `SOUL.md`, dst
-- [ ] Folder `igrow-hermes/hermes-home/igrow/` udah dibuat manual (subfolder `raw/`, `wiki/`, `output/`, `project-skills/`)
-- [ ] `AGENTS.md` ada di **root** `hermes-home/` (`hermes-home/AGENTS.md`), **bukan** di dalam `igrow/` — sudah diisi (lihat `iGROW_FINAL.md`)
-- [ ] `igrow-hermes/hermes-home/igrow/project-skills/` udah ada minimal 1 file markdown (`capture-experience.md` atau `mentor.md`), di-refer dari `AGENTS.md`
-- [ ] Tes chat lewat Telegram: Hermes bisa jawab dia lagi di direktori mana & nyebut aturan iGROW dari `AGENTS.md`
-- [ ] Tes capture 1 cerita/pengalaman lewat Telegram, cek file baru muncul di `igrow-hermes/hermes-home/igrow/` sesuai aturan penempatan
-- [ ] `igrow-hermes` nggak publish port & nggak disebut di proxy host manapun — murni diakses via Telegram
+- [x] Folder `igrow-hermes/hermes-home/igrow/` udah dibuat manual (subfolder `raw/`, `wiki/`, `output/`, `project-skills/`, `bash/`), **plus** 14 file inti (`SCHEMA.md`, `_index.md`, `log.md`, `raw/_index.md`, `wiki/_index.md`, `output/_index.md`, `project-skills/{capture-experience,mentor,daily-briefing,study,career-review,lint,backup}.md`, `project-skills/bash/backup.sh`)
+- [x] `AGENTS.md` ada di **root** `hermes-home/` (`hermes-home/AGENTS.md`), **bukan** di dalam `igrow/` — sudah diisi (lihat `iGROW_FINAL.md`)
+- [x] `igrow-hermes/hermes-home/igrow/project-skills/` udah ada minimal 1 file markdown (`capture-experience.md` atau `mentor.md`), di-refer dari `AGENTS.md`
+- [x] Tes chat lewat Telegram: Hermes bisa jawab dia lagi di direktori mana & nyebut aturan iGROW dari `AGENTS.md`
+- [x] Tes capture 1 cerita/pengalaman lewat Telegram, cek file baru muncul di `igrow-hermes/hermes-home/igrow/` sesuai aturan penempatan
+- [x] `igrow-hermes` nggak publish port & nggak disebut di proxy host manapun — murni diakses via Telegram
 - [ ] (Opsional) alias/bash function shortcut (`docker-igrow-hermes-setup`, `docker-logs`, dst) udah ditambahin ke `~/.bashrc` — lihat bagian "Shortcut CLI" di bawah
 - [ ] 4 cron job dibuat dari shell host pakai `hermes cron create` (daily-briefing, backup-knowledge, lint-mingguan, career-review) — lihat "Setup 4 Cron Job"; cek `hermes cron list` muncul 4 job
 

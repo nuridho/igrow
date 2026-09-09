@@ -17,7 +17,7 @@ echo ">> Memastikan nuridho ada di grup sudo..."
 usermod -aG sudo nuridho
 
 echo "=== 2. Set hostname ==="
-hostnamectl set-hostname whatsinsidegit
+hostnamectl set-hostname labs.nuridho
 
 echo "=== 3. Install & aktifkan fail2ban ==="
 sudo apt install fail2ban -y
