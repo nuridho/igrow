@@ -288,7 +288,16 @@ Di DNS management registrar domain kamu, buat A record untuk tiap subdomain:
 
 ```
 Type: A
-Name: portainer   (ulangi untuk: npm, dash, igrow)
+Name: `@` (root domain, service `home`)
+Value: <IP VPS kamu>
+TTL: default / auto
+```
+
+Atau kalau lebih suka daftar lengkap:
+
+```
+Type: A
+Name: portainer
 Value: <IP VPS kamu>
 TTL: default / auto
 ```
@@ -1060,7 +1069,7 @@ Chat ke bot kamu, coba beberapa hal:
 | # | Job | Schedule | Yang dikerjakan |
 |---|-----|----------|-----------------|
 | 1 | Daily Briefing | `0 7 * * *` (tiap hari 07:00) | Web research 5 berita infra → kirim ringkasan ke Telegram |
-| 2 | Backup Knowledge | `0 3 * * 0` (tiap Minggu 03:00) | Push `igrow/` ke GitHub repo privat `igrow-backup` (via https://igrow.yeonlabs.com) |
+| 2 | Backup Knowledge | `0 3 * * 0` (tiap Minggu 03:00) | Push `igrow/` ke GitHub repo privat `igrow-backup` (via SSH) |
 | 3 | Lint Mingguan | `0 8 * * 0` (tiap Minggu 08:00) | Cek kesehatan wiki (orphan, broken link, dll) → lapor ke Telegram |
 | 4 | Career Review | `0 9 1 1,4,7,10 *` (tgl 1 tiap kuartal, 09:00) | Review kuartalan → laporan ke `output/` + ringkasan ke Telegram |
 

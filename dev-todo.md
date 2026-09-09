@@ -31,9 +31,8 @@
 10. W8 — skill-map format belum baku
 11. W24 — test-flow Expected masih raw lama
 12. W25 — roadmap.md + completed.md 0 file runtime
-15. W28 — Fallback backup domain mustahil
-16. C3 — Ownership skill-map.md 3 versi
-17. I3 — op: init tidak ada di daftar ops
+13. W28 — Fallback backup domain mustahil
+14. C3 — Ownership skill-map.md 3 versi
 
 **Phase 4 — Improvement (kosmetik dokumen):**
 18. I5 — Definisi "Career Aktif" dobel
@@ -196,22 +195,22 @@
 
 ## Improvement
 
-- [ ] **I3** log.md:5 pakai `op: init` — tidak ada di daftar ops SCHEMA:21.
-  - Act: tambah `init` ke daftar ops, atau ganti entry-nya jadi `ingest`.
-  - Impact: `grep` per-op nggak ada entry yang lolos dari klasifikasi.
+- [x] ~~**I3**~~ ~~log.md:5 pakai `op: init` — tidak ada di daftar ops SCHEMA:21.~~
+  - Act: `init` SUDAH ada di daftar ops SCHEMA:23 (`init, ingest, update, lint, review, archive`). Dev-todo salah posisi line. Tidak perlu ubah apa-apa.
+  - Impact: `log.md` valid, bukan bug.
 - [ ] **I5** Definisi "Career Aktif" dobel (AGENTS.md:45 + capture-experience.md:6) — pindah ke SCHEMA, AGENTS tinggal rujuk.
   - Act: pindah ke SCHEMA, dua file itu tinggal 1 baris rujukan.
   - Impact: kalau aturannya berubah, cukup 1 tempat — nggak bisa drift.
-- [ ] **I6** FIN:753 rujuk "bagian Confidence Level di atas" — section-nya bernama "Confidence Score".
-  - Act: samakan nama section-nya.
+- [x] ~~**I6**~~ ~~FIN:753 rujuk "bagian Confidence Level di atas" — section-nya bernama "Confidence Score".~~
+  - Act: samakan nama section-nya → "Confidence Score".
   - Impact: rujukan internal nggak menggantung.
 - [ ] **I9** File `.md` hermes-home/ semua CRLF. Aman buat markdown; yang pecah cuma `.py`/`.sh` (`bad interpreter: ^M`) dan dua-duanya sudah nggak ada di hermes-home.
   - Act: pastikan LF kalau file executable balik ke hermes-home.
   - Impact: script bisa dieksekusi langsung.
-- [ ] **I12** build.md:662 tabel cron tulis backup "(via https://igrow.njzlabs.com)" — itu URL dashboard, bukan remote git.
-  - Act: hapus keterangan itu dari kolom job backup.
+- [x] ~~**I12**~~ ~~build.md:662 tabel cron tulis backup "(via https://igrow.njzlabs.com)" — itu URL dashboard, bukan remote git.~~
+  - Act: hapus keterangan itu dari kolom job backup → ganti "via SSH".
   - Impact: nggak ada yang nyangka dashboard bagian dari jalur backup.
-- [ ] **I15** build.md Step 7 minta A record untuk `portainer, npm, dash, igrow` — root domain (service `home`) tidak disebut, padahal ada di Domain Map & checklist.
+- [x] ~~**I15**~~ ~~build.md Step 7 minta A record untuk portainer, npm, dash, igrow — root domain (service home) tidak disebut, padahal ada di Domain Map & checklist.~~
   - Act: tambahkan root domain di daftar A record.
   - Impact: portofolio nggak 404 gara-gara DNS-nya kelewat.
 - [x] **I21** ~~`capture-experience.md` cuma handle incident/knowledge/lesson — belum ada flow "daftar kerjaan baru" (UC1.5)~~

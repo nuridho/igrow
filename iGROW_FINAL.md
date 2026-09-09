@@ -746,7 +746,7 @@ Kalau UC2 dibangun, skor jangan diserahkan ke reasoning LLM tiap kali — dihitu
 
 ### Format File — Markdown + YAML Frontmatter (bukan JSON terpisah)
 
-Note naratif (`wiki/careers/`, `wiki/self-development/`) dan hasil test (`wiki/tests/`) memakai pola gabungan metadata di YAML frontmatter + narasi di badan markdown — contoh di bagian Confidence Level di atas. Data file (`wiki/roadmap/`, `wiki/profile/`) pakai frontmatter minimal + body list; cuma `about.md` & `careers/*/skills.md` yang plain `Key: value` (lihat "Tipe File & Formatnya" di bawah). Alasan dipilih dibanding JSON terpisah:
+Note naratif (`wiki/careers/`, `wiki/self-development/`) dan hasil test (`wiki/tests/`) memakai pola gabungan metadata di YAML frontmatter + narasi di badan markdown — contoh di bagian Confidence Score di atas. Data file (`wiki/roadmap/`, `wiki/profile/`) pakai frontmatter minimal + body list; cuma `about.md` & `careers/*/skills.md` yang plain `Key: value` (lihat "Tipe File & Formatnya" di bawah). Alasan dipilih dibanding JSON terpisah:
 
 - Tetap bisa dibaca langsung tanpa tool/script apa pun (selaras prinsip "knowledge portable, tidak bergantung 1 provider")
 - Tetap gampang di-parse otomatis (library YAML/frontmatter biasa) untuk kebutuhan script seperti `confidence_calc.py`
