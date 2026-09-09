@@ -198,9 +198,9 @@
 - [x] ~~**I3**~~ ~~log.md:5 pakai `op: init` — tidak ada di daftar ops SCHEMA:21.~~
   - Act: `init` SUDAH ada di daftar ops SCHEMA:23 (`init, ingest, update, lint, review, archive`). Dev-todo salah posisi line. Tidak perlu ubah apa-apa.
   - Impact: `log.md` valid, bukan bug.
-- [ ] **I5** Definisi "Career Aktif" dobel (AGENTS.md:45 + capture-experience.md:6) — pindah ke SCHEMA, AGENTS tinggal rujuk.
-  - Act: pindah ke SCHEMA, dua file itu tinggal 1 baris rujukan.
-  - Impact: kalau aturannya berubah, cukup 1 tempat — nggak bisa drift.
+- [x] **I5** ~~Definisi "Career Aktif" dobel (AGENTS.md:45 + capture-experience.md:6) — pindah ke SCHEMA, AGENTS tinggal rujuk.~~
+  - Act: definisi pindah ke SCHEMA.md di Layer section (baris 16). AGENTS/FIN/build: ganti jadi 1 baris rujuk `igrow/SCHEMA.md`.
+  - Impact: satu sumber definisi — kalau aturannya berubah, cukup 1 tempat.
 - [x] ~~**I6**~~ ~~FIN:753 rujuk "bagian Confidence Level di atas" — section-nya bernama "Confidence Score".~~
   - Act: samakan nama section-nya → "Confidence Score".
   - Impact: rujukan internal nggak menggantung.

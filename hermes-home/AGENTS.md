@@ -43,9 +43,7 @@ wiki/ = executable.
 2. Update master `igrow/_index.md` (termasuk "Total pages" + "Last updated").
 3. Append `igrow/log.md`.
 
-## Career Aktif
-Career yang about.md-nya belum ada tanggal selesai = aktif. Incident baru
-masuk ke career itu.
+## Career aktif: rujuk `igrow/SCHEMA.md`.
 
 ## Perintah
 - /study  → dokumentasiin yang sudah dipelajari (ke wiki/self-development/...)
