@@ -662,40 +662,27 @@ Kalau suatu hari:
 
 **Knowledge tetap bisa dibawa** — asalkan langkah "Git/Backup" di atas benar-benar rutin dijalankan. Berikut implementasinya.
 
-### Implementasi: Cron Job Push ke GitHub (tiap 3 hari)
+### Implementasi: Backup via Hermes Cron
 
-Repo `igrow/` di-push otomatis ke GitHub (private repo) secara terjadwal, bukan manual satu-satu.
+Backup di-orchestrasi lewat cron Hermes, bukan crontab host. Flow:
 
-> Sesuai struktur folder di [🛠️ Implementasi Teknis — Hermes Agent](#-implementasi-teknis--hermes-agent-image-resmi), yang di-sync ke Git **hanya subfolder `igrow/`** di dalam `HERMES_HOME` (isinya `wiki/`, `raw/`, `roadmap/`, dst) — **bukan** seluruh `HERMES_HOME`, karena folder itu juga isinya session/state internal Hermes (`sessions/`, `memories/`, `logs/`, dll) yang bukan knowledge dan tidak perlu (bahkan sebaiknya tidak) ikut di-push ke Git.
+1. Cron job `backup-knowledge` (Minggu 03:00) → baca `igrow/project-skills/backup.md` → isi: jalankan `igrow/project-skills/bash/backup.sh`
+2. `backup.sh` → git add/commit/push ke repo GitHub privat `igrow-backup`, silent kalau no-change
+3. Exit non-zero → laporkan error ke Telegram; exit 0 + no-change → jangan kirim pesan
 
-**Script** (`~/whatsinsidegit/igrow-hermes/hermes-home/igrow/sync.sh`):
-
-```bash
-#!/bin/bash
-cd ~/whatsinsidegit/igrow-hermes/hermes-home/igrow || exit 1
-
-if [[ -n $(git status --porcelain) ]]; then
-  git add .
-  git commit -m "sync: $(date '+%Y-%m-%d') - scheduled backup"
-  git branch -M main
-  git push origin main
-  echo "$(date): pushed to GitHub" >> ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/.sync.log
-else
-  echo "$(date): no changes" >> ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/.sync.log
-fi
-```
+**Prasyarat** (sekali saja, lewat docker exec):
 
 ```bash
-chmod +x ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/sync.sh
+docker exec -it igrow-hermes bash
+cd /opt/data/igrow && git init && git add -A && git commit -m "init"
+git config --global credential.helper store
+git remote add origin https://<TOKEN>@github.com/nuridho/igrow-backup.git
+git branch -M main
+git push -u origin main
+exit
 ```
 
-**Crontab** (jalan tiap 3 hari jam 23:00):
-
-```
-0 23 */3 * * /home/username/whatsinsidegit/igrow-hermes/hermes-home/igrow/sync.sh
-```
-
-**Catatan risiko:** kalau VPS mati/corrupt di antara jadwal sync, ada kemungkinan kehilangan perubahan yang belum sempat di-push (maksimal 3 hari terakhir). Kalau merasa 3 hari terlalu lama, tinggal ganti `*/3` jadi `*/1` (tiap hari) — tanpa perlu ubah apa pun di script.
+> Script ini hanya backup subfolder `igrow/`, bukan seluruh `HERMES_HOME/` (state internal Hermes tidak perlu di-push). Jangan utak-atik `.git/` manual.
 
 ---
 
@@ -741,6 +728,7 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 | `career-review.md` | 6 | Review quarterly + hitung skill inventory |
 | `lint.md` | — | Dipicu cron Minggu 08:00, cek kesehatan struktur wiki |
 | `backup.md` | — | Dipicu cron Minggu 03:00, push `igrow/` ke GitHub privat |
+| `bash/backup.sh` | — | Script backup git: add/commit/push, silent no-change |
 | ~~`test-me.md`~~ | ~~2~~ | ⏸️ Phase 5 — belum dibuat |
 
 `wiki/roadmap/skill-map.md` = AUTO-GENERATE dari `about.md` + careers + self-development (bukan manual input). User boleh edit, tapi bukan keharusan. Semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
@@ -916,6 +904,8 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
         ├── career-review.md
         ├── lint.md
         ├── backup.md
+        ├── bash/
+        │   └── backup.sh
         ├── test-me.md                # ⏸️ PHASE 5 (UC2) — belum dibuat
         └── scripts/                  # ⏸️ PHASE 5 (UC2) — belum dibuat
             └── confidence_calc.py

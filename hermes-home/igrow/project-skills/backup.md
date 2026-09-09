@@ -1,19 +1,15 @@
-# Referensi: Backup Knowledge (Cron Mingguan)
+# Backup Knowledge (UC4 — Cron Mingguan)
 
-Dipicu cron Minggu 03:00. Push seluruh isi `igrow/` ke GitHub repo privat `igrow-backup`.
+Dipicu cron Minggu 03:00. Push `igrow/` ke GitHub privat `igrow-backup`.
 
 ## Langkah
 
-1. `cd igrow && git add -A`
-2. `git commit -m "backup $(date +%F)"`
-3. `git push`
+1. Jalankan `igrow/project-skills/bash/backup.sh` — script handle add/commit/push, silent kalau no-change.
+2. Exit non-zero → laporkan error ke Telegram.
+3. Exit 0 + output "no changes" → jangan kirim pesan.
 
 ## Aturan
 
-- **Silent**: kalau tidak ada perubahan (commit gagal karena nothing to commit),
-  JANGAN kirim pesan apapun ke Telegram.
-- **Push gagal**: laporkan error-nya ke Telegram (bisa jadi network block,
-  cek DNS/proxy container).
-- Jangan utak-atik `.git/` secara manual — backup ini satu-satunya cara
-  sync.
-</file>
+- Script cuma backup subfolder `igrow/`, bukan seluruh `HERMES_HOME/`.
+- Jangan utak-atik `.git/` manual.
+- Prasyarat: repo sudah diinisialisasi + remote (`git remote add origin`).

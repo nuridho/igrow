@@ -1,7 +1,7 @@
 # dev-todo — iGROW template
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C14 / W37 / I21. Void: `W4` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
+> Nomor berikutnya: C14 / W37 / I21. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
 > `FIN` = `iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
@@ -69,9 +69,9 @@
 - [x] **C2** ~~Job backup tidak tercermin di file runtime — agent bisa utak-atik `.git/` tanpa tahu~~
   - Act: 1 baris di AGENTS.md: "`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`."
   - Impact: agent tahu `.git/` bukan wilayahnya; backup nggak rusak gara-gara operasi tulis biasa.
-- [ ] **C3** Ownership `skill-map.md` beda di 3 file: SCHEMA.md:16 = human-owned, mentor.md:5 = "AUTO-GENERATE kalau belum ada", FIN:742 = "wajib diisi manual di awal".
-  - Act: SCHEMA:16 buang `skill-map.md` dari daftar human-owned; mentor.md step 1 jadi "regenerate kalau belum ada ATAU `about.md` lebih baru"; FIN:742 jadi agent-owned + human cuma edit 1 baris `Target:` di `about.md`.
-  - Impact: UC3 berhenti nunggu manusia ngisi file; porsi 20% untouched-target (UC2) dan pembagi % Skill Inventory (UC6) punya sumber pasti.
+- [x] **C3** ~~Ownership `skill-map.md` beda di 3 file: SCHEMA.md:16 = human-owned, mentor.md:5 = "AUTO-GENERATE kalau belum ada", FIN:742 = "wajib diisi manual di awal".~~
+  - Act: SCHEMA.md:16 buang skill-map dari human-owned + tambah rule agent-auto-generate (baca about.md + careers + self-dev → generate per level + section Role Fit); mentor.md → output Role Fit Matching (role cocok % + gap) + weak-topics; career-review.md → step 4 Role Fit Trend; FIN:742 → AUTO-GENERATE dari about.md + careers; FIN:539 → hapus "belum diisi = nggak ada pembanding".
+  - Impact: skill-map jadi input pasti untuk UC3 (gap + role-fit) dan UC6 (inventory + trend); UC3 nggak perlu nunggu manusia ngisi; porsi 20% untouched-target dan % Skill Inventory punya sumber konsisten.
 - [x] **C4** ~~test-me.md:19 `--date today` (string literal) matikan guard max +1/hari~~
   - Act: `--date today` → `--date $(date +%F)`.
   - Impact: skor nggak bisa digelembungkan dengan jawab benar berkali-kali di 1 sesi.
@@ -84,24 +84,18 @@
 - [x] **C7** ~~build.md klaim "delivery auto ke Telegram kamu" padahal ke-4 command tanpa `--deliver`; job dari shell host tidak punya chat asal.~~
   - Act: `--deliver telegram` ditambahkan di 4 command yang sama; kalimat "delivery auto" diganti penjelasan kenapa flag-nya wajib.
   - Impact: output job sampai ke HP, bukan cuma nyangkut di penyimpanan job.
-- [ ] **C8** Deploy `scp -r hermes-home/.` menimpa per-file → `igrow/_index.md`, `log.md`, `wiki/_index.md` versi VPS (34 page + riwayat ingest) ketimpa template kosong, sementara file wiki tetap ada.
-  - Act: build.md ganti perintah deploy jadi per-file, atau `rsync --exclude '_index.md' --exclude 'log.md'`; tandai 3 file itu "jangan pernah ikut deploy".
+- [x] **C8** ~~Deploy `scp -r hermes-home/.` menimpa per-file → `igrow/_index.md`, `log.md`, `wiki/_index.md` versi VPS (34 page + riwayat ingest) ketimpa template kosong, sementara file wiki tetap ada.~~
+  - Act: build.md ganti instruksi deploy dari `scp -r` ke `rsync -a --exclude '_index.md' --exclude 'log.md'`; tandai 3 file sebagai auto-generate VPS yang JANGAN ikut deploy.
   - Impact: katalog + audit trail VPS nggak ke-reset; lint nggak lapor orphan massal palsu tiap habis deploy.
-- [ ] **C9** Tidak ada `.gitignore` — artefak build gampang ke-track lagi (dulu `_index.json` + `__pycache__/*.pyc` ikut, dan cache `{}` bisa reset skor senyap; file-nya sudah kehapus bareng UC2, staged `D`).
-  - Act: `.gitignore` isi `__pycache__/`, `_index.json`, `*.zip`.
-  - Impact: artefak turunan nggak bisa balik ke repo diam-diam. Guard `load` pindah ke U2.
 - [ ] **C10** build.md Phase 2 tidak punya langkah membuat `SCHEMA.md`, 4 `_index.md`, `log.md`, `project-skills/*` — cuma `mkdir` + `AGENTS.md`.
   - Act: sisipin 1 langkah sesudah `mkdir`: kirim/tulis 7 file itu sebelum tes chat pertama.
   - Impact: AGENTS.md nggak nyuruh baca file yang nggak pernah dibuat; setup dari nol beneran reproducible.
-- [ ] **C11** VPS masih pra-fix: AGENTS.md tanpa blok "Apa Ini" / baris git-repo / screenshot assets / lint.md; SCHEMA+AGENTS masih `learning/` & `.processed/`; folder `wiki/learning/` + `raw/inbox/.processed/` masih ada. (Basis snapshot 2026-08-26; kondisi terkini belum diverifikasi.)
-  - Act: deploy ulang file runtime yang berubah, lalu di VPS `mv wiki/learning wiki/roadmap` + hapus `raw/inbox/.processed/`.
-  - Impact: agent di VPS dipandu aturan versi sekarang, bukan aturan yang sudah dibuang 2 batch lalu.
-- [ ] **C12** Dua spek backup bentrok: FIN:664-696 (`igrow/sync.sh` + crontab host, `0 23 */3 * *`, script tidak eksis) vs build.md (hermes cron `0 3 * * 0`).
+- [x] ~~**C12**~~ ~~Dua spek backup bentrok: FIN:664-696 (`igrow/sync.sh` + crontab host, `0 23 */3 * *`, script tidak eksis) vs build.md (hermes cron `0 3 * * 0`).~~
   - Act: hapus blok "Implementasi: Cron Job Push ke GitHub" + `sync.sh` dari FIN, ganti 1 baris yang nunjuk job #2 di build.md.
   - Impact: satu mekanisme backup; nggak ada script yang disuruh dipakai tapi nggak ada filenya.
-- [ ] **C13** testing/check.sh:15 masih cek `wiki/learning` (FAIL palsu) + seluruh file CRLF → `$'\r': command not found` begitu jalan di VPS.
-  - Act: `wiki/learning` → `wiki/roadmap` + simpan file pakai LF.
-  - Impact: harness verifikasi jalan lagi; sekarang mati sebelum ngecek apa pun.
+- [x] **C13** ~~testing/check.sh:15 masih cek `wiki/learning` (FAIL palsu) + seluruh file CRLF → `$'\r': command not found` begitu jalan di VPS.~~
+  - Act: check.sh sudah di-LF + sudah `wiki/roadmap` (verifikasi: 0 CR, 15: `wiki/roadmap`).
+  - Impact: harness verifikasi jalan lagi.
 
 ## Warning — inkonsistensi spec antar file
 
