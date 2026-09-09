@@ -14,7 +14,7 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 - `wiki/` — semua konten compiled, agent-owned.
 - `output/` — laporan turunan (career review, dst).
 |- Pengecualian human-owned (agent update cuma kalau diminta): semua `about.md` (kecuali saat daftar kerjaan baru — agent boleh auto-tutup career lama & auto-bikin about.md career baru).
-|- Pengecualian human-owned lain: `wiki/profile/career-goals.md` (user edit goal 1-3-5 tahun).
+|- Pengecualian human-owned lain: semua `about.md`.
 |- `skill-map.md` = AUTO-GENERATE (bukan human-owned). Agent baca `about.md` + seluruh `careers/` + `self-development/` + `lessons-learned/` → generate skill map per level + role-fit matching. User boleh edit manual, tapi bukan keharusan.
 
 ## Tiap operasi tulis WAJIB diakhiri
@@ -37,7 +37,6 @@ contradictions: [slug-lain]       # opsional
 ```
 - `about.md` & `careers/*/skills.md` tetap plain `Key: value` (bukan frontmatter).
 - `skill-map.md` → frontmatter minimal + body list/key:value per level (bukan data type — auto-generate, bukan manual input).
-- `career-goals.md` → plain `Key: value` (user input manual, bukan auto).
 
 ## Body note (wiki/careers/, wiki/self-development/)
 ```markdown

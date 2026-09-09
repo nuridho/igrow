@@ -886,7 +886,6 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │   │
     └── profile/                  # ringkasan karier — gabungan semua career
         ├── skills.md             # skill inventory gabungan lintas career
-        ├── career-goals.md       # goal 1-3-5 tahun (human-owned)
         └── career-summary.md
     │
     ├── output/                       # laporan turunan (career review quarterly, dst)

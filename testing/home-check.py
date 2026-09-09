@@ -32,7 +32,7 @@ chk(listed == set(skills), 'AGENTS vs disk project-skills: %s' % (listed ^ set(s
 
 # 2. semua path igrow/... yang dirujuk ada di disk (kecuali contoh + file yg agent generate sendiri)
 GEN = ('skill-map.md', 'weak-topics.md', 'roadmap.md', 'skills.md', 'about.md',
-       'career-summary.md', 'career-goals.md')
+       'career-summary.md')
 paths = set(re.findall(r'`(igrow/[\w./*-]+)`', ALL))
 missing = []
 for p in sorted(paths):
