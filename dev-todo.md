@@ -204,9 +204,9 @@
 - [x] ~~**I6**~~ ~~FIN:753 rujuk "bagian Confidence Level di atas" — section-nya bernama "Confidence Score".~~
   - Act: samakan nama section-nya → "Confidence Score".
   - Impact: rujukan internal nggak menggantung.
-- [ ] **I9** File `.md` hermes-home/ semua CRLF. Aman buat markdown; yang pecah cuma `.py`/`.sh` (`bad interpreter: ^M`) dan dua-duanya sudah nggak ada di hermes-home.
-  - Act: pastikan LF kalau file executable balik ke hermes-home.
-  - Impact: script bisa dieksekusi langsung.
+- [x] ~~**I9**~~ ~~File .md hermes-home/ semua CRLF. Aman buat markdown; yang pecah cuma .py/.sh (bad interpreter: ^M) dan dua-duanya sudah nggak ada di hermes-home.~~
+  - Act: `sed -i 's/\r$//'` semua .md di hermes-home/ — 11 file CRLF → LF.
+  - Impact: semua file .md konsisten LF, nggak ada yang CRLF lagi.
 - [x] ~~**I12**~~ ~~build.md:662 tabel cron tulis backup "(via https://igrow.njzlabs.com)" — itu URL dashboard, bukan remote git.~~
   - Act: hapus keterangan itu dari kolom job backup → ganti "via SSH".
   - Impact: nggak ada yang nyangka dashboard bagian dari jalur backup.
