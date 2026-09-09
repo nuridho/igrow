@@ -219,9 +219,9 @@
 - [x] **I17** ~~`wiki/profile/` punya 5 file di spec tapi career-review.md cuma update 2. `me.md` & `achievements.md` tanpa penulis.~~
   - Act: hapus `me.md` + `achievements.md` + `career-goals.md` dari spec (tree + body template + human-owned list), AGENTS (hermes-home/FIN/build byte-identik). Tinggal 2 file: `skills.md`, `career-summary.md`.
   - Impact: profile/ cuma 2 file auto — `skills.md` (dari skill-map), `career-summary.md` (dari review). Tidak ada human-owned di profile/.
-- [ ] **I18** `AGENTSnvk.md` (1.058 baris, referensi eksternal nvk) + `tobeAgentsigrow.md` (semua TODO `[x]`) masih di root dan masih menyebut `.processed/` + `learning/`.
-  - Act: 1 baris header "ARSIP — bukan spec aktif" di dua file itu.
-  - Impact: sesi baru nggak salah ambil spec mati sebagai acuan.
+- [x] **I18** ~~`AGENTSnvk.md` (1.058 baris, referensi eksternal nvk) + `AgentsNvk_iGrowVersion.md` (semua TODO `[x]`) masih di root dan masih menyebut `.processed/` + `learning/`.~~
+  - Act: tambah 1 baris header "[ARSIP — bukan spec aktif]" di dua file + rename `tobeAgentsigrow.md` → `AgentsNvk_iGrowVersion.md`.
+  - Impact: sesi baru nggak salah baca spec mati sebagai acuan.
 
 ## UC2 — Later (Phase 5)
 

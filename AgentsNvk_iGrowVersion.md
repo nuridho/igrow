@@ -1,4 +1,6 @@
-# iGROW + Pola Wiki — Rancangan (to-be)
+# [ARSIP — bukan spec aktif]
+
+Arsip dari rancangan migrasi wiki nvk (2026-08-25). Semua TODO sudah [x], spec aktif ada di `hermes-home/`. Jangan baca ini sebagai acuan.
 
 > Status: DIIMPLEMENTASIKAN di `hermes-home/` (2026-08-25), deployed ke VPS via `scp -r hermes-home/. nuridho@<vps>:~/whatsinsidegit/igrow-hermes/hermes-home/` + chown (2026-08-26). Testing berjalan (`testing/test-flow.md`).
 > Dasar: gist Karpathy + nvk/llm-wiki AGENTS.md (copy: `AGENTSnvk.md`).

@@ -1,4 +1,6 @@
-# LLM Wiki — Agent Instructions
+# [ARSIP — bukan spec aktif]
+
+Arsip dari migrasi wiki nvk (2026-08-25). Semua TODO sudah [x], spec aktif ada di `hermes-home/`. Jangan baca ini sebagai acuan.
 
 > This is an "idea file" in the spirit of [Karpathy's LLM Wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f). Paste it into any LLM agent (OpenAI Codex, Claude Code, OpenCode, Gemini Code Assist, or similar) and it will build and manage a wiki for you. The agent customizes the specifics; this file communicates the system.
 
