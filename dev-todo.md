@@ -216,9 +216,9 @@
 - [x] **I21** ~~`capture-experience.md` cuma handle incident/knowledge/lesson — belum ada flow "daftar kerjaan baru" (UC1.5)~~
   - Act: tambah section "Daftar Kerjaan Baru" di `hermes-home/igrow/project-skills/capture-experience.md` (tanya 1 ronde → bikin folder + about.md + skills.md) + Aturan Penempatan Cepat di 3 file (FIN/build/AGENTS byte-identik).
   - Impact: UC1 lengkap — bukan cuma simpan incident, tapi juga daftar career baru.
-- [ ] **I17** `wiki/profile/` punya 5 file di spec tapi career-review.md cuma update 2 (`skills.md`, `career-summary.md`). `me.md` & `achievements.md` tanpa penulis.
-  - Act: career-review.md step 5 tambah 2 file itu, atau buang dari spec.
-  - Impact: `profile/` nggak separuh kosong permanen setelah beberapa kuartal.
+- [x] **I17** ~~`wiki/profile/` punya 5 file di spec tapi career-review.md cuma update 2. `me.md` & `achievements.md` tanpa penulis.~~
+  - Act: hapus `me.md` + `achievements.md` dari FIN (tree + body template), AGENTS (hermes-home/FIN/build byte-identik). Tinggal 3 file: `skills.md`, `career-summary.md`, `career-goals.md`.
+  - Impact: spec = 3 file yang punya flow — `skills.md` (auto dari skill-map), `career-summary.md` (auto dari review), `career-goals.md` (human-owned). `me.md` data-nya derivable dari `careers/*/about.md`, `achievements.md` tidak punya flow.
 - [ ] **I18** `AGENTSnvk.md` (1.058 baris, referensi eksternal nvk) + `tobeAgentsigrow.md` (semua TODO `[x]`) masih di root dan masih menyebut `.processed/` + `learning/`.
   - Act: 1 baris header "ARSIP — bukan spec aktif" di dua file itu.
   - Impact: sesi baru nggak salah ambil spec mati sebagai acuan.

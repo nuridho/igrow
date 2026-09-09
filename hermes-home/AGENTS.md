@@ -20,7 +20,7 @@ wiki/ = executable.
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
   - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
-  - `profile/`             → ringkasan gabungan semua career
+  - `profile/`             → ringkasan karier — gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
 

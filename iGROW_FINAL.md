@@ -831,8 +831,7 @@ updated: 2026-08-22
    - `roadmap.md` → `- topik` (prioritas belajar)
    - `completed.md` → `- topik (YYYY-MM-DD)`
    - `weak-topics.md` → `- topik — alasan`
-   - `profile/me.md` → gabungan semua career: `## Career N` + `- Company/Role/Location/Period/Jobdesc`
-   - `profile/skills.md` dkk → `- Area` + bar / bullet singkat
+   - `profile/skills.md` → `- Area` + bar / bullet singkat
 
    `about.md` & `careers/*/skills.md` → plain `Key: value`, TANPA frontmatter.
 
@@ -885,12 +884,10 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │   │   ├── networking/
     │   │   └── incident/
     │   │
-    │   └── profile/                  # ringkasan & tujuan karier — GABUNGAN semua career
-    │       ├── me.md                 # "tentang saya" — gabungan about.md SEMUA career
-    │       ├── skills.md             # skill inventory gabungan lintas career
-    │       ├── achievements.md
-    │       ├── career-goals.md
-    │       └── career-summary.md
+    └── profile/                  # ringkasan karier — gabungan semua career
+        ├── skills.md             # skill inventory gabungan lintas career
+        ├── career-goals.md       # goal 1-3-5 tahun (human-owned)
+        └── career-summary.md
     │
     ├── output/                       # laporan turunan (career review quarterly, dst)
     │   └── _index.md                 # katalog output
@@ -978,7 +975,7 @@ wiki/ = executable.
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
   - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
-  - `profile/`             → ringkasan gabungan semua career
+  - `profile/`             → ringkasan karier — gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
 
