@@ -728,6 +728,7 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 | `career-review.md` | 6 | Review quarterly + hitung skill inventory |
 | `lint.md` | — | Dipicu cron Minggu 08:00, cek kesehatan struktur wiki |
 | `backup.md` | — | Dipicu cron Minggu 03:00, push `igrow/` ke GitHub privat |
+| `session-export.md` | — | Dipicu cron Minggu 03:15, dump memory+skills+igrow ke archive |
 | `bash/backup.sh` | — | Script backup git: add/commit/push, silent no-change |
 | ~~`test-me.md`~~ | ~~2~~ | ⏸️ Phase 5 — belum dibuat |
 
@@ -1012,6 +1013,7 @@ wiki/ = executable.
 - igrow/project-skills/career-review.md      → cron quarterly / user minta review
 - igrow/project-skills/lint.md               → dipicu cron Minggu 08:00
 - igrow/project-skills/backup.md             → dipicu cron Minggu 03:00
+- igrow/project-skills/session-export.md     → dipicu cron Minggu 03:15
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,

@@ -1043,6 +1043,7 @@ Career aktif: rujuk `igrow/SCHEMA.md`.
 - igrow/project-skills/career-review.md      → cron quarterly / user minta review
 - igrow/project-skills/lint.md               → dipicu cron Minggu 08:00
 - igrow/project-skills/backup.md             → dipicu cron Minggu 03:00
+- igrow/project-skills/session-export.md     → dipicu cron Minggu 03:15
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,

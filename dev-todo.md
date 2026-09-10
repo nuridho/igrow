@@ -1,7 +1,7 @@
 # dev-todo — iGROW template
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C14 / W37 / I21. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
+> Nomor berikutnya: C14 / W37 / I21 / I22. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
 > `FIN` = `iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
@@ -222,6 +222,9 @@
 - [x] **I18** ~~`AGENTSnvk.md` (1.058 baris, referensi eksternal nvk) + `AgentsNvk_iGrowVersion.md` (semua TODO `[x]`) masih di root dan masih menyebut `.processed/` + `learning/`.~~
   - Act: tambah 1 baris header "[ARSIP — bukan spec aktif]" di dua file + rename `tobeAgentsigrow.md` → `AgentsNvk_iGrowVersion.md`.
   - Impact: sesi baru nggak salah baca spec mati sebagai acuan.
+- [x] **I22** ~~Belum ada session capture/export — kalo pindah Hermes ke tool lain, conversation history + memory + skills ilang; knowledge base `hermes-home/igrow/` aman tapi agent baru harus setup dari 0.~~
+  - Act: bikin project-skill `session-export.md` + `bash/session-export.sh` (1 cron mingguan dump `memory/` + `skills/igrow/` + `igrow/` ke `log/sessions/archive/YYYY-MM-DD/` + on-demand command).
+  - Impact: migration ke tool lain = copy `igrow/` + extract archive, bukan mulai nol.
 
 ## UC2 — Later (Phase 5)
 
