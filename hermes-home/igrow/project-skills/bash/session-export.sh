@@ -30,6 +30,11 @@ else
   echo "WARN: memory dir not found at $MEMDIR" >&2
 fi
 
+# --- AGENTS.md (aturan inti) ---
+if [ -f "$HERMES_HOME/AGENTS.md" ]; then
+  cp "$HERMES_HOME/AGENTS.md" "$DEST/"
+fi
+
 # --- skills (hanya igrow project skill, bukan seluruh bundled) ---
 # ponytail: only export the igrow skill — it's the one that matters for migration.
 # Add more skill dirs here if needed.

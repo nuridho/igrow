@@ -677,8 +677,8 @@ docker exec -it igrow-hermes bash
 cd /opt/data/igrow && git init && git add -A && git commit -m "init"
 git config --global credential.helper store
 git remote add origin https://<TOKEN>@github.com/nuridho/igrow-backup.git
-git branch -M main
-git push -u origin main
+git branch -M master
+git push -u origin master
 exit
 ```
 
