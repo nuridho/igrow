@@ -721,16 +721,17 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 
 | File referensi | Use Case | Isi instruksi |
 |---|---|---|
-| `capture-experience.md` | 1 | Cerita pengalaman kerja → markdown terstruktur |
-| `mentor.md` | 3 | Gap analysis dari 2 sumber data |
-| `daily-briefing.md` | 4 | Dipicu cron 07:00, format ringkasan |
-| `study.md` | 5 | Dokumentasi belajar mandiri (perintah `/study`) → note terstruktur |
-| `career-review.md` | 6 | Review quarterly + hitung skill inventory |
-| `lint.md` | — | Dipicu cron Minggu 08:00, cek kesehatan struktur wiki |
-| `backup.md` | — | Dipicu cron Minggu 03:00, push `igrow/` ke GitHub privat |
-| `session-export.md` | — | Dipicu cron Minggu 03:15, dump memory+skills+igrow ke archive |
-| `bash/backup.sh` | — | Script backup git: add/commit/push, silent no-change |
-| ~~`test-me.md`~~ | ~~2~~ | ⏸️ Phase 5 — belum dibuat |
+|| `capture-experience.md` | 1 | Cerita pengalaman kerja → markdown terstruktur |
+|| `mentor.md` | 3 | Gap analysis dari 2 sumber data |
+|| `daily-briefing.md` | 4 | Dipicu cron 07:00, format ringkasan |
+|| `study.md` | 5 | Dokumentasi belajar mandiri (perintah `/study`) → note terstruktur |
+|| `career-review.md` | 6 | Review quarterly + hitung skill inventory |
+|| `maintenance/lint.md` | — | Cron 08:00 → health check wiki |
+|| `maintenance/backup.md` | — | Cron 03:00 → push igrow/ ke GitHub |
+|| `maintenance/session-export.md` | — | Cron 03:15 → dump memory+skills+igrow |
+| `maintenance/backup.sh` | — | Script backup git: add/commit/push, silent no-change |
+| `maintenance/session-export.sh` | — | Script export: dump memory+skills+igrow ke archive |
+|| ~~`test-me.md`~~ | ~~2~~ | ⏸️ Phase 5 — belum dibuat |
 
 `wiki/roadmap/skill-map.md` = AUTO-GENERATE dari `about.md` + careers + self-development (bukan manual input). User boleh edit, tapi bukan keharusan. Semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
 
