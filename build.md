@@ -939,7 +939,7 @@ Dipicu cron Minggu 03:00. Push `igrow/` ke GitHub privat `igrow-backup`.
 
 ## Langkah
 
-1. Jalankan `igrow/project-skills/bash/backup.sh` — script handle add/commit/push, silent kalau no-change.
+1. Jalankan `igrow/project-skills/maintenance/backup.sh` — script handle add/commit/push, silent kalau no-change.
 2. Exit non-zero → laporkan error ke Telegram.
 3. Exit 0 + output "no changes" → jangan kirim pesan.
 
@@ -950,7 +950,7 @@ Dipicu cron Minggu 03:00. Push `igrow/` ke GitHub privat `igrow-backup`.
 - Prasyarat: repo sudah diinisialisasi + remote (`git remote add origin`).
 ```
 
-### `project-skills/bash/backup.sh`
+### `project-skills/maintenance/backup.sh`
 
 ```bash
 #!/usr/bin/env bash
@@ -1041,9 +1041,9 @@ Career aktif: rujuk `igrow/SCHEMA.md`.
 - igrow/project-skills/daily-briefing.md     → dipicu cron 07:00
 - igrow/project-skills/study.md              → user /study
 - igrow/project-skills/career-review.md      → cron quarterly / user minta review
-- igrow/project-skills/lint.md               → dipicu cron Minggu 08:00
-- igrow/project-skills/backup.md             → dipicu cron Minggu 03:00
-- igrow/project-skills/session-export.md     → dipicu cron Minggu 03:15
+- igrow/project-skills/maintenance/lint.md    → dipicu cron Minggu 08:00
+- igrow/project-skills/maintenance/backup.md  → dipicu cron Minggu 03:00
+- igrow/project-skills/maintenance/session-export.md → dipicu cron Minggu 03:15
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,
@@ -1322,7 +1322,7 @@ Detail konfigurasi CouchDB + setup plugin LiveSync di Obsidian app menyusul kala
 - [x] `hermes setup` & `hermes gateway setup` udah dijalanin sekali di dalam container (secret otomatis ketulis ke `hermes-home/.env`, bukan file yang dibuat manual)
 - [x] Ownership `igrow-hermes/hermes-home/` di host sudah milik user kamu (bukan `root`) — cek `ls -la`
 - [x] `hermes doctor` jalan tanpa error, `docker exec -it igrow-hermes ls /opt/data` nampilin `.env`, `config.yaml`, `SOUL.md`, dst
-- [x] Folder `igrow-hermes/hermes-home/igrow/` udah dibuat manual (subfolder `raw/`, `wiki/`, `output/`, `project-skills/`, `bash/`), **plus** 14 file inti (`SCHEMA.md`, `_index.md`, `log.md`, `raw/_index.md`, `wiki/_index.md`, `output/_index.md`, `project-skills/{capture-experience,mentor,daily-briefing,study,career-review,lint,backup}.md`, `project-skills/bash/backup.sh`)
+- [x] Folder `igrow-hermes/hermes-home/igrow/` udah dibuat manual (subfolder `raw/`, `wiki/`, `output/`, `project-skills/`, `maintenance/`), **plus** 14 file inti (`SCHEMA.md`, `_index.md`, `log.md`, `raw/_index.md`, `wiki/_index.md`, `output/_index.md`, `project-skills/{capture-experience,mentor,daily-briefing,study,career-review}.md`, `project-skills/maintenance/{lint,backup,session-export}.md`, `project-skills/maintenance/backup.sh`)
 - [x] `AGENTS.md` ada di **root** `hermes-home/` (`hermes-home/AGENTS.md`), **bukan** di dalam `igrow/` — sudah diisi (lihat `iGROW_FINAL.md`)
 - [x] `igrow-hermes/hermes-home/igrow/project-skills/` udah ada minimal 1 file markdown (`capture-experience.md` atau `mentor.md`), di-refer dari `AGENTS.md`
 - [x] Tes chat lewat Telegram: Hermes bisa jawab dia lagi di direktori mana & nyebut aturan iGROW dari `AGENTS.md`

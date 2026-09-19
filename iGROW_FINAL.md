@@ -666,7 +666,7 @@ Kalau suatu hari:
 
 Backup di-orchestrasi lewat cron Hermes, bukan crontab host. Flow:
 
-1. Cron job `backup-knowledge` (Minggu 03:00) → baca `igrow/project-skills/backup.md` → isi: jalankan `igrow/project-skills/bash/backup.sh`
+1. Cron job `backup-knowledge` (Minggu 03:00) → baca `igrow/project-skills/maintenance/backup.md` → isi: jalankan `igrow/project-skills/maintenance/backup.sh`
 2. `backup.sh` → git add/commit/push ke repo GitHub privat `igrow-backup`, silent kalau no-change
 3. Exit non-zero → laporkan error ke Telegram; exit 0 + no-change → jangan kirim pesan
 
@@ -899,10 +899,12 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
         ├── daily-briefing.md
         ├── study.md
         ├── career-review.md
-        ├── lint.md
-        ├── backup.md
-        ├── bash/
-        │   └── backup.sh
+        ├── maintenance/
+        │   ├── lint.md
+        │   ├── backup.md
+        │   ├── session-export.md
+        │   ├── backup.sh
+        │   └── session-export.sh
         ├── test-me.md                # ⏸️ PHASE 5 (UC2) — belum dibuat
         └── scripts/                  # ⏸️ PHASE 5 (UC2) — belum dibuat
             └── confidence_calc.py
