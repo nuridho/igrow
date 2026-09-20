@@ -204,22 +204,68 @@
 ### Tier 2 — ROI Sedang (effort: trace edge case per UC)
 
 - [ ] **A4** Explicit reasoning untuk keputusan ambigu — agent tulis 1 baris alasan sebelum pilih
-  - Act: tambahkan di capture-experience.md step 2: "Cerita 'server mati pas backup' → incident atau knowledge? Reasoning: <tulis 1 baris: ada symptom/investigation/result = incident; cuma SOP tanpa kejadian = knowledge> lalu pilih."
-  - Impact: agent transparan kenapa pilih type/folder tertentu; user bisa koreksi keputusan yang salah tanpa debug isi file.
+  - Act: tambahkan di capture-experience.md step 2 (setelah "Rapikan cerita jadi note"):
+    ```
+    Tentukan type & folder — TULIS REASONING 1 BARIS:
+    - Cerita "server mati pas backup" → incident atau knowledge?
+      Reasoning: ada symptom + investigation + result = incident; cuma SOP tanpa kejadian = knowledge
+    - Pilih: incident → igrow/wiki/careers/career-N/knowledge/incidents/
+    ```
+  - Impact: agent transparan kenapa pilih type/folder tertentu; user bisa koreksi keputusan yang salah tanpa debug isi file. Konfirmasi passive (agent tulis reasoning, user koreksi kalau salah).
 - [ ] **A5** Fallback per langkah yang bisa gagal — instruksi eksplisit saat kondisi tidak ideal
-  - Act: tambahkan di mentor.md: "careers/ kosong → bilang bahannya kurang, jangan ngarang gap generik. skill-map.md belum ada / lebih lama dari about.md → auto-generate dulu, lalu analisa." Tambahkan di capture-experience.md: "Tag tidak cocok taxonomy → pilih terdekat + catat di contradictions field."
-  - Impact: agent tahu next-action saat data tidak lengkap; nol stuck/silent-fail.
+  - Act: 
+    - mentor.md tambah setelah "## Prasyarat jujur": "skill-map.md belum ada / lebih lama dari about.md → auto-generate dulu dari careers/+self-dev, lalu analisa. careers/ kosong → bilang 'Data karier belum cukup untuk gap analysis (minimal 3 incident/knowledge)', jangan ngarang roadmap generik."
+    - capture-experience.md tambah di step 3 (Format frontmatter): "Tag fuzzy-match ke taxonomy SCHEMA. Kalau tidak ada yang cocok (<60% similarity) → tanya user 1x 'Tag mana yang cocok: [3 opsi terdekat]?', jangan tebak. Kalau user skip → pakai terdekat + catat di `contradictions: ['taxonomy-mismatch']`."
+  - Impact: agent tahu next-action saat data tidak lengkap (auto-generate skill-map, tanya tag) atau kondisi mustahil (careers/ kosong → jujur); nol stuck/silent-fail/ngarang.
 
 ### Tier 3 — Effort Besar (DISKUTABEL — kerjakan hanya kalau Tier 1-2 terbukti kurang)
 
 > **Disclaimer:** Tier 3 mengubah pipeline & UX. Multi-turn mustahil untuk cron (UC4/UC6 zero human-in-loop). Chain-of-thought verbose, output 2x lebih panjang.
 
 - [ ] **A6** Chain-of-thought eksplisit — agent tulis reasoning sebelum SETIAP action
-  - Act: refactor capture-experience.md jadi: step 1 → agent tulis "Career aktif = career-N (about.md tanpa tanggal selesai)", step 2 → tulis "Cerita → type X karena Y", step 3 → tulis "Tags = A, B (dari taxonomy karena Z)", dst. Total 5 langkah jadi ~12 langkah (sisip reasoning step).
-  - Impact: akurasi naik 10-15% untuk model lemah (Llama 7B, Qwen 7B), tapi output 2x lebih panjang. Model kuat (Claude Opus, GPT-4) gain marginal (< 5%).
+  - Act: refactor capture-experience.md struktur step jadi:
+    ```
+    1. Tentukan career aktif
+       → OUTPUT: "Career aktif = career-2 (about.md tanpa tanggal selesai)"
+    2. Analisa cerita
+       → OUTPUT: "Cerita → incident (ada symptom: 'server down' + investigation + result)"
+       → OUTPUT: "Tags = linux, mysql (dari taxonomy: cerita menyebut 'MySQL crash on Ubuntu')"
+    3. Rapikan cerita jadi note (sama seperti sekarang)
+    4. Format frontmatter
+       → OUTPUT: "Field wajib: title/created/updated/type/tags/sources/confidence (7 field)"
+    5. See Also (sama seperti sekarang)
+    6. Update _index+log (sama seperti sekarang)
+    ```
+    Total: 5 langkah linier → 6 langkah + 4 reasoning output (10 sub-step). Terapkan ke 5 UC (capture-experience, study, mentor, daily-briefing, career-review).
+  - Impact: akurasi naik 10-15% untuk model lemah (Llama 7B, Qwen 7B), tapi output 2x lebih panjang (reasoning verbose). Model kuat (Claude Opus, GPT-4) gain marginal (<5%). Cost +$2.10/bulan (30 operasi) vs baseline Tier 1-2.
+  - **Disclaimer**: Output jadi verbose (agent tulis pemikiran tiap step). Trade-off: akurasi +10-15% (model lemah) vs conciseness turun 50%. Untuk model kuat, gain kecil tapi tetap bayar cost verbose.
 - [ ] **A7** Multi-turn simulation — UC kompleks jadi dialog konfirmasi bertahap
-  - Act: refactor capture-experience.md "Daftar Kerjaan Baru": Turn 1 tanya 6 pertanyaan → Turn 2 konfirmasi summary ("Company X, role Y, mulai Z — benar?") → Turn 3 eksekusi tulis file. HANYA untuk UC yang ada human-in-loop (UC1/UC3/UC5), TIDAK untuk cron (UC4/UC6).
-  - Impact: error input turun 20% (user bisa koreksi sebelum file tertulis), tapi cost 3-4x API call + 3-4x latency. Telegram UX jadi tanya-jawab berkali-kali sebelum hasil keluar.
+  - Act: refactor capture-experience.md sub-case "Daftar Kerjaan Baru":
+    ```
+    Turn 1 — Agent tanya:
+      1. Nama company?
+      2. Role/title?
+      3. Lokasi (kantor/remote)?
+      4. Start date? (end date opsional)
+      5. Job desc ringkas?
+      6. Vendor/client atau direct?
+    Turn 2 — Agent konfirmasi:
+      "Company: PT Maju Jaya
+       Role: Backend Engineer
+       Lokasi: Jakarta (kantor)
+       Period: 2025-01-15 s/d sekarang
+       Jobdesc: API development, MySQL, Docker
+       Type: Direct hire
+       
+       Benar? (ya/edit)"
+    Turn 3 — Eksekusi:
+      - Buat igrow/wiki/careers/career-N/about.md
+      - Update _index.md career-N entry
+      - Log ke careers/_log.md
+    ```
+    HANYA untuk UC1 sub-case "Daftar Kerjaan Baru" (1-2x/tahun, data kritikal). TIDAK untuk incident/knowledge rutin (10-30x/bulan). TIDAK untuk cron UC4/UC6 (zero human-in-loop).
+  - Impact: error input turun 20% untuk data kritikal (user koreksi sebelum file tertulis). Trade-off: cost 3-4x API call ($0.36 vs $0.09 per operasi), latency 3-4x (3 bolak-balik vs 1 pesan). Telegram UX jadi interview-style.
+  - **Disclaimer**: Multi-turn MUSTAHIL untuk cron job (UC4 daily briefing, UC6 career review = zero human). Hanya applicable untuk UC1/UC3/UC5 yang dipicu manual. Cost naik 300% per operasi. UX berubah dari "cerita → langsung simpan" jadi "cerita → tanya-jawab 3-4 turn → baru simpan".
 
 ## UC2 — Later (Phase 5)
 
