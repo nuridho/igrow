@@ -192,14 +192,73 @@
 ### Tier 1 — ROI Tinggi (effort: copy-paste + insert)
 
 - [ ] **A1** Few-shot examples — 1 contoh lengkap input→output per UC di section `## Contoh Eksekusi`
-  - Act: tambahkan di capture-experience.md (cerita incident CPU spike → frontmatter 7 field + body 6 section), study.md (link Redis → raw/inbox/ + note), mentor.md ("role apa cocok" → tabel Role Fit 3 baris), daily-briefing.md (output 5 info + Why it matters), career-review.md (quarterly → skill inventory + role fit trend).
-  - Impact: model mid (Sonnet/Haiku/Qwen) konsisten 15-25% lebih akurat; model tahu bentuk output yang diharapkan tanpa trial-error.
+  - Act: tambahkan di akhir 5 file UC:
+    - capture-experience.md:
+      ```
+      ## Contoh Eksekusi
+      
+      Input: "Kemarin server production down 2 jam. CPU 100% gara-gara backup MySQL jalan pas jam sibuk. Akhirnya matiin backup, server normal lagi."
+      
+      Output:
+      ---
+      title: MySQL Backup CPU Spike Incident
+      created: 2025-01-20
+      updated: 2025-01-20
+      type: incident
+      tags: [linux, mysql, backup, performance]
+      sources: []
+      confidence: high
+      ---
+      
+      ## Ringkasan
+      Server production down 2 jam karena CPU 100% saat backup MySQL berjalan.
+      
+      ## Symptom
+      - Server production tidak responsif
+      - CPU usage 100%
+      - Terjadi saat jam sibuk (peak hours)
+      
+      ## Investigation
+      - Cek top: proses mysqldump menghabiskan CPU
+      - Backup schedule: berjalan jam 14:00 (peak traffic)
+      
+      ## Action
+      - Matikan proses backup
+      - Reschedule backup ke jam 03:00 (off-peak)
+      
+      ## Result
+      Server kembali normal setelah backup dihentikan.
+      
+      ## See Also
+      - [[backup-scheduling]]
+      - [[mysql-performance-tuning]]
+      ```
+    - study.md: "Input: '/study selesai Redis caching course' → Output: raw/inbox/2025-01-20-redis-caching.md + wiki/self-development/Bootcamp/Redis-Caching/redis-basics.md (frontmatter type: learning, tags: [redis, caching, backend], body: Ringkasan/Detail/Contoh/Referensi/See Also)"
+    - mentor.md: "Input: 'role apa cocok buat saya?' → Output tabel: SRE (75% cocok, kurang: terraform, prometheus) | DevOps (60%, kurang: CI/CD, ansible) | Backend (50%, kurang: microservices)"
+    - daily-briefing.md: "Output: 1. Kubernetes 1.29 released (security patch CVE-2024-xxxx). Why it matters: patch wajib untuk cluster production. 2-5. [...]"
+    - career-review.md: "Output: Skill Inventory Q1 2025: Linux 80% mastered, Networking 60%, Cloud 40%. Role Fit Trend: SRE 75% (naik dari 65% Q4 2024)."
+  - Impact: model mid (Sonnet/Haiku/Qwen) konsisten 15-25% lebih akurat; model tahu bentuk output yang diharapkan tanpa trial-error. Few-shot = teknik prompting paling efektif per research.
 - [ ] **A2** Role definition — 1 baris di awal tiap UC: "Kamu = wiki compiler. Input mentah → structured page. Human edit manual = jarang."
-  - Act: tambahkan di 5 UC file (capture-experience, study, mentor, daily-briefing, career-review).
-  - Impact: agent paham konteks kerja (compiler otomatis, bukan interviewer/tutor interaktif).
-- [ ] **A3** Verification checkpoint — self-check sebelum nulis untuk UC yang >3 langkah
-  - Act: tambahkan di capture-experience.md step 4 & study.md step 4: "Self-check sebelum tulis file: (1) frontmatter 7 field wajib? (2) tags ⊂ taxonomy SCHEMA? (3) sources: prefix `igrow/`? (4) min 2 dual-link See Also?"
-  - Impact: error struktur (frontmatter kurang, tag typo, path salah) tertangkap sebelum nulis file, bukan saat lint/cron.
+  - Act: tambahkan setelah header `# Referensi: <UC>` di 5 file:
+    - capture-experience.md: "Kamu = wiki compiler iGROW. Cerita mentah user → structured note di igrow/wiki/. Human edit wiki manual = jarang (itu domain kamu)."
+    - study.md: "Kamu = wiki compiler iGROW. Artikel/course mentah → structured learning note. Human edit wiki manual = jarang."
+    - mentor.md: "Kamu = mentor iGROW berbasis data. Analisa gap dari wiki/ yang ada, BUKAN roadmap generik."
+    - daily-briefing.md: "Kamu = infra news curator. 5 berita penting + alasan peduli, bukan banyak berita tanpa konteks."
+    - career-review.md: "Kamu = career analyst iGROW. Review berbasis data wiki/, BUKAN opini generik."
+  - Impact: agent paham konteks kerja (compiler otomatis/analyst data-driven, bukan interviewer/tutor interaktif/opini generik). Role clarity = kurangi halusinasi 10-15%.
+- [ ] **A3** Verification checkpoint — self-check sebelum tulis untuk UC yang >3 langkah
+  - Act: tambahkan sebelum step "Update _index+log" di 2 file:
+    - capture-experience.md step 5 (setelah "See Also"):
+      ```
+      Self-check sebelum commit ke disk:
+      1. Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
+      2. Tags ⊂ taxonomy SCHEMA? (linux|networking|monitoring|..., cek igrow/SCHEMA.md)
+      3. sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
+      4. Min 2 dual-link See Also? (format `[[slug]]`)
+      Kalau ada yang kurang → STOP, perbaiki dulu sebelum tulis file.
+      ```
+    - study.md step 5 (setelah "See Also"): sama seperti di atas.
+  - Impact: error struktur (frontmatter kurang, tag typo `linuxx`, path salah `raw/...` tanpa prefix, orphan page tanpa link) tertangkap sebelum nulis file, bukan saat lint/cron. Checkpoint = safety net 80% error struktural.
 
 ### Tier 2 — ROI Sedang (effort: trace edge case per UC)
 
