@@ -183,6 +183,44 @@
   - Act: bikin project-skill `session-export.md` + `session-export.sh`.
   - Impact: migration ke tool lain = copy `igrow/` + extract archive, bukan mulai nol.
 
+## Advanced Prompting
+
+> Tingkatkan kualitas project-skills (UC1/3/4/5/6) dengan teknik prompting proven untuk meminimalisir debugging.
+> **Prioritas konsistensi over conciseness** — output boleh panjang/minta validasi ulang, yang penting akurat.
+> Tier 1 = ROI tinggi (effort kecil, dampak jelas). Tier 2 = ROI sedang (effort medium). Tier 3 = effort besar (refactor pipeline, 4x API call untuk multi-turn).
+
+### Tier 1 — ROI Tinggi (effort: copy-paste + insert)
+
+- [ ] **A1** Few-shot examples — 1 contoh lengkap input→output per UC di section `## Contoh Eksekusi`
+  - Act: tambahkan di capture-experience.md (cerita incident CPU spike → frontmatter 7 field + body 6 section), study.md (link Redis → raw/inbox/ + note), mentor.md ("role apa cocok" → tabel Role Fit 3 baris), daily-briefing.md (output 5 info + Why it matters), career-review.md (quarterly → skill inventory + role fit trend).
+  - Impact: model mid (Sonnet/Haiku/Qwen) konsisten 15-25% lebih akurat; model tahu bentuk output yang diharapkan tanpa trial-error.
+- [ ] **A2** Role definition — 1 baris di awal tiap UC: "Kamu = wiki compiler. Input mentah → structured page. Human edit manual = jarang."
+  - Act: tambahkan di 5 UC file (capture-experience, study, mentor, daily-briefing, career-review).
+  - Impact: agent paham konteks kerja (compiler otomatis, bukan interviewer/tutor interaktif).
+- [ ] **A3** Verification checkpoint — self-check sebelum nulis untuk UC yang >3 langkah
+  - Act: tambahkan di capture-experience.md step 4 & study.md step 4: "Self-check sebelum tulis file: (1) frontmatter 7 field wajib? (2) tags ⊂ taxonomy SCHEMA? (3) sources: prefix `igrow/`? (4) min 2 dual-link See Also?"
+  - Impact: error struktur (frontmatter kurang, tag typo, path salah) tertangkap sebelum nulis file, bukan saat lint/cron.
+
+### Tier 2 — ROI Sedang (effort: trace edge case per UC)
+
+- [ ] **A4** Explicit reasoning untuk keputusan ambigu — agent tulis 1 baris alasan sebelum pilih
+  - Act: tambahkan di capture-experience.md step 2: "Cerita 'server mati pas backup' → incident atau knowledge? Reasoning: <tulis 1 baris: ada symptom/investigation/result = incident; cuma SOP tanpa kejadian = knowledge> lalu pilih."
+  - Impact: agent transparan kenapa pilih type/folder tertentu; user bisa koreksi keputusan yang salah tanpa debug isi file.
+- [ ] **A5** Fallback per langkah yang bisa gagal — instruksi eksplisit saat kondisi tidak ideal
+  - Act: tambahkan di mentor.md: "careers/ kosong → bilang bahannya kurang, jangan ngarang gap generik. skill-map.md belum ada / lebih lama dari about.md → auto-generate dulu, lalu analisa." Tambahkan di capture-experience.md: "Tag tidak cocok taxonomy → pilih terdekat + catat di contradictions field."
+  - Impact: agent tahu next-action saat data tidak lengkap; nol stuck/silent-fail.
+
+### Tier 3 — Effort Besar (DISKUTABEL — kerjakan hanya kalau Tier 1-2 terbukti kurang)
+
+> **Disclaimer:** Tier 3 mengubah pipeline & UX. Multi-turn mustahil untuk cron (UC4/UC6 zero human-in-loop). Chain-of-thought verbose, output 2x lebih panjang.
+
+- [ ] **A6** Chain-of-thought eksplisit — agent tulis reasoning sebelum SETIAP action
+  - Act: refactor capture-experience.md jadi: step 1 → agent tulis "Career aktif = career-N (about.md tanpa tanggal selesai)", step 2 → tulis "Cerita → type X karena Y", step 3 → tulis "Tags = A, B (dari taxonomy karena Z)", dst. Total 5 langkah jadi ~12 langkah (sisip reasoning step).
+  - Impact: akurasi naik 10-15% untuk model lemah (Llama 7B, Qwen 7B), tapi output 2x lebih panjang. Model kuat (Claude Opus, GPT-4) gain marginal (< 5%).
+- [ ] **A7** Multi-turn simulation — UC kompleks jadi dialog konfirmasi bertahap
+  - Act: refactor capture-experience.md "Daftar Kerjaan Baru": Turn 1 tanya 6 pertanyaan → Turn 2 konfirmasi summary ("Company X, role Y, mulai Z — benar?") → Turn 3 eksekusi tulis file. HANYA untuk UC yang ada human-in-loop (UC1/UC3/UC5), TIDAK untuk cron (UC4/UC6).
+  - Impact: error input turun 20% (user bisa koreksi sebelum file tertulis), tapi cost 3-4x API call + 3-4x latency. Telegram UX jadi tanya-jawab berkali-kali sebelum hasil keluar.
+
 ## UC2 — Later (Phase 5)
 
 > UC2 (\"Uji Saya\") **dihapus dari hermes-home** 2026-09-04 — core UC1/3/4/5/6 dulu.
