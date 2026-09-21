@@ -38,7 +38,7 @@ chk('PHASE 5' in re.search(r'tests/.*', tree).group(0), 'W11: tree tests/ belum 
 chk(not [p for p in ('test-me', 'confidence_calc', 'wiki/tests', 'source_type', 'mastered')
          if p in SCHEMA + AGENTS + CAP + rd('hermes-home/igrow/project-skills/mentor.md')
          + rd('hermes-home/igrow/project-skills/career-review.md')
-         + rd('hermes-home/igrow/project-skills/lint.md')],
+         + rd('hermes-home/igrow/project-skills/maintenance/lint.md')],
     'W11/UC2: hermes-home masih ada jejak UC2')
 
 # W12 raw/assets/ ada di tree
@@ -63,7 +63,7 @@ bad_src = re.findall(r'sources: \[(?!\]|igrow/)[^\]]+\]', RUNTIME + FIN)
 chk(not bad_src, 'W15: sources: tanpa prefix igrow/: %s' % bad_src)
 
 # W16 jumlah field wajib konsisten: SCHEMA == lint.md == check.sh
-LINT = rd('hermes-home/igrow/project-skills/lint.md')
+LINT = rd('hermes-home/igrow/project-skills/maintenance/lint.md')
 CHECK = rd('testing/check.sh')
 fm = re.search(r'```yaml\n---\n(.*?)\n---\n```', SCHEMA, re.S).group(1)
 req = [l.split(':')[0] for l in fm.split('\n') if ':' in l and 'contradictions' not in l]
