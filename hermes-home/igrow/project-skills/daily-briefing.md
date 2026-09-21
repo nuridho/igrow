@@ -7,6 +7,7 @@ cloud, networking, monitoring, devops, sre, security, cve (= tag taxonomy SCHEMA
 
 ## Langkah
 1. Web research berita terbaru (maks 5 info penting).
+   → OUTPUT: "Pilih <berita> karena <relevan ke topik/infra kamu>" — 1 baris per item sebelum masuk format akhir.
 2. Format output:
 
 ```

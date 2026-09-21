@@ -12,6 +12,7 @@ Dipicu cron quarterly atau user minta review.
    % per area = (topik target yang sudah ada notenya di area itu) / (total topik
    target `wiki/roadmap/skill-map.md` untuk area itu). Angka dari counting file,
    bukan reasoning. Tiap bar + insight singkat (kenapa segitu, langkah berikutnya).
+   → OUTPUT: "Linux = 4/5 topik ada notenya = 80%" (tunjukin pembilang/penyebut, bukan cuma hasil).
 4. Role Fit Trend — bandingkan % kecocokan role dari skill-map tahun lalu vs sekarang (naik/turun? Kenapa?).
 5. Tulis laporan ke `igrow/output/career-review-<YYYY>-Q<n>.md`.
 6. Update `wiki/profile/skills.md` + `career-summary.md`.

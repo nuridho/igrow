@@ -12,6 +12,7 @@ Dipakai kalau user tanya roadmap belajar, kelemahan, "harus belajar apa", atau "
 2. Terdokumentasi: `igrow/_index.md` (katalog careers + self-development)
 
 Knowledge gap = topik target yg TIDAK ada di index, ATAU cuma disebut sekali lewat.
+→ OUTPUT: "Gap = <topik> (di skill-map tapi 0/1x disebut di index)" sebelum tulis tabel/rekomendasi.
 
 ## Output
 

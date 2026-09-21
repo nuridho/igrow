@@ -232,23 +232,9 @@
 
 > **Disclaimer:** Tier 3 mengubah pipeline & UX. Multi-turn mustahil untuk cron (UC4/UC6 zero human-in-loop). Chain-of-thought verbose, output 2x lebih panjang.
 
-- [ ] **A6** Chain-of-thought eksplisit — agent tulis reasoning sebelum SETIAP action
-  - Act: refactor capture-experience.md struktur step jadi:
-    ```
-    1. Tentukan career aktif
-       → OUTPUT: "Career aktif = career-2 (about.md tanpa tanggal selesai)"
-    2. Analisa cerita
-       → OUTPUT: "Cerita → incident (ada symptom: 'server down' + investigation + result)"
-       → OUTPUT: "Tags = linux, mysql (dari taxonomy: cerita menyebut 'MySQL crash on Ubuntu')"
-    3. Rapikan cerita jadi note (sama seperti sekarang)
-    4. Format frontmatter
-       → OUTPUT: "Field wajib: title/created/updated/type/tags/sources/confidence (7 field)"
-    5. See Also (sama seperti sekarang)
-    6. Update _index+log (sama seperti sekarang)
-    ```
-    Total: 5 langkah linier → 6 langkah + 4 reasoning output (10 sub-step). Terapkan ke 5 UC (capture-experience, study, mentor, daily-briefing, career-review).
-  - Impact: akurasi naik 10-15% untuk model lemah (Llama 7B, Qwen 7B), tapi output 2x lebih panjang (reasoning verbose). Model kuat (Claude Opus, GPT-4) gain marginal (<5%). Cost +$2.10/bulan (30 operasi) vs baseline Tier 1-2.
-  - **Disclaimer**: Output jadi verbose (agent tulis pemikiran tiap step). Trade-off: akurasi +10-15% (model lemah) vs conciseness turun 50%. Untuk model kuat, gain kecil tapi tetap bayar cost verbose.
+- [x] ~~**A6** Chain-of-thought eksplisit — agent tulis reasoning sebelum SETIAP action~~
+  - Act (revisi lazy — bukan refactor 10-substep penuh): 1 baris `→ OUTPUT:` di titik keputusan paling berisiko per UC (bukan tiap step): capture-experience (career aktif), study (topik taxonomy), mentor (gap detection), daily-briefing (kurasi berita), career-review (skill inventory hitung).
+  - Impact: transparansi keputusan tanpa 2x output length — reasoning cuma di titik yang sering salah, bukan tiap langkah rutin (career aktif/format frontmatter yang deterministik nggak perlu reasoning verbose).
 - [ ] **A7** Multi-turn simulation — UC kompleks jadi dialog konfirmasi bertahap
   - Act: refactor capture-experience.md sub-case "Daftar Kerjaan Baru":
     ```

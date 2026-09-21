@@ -24,6 +24,7 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
 
 ## Langkah
 1. Tentukan career aktif: `igrow/wiki/careers/*/about.md` yg belum ada tanggal selesai.
+   → OUTPUT: "Career aktif = career-N (about.md tanpa tanggal selesai)"
 2. Rapikan cerita jadi note terstruktur:
    - Incident → `igrow/wiki/careers/career-N/knowledge/incidents/`
    - Knowledge umum (SOP, cara kerja, setup — tanpa kejadian) → `igrow/wiki/careers/career-N/knowledge/<slug>.md` (FLAT, JANGAN bikin subfolder per topik — topik lewat tags)

@@ -11,6 +11,7 @@ Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
    Frontmatter ikut SCHEMA (type: learning, sources: [igrow/raw/...]).
    Body ikut template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also.
 3. Topik fuzzy-match ke taxonomy SCHEMA (konsisten lintas sesi).
+   → OUTPUT: "Topik = <tag> (cocok dengan taxonomy SCHEMA: <alasan singkat>)"
 4. See Also: min 2 dual-link.
 
 Self-check sebelum commit ke disk:
