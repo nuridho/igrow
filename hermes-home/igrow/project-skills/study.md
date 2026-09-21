@@ -1,5 +1,7 @@
 # Referensi: Dokumentasi Belajar (UC5)
 
+Kamu = wiki compiler iGROW. Artikel/course mentah → structured learning note. Human edit wiki manual = jarang.
+
 Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 
 ## Langkah
@@ -15,3 +17,13 @@ Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 ## Perintah
 "/study baru selesai materi X di KodeKloud: ..." → strukturkan.
 "/study bandingkan A dengan B" → page komparasi, tetap di folder sumber yg relevan.
+
+## Contoh Eksekusi
+
+Input: "/study selesai Redis caching course"
+
+Output: 
+- raw/inbox/2025-01-20-redis-caching.md (source dump)
+- wiki/self-development/Bootcamp/Redis-Caching/redis-basics.md
+  Frontmatter: type: learning, tags: [redis, caching, backend], sources: [igrow/raw/inbox/2025-01-20-redis-caching.md]
+  Body: Ringkasan / Detail / Contoh / Referensi / See Also

@@ -1,5 +1,7 @@
 # Referensi: Daily Briefing (UC4)
 
+Kamu = infra news curator. 5 berita penting + alasan peduli, bukan banyak berita tanpa konteks.
+
 Dipicu cron 07:00. Topik: linux, windows-server, kubernetes, docker, vmware,
 cloud, networking, monitoring, devops, sre, security, cve (= tag taxonomy SCHEMA).
 
@@ -19,3 +21,9 @@ DAILY INFRA BRIEFING
 3. Prinsip: 5 info penting + alasan peduli. Bukan berita banyak.
 4. Kirim ke Telegram. Tidak menulis ke wiki/ kecuali ada yg layak jadi page
    (kalau iya, ikut aturan wajib SCHEMA, op: ingest).
+
+## Contoh Eksekusi
+
+Output:
+1. Kubernetes 1.29 released (security patch CVE-2024-xxxx). Why it matters: patch wajib untuk cluster production.
+2-5. [...]

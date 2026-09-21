@@ -191,60 +191,11 @@
 
 ### Tier 1 — ROI Tinggi (effort: copy-paste + insert)
 
-- [ ] **A1** Few-shot examples — 1 contoh lengkap input→output per UC di section `## Contoh Eksekusi`
-  - Act: tambahkan di akhir 5 file UC:
-    - capture-experience.md:
-      ```
-      ## Contoh Eksekusi
-      
-      Input: "Kemarin server production down 2 jam. CPU 100% gara-gara backup MySQL jalan pas jam sibuk. Akhirnya matiin backup, server normal lagi."
-      
-      Output:
-      ---
-      title: MySQL Backup CPU Spike Incident
-      created: 2025-01-20
-      updated: 2025-01-20
-      type: incident
-      tags: [linux, mysql, backup, performance]
-      sources: []
-      confidence: high
-      ---
-      
-      ## Ringkasan
-      Server production down 2 jam karena CPU 100% saat backup MySQL berjalan.
-      
-      ## Symptom
-      - Server production tidak responsif
-      - CPU usage 100%
-      - Terjadi saat jam sibuk (peak hours)
-      
-      ## Investigation
-      - Cek top: proses mysqldump menghabiskan CPU
-      - Backup schedule: berjalan jam 14:00 (peak traffic)
-      
-      ## Action
-      - Matikan proses backup
-      - Reschedule backup ke jam 03:00 (off-peak)
-      
-      ## Result
-      Server kembali normal setelah backup dihentikan.
-      
-      ## See Also
-      - [[backup-scheduling]]
-      - [[mysql-performance-tuning]]
-      ```
-    - study.md: "Input: '/study selesai Redis caching course' → Output: raw/inbox/2025-01-20-redis-caching.md + wiki/self-development/Bootcamp/Redis-Caching/redis-basics.md (frontmatter type: learning, tags: [redis, caching, backend], body: Ringkasan/Detail/Contoh/Referensi/See Also)"
-    - mentor.md: "Input: 'role apa cocok buat saya?' → Output tabel: SRE (75% cocok, kurang: terraform, prometheus) | DevOps (60%, kurang: CI/CD, ansible) | Backend (50%, kurang: microservices)"
-    - daily-briefing.md: "Output: 1. Kubernetes 1.29 released (security patch CVE-2024-xxxx). Why it matters: patch wajib untuk cluster production. 2-5. [...]"
-    - career-review.md: "Output: Skill Inventory Q1 2025: Linux 80% mastered, Networking 60%, Cloud 40%. Role Fit Trend: SRE 75% (naik dari 65% Q4 2024)."
+- [x] ~~**A1** Few-shot examples — 1 contoh lengkap input→output per UC di section `## Contoh Eksekusi`~~
+  - Act: tambahkan di akhir 5 file UC: capture-experience.md (full example incident), study.md/mentor.md/daily-briefing.md/career-review.md (ringkas).
   - Impact: model mid (Sonnet/Haiku/Qwen) konsisten 15-25% lebih akurat; model tahu bentuk output yang diharapkan tanpa trial-error. Few-shot = teknik prompting paling efektif per research.
-- [ ] **A2** Role definition — 1 baris di awal tiap UC: "Kamu = wiki compiler. Input mentah → structured page. Human edit manual = jarang."
-  - Act: tambahkan setelah header `# Referensi: <UC>` di 5 file:
-    - capture-experience.md: "Kamu = wiki compiler iGROW. Cerita mentah user → structured note di igrow/wiki/. Human edit wiki manual = jarang (itu domain kamu)."
-    - study.md: "Kamu = wiki compiler iGROW. Artikel/course mentah → structured learning note. Human edit wiki manual = jarang."
-    - mentor.md: "Kamu = mentor iGROW berbasis data. Analisa gap dari wiki/ yang ada, BUKAN roadmap generik."
-    - daily-briefing.md: "Kamu = infra news curator. 5 berita penting + alasan peduli, bukan banyak berita tanpa konteks."
-    - career-review.md: "Kamu = career analyst iGROW. Review berbasis data wiki/, BUKAN opini generik."
+- [x] ~~**A2** Role definition — 1 baris di awal tiap UC: "Kamu = wiki compiler. Input mentah → structured page. Human edit manual = jarang."~~
+  - Act: tambahkan setelah header `# Referensi: <UC>` di 5 file: capture-experience (wiki compiler), study (wiki compiler), mentor (mentor data-driven), daily-briefing (news curator), career-review (career analyst).
   - Impact: agent paham konteks kerja (compiler otomatis/analyst data-driven, bukan interviewer/tutor interaktif/opini generik). Role clarity = kurangi halusinasi 10-15%.
 - [ ] **A3** Verification checkpoint — self-check sebelum tulis untuk UC yang >3 langkah
   - Act: tambahkan sebelum step "Update _index+log" di 2 file:
