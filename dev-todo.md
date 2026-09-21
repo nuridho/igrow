@@ -197,7 +197,7 @@
 - [x] ~~**A2** Role definition — 1 baris di awal tiap UC: "Kamu = wiki compiler. Input mentah → structured page. Human edit manual = jarang."~~
   - Act: tambahkan setelah header `# Referensi: <UC>` di 5 file: capture-experience (wiki compiler), study (wiki compiler), mentor (mentor data-driven), daily-briefing (news curator), career-review (career analyst).
   - Impact: agent paham konteks kerja (compiler otomatis/analyst data-driven, bukan interviewer/tutor interaktif/opini generik). Role clarity = kurangi halusinasi 10-15%.
-- [ ] **A3** Verification checkpoint — self-check sebelum tulis untuk UC yang >3 langkah
+- [x] ~~**A3** Verification checkpoint — self-check sebelum tulis untuk UC yang >3 langkah~~
   - Act: tambahkan sebelum step "Update _index+log" di 2 file:
     - capture-experience.md step 5 (setelah "See Also"):
       ```
@@ -213,7 +213,7 @@
 
 ### Tier 2 — ROI Sedang (effort: trace edge case per UC)
 
-- [ ] **A4** Explicit reasoning untuk keputusan ambigu — agent tulis 1 baris alasan sebelum pilih
+- [x] ~~**A4** Explicit reasoning untuk keputusan ambigu — agent tulis 1 baris alasan sebelum pilih~~
   - Act: tambahkan di capture-experience.md step 2 (setelah "Rapikan cerita jadi note"):
     ```
     Tentukan type & folder — TULIS REASONING 1 BARIS:
@@ -222,7 +222,7 @@
     - Pilih: incident → igrow/wiki/careers/career-N/knowledge/incidents/
     ```
   - Impact: agent transparan kenapa pilih type/folder tertentu; user bisa koreksi keputusan yang salah tanpa debug isi file. Konfirmasi passive (agent tulis reasoning, user koreksi kalau salah).
-- [ ] **A5** Fallback per langkah yang bisa gagal — instruksi eksplisit saat kondisi tidak ideal
+- [x] ~~**A5** Fallback per langkah yang bisa gagal — instruksi eksplisit saat kondisi tidak ideal~~
   - Act: 
     - mentor.md tambah setelah "## Prasyarat jujur": "skill-map.md belum ada / lebih lama dari about.md → auto-generate dulu dari careers/+self-dev, lalu analisa. careers/ kosong → bilang 'Data karier belum cukup untuk gap analysis (minimal 3 incident/knowledge)', jangan ngarang roadmap generik."
     - capture-experience.md tambah di step 3 (Format frontmatter): "Tag fuzzy-match ke taxonomy SCHEMA. Kalau tidak ada yang cocok (<60% similarity) → tanya user 1x 'Tag mana yang cocok: [3 opsi terdekat]?', jangan tebak. Kalau user skip → pakai terdekat + catat di `contradictions: ['taxonomy-mismatch']`."

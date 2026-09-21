@@ -12,6 +12,14 @@ Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
    Body ikut template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also.
 3. Topik fuzzy-match ke taxonomy SCHEMA (konsisten lintas sesi).
 4. See Also: min 2 dual-link.
+
+Self-check sebelum commit ke disk:
+1. Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
+2. Tags ⊂ taxonomy SCHEMA? (linux|networking|monitoring|..., cek igrow/SCHEMA.md)
+3. sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
+4. Min 2 dual-link See Also? (format `[[slug]]`)
+Kalau ada yang kurang → STOP, perbaiki dulu sebelum tulis file.
+
 5. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md + master + log.md (op: ingest).
 
 ## Perintah

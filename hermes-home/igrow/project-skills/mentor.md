@@ -29,6 +29,7 @@ Knowledge gap = topik target yg TIDAK ada di index, ATAU cuma disebut sekali lew
 ## Prasyarat jujur
 Kalau careers/ belum ada isi → bilang bahannya belum cukup,
 jangan ngarang gap analysis generik. (skill-map kosong BUKAN alasan menolak — generate dulu.)
+skill-map.md belum ada / lebih lama dari about.md → auto-generate dulu dari careers/+self-dev, lalu analisa. careers/ kosong → bilang "Data karier belum cukup untuk gap analysis (minimal 3 incident/knowledge)", jangan ngarang roadmap generik.
 
 ## Tutup
 Kalau ada file ditulis/diupdate (skill-map, weak-topics): ikut aturan wajib SCHEMA

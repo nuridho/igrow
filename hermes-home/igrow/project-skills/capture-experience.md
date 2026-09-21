@@ -30,9 +30,23 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    - Lesson → `igrow/wiki/careers/career-N/lessons-learned/`
    - Skill terpakai → update `igrow/wiki/careers/career-N/skills.md`
    - Screenshot → `igrow/raw/assets/YYYYMMDD-deskripsi.png` (WAJIB redact); rujuk dari note via `sources: [igrow/raw/assets/...]` + `![](../../raw/assets/...)` di body
+
+   Tentukan type & folder — TULIS REASONING 1 BARIS:
+   - Cerita "server mati pas backup" → incident atau knowledge?
+     Reasoning: ada symptom + investigation + result = incident; cuma SOP tanpa kejadian = knowledge
+   - Pilih: incident → igrow/wiki/careers/career-N/knowledge/incidents/
 3. Format frontmatter ikut `igrow/SCHEMA.md` (type: incident|lesson|knowledge).
    Body incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
+   Tag fuzzy-match ke taxonomy SCHEMA. Kalau tidak ada yang cocok (<60% similarity) → tanya user 1x "Tag mana yang cocok: [3 opsi terdekat]?", jangan tebak. Kalau user skip → pakai terdekat + catat di `contradictions: ['taxonomy-mismatch']`.
 4. See Also: minimal 2 link (dual-link format).
+
+Self-check sebelum commit ke disk:
+1. Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
+2. Tags ⊂ taxonomy SCHEMA? (linux|networking|monitoring|..., cek igrow/SCHEMA.md)
+3. sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
+4. Min 2 dual-link See Also? (format `[[slug]]`)
+Kalau ada yang kurang → STOP, perbaiki dulu sebelum tulis file.
+
 5. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: ingest/update).
 
 ## Larangan
