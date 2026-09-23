@@ -19,13 +19,7 @@
   - Impact: agent tahu `.git/` bukan wilayahnya.
 - [x] **C3** Ownership `skill-map.md` beda di 3 file: SCHEMA.md:16 = human-owned, mentor.md:5 = "AUTO-GENERATE", FIN:742 = "wajib diisi manual di awal"
   - Act: SCHEMA.md:16 buang skill-map dari human-owned + rule agent-auto-generate; mentor.md → output Role Fit Matching; career-review.md → step 4 Role Fit Trend; FIN:742 → AUTO-GENERATE.
-  - Impact: skill-map jadi input pasti untuk UC3 & UC6.
-- [x] **C4** test-me.md:19 `--date today` (string literal) matikan guard max +1/hari
-  - Act: `--date today` → `--date $(date +%F)`.
-  - Impact: skor nggak bisa digelembungkan dengan jawab benar berkali-kali di 1 sesi.
-- [x] **C5** `_index.json` cache kebaca lint sebagai orphan page (false positive)
-  - Act: lint.md diminta skip file berawalan `_`.
-  - Impact: laporan lint bersih.
+  - Impact: skill-map jadi input pasti untuk UC2 & UC5.
 - [x] **C6** build.md "Setup 4 Cron Job" — flag `--prompt` tidak ada. CLI: prompt POSITIONAL.
   - Act: 4 blok itu diubah jadi `hermes cron create '0 7 * * *' 'Baca igrow/project-skills/... lalu kerjakan.' --name X --deliver telegram`.
   - Impact: 4 job maintenance beneran kebuat.
@@ -59,15 +53,9 @@
 - [x] **W2** SCHEMA.md:31 `sources:` belum diputus satu konvensi
   - Act: SCHEMA jadi "selalu ada; `[]` kalau murni cerita user".
   - Impact: `igrow-api` bisa asumsi field-nya selalu ada.
-- [x] **W3** test-me.md:20 `<kategori>` tidak terdefinisi
-  - Act: SCHEMA:59 subfolder `tests/` = tag taxonomy.
-  - Impact: hasil test topik sama selalu mendarat di folder sama.
 - [x] **W5** raw/ punya 2 jalur (inbox→`.processed/` vs articles/ langsung)
   - Act: `.processed/` dibuang total; sisa 1 jalur `inbox/ → articles/`.
   - Impact: "inbox kosong = semua sudah diproses" jadi indikator yang bisa dipercaya.
-- [x] **W6** career-review butuh skor semua topik tapi script cuma bisa 1 topik
-  - Act: `confidence_calc.py --all` dump JSON semua topik.
-  - Impact: % Skill Inventory dihitung dari 1 command.
 - [x] **W7** Op `query` terdaftar di SCHEMA:21 tapi tidak pernah dipakai
   - Act: buang `query` dari daftar ops SCHEMA.
   - Impact: daftar ops = ops yang beneran ada.
@@ -98,15 +86,9 @@
 - [x] **W16** Hitungan field wajib beda 3 versi (lint.md "8", isinya 7, check.sh cek 5)
   - Act: lint.md → "7 field wajib" + `contradictions` opsional; check.sh loop +`title` +`sources`.
   - Impact: SCHEMA, lint, dan check.sh ngukur hal yang sama.
-- [x] **W17** FIN:360 (UC5) masih format pra-nvk
+- [x] **W17** FIN:360 (UC4) masih format pra-nvk
   - Act: diganti frontmatter SCHEMA + body template.
-  - Impact: UC5 nggak ngajarin field yang sudah dibuang.
-- [x] **W18** FIN kontradiksi sendiri soal `confidence_calc.py` (3 tempat beda)
-  - Act: :420-424 jadi "angka `mastered` dari `confidence_calc.py --all`"; TODO dihapus.
-  - Impact: satu jawaban soal siapa yang ngitung.
-- [x] **W19** Contoh `test-me.md` di FIN drift dari file asli
-  - Act: blok itu diganti isi `project-skills/test-me.md` verbatim; crosscheck.py assert byte-identik.
-  - Impact: contoh di blueprint = file yang beneran dibaca agent.
+  - Impact: UC4 nggak ngajarin field yang sudah dibuang.
 - [x] **W20** `igrow/_index.md` runtime masih section `## Learning`, tidak punya `## Output`
   - Act: `## Learning` → `## Roadmap`, +`## Output`.
   - Impact: laporan career review punya tempat di master index.
@@ -185,7 +167,7 @@
 
 ## Advanced Prompting
 
-> Tingkatkan kualitas project-skills (UC1/3/4/5/6) dengan teknik prompting proven untuk meminimalisir debugging.
+> Tingkatkan kualitas project-skills (UC1/2/3/4/5) dengan teknik prompting proven untuk meminimalisir debugging.
 > **Prioritas konsistensi over conciseness** — output boleh panjang/minta validasi ulang, yang penting akurat.
 > Tier 1 = ROI tinggi (effort kecil, dampak jelas). Tier 2 = ROI sedang (effort medium). Tier 3 = effort besar (refactor pipeline, 4x API call untuk multi-turn).
 
@@ -230,7 +212,7 @@
 
 ### Tier 3 — Effort Besar (DISKUTABEL — kerjakan hanya kalau Tier 1-2 terbukti kurang)
 
-> **Disclaimer:** Tier 3 mengubah pipeline & UX. Multi-turn mustahil untuk cron (UC4/UC6 zero human-in-loop). Chain-of-thought verbose, output 2x lebih panjang.
+> **Disclaimer:** Tier 3 mengubah pipeline & UX. Multi-turn mustahil untuk cron (UC3/UC5 zero human-in-loop). Chain-of-thought verbose, output 2x lebih panjang.
 
 - [x] ~~**A6** Chain-of-thought eksplisit — agent tulis reasoning sebelum SETIAP action~~
   - Act (revisi lazy — bukan refactor 10-substep penuh): 1 baris `→ OUTPUT:` di titik keputusan paling berisiko per UC (bukan tiap step): capture-experience (career aktif), study (topik taxonomy), mentor (gap detection), daily-briefing (kurasi berita), career-review (skill inventory hitung).
@@ -259,23 +241,6 @@
       - Update _index.md career-N entry
       - Log ke careers/_log.md
     ```
-    HANYA untuk UC1 sub-case "Daftar Kerjaan Baru" (1-2x/tahun, data kritikal). TIDAK untuk incident/knowledge rutin (10-30x/bulan). TIDAK untuk cron UC4/UC6 (zero human-in-loop).
+    HANYA untuk UC1 sub-case "Daftar Kerjaan Baru" (1-2x/tahun, data kritikal). TIDAK untuk incident/knowledge rutin (10-30x/bulan). TIDAK untuk cron UC3/UC5 (zero human-in-loop).
   - Impact: error input turun 20% untuk data kritikal (user koreksi sebelum file tertulis). Trade-off: cost 3-4x API call ($0.36 vs $0.09 per operasi), latency 3-4x (3 bolak-balik vs 1 pesan). Telegram UX jadi interview-style.
-  - **Disclaimer**: Multi-turn MUSTAHIL untuk cron job (UC4 daily briefing, UC6 career review = zero human). Hanya applicable untuk UC1/UC3/UC5 yang dipicu manual. Cost naik 300% per operasi. UX berubah dari "cerita → langsung simpan" jadi "cerita → tanya-jawab 3-4 turn → baru simpan".
-
-## UC2 — Later (Phase 5)
-
-> UC2 (\"Uji Saya\") **dihapus dari hermes-home** 2026-09-04 — core UC1/3/4/5/6 dulu.
-> Yang dihapus: `project-skills/test-me.md`, `project-skills/scripts/`, `wiki/tests/`.
-> `iGROW_FINAL.md` UC2 tetap jadi rancangan — jangan dianggap sudah ada.
-
-- [ ] **U1** Putuskan bentuk UC2: (A) chat-only nol state, (B) skor di 1 file `wiki/roadmap/scores.md`, (C) balik ke folder `tests/` + script.
-- [ ] **U2** Kalau pilih B/C: cache JANGAN ke-track git.
-- [ ] **U3** `type: test` + op `test` sudah dibuang dari SCHEMA.
-- [ ] **U4** mentor.md sekarang 2 sumber. Sumber ke-3 "terbukti" hilang.
-- [ ] **U5** career-review.md Skill Inventory sekarang counting note.
-- [ ] **U6** test-flow: FASE 3 + 4.3 + 4.4 ditandai SKIP.
-- [ ] **U7** check.sh blok frontmatter tests/ dihapus.
-- [ ] **U10** `confidence_calc.py` regex `^topic:\s*(\S+)` motong topik multi-kata.
-- [ ] **U11** `_demo` di confidence_calc.py tak punya jalur pemanggil (`--demo` nggak ada).
-- [ ] **U12** `python` vs `python3` di container belum diverifikasi.
+  - **Disclaimer**: Multi-turn MUSTAHIL untuk cron job (UC3 daily briefing, UC5 career review = zero human). Hanya applicable untuk UC1/UC2/UC4 yang dipicu manual. Cost naik 300% per operasi. UX berubah dari "cerita → langsung simpan" jadi "cerita → tanya-jawab 3-4 turn → baru simpan".

@@ -1,4 +1,4 @@
-# Referensi: Mentor (UC3)
+# Referensi: Mentor (UC2)
 
 Kamu = mentor iGROW berbasis data. Analisa gap dari wiki/ yang ada, BUKAN roadmap generik.
 
@@ -7,7 +7,7 @@ Dipakai kalau user tanya roadmap belajar, kelemahan, "harus belajar apa", atau "
 ## Input data
 1. Target: `igrow/wiki/roadmap/skill-map.md` — AUTO-GENERATE kalau belum ada:
    baca `about.md` career aktif (role + jobdesc), seluruh `careers/*/knowledge/`, `careers/*/lessons-learned/`,
-   `self-development/`, `tests/` → generate skill map per level + role-fit matching.
+   `self-development/` → generate skill map per level + role-fit matching.
    Human boleh edit manual, tapi bukan keharusan (agent auto-update setiap ada data baru).
 2. Terdokumentasi: `igrow/_index.md` (katalog careers + self-development)
 

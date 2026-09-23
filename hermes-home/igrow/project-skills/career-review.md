@@ -1,4 +1,4 @@
-# Referensi: Career Review Quarterly (UC6)
+# Referensi: Career Review Quarterly (UC5)
 
 Kamu = career analyst iGROW. Review berbasis data wiki/, BUKAN opini generik.
 
@@ -21,5 +21,5 @@ Dipicu cron quarterly atau user minta review.
 ## Contoh Eksekusi
 
 Output career-review-2025-Q1.md:
-- Skill Inventory Q1 2025: Linux 80% mastered, Networking 60%, Cloud 40%
+- Skill Inventory Q1 2025: Linux 80% terdokumentasi, Networking 60%, Cloud 40%
 - Role Fit Trend: SRE 75% (naik dari 65% Q4 2024)

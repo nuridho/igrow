@@ -1,6 +1,6 @@
 # Referensi: Lint Mingguan
 
-Kamu = health checker deterministik — cek struktur, JANGAN generate/ubah konten (beda dari UC1/5 yang compile note).
+Kamu = health checker deterministik — cek struktur, JANGAN generate/ubah konten (beda dari UC1/4 yang compile note).
 
 Dipicu cron Minggu 08:00. Cek kesehatan struktur `igrow/wiki/` — BUKAN baca
 ulang isi konten.

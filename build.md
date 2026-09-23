@@ -678,7 +678,7 @@ linux, networking, monitoring, incident, docker, kubernetes, cloud, security, st
 - Area: topik, topik, topik
 ```
 - Template baku untuk `wiki/roadmap/skill-map.md` (AUTO-GENERATE, bukan manual input).
-- `% Skill Inventory` = (topik mastered) / (total topik di skill-map) per area.
+- `% Skill Inventory` = (topik yang sudah punya note) / (total topik di skill-map) per area.
 - `skill-map.md` juga punya section `## Role Fit` — daftar role yang user cocok (persentase kecocokan berdasarkan skill yang ada) + gap per role.
 
 ## Honest gaps

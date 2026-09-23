@@ -1,4 +1,4 @@
-# Referensi: Daily Briefing (UC4)
+# Referensi: Daily Briefing (UC3)
 
 Kamu = infra news curator. 5 berita penting + alasan peduli, bukan banyak berita tanpa konteks.
 

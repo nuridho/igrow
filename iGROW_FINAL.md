@@ -108,105 +108,7 @@ Dengan begini, tiap knowledge/incident otomatis ketahuan **konteksnya dari caree
 
 ---
 
-## Use Case 2 — 🧪 "Uji Saya, Jangan Ajari Saya" *(PHASE 5 — belum dibangun)*
-
-> ⏸️ **Ditunda ke Phase 5.** Core (UC1/3/4/5/6) diselesaikan dulu. Semua yang ada di section ini adalah **rancangan**, belum ada di `hermes-home/` — `project-skills/test-me.md`, `scripts/confidence_calc.py`, dan folder `wiki/tests/` sengaja TIDAK dibuat. Backlog + keputusan desainnya di `dev-todo.md` section "UC2 — Later".
-
-**Tujuan:** menggunakan Hermes sebagai simulator troubleshooting/interview untuk meningkatkan kemampuan L1 → L2. Bukan memberikan jawaban langsung.
-
-### Workflow
-
-```
-Knowledge saya
-      ↓
-Hermes membuat scenario
-      ↓
-Incident simulation
-      ↓
-Saya memberikan jawaban
-      ↓
-Hermes mengevaluasi
-      ↓
-Score + feedback
-      ↓
-Knowledge gap
-```
-
-### Contoh
-
-**Saya:** "Uji saya tentang Linux troubleshooting. Jangan kasih petunjuk."
-
-**Hermes:**
-```
-INCIDENT:
-Server mengalami load tinggi. CPU utilization 50%, tetapi load average 20.
-Apa yang kamu cek?
-```
-
-Saya menjawab. Hermes mengevaluasi:
-
-```
-Score: 7/10
-
-✓ Check process
-✓ Check CPU
-✗ Belum mengecek I/O wait
-✗ Belum mengecek blocked processes
-
-Recommended:
-Linux process states
-iowait
-load average
-```
-
-### Variasi
-
-Linux troubleshooting · Networking · Monitoring · Incident response · DNS · Storage · Performance · Security basic · Interview simulation
-
-**Target:** Hermes mengetahui kelemahan saya, bukan cuma mengajari saya.
-
-### 🎯 Dari Mana Soal Test Diambil (Penting — Supaya Tidak Ambigu)
-
-Soal bukan cuma dari topik yang sudah dipelajari, dan juga bukan cuma topik baru sepenuhnya. Kombinasi 3 sumber, dengan porsi berbeda:
-
-| Sumber Soal | Porsi | Tujuan |
-|---|---|---|
-| Knowledge yang **sudah terdokumentasi** (`wiki/self-development/`, `wiki/careers/*/knowledge/`) | ~70% | Validasi pemahaman beneran mendalam, bukan cuma pernah dicatat sekilas |
-| Target di `wiki/roadmap/skill-map.md` yang **belum ada filenya sama sekali** | ~20% | Proaktif nemuin gap yang ditarget tapi belum pernah disentuh, sebelum kamu sadar sendiri |
-| Topik **berdekatan/adjacent** dari yang sudah dipelajari, tapi belum eksplisit ditulis | ~10% | Nemuin blind spot yang nggak kelihatan dari knowledge base saja (misal sudah paham `iowait`, tapi belum pernah ditest soal `load average` yang berkaitan) |
-
-> ⚠️ Kalau soal 100% dari hal yang benar-benar baru/belum pernah dipelajari sama sekali, hasil gagalnya **tidak informatif** untuk gap analysis — wajar gagal karena memang belum pernah diajarkan, bukan sinyal kelemahan yang berarti. Makanya porsi terbesar tetap dari knowledge yang sudah ada.
-
-### 📊 Confidence Score — Sekali Benar ≠ Sudah Paham
-
-Jawaban benar 1 kali bukan bukti kuat suatu topik sudah dikuasai (bisa kebetulan/nebak/baru saja dibaca). Setiap topik punya **1 angka running score**, bukan status berjenjang — lebih sederhana untuk dijaga konsisten, tapi tetap presisi karena dihitung, bukan ditebak LLM:
-
-- **+1** tiap kali jawaban **benar**
-- **-1** tiap kali jawaban **salah**, dengan **floor 0** (gak bisa minus)
-- **Maksimal +1 per topik per hari** — kalau di 1 sesi ada beberapa soal topik yang sama semua benar, tetap cuma nambah +1, bukan dikali jumlah soal. Ini mencegah skor "digelembungkan" cuma karena jawab beruntun di 1 sesi yang sama.
-- Dianggap **`mastered`** kalau skor topik itu sudah **≥ 5**.
-
-**Aturan penting:**
-- Yang dipakai buat menghitung **Skill Inventory** (di Use Case 6) hanya topik yang skornya sudah **≥ 5**. Topik dengan skor di bawah itu dianggap belum matang dan tidak menaikkan persentase bar secara penuh.
-- Simpan skor ini per topik di `wiki/tests/`, misal lewat metadata di tiap file hasil test:
-
-```markdown
----
-topic: iowait
-source_type: documented    # documented | untouched-target | adjacent
-date: 2026-08-11
-result: correct
-score: 4
-mastered: false
-last_increment_date: 2026-08-11
----
-```
-
-> `source_type: untouched-target` artinya topik ini **tercantum sebagai target skill** di `wiki/roadmap/skill-map.md` tapi **belum pernah didokumentasikan sama sekali** — beda dengan `adjacent` yang artinya topik ini berkaitan dengan sesuatu yang sudah pernah dipelajari, tapi belum eksplisit ditulis (lihat tabel "Dari Mana Soal Test Diambil" di atas).
-
----
-
-## Use Case 3 — 🎓 Mentor Belajar yang Tahu Sejarah Saya
+## Use Case 2 — 🎓 Mentor Belajar yang Tahu Sejarah Saya
 
 **Tujuan:** Hermes menjadi mentor yang mengetahui apa yang sudah dipelajari, kasus yang pernah ditemui, konsep yang masih lemah, teknologi yang sering digunakan, dan skill yang belum pernah dipraktikkan.
 
@@ -265,7 +167,7 @@ wiki/roadmap/
 
 ---
 
-## Use Case 4 — 📰 Daily Infra Briefing
+## Use Case 3 — 📰 Daily Infra Briefing
 
 **Tujuan:** setiap hari Hermes mencari informasi terbaru yang relevan untuk pekerjaan dan perkembangan skill.
 
@@ -320,7 +222,7 @@ DAILY INFRA BRIEFING
 
 ---
 
-## Use Case 5 — 📖 Dokumentasi Belajar Mandiri
+## Use Case 4 — 📖 Dokumentasi Belajar Mandiri
 
 **Tujuan:** mendokumentasikan hasil belajar mandiri (bootcamp, artikel, dokumentasi, eksperimen) menjadi knowledge pribadi terstruktur.
 
@@ -363,7 +265,7 @@ Source tetap dicatat. Note hasil belajar ikut format baku `igrow/SCHEMA.md`: fro
 
 ---
 
-## Use Case 6 — 📈 "Saya Berkembang atau Nggak?" (Career Review, Quarterly)
+## Use Case 5 — 📈 "Saya Berkembang atau Nggak?" (Career Review, Quarterly)
 
 **Tujuan:** melakukan career review setiap **kuartal (3 bulan sekali)** berdasarkan semua knowledge, pengalaman, latihan, dan pembelajaran — sekaligus tempat Skill Inventory dihitung ulang.
 
@@ -425,7 +327,7 @@ Selain narasi review di atas, tiap quarterly review juga menghasilkan **skill in
 >
 > Kalau kamu sekarang **L1**, maka pembandingnya adalah target skill **L2** (bukan target L1). Kalau kamu sudah **L2**, pembandingnya jadi target **L3**. Dua-duanya angka hasil counting, bukan reasoning subjektif.
 >
-> ⏸️ Kalau UC2 dibangun (Phase 5), pembilang naik jadi "topik dengan skor ≥ 5" — lebih ketat karena terbukti lewat uji, bukan cuma tertulis.
+> Skill Inventory hanya memakai topik yang sudah punya note di knowledge base.
 
 Contoh — posisi saat ini **L1**, jadi semua bar diukur terhadap target **L2**:
 
@@ -445,7 +347,6 @@ Kalau nanti sudah naik ke **L2**, bar yang sama akan **direset ukurannya** karen
 
 ### Dari Mana Angka Persentase Ini Didapat
 
-Ini bagian dari mekanisme yang sama seperti [🔍 Mekanisme: Bagaimana Hermes Menemukan Knowledge Gap](#-mekanisme-bagaimana-hermes-menemukan-knowledge-gap) — sumbernya tetap `wiki/roadmap/skill-map.md` (target per level) dibandingkan dengan `wiki/self-development/`, `wiki/careers/*/knowledge/`, dan `wiki/tests/`. Supaya "1 level di atas" ini bisa dihitung otomatis, `wiki/roadmap/skill-map.md` perlu punya target **per level**, bukan cuma satu daftar generik. Contoh isinya:
 
 ```markdown
 ---
@@ -491,7 +392,7 @@ Format insight ini yang jadi isi bagian "Skill Developed" dan "Weak/Knowledge Ga
 
 ## 🔍 Mekanisme: Bagaimana Hermes Menemukan Knowledge Gap
 
-> Ini bagian yang sering disebut ambigu di Use Case 3 & 6 ("mengetahui knowledge gap") — jadi perlu dijelaskan eksplisit: **ini bukan Hermes menebak secara insting, tapi hasil perbandingan 3 sumber data yang konkret.**
+> Ini bagian yang sering disebut ambigu di Use Case 2 & 5 ("mengetahui knowledge gap") — jadi perlu dijelaskan eksplisit: **ini bukan Hermes menebak secara insting, tapi hasil perbandingan 3 sumber data yang konkret.**
 
 ### 3 Sumber Data yang Dibandingkan
 
@@ -500,7 +401,6 @@ Format insight ini yang jadi isi bagian "Skill Developed" dan "Weak/Knowledge Ga
 | 1 | **Knowledge yang sudah terdokumentasi** | `wiki/careers/*/knowledge/`, `wiki/self-development/`, `wiki/careers/*/skills.md` | "Apa yang sudah saya punya?" |
 | 2 | **Target skill yang seharusnya dikuasai** | `wiki/roadmap/skill-map.md` | "Apa yang *seharusnya* saya kuasai di level ini?" |
 
-> Sumber ke-3 (`wiki/tests/` — hasil uji, "apa yang sudah *terbukti*") menyusul kalau UC2 dibangun di Phase 5.
 
 ### Diagram Alur
 
@@ -513,13 +413,11 @@ wiki/roadmap/skill-map.md
                     │
    ┌────────────────┼────────────────┐
    ▼                ▼                ▼
-wiki/careers/ &      wiki/tests/     frekuensi topik
 wiki/self-development/ (hasil test)  di wiki/careers/*/knowledge/incidents/
    │                │                │
    └────────────────┼────────────────┘
                      ▼
      Topik yang TIDAK ADA filenya,
-     atau SELALU nilai rendah di wiki/tests/
                      ▼
               = Knowledge Gap
 ```
@@ -528,7 +426,6 @@ wiki/self-development/ (hasil test)  di wiki/careers/*/knowledge/incidents/
 
 Kalau `wiki/careers/career-1/knowledge/` banyak berisi Linux & monitoring, tapi:
 - Tidak ada satupun note automation di `wiki/self-development/` (Project/Bootcamp/Dokumentasi) atau tag `automation` di `wiki/careers/*/knowledge/`
-- Hasil test di `wiki/tests/networking/` konsisten skor rendah di bagian routing
 
 Maka outputnya:
 
@@ -537,10 +434,10 @@ Maka outputnya:
 ### ⚠️ Prasyarat — Fitur Ini Butuh Bahan
 
 Hermes otomatis generate `wiki/roadmap/skill-map.md` dari `about.md` + careers — jadi fitur gap analysis & skill inventory jalan tanpa perlu setup awal. Outputnya bisa generik kalau data careers masih kosong, bukan karena skill-map belum ada.
-2. Rutin capture pengalaman kerja & belajar mandiri (Use Case 1 & 5) — supaya `wiki/self-development/` & `wiki/careers/*/knowledge/` terisi
-3. Baru minta gap analysis (Use Case 3/6) — karena sekarang ada bahan pembanding yang jelas
+1. Rutin capture pengalaman kerja & belajar mandiri (Use Case 1 & 4) — supaya `wiki/self-development/` & `wiki/careers/*/knowledge/` terisi
+2. Baru minta gap analysis (Use Case 2/5) — karena sekarang ada bahan pembanding yang jelas
 
-> ⚠️ **Penamaan topik perlu konsisten** — kalau topik yang sama ditulis beda nama tiap kali dites (misal "iowait" vs "IO wait"), skor & gap analysis-nya jadi kepecah dan gak akurat. Solusinya: **tag taxonomy di `igrow/SCHEMA.md`** — daftar tag baku yang wajib dipakai. Sebelum bikin topik baru, Hermes cek dulu ke taxonomy + fuzzy-match nama yang mirip di `igrow/_index.md`. LLM yang tetap memutuskan normalisasinya, file-file itu cuma jadi rujukan biar keputusannya konsisten dari sesi ke sesi.
+Kalau topik yang sama ditulis beda nama tiap kali, gap analysis-nya bisa terpecah dan kurang akurat. Solusinya: gunakan tag taxonomy di `igrow/SCHEMA.md` dan fuzzy-match nama topik yang mirip.
 
 ---
 
@@ -565,11 +462,9 @@ Ini bagian yang **paling penting**. Use case-nya jangan dibuat sebagai 6 sistem 
                                 ↓
                          Knowledge Base
                                 │
-               ┌────────────────┼────────────────┐
+               ┌────────────────┬────────────────┐
                ↓                ↓                ↓
-      (Test Yourself)      Mentor        Daily Briefing
-        ⏸️ Phase 5            │                │
-               └────────────────┼────────────────┘
+             Mentor        Daily Briefing   Career Review
                                 ↓
                      Career Review (Quarterly)
                                 ↓
@@ -581,9 +476,8 @@ Ini bagian yang **paling penting**. Use case-nya jangan dibuat sebagai 6 sistem 
 Jadi semuanya saling memberi makan. Contoh: kamu mengalami incident → Use Case 1 mencatatnya. Incident itu kemudian:
 
 - → masuk knowledge base
-- → (Phase 5) menjadi bahan Use Case 2 untuk membuat soal
-- → Use Case 3 mengetahui kamu sudah punya pengalaman tersebut
-- → Use Case 6 memasukkannya ke career review quarterly + skill inventory
+- → Use Case 2 mengetahui kamu sudah punya pengalaman tersebut
+- → Use Case 5 memasukkannya ke career review quarterly + skill inventory
 
 **Satu aktivitas bisa menghasilkan banyak value.**
 
@@ -731,30 +625,15 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 || `maintenance/session-export.md` | — | Cron 03:15 → dump memory+skills+igrow |
 | `maintenance/backup.sh` | — | Script backup git: add/commit/push, silent no-change |
 | `maintenance/session-export.sh` | — | Script export: dump memory+skills+igrow ke archive |
-|| ~~`test-me.md`~~ | ~~2~~ | ⏸️ Phase 5 — belum dibuat |
 
 `wiki/roadmap/skill-map.md` = AUTO-GENERATE dari `about.md` + careers + self-development (bukan manual input). User boleh edit, tapi bukan keharusan. Semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
 
-### Confidence Score — Kenapa Nanti Butuh Script *(PHASE 5, bareng UC2)*
-
-> ⏸️ `project-skills/scripts/confidence_calc.py` **belum ada** di `hermes-home/`. Section ini rancangan buat Phase 5.
-
-Kalau UC2 dibangun, skor jangan diserahkan ke reasoning LLM tiap kali — dihitung script kecil (`project-skills/scripts/confidence_calc.py`) yang dipanggil lewat tool terminal. Alasannya dobel:
-
-1. **Presisi** — LLM lemah untuk hitungan berulang yang harus konsisten dari waktu ke waktu, apalagi kalau riwayat test sudah menumpuk bertahun-tahun. Termasuk logic "max +1 per hari" — ini butuh cek tanggal terakhir topik itu naik skor, gampang salah kalau diserahkan ke LLM tiap kali.
-2. **Efisiensi token** — tanpa script, Hermes harus buka & baca ulang **semua** file test di topik itu ke context tiap kali mau update skor. Dengan script, Hermes cukup panggil satu command, dapat hasil jadi (`score: 4, mastered: false`) tanpa loading semua riwayat mentah.
-
-`test-me.md` yang bakal ngarahin Hermes manggil script ini tiap ada hasil test baru; Skill Inventory UC6 ikut pakai angka yang sama biar konsisten.
-
 ### Format File — Markdown + YAML Frontmatter (bukan JSON terpisah)
 
-Note naratif (`wiki/careers/`, `wiki/self-development/`) dan hasil test (`wiki/tests/`) memakai pola gabungan metadata di YAML frontmatter + narasi di badan markdown — contoh di bagian Confidence Score di atas. Data file (`wiki/roadmap/`, `wiki/profile/`) pakai frontmatter minimal + body list; cuma `about.md` & `careers/*/skills.md` yang plain `Key: value` (lihat "Tipe File & Formatnya" di bawah). Alasan dipilih dibanding JSON terpisah:
 
 - Tetap bisa dibaca langsung tanpa tool/script apa pun (selaras prinsip "knowledge portable, tidak bergantung 1 provider")
-- Tetap gampang di-parse otomatis (library YAML/frontmatter biasa) untuk kebutuhan script seperti `confidence_calc.py`
 - Satu file, satu sumber kebenaran — tidak ada risiko dua file (markdown & JSON) jadi tidak sinkron
 
-JSON hanya dipakai untuk **cache/index turunan** yang di-generate ulang otomatis oleh script (misal `wiki/tests/_index.json` untuk mempercepat lookup topik) — bukan ditulis manual, dan aman dihapus kapan saja karena bisa dibuat ulang dari file markdown yang menjadi sumber kebenaran sebenarnya.
 
 ### Format Normalisasi Note (biar seragam & bisa di-scrape API)
 
@@ -799,22 +678,6 @@ Frontmatter = yang di-parse `igrow-api` buat index/kategori. Badan = yang dibaca
 Semua file di `igrow/` berformat — 3 jenis:
 
 1. **Note naratif** (`wiki/careers/`, `wiki/self-development/`) → format META/BODY di atas.
-2. **Hasil test** (`wiki/tests/`) → frontmatter skor (tambah field test-me: `topic`, `source_type`, `result`, `score`, `mastered`), tanpa section baku:
-
-```markdown
----
-topic: iowait
-source_type: documented    # documented | untouched-target | adjacent
-date: 2026-08-22
-result: correct
-score: 4
-mastered: false
-last_increment_date: 2026-08-22
----
-
-<!-- narasi singkat: jawaban + feedback -->
-```
-
 3. **Data file** (`wiki/roadmap/`, `wiki/profile/`) → frontmatter minimal (`title`, `type: data`, `updated`) + body list/key:value, bukan narasi:
 
 ```markdown
@@ -875,16 +738,11 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
     │   │   ├── Bootcamp/             # kursus/platform belajar — {nama-bootcamp}/, dst
     │   │   └── Dokumentasi/          # belajar dari docs/artikel — {nama-topik}/, dst
     │   │
-    │   ├── roadmap/                 # roadmap belajar, lintas career (Use Case 3)
+    │   ├── roadmap/                 # roadmap belajar, lintas career (Use Case 2)
     │   │   ├── roadmap.md
     │   │   ├── completed.md
     │   │   ├── weak-topics.md
     │   │   └── skill-map.md          # target skill per level — dasar gap analysis & skill inventory
-    │   │
-    │   ├── tests/                    # ⏸️ PHASE 5 (UC2) — belum dibuat
-    │   │   ├── linux/                # subfolder = tag taxonomy SCHEMA
-    │   │   ├── networking/
-    │   │   └── incident/
     │   │
     └── profile/                  # ringkasan karier — gabungan semua career
         ├── skills.md             # skill inventory gabungan lintas career
@@ -904,10 +762,7 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
         │   ├── backup.md
         │   ├── session-export.md
         │   ├── backup.sh
-        │   └── session-export.sh
-        ├── test-me.md                # ⏸️ PHASE 5 (UC2) — belum dibuat
-        └── scripts/                  # ⏸️ PHASE 5 (UC2) — belum dibuat
-            └── confidence_calc.py
+        └── session-export.sh
 ```
 
 `igrow-api` (dashboard read-only) cukup mount subfolder `igrow/` saja secara read-only — jadi gak ikut ter-expose ke `sessions/`, `memories/`, `logs/` bawaan Hermes yang emang bukan urusannya.
@@ -1023,38 +878,6 @@ Credential, API key/token, IP internal, hostname sensitif, data client,
 screenshot yang belum di-redact.
 ```
 
-**Contoh isi `igrow/project-skills/test-me.md`:**
-
-```markdown
-# Referensi: Uji Troubleshooting (UC2)
-
-Dipakai kalau user minta diuji ("uji saya soal Linux", "test networking dong").
-
-## Sumber Soal (WAJIB ikuti porsi ini)
-- 70% knowledge SUDAH terdokumentasi (wiki/careers/*/knowledge/, wiki/self-development/) — source_type: documented
-- 20% target di wiki/roadmap/skill-map.md yg BELUM ada filenya sama sekali — source_type: untouched-target
-- 10% topik adjacent yg berkaitan tapi belum eksplisit ditulis — source_type: adjacent
-
-Kalau soal 100% topik baru, hasil gagalnya tidak informatif untuk gap analysis.
-
-## Format Soal
-1 skenario incident. JANGAN kasih hint/petunjuk.
-
-## Setelah User Jawab
-1. Evaluasi jawaban, kasih score /10 + poin kejawab/kelewat.
-2. Nama topik: fuzzy-match ke tag taxonomy di igrow/SCHEMA.md (bukan topics-registry —
-   normalisasi topik sekarang lewat taxonomy + igrow/_index.md).
-3. Jalankan: `python igrow/project-skills/scripts/confidence_calc.py --topic <topik> --result correct|wrong --date $(date +%F)`
-4. Simpan hasil ke `igrow/wiki/tests/<kategori>/<topik>-<tanggal>.md`, frontmatter:
-   topic / source_type / date / result / score / mastered / last_increment_date (dari output script).
-5. Tampilkan skor terbaru ("skor: 4, belum mastered").
-6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: test).
-
-## Aturan skor
-+1 benar, -1 salah (floor 0), max +1 per topik per hari, mastered >= 5.
-Script yg hitung — bukan kamu.
-```
-
 ---
 
 ### Diagram Alur — Dari Pesan Telegram Sampai Ditulis ke Knowledge Base
@@ -1096,8 +919,6 @@ masuk context                         TANPA nulis file
 Hermes ikutin instruksi file referensi:
 tentuin folder tujuan (sesuai tabel
 di AGENTS.md), susun markdown +
-frontmatter, (khusus test-me)
-panggil confidence_calc.py
    │
    ▼
 Hermes TULIS/EDIT file di igrow/
@@ -1123,7 +944,7 @@ Hermes balas ke user via Telegram
 
 - [ ] Command tracing/koreksi — cari & benerin note salah di KB yang udah besar (nama command: `/cek`/`/audit`, tentukan nanti)
 - [ ] `/explore` — kalau ternyata `/recall` perlu dibedakan dari riset sumber baru
-- [ ] Export PDF career review (UC6)
+- [ ] Export PDF career review (UC5)
 
 ## 🎯 Hasil Akhir Proyek
 
