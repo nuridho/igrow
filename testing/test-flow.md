@@ -243,7 +243,7 @@ systemctl status nginx && journalctl -u nginx -b -p err
 
 ---
 
-# FASE 2 — UC5: /study
+# FASE 2 — UC4: /study
 
 ## 2.1 /study dengan sumber
 **Prompt:**
@@ -266,11 +266,11 @@ systemctl status nginx && journalctl -u nginx -b -p err
 
 ---
 
-# FASE 3 — UC2: Test-Me *(SKIP — Phase 5, belum dibangun)*
+# FASE 3 — Testing kemampuan *(SKIP — fitur ini tidak termasuk 5 UC aktif)*
 
-> ⏸️ UC2 ditunda. `test-me.md`, `confidence_calc.py`, `wiki/tests/` sengaja tidak ada di `hermes-home/`.
-> Case 3.1/3.2 + case mentor yang butuh skor (4.3, 4.4) dilewati sampai UC2 dibangun.
-> Backlog: `dev-todo.md` section "UC2 — Later".
+> ⏸️ fitur testing ditunda. `test-me.md`, `confidence_calc.py`, `wiki/tests/` sengaja tidak ada di `hermes-home/`.
+> Case 3.1/3.2 + case mentor yang butuh skor dilewati karena fitur testing belum aktif.
+> Backlog fitur testing: `dev-todo.md` (jika diaktifkan lagi).
 
 ## 3.1 Jawab benar
 **Prompt:** "Uji saya soal Linux troubleshooting. Jangan kasih petunjuk."
@@ -287,7 +287,7 @@ Jawab dengan benar.
 
 ---
 
-# FASE 4 — UC3: Mentor (8 case)
+# FASE 4 — UC2: Mentor (8 case)
 
 ## 4.1 Skill-map kosong → jujur
 **Prompt:** "Saya harus belajar apa biar naik L2?"
@@ -348,12 +348,12 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 ## 5.2 /recall — honest gap
 **Prompt:** "apa pengalaman saya soal Kubernetes?" → jujur "belum ada catatan", tawarin riset/tulis baru. **Gagal kalau ngarang.**
 
-## 5.3 UC4 daily briefing
+## 5.3 UC3 daily briefing
 **Prompt:** "kasih daily briefing hari ini."
 
 **Expected:** format DAILY INFRA BRIEFING (maks 5 info + "why it matters"), topik sesuai taxonomy. Tidak ada file tertulis — murni output chat.
 
-## 5.4 UC6 career review (paksa)
+## 5.4 UC5 career review (paksa)
 **Prompt:** "buatkan career review Q3 2025."
 
 **Expected:**
@@ -373,7 +373,7 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 | 2 | Struktur varian B | Konten di `wiki/`, sumber mentah di `raw/`, laporan di `output/` |
 | 3 | Aturan wajib SCHEMA | Tiap operasi tulis: _index terdekat + master _index + log.md |
 | 4 | Frontmatter | 7 field nvk untuk semua note |
-| 5 | ~~confidence_calc~~ | ⏸️ Phase 5 (UC2) |
+| 5 | ~~confidence_calc~~ | ⏸️ Phase 5 (fitur testing) |
 | 6 | Honest gaps | /recall & mentor tidak ngarang kalau data kosong |
 | 7 | Career aktif | Semua incident kerja masuk career-1; hobi masuk self-development |
 | 8 | No duplikat/timpa | Topik sama → file baru; update note → edit in-place |

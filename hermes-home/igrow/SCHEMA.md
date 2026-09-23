@@ -30,7 +30,7 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 title: Judul
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-type: knowledge | incident | lesson | learning | profile | query | data
+type: knowledge | incident | lesson | learning | profile | data
 tags: [dari taxonomy]
 sources: [igrow/raw/articles/xxxx.md]   # selalu ada; `[]` kalau murni cerita user
 confidence: high | medium | low   # dukungan SUMBER (bukan penguasaanmu)

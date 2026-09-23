@@ -760,9 +760,7 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
         ├── maintenance/
         │   ├── lint.md
         │   ├── backup.md
-        │   ├── session-export.md
-        │   ├── backup.sh
-        └── session-export.sh
+        │   └── session-export.md
 ```
 
 `igrow-api` (dashboard read-only) cukup mount subfolder `igrow/` saja secara read-only — jadi gak ikut ter-expose ke `sessions/`, `memories/`, `logs/` bawaan Hermes yang emang bukan urusannya.
@@ -835,7 +833,13 @@ wiki/ = executable.
   - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
   - `profile/`             → ringkasan karier — gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
-- `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
+- `igrow/project-skills/`     → file referensi prosedur (baca kalau relevan)
+  - `capture-experience.md` → UC1
+  - `mentor.md`             → UC2
+  - `daily-briefing.md`     → UC3
+  - `study.md`              → UC4
+  - `career-review.md`      → UC5
+  - `maintenance/`          → maintenance scripts (lint, backup, session-export)
 
 `igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
 
@@ -864,14 +868,18 @@ wiki/ = executable.
   → bilang jujur "belum ada catatan", tawarin riset/tulis baru (honest gaps)
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)
-- igrow/project-skills/capture-experience.md → user cerita incident/pengalaman
-- igrow/project-skills/mentor.md             → user tanya roadmap/kelemahan belajar
-- igrow/project-skills/daily-briefing.md     → dipicu cron 07:00
-- igrow/project-skills/study.md              → user /study
-- igrow/project-skills/career-review.md      → cron quarterly / user minta review
-- igrow/project-skills/lint.md               → dipicu cron Minggu 08:00
-- igrow/project-skills/backup.md             → dipicu cron Minggu 03:00
-- igrow/project-skills/session-export.md     → dipicu cron Minggu 03:15
+
+### Use Case (5)
+- igrow/project-skills/capture-experience.md → UC1: Incident/knowledge/career new → wiki
+- igrow/project-skills/mentor.md             → UC2: Roadmap/kelemahan → gap analysis
+- igrow/project-skills/daily-briefing.md     → UC3: Cron 07:00 → daily infra summary
+- igrow/project-skills/study.md              → UC4: /study → dokumentasi belajar
+- igrow/project-skills/career-review.md      → UC5: Cron quarterly / manual → review + skill inventory
+
+### Maintenance (bukan UC)
+- igrow/project-skills/maintenance/lint.md    → Cron Minggu 08:00 → health check wiki
+- igrow/project-skills/maintenance/backup.md  → Cron Minggu 03:00 → push igrow/ ke GitHub
+- igrow/project-skills/maintenance/session-export.md → Cron Minggu 03:15 → dump memory+skills+igrow
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,

@@ -43,11 +43,11 @@ for op in ingest update; do
   grep -qi "op\b.*$op\|$op" log.md 2>/dev/null && ok "log.md ada op $op" || echo "WARN | log.md belum ada op $op (belum jalan?)"
 done
 
-echo "== 6. UC5 /study =="
+echo "== 6. UC4 /study =="
 [ -n "$(ls raw/articles/*.md 2>/dev/null)" ] && ok "raw/articles terisi" || bad "raw/articles kosong (2.1)"
 grep -rq "sources:" wiki/self-development/ 2>/dev/null && ok "note learning punya sources:" || bad "note learning tanpa sources:"
 
-echo "== 7. UC6 output =="
+echo "== 7. UC5 output =="
 [ -n "$(ls output/*.md 2>/dev/null)" ] && ok "output/ ada laporan" || echo "SKIP | output/ kosong (5.4 belum jalan)"
 [ -s wiki/profile/skills.md ] && ok "profile/skills.md terisi" || echo "SKIP | profile/skills.md kosong (5.4 belum jalan)"
 

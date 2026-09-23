@@ -803,7 +803,7 @@ di frontmatter (SCHEMA). Lesson lama TIDAK dihapus — dua-duanya hidup, kontrad
 ### `project-skills/mentor.md`
 
 ```markdown
-# Referensi: Mentor (UC3)
+# Referensi: Mentor (UC2)
 
 Dipakai kalau user tanya roadmap belajar, kelemahan, "harus belajar apa", atau "role apa cocok buat saya".
 
@@ -841,7 +841,7 @@ Kalau ada file ditulis/diupdate (skill-map, weak-topics): ikut aturan wajib SCHE
 ### `project-skills/daily-briefing.md`
 
 ```markdown
-# Referensi: Daily Briefing (UC4)
+# Referensi: Daily Briefing (UC3)
 
 Dipicu cron 07:00. Topik: linux, windows-server, kubernetes, docker, vmware,
 cloud, networking, monitoring, devops, sre, security, cve (= tag taxonomy SCHEMA).
@@ -867,7 +867,7 @@ DAILY INFRA BRIEFING
 ### `project-skills/study.md`
 
 ```markdown
-# Referensi: Dokumentasi Belajar (UC5)
+# Referensi: Dokumentasi Belajar (UC4)
 
 Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 
@@ -889,7 +889,7 @@ Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 ### `project-skills/career-review.md`
 
 ```markdown
-# Referensi: Career Review Quarterly (UC6)
+# Referensi: Career Review Quarterly (UC5)
 
 Dipicu cron quarterly atau user minta review.
 
@@ -933,7 +933,7 @@ bersih → cukup "wiki sehat".
 ### `project-skills/backup.md`
 
 ```markdown
-# Backup Knowledge (UC4 — Cron Mingguan)
+# Backup Knowledge (maintenance — Cron Mingguan)
 
 Dipicu cron Minggu 03:00. Push `igrow/` ke GitHub privat `igrow-backup`.
 
@@ -1007,7 +1007,13 @@ wiki/ = executable.
   - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
   - `profile/`             → ringkasan karier — gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
-- `igrow/project-skills/`  → file referensi prosedur (baca kalau relevan)
+- `igrow/project-skills/`     → file referensi prosedur (baca kalau relevan)
+  - `capture-experience.md` → UC1
+  - `mentor.md`             → UC2
+  - `daily-briefing.md`     → UC3
+  - `study.md`              → UC4
+  - `career-review.md`      → UC5
+  - `maintenance/`          → maintenance scripts (lint, backup, session-export)
 
 `igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
 
@@ -1028,7 +1034,7 @@ wiki/ = executable.
 2. Update master `igrow/_index.md` (termasuk "Total pages" + "Last updated").
 3. Append `igrow/log.md`.
 
-Career aktif: rujuk `igrow/SCHEMA.md`.
+## Career aktif: rujuk `igrow/SCHEMA.md`.
 
 ## Perintah
 - /study  → dokumentasiin yang sudah dipelajari (ke wiki/self-development/...)
@@ -1036,14 +1042,18 @@ Career aktif: rujuk `igrow/SCHEMA.md`.
   → bilang jujur "belum ada catatan", tawarin riset/tulis baru (honest gaps)
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)
-- igrow/project-skills/capture-experience.md → user cerita incident/pengalaman
-- igrow/project-skills/mentor.md             → user tanya roadmap/kelemahan belajar
-- igrow/project-skills/daily-briefing.md     → dipicu cron 07:00
-- igrow/project-skills/study.md              → user /study
-- igrow/project-skills/career-review.md      → cron quarterly / user minta review
-- igrow/project-skills/maintenance/lint.md    → dipicu cron Minggu 08:00
-- igrow/project-skills/maintenance/backup.md  → dipicu cron Minggu 03:00
-- igrow/project-skills/maintenance/session-export.md → dipicu cron Minggu 03:15
+
+### Use Case (5)
+- igrow/project-skills/capture-experience.md → UC1: Incident/knowledge/career new → wiki
+- igrow/project-skills/mentor.md             → UC2: Roadmap/kelemahan → gap analysis
+- igrow/project-skills/daily-briefing.md     → UC3: Cron 07:00 → daily infra summary
+- igrow/project-skills/study.md              → UC4: /study → dokumentasi belajar
+- igrow/project-skills/career-review.md      → UC5: Cron quarterly / manual → review + skill inventory
+
+### Maintenance (bukan UC)
+- igrow/project-skills/maintenance/lint.md    → Cron Minggu 08:00 → health check wiki
+- igrow/project-skills/maintenance/backup.md  → Cron Minggu 03:00 → push igrow/ ke GitHub
+- igrow/project-skills/maintenance/session-export.md → Cron Minggu 03:15 → dump memory+skills+igrow
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,

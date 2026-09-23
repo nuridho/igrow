@@ -24,10 +24,10 @@ wiki/ = executable.
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`     → file referensi prosedur (baca kalau relevan)
   - `capture-experience.md` → UC1
-  - `mentor.md`             → UC3
-  - `daily-briefing.md`     → UC4
-  - `study.md`              → UC5
-  - `career-review.md`      → UC6
+  - `mentor.md`             → UC2
+  - `daily-briefing.md`     → UC3
+  - `study.md`              → UC4
+  - `career-review.md`      → UC5
   - `maintenance/`          → maintenance scripts (lint, backup, session-export)
 
 `igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
@@ -58,12 +58,12 @@ wiki/ = executable.
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)
 
-### Use Case (6)
+### Use Case (5)
 - igrow/project-skills/capture-experience.md → UC1: Incident/knowledge/career new → wiki
-- igrow/project-skills/mentor.md             → UC3: Roadmap/kelemahan → gap analysis
-- igrow/project-skills/daily-briefing.md     → UC4: Cron 07:00 → daily infra summary
-- igrow/project-skills/study.md              → UC5: /study → dokumentasi belajar
-- igrow/project-skills/career-review.md      → UC6: Cron quarterly / manual → review + skill inventory
+- igrow/project-skills/mentor.md             → UC2: Roadmap/kelemahan → gap analysis
+- igrow/project-skills/daily-briefing.md     → UC3: Cron 07:00 → daily infra summary
+- igrow/project-skills/study.md              → UC4: /study → dokumentasi belajar
+- igrow/project-skills/career-review.md      → UC5: Cron quarterly / manual → review + skill inventory
 
 ### Maintenance (bukan UC)
 - igrow/project-skills/maintenance/lint.md    → Cron Minggu 08:00 → health check wiki

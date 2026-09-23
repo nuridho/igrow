@@ -33,21 +33,21 @@ chk('JANGAN bikin subfolder per topik' in CAP, 'W9: capture-experience kehilanga
 chk('.processed' not in FIN, 'W10: .processed masih ada di FIN')
 chk('.processed' not in SCHEMA + AGENTS, 'W10: .processed masih ada di runtime')
 
-# W11 subfolder tests/ harus tag taxonomy — UC2 ditunda ke Phase 5, tree FIN ditandai
-chk('PHASE 5' in re.search(r'tests/.*', tree).group(0), 'W11: tree tests/ belum ditandai Phase 5')
-chk(not [p for p in ('test-me', 'confidence_calc', 'wiki/tests', 'source_type', 'mastered')
+# W11: legacy testing artifacts stay absent from runtime; UC2 is the active Mentor workflow.
+chk(not [p for p in ('test-me', 'confidence_calc', 'wiki/tests', 'source_type')
          if p in SCHEMA + AGENTS + CAP + rd('hermes-home/igrow/project-skills/mentor.md')
          + rd('hermes-home/igrow/project-skills/career-review.md')
          + rd('hermes-home/igrow/project-skills/maintenance/lint.md')],
-    'W11/UC2: hermes-home masih ada jejak UC2')
+    'W11: legacy testing artifacts masih ada di hermes-home')
 
 # W12 raw/assets/ ada di tree
 chk('assets/' in tree, 'W12: raw/assets/ tidak ada di tree FIN')
 
 # W13 lint.md di tabel + tree FIN; project-skills FIN (minus yg ditandai Phase 5) == AGENTS
 chk(FIN.count('lint.md') >= 2, 'W13: lint.md belum di tabel + tree FIN')
-ps_blk = re.search(r'project-skills/.*?\n(.*?)scripts/', tree, re.S).group(1)
-ps_fin = set(re.findall(r'([a-z-]+\.md)', re.sub(r'.*PHASE 5.*', '', ps_blk)))
+ps_start = tree.find('project-skills/')
+ps_blk = tree[ps_start:] if ps_start >= 0 else ''
+ps_fin = set(re.findall(r'([a-z-]+\.md)', ps_blk.split('maintenance/', 1)[0]))
 ps_ag = set(re.findall(r'project-skills/([a-z-]+\.md)', AGENTS))
 chk(ps_fin == ps_ag, 'W13: project-skills FIN vs AGENTS beda: %s' % (ps_fin ^ ps_ag))
 
