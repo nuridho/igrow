@@ -9,6 +9,12 @@
 > Isi list = bug + kontradiksi antar file. Kosmetik dokumen sengaja dibuang, jangan ditambahkan lagi.
 > `hermes-home/` = source of truth. Kalau FIN/build/testing bentrok, yang nurut mereka.
 
+## Prioritas aktif
+
+- [ ] **U13** Migrasi penuh iGROW ke Jev (parked/speculative)
+  - Act: Baca `ignore/jev-full-migration.md`; lakukan POC routing, keputusan typed, capture, dan use case lengkap sebelum mengubah runtime.
+  - Impact: keputusan go/no-go berbasis akurasi, biaya, latency, kualitas output, privasi, dan rollback — bukan klaim marketing.
+
 ## Critical
 
 - [x] **C1** `lint.md` belum ada padahal cron lint mingguan dijanjikan
