@@ -1,7 +1,7 @@
 # dev-todo — iGROW template
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C14 / W37 / I21 / I22. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
+> Nomor berikutnya: C21 / W44 / I26. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
 > `FIN` = `iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
@@ -14,6 +14,67 @@
 - [ ] **U13** Migrasi penuh iGROW ke Jev (parked/speculative)
   - Act: Baca `ignore/jev-full-migration.md`; lakukan POC routing, keputusan typed, capture, dan use case lengkap sebelum mengubah runtime.
   - Impact: keputusan go/no-go berbasis akurasi, biaya, latency, kualitas output, privasi, dan rollback — bukan klaim marketing.
+
+## Phase 2 ToDo
+
+> Audit 2026-10-10: seluruh project dibaca ulang + script `testing/` dijalankan. C14–C16 sudah di-fix, sisanya terbuka.
+
+- [x] **C14** `maintenance/backup.md:7` + `maintenance/session-export.md` (4 tempat) nunjuk `project-skills/bash/*.sh` — folder `bash/` nggak ada
+  - Act: path → `project-skills/maintenance/*.sh`; step "Jalankan" ditambah "pakai bash" (mode file di git `100644`, nggak executable).
+  - Impact: cron backup & session-export nemu script-nya dan bisa jalanin.
+- [x] **C15** build.md cron: prompt backup & lint nunjuk `project-skills/{backup,lint}.md` (tanpa `maintenance/`); job session-export (Minggu 03:15 di AGENTS.md) nggak ada
+  - Act: 2 prompt → `project-skills/maintenance/...`; tambah job 5 `session-export` (`15 3 * * 0`); "4 job" → "5 job" di judul, tabel, checklist Phase 2.
+  - Impact: semua cron yang dijanjikan AGENTS.md kebuat & baca file yang ada.
+- [x] **C16** `session-export.sh:20-21` default dir memory/skills = path Windows (`$HOME/AppData/Local/hermes/...`); log ke `/opt/data/log.md` format bebas
+  - Act: dir → `$HERMES_HOME/memories` + `$HERMES_HOME/skills` (sesuai snapshot VPS `ed5ece6`); `SRC_MEMORY` mati dibuang; log → `igrow/log.md` format `## [YYYY-MM-DD] archive | ...`; step 3 session-export.md disamakan. Dites di HERMES_HOME palsu.
+  - Impact: MEMORY.md + USER.md beneran ikut ke archive; jejak export masuk log iGROW.
+- [x] **C17** Contoh few-shot ngelanggar aturan sendiri: tag di luar taxonomy (`capture-experience.md:71` `mysql, backup`; `study.md:37` `redis, caching, backend`; `FIN:649` `systemd`), See Also cuma `[[slug]]` (`capture-experience.md:96-97`), `sources` study nunjuk `raw/inbox/`
+  - Act: tag contoh → tag taxonomy SCHEMA (atau tambah tag baru ke taxonomy dulu); See Also → dual-link; `sources` study → `igrow/raw/articles/...`; self-check poin 4 (`capture-experience.md:48`, `study.md:21`) "format `[[slug]]`" → format dual-link SCHEMA.
+  - Selesai: tag → taxonomy (`linux, performance, incident` / `storage, performance` / `linux`); contoh capture dilengkapi Finding + Lesson Learned + Referensi, See Also dual-link, tanggal 2026; study `sources` → `raw/articles/`.
+  - Impact: contoh = aturan; model nggak niru tag liar & See Also tanpa path.
+- [ ] **C18** `career-review.md:16` Role Fit Trend butuh % "tahun lalu", tapi skill-map ditimpa tiap generate — angka lama nggak disimpan di mana pun
+  - Act: step 4 → angka lama diambil dari `igrow/output/career-review-*.md` sebelumnya; belum ada → tulis "baseline, belum ada pembanding"; periode disamakan (step "tahun lalu" vs contoh `career-review.md:25` "Q4 2024").
+  - Impact: trend dari data tersimpan; run pertama nggak ngarang angka.
+- [x] ~~**C19**~~ ~~`session-export.sh:38` cuma copy `skills/igrow/` — folder itu nggak ada.~~
+  - Act: session-export dihapus total (`.md` + `.sh` + cron job 5 + rujukan di AGENTS/FIN/build). Di VPS: `hermes cron remove session-export` kalau job sudah dibuat.
+  - Impact: nggak ada lagi arsip yang diam-diam nggak lengkap; backup tetap lewat git (`backup.sh`).
+- [ ] **C20** `core.autocrlf=true` tanpa `.gitattributes` → `.sh`/`.md` balik CRLF tiap git checkout (akar I9/C12/C13)
+  - Act: bikin `.gitattributes` isi `* text=auto eol=lf` (index sudah LF semua, nggak perlu renormalize).
+  - Impact: file yang dikirim ke VPS selalu LF; script nggak patah gara-gara `\r` lagi.
+- [ ] **W37** `SCHEMA.md:92` Skill Inventory = "topik mastered" (sisa fitur testing) vs `career-review.md:12` "topik target yang sudah ada notenya"
+  - Act: SCHEMA:92 → "(topik target yang sudah ada notenya) / (total topik target skill-map) per area".
+  - Impact: SCHEMA & career-review ngitung hal yang sama.
+- [ ] **W38** `SCHEMA.md:41` bilang skill-map "bukan data type", tapi contoh data file `SCHEMA.md:66-67` = `title: Skill Map` + `type: data` (`FIN:353-354` juga)
+  - Act: SCHEMA:41 → skill-map = `type: data` (frontmatter minimal), buang "(bukan data type …)".
+  - Impact: generator & lint sepakat bentuk frontmatter skill-map.
+- [ ] **W39** W28 & W26 dicentang `[x]` tapi belum beres
+  - Act: hapus kalimat fallback push via `igrow.nuridho.com` di `build.md:1095` (W28); hapus section "🧩 TODO" di `FIN:951-955` (W26) — isinya pindah ke sini kalau masih dipakai.
+  - Impact: status `[x]` di dev-todo bisa dipercaya lagi.
+- [ ] **W40** FIN masih sisa skema lama
+  - Act:
+    - Tabel file referensi `FIN:616-627`: nomor UC → ikut AGENTS (mentor=2, briefing=3, study=4, review=5); `||` → `|`.
+    - "3 Sumber Data" `FIN:397-402` isinya cuma 2; buang "hasil test" di `FIN:416` + `FIN:432`.
+    - Tree `FIN:747`: `profile/` ke-indent di level `igrow/`, harusnya di bawah `wiki/`.
+    - Status `FIN:587` "AGENTS.md belum pernah dites" → sudah (checklist Phase 2 build.md).
+  - Impact: FIN nggak ngajarin nomor UC & struktur yang beda dari runtime.
+- [ ] **W41** Blok "Bikin 14 file inti" `build.md:585-1061` basi vs `hermes-home/` (SCHEMA masih ada `query`, mentor masih baca `tests/`, tanpa A1–A6 & session-export) + instruksi rsync C8 nggak ada lagi
+  - Act: ganti blok salinan jadi 1 instruksi `rsync -a --exclude '_index.md' --exclude 'log.md' hermes-home/ <vps>:~/whatsinsidegit/igrow-hermes/hermes-home/` (setup pertama tanpa exclude); sekalian "(via SSH)" `build.md:1080` → HTTPS + token (sesuai prasyarat Job 2).
+  - Impact: setup dari nol = runtime yang sama persis; deploy ulang nggak nge-reset `_index.md`/`log.md` VPS.
+- [ ] **W42** `testing/test-flow.md` basi vs mentor & career-review sekarang
+  - Act: 4.1 expected → skill-map ke-generate otomatis dari careers (bukan "minta isi manual"); 4.2 → buang langkah isi manual; 5.4 → % = topik yang ada notenya ÷ target skill-map (bukan "score ≥5"); Checklist #10 "dari 17" → "dari 16".
+  - Impact: test-flow nggak nge-FAIL perilaku yang benar (pola W24).
+- [ ] **W43** `testing/check.sh:15` masih cek dir `raw/notes` (dihapus W35) → FAIL palsu
+  - Act: buang `raw/notes` dari loop.
+  - Impact: check.sh hijau di struktur yang benar.
+- [ ] **I23** `testing/home-check.py` FAIL palsu + buta `maintenance/`
+  - Act: regex op → `\bop: ([a-z/]+)` (sekarang nyangkut "Cek top: proses" di `capture-experience.md:85`); scan `project-skills/` rekursif termasuk `maintenance/`.
+  - Impact: path rusak kayak C14 ketangkep otomatis; nggak FAIL gara-gara kata biasa.
+- [ ] **I24** `testing/todo-check.py` FAIL: kode A1–A9 nggak dikenali; `C9`/`C11`/`W31` ada di daftar void tapi item-nya masih ada
+  - Act: regex item → `^- \[([ x])\] (?:~~)?\*\*([CWIUA]\d+)\*\*`; A6 "Act (revisi lazy …):" → "Act:"; C9/C11/W31 → keluarin dari daftar void ATAU hapus item-nya (pilih satu).
+  - Impact: todo-check hijau; dev-todo bisa dicek otomatis lagi.
+- [ ] **I25** File sisa di root
+  - Act: hapus `.probe.py` + `.probe2.py` (import `confidence_calc` yang sudah dihapus → crash) dan `.cmp.py` (duplikat crosscheck W19); `hermes-home.zip` (untracked, identik `hermes-home/`) hapus atau masuk `.gitignore`.
+  - Impact: root cuma isi file yang kepakai.
 
 ## Critical
 
@@ -167,9 +228,9 @@
 - [x] **I18** ~~`AGENTSnvk.md` + `AgentsNvk_iGrowVersion.md` masih menyebut `.processed/` + `learning/`.~~
   - Act: tambah 1 baris header "[ARSIP — bukan spec aktif]" di dua file.
   - Impact: sesi baru nggak salah baca spec mati sebagai acuan.
-- [x] **I22** ~~Belum ada session capture/export.~~
-  - Act: bikin project-skill `session-export.md` + `session-export.sh`.
-  - Impact: migration ke tool lain = copy `igrow/` + extract archive, bukan mulai nol.
+- [x] ~~**I22**~~ ~~Belum ada session capture/export.~~
+  - Act: dibuat lalu DIHAPUS (lihat C19) — terlalu ribet, `igrow/` + git backup sudah cukup buat migrasi.
+  - Impact: tidak ada export sesi; memory/skill agent tidak ikut dimigrasi otomatis.
 
 ## Advanced Prompting
 
@@ -250,3 +311,19 @@
     HANYA untuk UC1 sub-case "Daftar Kerjaan Baru" (1-2x/tahun, data kritikal). TIDAK untuk incident/knowledge rutin (10-30x/bulan). TIDAK untuk cron UC3/UC5 (zero human-in-loop).
   - Impact: error input turun 20% untuk data kritikal (user koreksi sebelum file tertulis). Trade-off: cost 3-4x API call ($0.36 vs $0.09 per operasi), latency 3-4x (3 bolak-balik vs 1 pesan). Telegram UX jadi interview-style.
   - **Disclaimer**: Multi-turn MUSTAHIL untuk cron job (UC3 daily briefing, UC5 career review = zero human). Hanya applicable untuk UC1/UC2/UC4 yang dipicu manual. Cost naik 300% per operasi. UX berubah dari "cerita → langsung simpan" jadi "cerita → tanya-jawab 3-4 turn → baru simpan".
+- [ ] **A8** Output format constraint — enforce struktur output via regex/schema validation
+  - Act: tambahkan di akhir setiap UC (capture-experience/study/mentor/daily-briefing/career-review) sebelum "Update _index+log":
+    ```
+    Regex validation sebelum tulis file:
+    - Frontmatter: `^---\ntitle: .+\ncreated: \d{4}-\d{2}-\d{2}` (7 field wajib)
+    - Dual-link: min 2x `\[\[[\w-]+\]\]`
+    - sources: `^sources: (igrow/raw/[\w/.-]+|\[\])$`
+    Kalau TIDAK match → STOP, perbaiki format dulu.
+    ```
+  - Impact: format error tertangkap di agent runtime (sebelum tulis), bukan post-hoc di lint cron. Constraint = forcing function 95% error format.
+- [ ] **A9** Negative examples — 1-2 contoh "JANGAN seperti ini" per UC untuk edge case umum
+  - Act: tambahkan di section "## Contoh Eksekusi" setelah contoh positif:
+    - capture-experience: "❌ SALAH: tag `linuxx` (typo), sources `raw/inbox/...` (tanpa prefix `igrow/`), 0 dual-link See Also"
+    - study: "❌ SALAH: folder `wiki/self-dev/docker/` (bukan FLAT), confidence 95 tanpa `sources:` (terlalu tinggi untuk zero-reference)"
+    - mentor: "❌ SALAH: roadmap generik 'belajar cloud' saat careers/ kosong (ngarang, bukan data-driven)"
+  - Impact: model tahu boundary violation konkret, bukan cuma aturan abstrak. Negative example = kurangi false positive 10-15%.

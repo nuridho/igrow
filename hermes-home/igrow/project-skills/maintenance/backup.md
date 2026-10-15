@@ -4,7 +4,7 @@ Dipicu cron Minggu 03:00. Push `igrow/` ke GitHub privat `igrow-backup`.
 
 ## Langkah
 
-1. Jalankan `igrow/project-skills/bash/backup.sh` — script handle add/commit/push, silent kalau no-change.
+1. Jalankan pakai bash: `igrow/project-skills/maintenance/backup.sh` — script handle add/commit/push, silent kalau no-change.
 2. Exit non-zero → laporkan error ke Telegram.
 3. Exit 0 + output "no changes" → jangan kirim pesan.
 

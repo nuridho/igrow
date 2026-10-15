@@ -622,9 +622,7 @@ Isinya cuma aturan inti yang harus **selalu** diingat — dibuat sepadat mungkin
 || `career-review.md` | 6 | Review quarterly + hitung skill inventory |
 || `maintenance/lint.md` | — | Cron 08:00 → health check wiki |
 || `maintenance/backup.md` | — | Cron 03:00 → push igrow/ ke GitHub |
-|| `maintenance/session-export.md` | — | Cron 03:15 → dump memory+skills+igrow |
 | `maintenance/backup.sh` | — | Script backup git: add/commit/push, silent no-change |
-| `maintenance/session-export.sh` | — | Script export: dump memory+skills+igrow ke archive |
 
 `wiki/roadmap/skill-map.md` = AUTO-GENERATE dari `about.md` + careers + self-development (bukan manual input). User boleh edit, tapi bukan keharusan. Semua mekanisme gap analysis & skill inventory bergantung ke file ini sebagai starting point.
 
@@ -646,7 +644,7 @@ title: "Judul singkat & deskriptif"
 created: 2026-08-22
 updated: 2026-08-22
 type: learning              # knowledge | incident | lesson | test | learning | profile | query | data
-tags: [linux, systemd]      # dari taxonomy igrow/SCHEMA.md
+tags: [linux]               # dari taxonomy igrow/SCHEMA.md
 sources: [igrow/raw/articles/2026-08-22-kodekloud-systemd.md]  # selalu ada; `[]` kalau murni cerita
 confidence: medium          # high | medium | low — dukungan SUMBER, beda dari skor tests/
 ---
@@ -759,8 +757,7 @@ igrow-hermes/hermes-home/                            # host folder → mount ke 
         ├── career-review.md
         ├── maintenance/
         │   ├── lint.md
-        │   ├── backup.md
-        │   └── session-export.md
+        │   └── backup.md
 ```
 
 `igrow-api` (dashboard read-only) cukup mount subfolder `igrow/` saja secara read-only — jadi gak ikut ter-expose ke `sessions/`, `memories/`, `logs/` bawaan Hermes yang emang bukan urusannya.
@@ -839,7 +836,7 @@ wiki/ = executable.
   - `daily-briefing.md`     → UC3
   - `study.md`              → UC4
   - `career-review.md`      → UC5
-  - `maintenance/`          → maintenance scripts (lint, backup, session-export)
+  - `maintenance/`          → maintenance scripts (lint, backup)
 
 `igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
 
@@ -879,7 +876,6 @@ wiki/ = executable.
 ### Maintenance (bukan UC)
 - igrow/project-skills/maintenance/lint.md    → Cron Minggu 08:00 → health check wiki
 - igrow/project-skills/maintenance/backup.md  → Cron Minggu 03:00 → push igrow/ ke GitHub
-- igrow/project-skills/maintenance/session-export.md → Cron Minggu 03:15 → dump memory+skills+igrow
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,

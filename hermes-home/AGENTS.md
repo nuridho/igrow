@@ -28,7 +28,7 @@ wiki/ = executable.
   - `daily-briefing.md`     → UC3
   - `study.md`              → UC4
   - `career-review.md`      → UC5
-  - `maintenance/`          → maintenance scripts (lint, backup, session-export)
+  - `maintenance/`          → maintenance scripts (lint, backup)
 
 `igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
 
@@ -68,7 +68,6 @@ wiki/ = executable.
 ### Maintenance (bukan UC)
 - igrow/project-skills/maintenance/lint.md    → Cron Minggu 08:00 → health check wiki
 - igrow/project-skills/maintenance/backup.md  → Cron Minggu 03:00 → push igrow/ ke GitHub
-- igrow/project-skills/maintenance/session-export.md → Cron Minggu 03:15 → dump memory+skills+igrow
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,

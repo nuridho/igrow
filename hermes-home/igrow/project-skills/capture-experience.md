@@ -45,7 +45,7 @@ Self-check sebelum commit ke disk:
 1. Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
 2. Tags ⊂ taxonomy SCHEMA? (linux|networking|monitoring|..., cek igrow/SCHEMA.md)
 3. sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
-4. Min 2 dual-link See Also? (format `[[slug]]`)
+4. Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
 Kalau ada yang kurang → STOP, perbaiki dulu sebelum tulis file.
 
 5. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: ingest/update).
@@ -65,10 +65,10 @@ Input: "Kemarin server production down 2 jam. CPU 100% gara-gara backup MySQL ja
 Output:
 ---
 title: MySQL Backup CPU Spike Incident
-created: 2025-01-20
-updated: 2025-01-20
+created: 2026-09-20
+updated: 2026-09-20
 type: incident
-tags: [linux, mysql, backup, performance]
+tags: [linux, performance, incident]
 sources: []
 confidence: high
 ---
@@ -85,6 +85,9 @@ Server production down 2 jam karena CPU 100% saat backup MySQL berjalan.
 - Cek top: proses mysqldump menghabiskan CPU
 - Backup schedule: berjalan jam 14:00 (peak traffic)
 
+## Finding
+Backup MySQL terjadwal bentrok dengan jam sibuk, bukan bug aplikasi.
+
 ## Action
 - Matikan proses backup
 - Reschedule backup ke jam 03:00 (off-peak)
@@ -92,8 +95,14 @@ Server production down 2 jam karena CPU 100% saat backup MySQL berjalan.
 ## Result
 Server kembali normal setelah backup dihentikan.
 
+## Lesson Learned
+Jadwalkan job berat di luar jam sibuk; cek crontab sebelum menyalahkan aplikasi.
+
+## Referensi
+Sesi Telegram (cerita user).
+
 ## See Also
-- [[backup-scheduling]]
-- [[mysql-performance-tuning]]
+- [[backup-scheduling|Backup Scheduling]] ([Backup Scheduling](../backup-scheduling.md))
+- [[cpu-spike-triage|CPU Spike Triage]] ([CPU Spike Triage](../cpu-spike-triage.md))
 
 ```

@@ -18,7 +18,7 @@ Self-check sebelum commit ke disk:
 1. Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
 2. Tags ⊂ taxonomy SCHEMA? (linux|networking|monitoring|..., cek igrow/SCHEMA.md)
 3. sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
-4. Min 2 dual-link See Also? (format `[[slug]]`)
+4. Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
 Kalau ada yang kurang → STOP, perbaiki dulu sebelum tulis file.
 
 5. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md + master + log.md (op: ingest).
@@ -32,7 +32,7 @@ Kalau ada yang kurang → STOP, perbaiki dulu sebelum tulis file.
 Input: "/study selesai Redis caching course"
 
 Output: 
-- raw/inbox/2025-01-20-redis-caching.md (source dump)
+- raw/inbox/2026-09-20-redis-caching.md (source dump; setelah diproses dipindah ke igrow/raw/articles/)
 - wiki/self-development/Bootcamp/Redis-Caching/redis-basics.md
-  Frontmatter: type: learning, tags: [redis, caching, backend], sources: [igrow/raw/inbox/2025-01-20-redis-caching.md]
+  Frontmatter: type: learning, tags: [storage, performance], sources: [igrow/raw/articles/2026-09-20-redis-caching.md]
   Body: Ringkasan / Detail / Contoh / Referensi / See Also
