@@ -6,7 +6,7 @@ Skala: **H** (tinggi), **M** (sedang), **L** (rendah).
 
 | ID | Risiko | Dampak | Kemungkinan | Mitigasi | Status |
 |---|---|---|---|---|---|
-| R-01 | Agent tidak patuh SCHEMA: tag di luar taxonomy, link tanpa path, salah folder. | M | H | Self-check sebelum menulis, contoh few-shot yang mematuhi aturan (C17 sudah diperbaiki), dan lint mingguan. | Termitigasi sebagian |
+| R-01 | Agent tidak patuh SCHEMA: tag di luar taxonomy, link tanpa path, salah folder. | M | H | Self-check sebelum menulis, contoh few-shot yang mematuhi aturan (C2 sudah diperbaiki), dan lint mingguan. | Termitigasi sebagian |
 | R-02 | Data sensitif bocor ke provider LLM atau GitHub. | H | M | Redaksi sebelum bercerita, aturan larangan di `AGENTS.md` dan `SCHEMA.md`, repo backup privat, dan cek manual setiap kuartal. Redaksi tetap bergantung pada disiplin user dan kepatuhan agent. | Termitigasi sebagian |
 | R-03 | Skill inventory tidak bisa dibandingkan antar kuartal karena skill map di-generate ulang dan pencocokan topik ↔ note bergantung penilaian LLM. | H | H | Skill map beku per level (D-22) dan aturan pencocokan tertulis di SCHEMA dengan file bukti per topik (D-26). | Termitigasi |
 | R-04 | VPS menjadi single point of failure. Dengan backup 3x seminggu, hingga 3 hari catatan bisa hilang. | M | L | Backup Git ke GitHub setiap Senin, Rabu, Sabtu 05:00 (D-23). | Diterima |
@@ -37,9 +37,9 @@ Skala: **H** (tinggi), **M** (sedang), **L** (rendah).
 | D-13 | 2026-09-21 | Advanced prompting Tier 1–2 (A1–A5) + A6 versi ringan diterapkan. Tier 3 (A7–A9) ditunda. | ROI tinggi dengan effort kecil. Tier 3 menaikkan biaya dan latency. | Chain-of-thought penuh di setiap langkah. |
 | D-14 | 2026-09-05 s/d 2026-09-23 | Fitur uji/latihan troubleshooting (`tests/`) dihapus bertahap. Use case menjadi 5. | Fokus ke capture, mentor, briefing, study, dan review. | — |
 | D-15 | 2026-09-23 | Migrasi ke Jev diparkir. | Belum ada bukti bahwa migrasi layak, jadi wajib POC dulu. | Migrasi langsung. |
-| D-16 | 2026-10-16 | Session export dihapus. | Script menyalin folder yang salah (C19) dan terlalu rumit untuk nilainya. Aset utama sudah aman di `igrow/` + Git. | Memperbaiki target salinan. |
+| D-16 | 2026-10-16 | Session export dihapus. | Script menyalin folder yang salah (C4) dan terlalu rumit untuk nilainya. Aset utama sudah aman di `igrow/` + Git. | Memperbaiki target salinan. |
 | D-17 | 2026-10-16 | `AGENTS.md` ikut di-backup sebagai `igrow/AGENTS.backup.md`. | File itu ada di luar `igrow/`. Diberi nama berbeda supaya tidak dianggap aturan aktif. | Mengandalkan salinan di repo saja. |
-| D-18 | 2026-10-16 | Script testing otomatis dihapus. Verifikasi dilakukan manual lewat `test-flow.md`. | Pilihan owner. Script sering memberi FAIL palsu. | Memperbaiki script (I23, I24). |
+| D-18 | 2026-10-16 | Script testing otomatis dihapus. Verifikasi dilakukan manual lewat `test-flow.md`. | Pilihan owner. Script sering memberi FAIL palsu. | Memperbaiki script cek otomatis. |
 | D-19 | 2026-10-16 | Struktur repo dirapikan (`docs/`, `web/`, `archive/`, `parked/`), `.gitattributes` mengunci LF, dan PRD dibuat. | Root lebih bersih dan setiap folder punya satu peran jelas. | — |
 | D-20 | 2026-10-16 | Note belajar: satu folder per sumber belajar, isinya note per sub-topik dengan template lengkap SCHEMA. | Template SCHEMA sudah memuat Contoh dan Referensi di setiap note. | Pecah per jenis isi (`concepts.md`, `commands.md`, `troubleshooting.md`, `references.md`) seperti di blueprint lama. |
 | D-21 | 2026-10-16 | `iGROW_FINAL.md` diarsipkan ke `archive/`. Isinya dipindah ke PRD, dan format data file yang hanya ada di FIN dipindah ke `SCHEMA.md`. | Mengurangi sumber drift (R-07). Menutup OQ-05 dan OQ-09. | Mempertahankan FIN berdampingan dengan PRD. |
@@ -58,7 +58,7 @@ Tanggal "—" berarti keputusan diambil sebelum ada pencatatan tanggal.
 | OQ-01 | ~~Skill map dibekukan per level, atau di-generate ulang setiap ada data baru?~~ | **Selesai (D-22):** dibekukan per level. | — |
 | OQ-02 | ~~Apakah backup mingguan cukup?~~ | **Selesai (D-23):** backup Senin, Rabu, Sabtu 05:00. RPO ≤ 3 hari. | — |
 | OQ-03 | ~~Op `archive` di SCHEMA masih perlu?~~ | **Selesai (D-24):** dihapus dari daftar ops. | — |
-| OQ-04 | ~~Apa yang terjadi kalau tidak ada career aktif?~~ | **Selesai:** Hermes tidak menulis file dan menawarkan alur Daftar Kerjaan Baru (W44). | — |
+| OQ-04 | ~~Apa yang terjadi kalau tidak ada career aktif?~~ | **Selesai:** Hermes tidak menulis file dan menawarkan alur Daftar Kerjaan Baru (W3). | — |
 | OQ-05 | ~~`roadmap.md` dan `completed.md` dipertahankan atau tidak?~~ | **Selesai (D-21):** hanya disebut di FIN yang sudah diarsipkan, jadi keduanya tidak ada lagi di spec. | Kalau fitur roadmap/completed dibutuhkan lagi, buka item baru di `todo.md`. |
 | OQ-06 | Apakah `project-skills/` dipindah ke sistem Skill resmi Hermes (`SKILL.md`, `external_dirs`)? | Hemat token karena lazy-load, dan setiap skill otomatis menjadi slash command di Telegram. | Evaluasi setelah Phase 2 selesai. |
 | OQ-07 | Sumber daily briefing: web research bebas, atau skill RSS/watchers resmi Hermes? | Kualitas dan konsistensi briefing. | Jalankan versi sekarang selama 2 minggu, nilai relevansinya, baru putuskan. |

@@ -1,6 +1,6 @@
 # 05 · Roadmap & Release Plan
 
-To-do rinci per item (bug, kontradiksi, dan improvement) ada di [`todo.md`](todo.md), dan riwayat perubahan ada di [`backlog.md`](backlog.md). Dokumen ini adalah ringkasan level produk: fase, milestone, dan prioritas.
+To-do rinci untuk `hermes-home/` ada di [`todo.md`](todo.md). Pekerjaan di luar `hermes-home/` (docs, VPS, testing) dicatat langsung di tabel prioritas §3. Riwayat perubahan ada di [`backlog.md`](backlog.md). Dokumen ini adalah ringkasan level produk: fase, milestone, dan prioritas.
 
 ## 1. Status Fase
 
@@ -22,8 +22,8 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 **Target:** sebelum data nyata diisi.
 
-- [x] Rapikan `SCHEMA.md`: duplikat kepemilikan, definisi skill inventory (W37), skill map sebagai `type: data` (W38), dan SCHEMA jadi wajib. Selesai 2026-10-16 (W51).
-- [ ] Deploy ulang `hermes-home/` ke VPS: contoh few-shot yang sudah diperbaiki (C17), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`).
+- [x] Rapikan `SCHEMA.md`: duplikat kepemilikan, definisi skill inventory (W1), skill map sebagai `type: data` (W2), dan SCHEMA jadi wajib. Selesai 2026-10-16 (W9).
+- [ ] Deploy ulang `hermes-home/` ke VPS: contoh few-shot yang sudah diperbaiki (C2), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`).
 - [ ] Hapus sisa session-export di VPS: cron job (kalau sudah dibuat), file prosedurnya, dan folder `log/sessions/archive/`.
 
 ### M2.2 · Automation Aktif
@@ -34,7 +34,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 ### M2.3 · Tervalidasi dengan Data Nyata
 
-- [ ] Perbarui `testing/test-flow.md` supaya sesuai perilaku sekarang ([W42](todo.md)).
+- [ ] Perbarui `testing/test-flow.md` supaya sesuai perilaku sekarang: 4.1/4.2 skill map dibuat otomatis (bukan diisi manual), 5.4 skill inventory = topik yang punya note ÷ target skill map, checklist #10 taxonomy berisi 16 tag, dan `about.md` di Step 0 memakai Role + level.
 - [ ] Isi minimal 10 note nyata (campuran incident, knowledge, dan study).
 - [ ] Jalankan test-flow secara manual, termasuk mentor (UC2) dan career review manual (UC5).
 - [x] Putuskan kebijakan skill map: dibekukan per level (D-22).
@@ -47,8 +47,8 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 |---|---|---|
 | **Now** | Cron + prasyarat backup | build.md checklist Phase 2 |
 | **Now** | Deploy ulang runtime | §2 M2.1 |
-| **Next** | Perbarui test-flow, lalu uji dengan data nyata | W42 |
-| **Next** | Bersihkan dokumen basi: blok salinan di build.md dan status `[x]` yang belum benar-benar beres | W39, W41 |
+| **Next** | Perbarui test-flow, lalu uji dengan data nyata | §2 M2.3 |
+| **Next** | Bersihkan `build.md`: ganti blok salinan "Bikin 14 file inti" dengan 1 instruksi rsync (exclude `_index.md` + `log.md`), hapus kalimat fallback push via `igrow.nuridho.com`, ganti "(via SSH)" di tabel cron jadi HTTPS + token | `docs/build.md` |
 | **Later** | Phase 3 (Dozzle), Phase 4 (dashboard) | vpslab.md |
 | **Later** | Export PDF career review, perintah koreksi note (`/cek` / `/audit`) | FR-25, FR-26 |
 | **Later** | Evaluasi migrasi `project-skills/` ke sistem Skill resmi Hermes | OQ-06 |
@@ -59,7 +59,7 @@ Tidak dikerjakan sampai ada bukti bahwa versi sekarang kurang:
 
 | Item | Alasan ditunda | Rujukan |
 |---|---|---|
-| **U13** Migrasi ke Jev (decision model) + n8n | Spekulatif. Mengubah iGROW dari assistant menjadi workflow app. Wajib POC (≥ 100 pesan anonim) sebelum keputusan go/no-go. | [`parked/jev-full-migration.md`](../parked/jev-full-migration.md) |
+| Migrasi ke Jev (decision model) + n8n | Spekulatif. Mengubah iGROW dari assistant menjadi workflow app. Wajib POC (≥ 100 pesan anonim) sebelum keputusan go/no-go. | [`parked/jev-full-migration.md`](../parked/jev-full-migration.md) |
 | **A7** Multi-turn confirmation untuk Daftar Kerjaan Baru | Biaya dan latency naik 3–4×. Tidak mungkin dipakai untuk cron. | todo |
 | **A8** Validasi format berbasis regex di prompt | Lint mingguan sudah menangkap error format. | todo |
 | **A9** Negative examples per UC | Kerjakan hanya kalau error yang sama berulang di lint. | todo |

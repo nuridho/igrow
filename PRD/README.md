@@ -31,7 +31,7 @@ Urutan baca yang disarankan: 01 → 02 → 05, lalu 03/04/06 sesuai kebutuhan.
 
 | Dokumen | Isi |
 |---|---|
-| [To-Do](todo.md) | Bug, kontradiksi, dan improvement per item (kode permanen C/W/I/A/U, format Act/Impact) |
+| [To-Do](todo.md) | Bug, kontradiksi, dan improvement **khusus `hermes-home/`** (kode permanen C/W/I/A, format Act/Impact) |
 | [Backlog](backlog.md) | Riwayat setiap update project, terbaru di atas, termasuk apakah perlu deploy ke VPS |
 
 ## Hierarki Sumber Kebenaran

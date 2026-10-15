@@ -23,7 +23,7 @@ Bahasa: Bahasa Indonesia (santai di chat, rapi di dokumen). Owner = satu-satunya
 ## Aturan Wajib
 
 1. **Setiap perubahan file → tambah entri di `PRD/backlog.md`** (paling atas, format ada di file itu). Isi juga "Deploy VPS: perlu/tidak". Kalau perubahan menyentuh `hermes-home/`, hampir pasti perlu deploy.
-2. **Temuan bug/gap baru → item di `PRD/todo.md`.** Pakai kode permanen sesuai baris "Nomor berikutnya" di header, lalu naikkan nomornya. Format: judul + `Act` + `Impact`. Jangan menomori ulang. Item selesai dicentang `[x]`, tidak dihapus.
+2. **Temuan bug/gap di `hermes-home/` → item di `PRD/todo.md`** (todo khusus hermes-home; pekerjaan di luar itu, misalnya docs/VPS/testing, dicatat di tabel prioritas `PRD/05-roadmap.md`). Pakai kode permanen sesuai baris "Nomor berikutnya" di header, lalu naikkan nomornya. Format: judul + `Act` + `Impact`. Jangan menomori ulang. Item selesai dicentang `[x]`, tidak dihapus.
 3. **Satu aturan, satu sumber.** Jangan salin aturan runtime (frontmatter, taxonomy, langkah UC) ke PRD/docs. Rujuk file aslinya. Setiap kali mengubah aturan di `hermes-home/`, grep istilah yang sama di `PRD/` dan `docs/`, lalu perbarui yang ikut berubah.
 4. **Rujukan nomor baris** (`build.md:1093`, `SCHEMA.md:93`) di `todo.md` ikut bergeser kalau file target diedit. Setelah mengedit file yang dirujuk, cek ulang rujukan di item `todo.md` yang masih terbuka.
 5. **`AGENTS.md` harus tetap padat.** File ini dimuat di setiap sesi Hermes, jadi setiap baris memakan token. Detail ditaruh di `igrow/project-skills/`.
@@ -38,7 +38,7 @@ Bahasa: Bahasa Indonesia (santai di chat, rapi di dokumen). Owner = satu-satunya
 - `project-skills/` = markdown biasa yang dirujuk dari `AGENTS.md`, **bukan** sistem Skill resmi Hermes (`SKILL.md`).
 - `hermes cron create`: argumen prompt bersifat **positional** (tidak ada `--prompt`), dan wajib `--deliver telegram`.
 - Deploy runtime: `rsync -a --exclude '_index.md' --exclude 'log.md'` supaya katalog dan log di VPS tidak tertimpa. Saat setup pertama, jalankan tanpa exclude.
-- Blok "Bikin 14 file inti" di `docs/build.md` sudah basi (W41). Salin dari `hermes-home/`, bukan dari blok itu.
+- Blok "Bikin 14 file inti" di `docs/build.md` sudah basi (tugas pembersihannya ada di `PRD/05-roadmap.md`). Salin dari `hermes-home/`, bukan dari blok itu.
 - Fakta CLI atau perilaku Hermes dicek ke dokumentasi resmi (hermes-agent.nousresearch.com), bukan dari ingatan.
 
 ## Status Saat Ini

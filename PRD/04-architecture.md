@@ -146,7 +146,7 @@ Yang tidak bisa dipulihkan dari backup: memory dan skill internal Hermes, serta 
 
 - **Konfigurasi container:** `image: nousresearch/hermes-agent:latest`, `command: gateway run`, environment `HERMES_UID`/`HERMES_GID`/`TZ`, dan satu volume `./igrow-hermes/hermes-home:/opt/data`. Tidak ada `env_file:`; secret ditulis oleh `hermes setup`. `HERMES_HOME` tidak bisa dipindah lewat env var; path-nya tetap `/opt/data`.
 - **Deploy runtime:** `rsync -a --exclude '_index.md' --exclude 'log.md'` dari `hermes-home/` di repo ini ke VPS, supaya katalog dan log di VPS tidak tertimpa template kosong. Saat setup pertama, jalankan tanpa exclude.
-- ⚠ Blok "Bikin 14 file inti" di `docs/build.md` sudah basi dibanding `hermes-home/`. Jangan dipakai untuk setup baru ([W41](todo.md)).
+- ⚠ Blok "Bikin 14 file inti" di `docs/build.md` sudah basi dibanding `hermes-home/`. Jangan dipakai untuk setup baru (pembersihannya ada di [05 · Roadmap](05-roadmap.md#3-prioritas-backlog)).
 
 ## 8. Domain
 
