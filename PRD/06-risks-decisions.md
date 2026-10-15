@@ -1,0 +1,60 @@
+# 06 · Risks, Decisions & Open Questions
+
+## 1. Risk Register
+
+Skala: **H** (tinggi), **M** (sedang), **L** (rendah).
+
+| ID | Risiko | Dampak | Kemungkinan | Mitigasi | Status |
+|---|---|---|---|---|---|
+| R-01 | Agent tidak patuh SCHEMA: tag di luar taxonomy, link tanpa path, salah folder. | M | H | Self-check sebelum menulis, contoh few-shot yang mematuhi aturan (C17 sudah diperbaiki), dan lint mingguan. | Termitigasi sebagian |
+| R-02 | Data sensitif bocor ke provider LLM atau GitHub. | H | M | Redaksi sebelum bercerita, aturan larangan di `AGENTS.md` dan `SCHEMA.md`, repo backup privat, dan cek manual setiap kuartal. Redaksi tetap bergantung pada disiplin user dan kepatuhan agent. | Termitigasi sebagian |
+| R-03 | **Skill inventory tidak bisa dibandingkan antar kuartal.** Pembilangnya dihitung dari file, tapi penyebutnya (skill map) di-generate ulang oleh LLM, sehingga daftar topik target bisa bergeser. | H | H | Usulan: bekukan skill map per level, dan setiap perubahan dilakukan eksplisit lalu dicatat di `log.md` ([OQ-01](#3-pertanyaan-terbuka)). | **Terbuka** |
+| R-04 | VPS menjadi single point of failure. Dengan backup mingguan, hingga 7 hari catatan bisa hilang. | M | L | Backup Git ke GitHub. Frekuensi bisa dinaikkan ([OQ-02](#3-pertanyaan-terbuka)). | Diterima |
+| R-05 | Update `:latest` Hermes mengubah perilaku (argumen CLI cron, cara memuat `AGENTS.md`). | M | M | Pin versi setelah stabil ([OQ-08](#3-pertanyaan-terbuka)). Setelah update, cek `hermes cron create --help` dan ulangi tes Telegram Phase 2. | Terbuka |
+| R-06 | Token GitHub tersimpan plaintext di container (`credential.helper store`). | M | L | Gunakan fine-grained token dengan scope satu repo, dan rotasi berkala. | Diterima |
+| R-07 | Dokumen saling menyimpang (FIN, build, PRD, runtime). Sejak script cek otomatis dihapus, tidak ada pengaman otomatis. | M | H | Hierarki sumber kebenaran ([README](README.md#hierarki-sumber-kebenaran)), PRD tidak menyalin aturan runtime, dan setiap perubahan runtime langsung diikuti update dokumen terkait. | Terbuka |
+| R-08 | Adopsi rendah: user berhenti bercerita, sehingga UC2 dan UC5 tidak punya bahan. | H | M | Friction dibuat rendah (cukup chat bebas) dan metrik adopsi dipantau. Usulan: pengingat kalau 7 hari tidak ada `ingest`. | Terbuka |
+| R-09 | Biaya token LLM naik (briefing harian dengan web research, review kuartalan). | M | M | `AGENTS.md` ringkas, prosedur dimuat sesuai kebutuhan, dashboard tanpa LLM. Pantau tagihan provider setiap bulan. | Termitigasi sebagian |
+| R-10 | Memory dan skill internal agent hilang saat migrasi, karena session export sudah dihapus. | L | H | Diterima. Prosedur yang penting harus ditulis di `project-skills/`, bukan hanya hidup di skill buatan agent. | Diterima |
+| R-11 | RAM 4 GB tidak cukup saat Phase 3–5 ditambahkan. | M | L | Pilih tool ringan, pantau `docker stats`, tambahkan swap, upgrade kalau perlu. | Diterima |
+
+## 2. Decision Log
+
+| ID | Tanggal | Keputusan | Alasan | Alternatif yang ditolak |
+|---|---|---|---|---|
+| D-01 | — | Memakai image resmi `nousresearch/hermes-agent`. | Gateway, memory, tools, dan cron sudah tersedia. Yang custom cukup lapisan instruksi. | Membangun bot sendiri (effort besar). |
+| D-02 | — | `AGENTS.md` diletakkan di root `HERMES_HOME`. | Di mode gateway, working directory selalu `/opt/data` (issue #5200). Sudah teruji. | `AGENTS.md` di dalam `igrow/`. |
+| D-03 | — | Satu volume `hermes-home:/opt/data`, data iGROW di subfolder `igrow/`. | Mengikuti konvensi image. Hanya `igrow/` yang di-backup dan dibagikan ke `igrow-api`. | Mount terpisah per folder. |
+| D-04 | — | Format markdown + YAML frontmatter. | Bisa dibaca tanpa tool, dan satu file menjadi satu sumber kebenaran. | Markdown + JSON terpisah. |
+| D-05 | — | `project-skills/` berupa markdown biasa yang dirujuk dari `AGENTS.md`. | Sederhana dan portable. Konsekuensinya, tidak mendapat lazy-load dari sistem Skill resmi. | `SKILL.md` resmi (ditinjau ulang di OQ-06). |
+| D-06 | 2026-08-25 | Pola wiki "varian B" (Karpathy LLM Wiki / nvk): `raw/` immutable, `wiki/` hasil kompilasi, index + log. | Struktur yang sudah teruji untuk knowledge base yang dikelola LLM. | Satu folder campur. Arsip ada di `archive/`. |
+| D-07 | — | Folder `knowledge/` dibuat flat; topik diatur lewat tag. | Satu note bisa mencakup banyak topik, dan gap analysis membaca tag. | Subfolder per topik. |
+| D-08 | — | Satu jalur `raw/`: `inbox/` → `articles/` (`.processed/` dibuang). | Supaya "inbox kosong = semua sudah diproses" bisa dipercaya. | Dua jalur paralel. |
+| D-09 | — | Skill map di-generate otomatis. | Fitur gap analysis jalan tanpa setup manual di awal. | Diisi manual (konsekuensi: R-03). |
+| D-10 | — | Backup lewat Hermes cron + `backup.sh`. | Satu mekanisme, dan error langsung dikirim ke Telegram. | Crontab host + `sync.sh`. |
+| D-11 | — | Dashboard dibagi menjadi tiga service: hermes, api, web. | Refresh dashboard tidak membebani bot dan tidak memakai token LLM. | Web memanggil Hermes langsung. |
+| D-12 | — | Phase 4 (dashboard) ditunda setelah Phase 2. | Belum ada data yang bisa ditampilkan. | Membangun dashboard lebih dulu. |
+| D-13 | 2026-09-21 | Advanced prompting Tier 1–2 (A1–A5) + A6 versi ringan diterapkan. Tier 3 (A7–A9) ditunda. | ROI tinggi dengan effort kecil. Tier 3 menaikkan biaya dan latency. | Chain-of-thought penuh di setiap langkah. |
+| D-14 | 2026-09-05 s/d 2026-09-23 | Fitur uji/latihan troubleshooting (`tests/`) dihapus bertahap. Use case menjadi 5. | Fokus ke capture, mentor, briefing, study, dan review. | — |
+| D-15 | 2026-09-23 | Migrasi ke Jev diparkir. | Belum ada bukti bahwa migrasi layak, jadi wajib POC dulu. | Migrasi langsung. |
+| D-16 | 2026-10-16 | Session export dihapus. | Script menyalin folder yang salah (C19) dan terlalu rumit untuk nilainya. Aset utama sudah aman di `igrow/` + Git. | Memperbaiki target salinan. |
+| D-17 | 2026-10-16 | `AGENTS.md` ikut di-backup sebagai `igrow/AGENTS.backup.md`. | File itu ada di luar `igrow/`. Diberi nama berbeda supaya tidak dianggap aturan aktif. | Mengandalkan salinan di repo saja. |
+| D-18 | 2026-10-16 | Script testing otomatis dihapus. Verifikasi dilakukan manual lewat `test-flow.md`. | Pilihan owner. Script sering memberi FAIL palsu. | Memperbaiki script (I23, I24). |
+| D-19 | 2026-10-16 | Struktur repo dirapikan (`docs/`, `web/`, `archive/`, `parked/`), `.gitattributes` mengunci LF, dan PRD dibuat. | Root lebih bersih dan setiap folder punya satu peran jelas. | — |
+
+Tanggal "—" berarti keputusan diambil sebelum ada pencatatan tanggal.
+
+## 3. Pertanyaan Terbuka
+
+| ID | Pertanyaan | Kenapa penting | Usulan default |
+|---|---|---|---|
+| OQ-01 | Skill map dibekukan per level, atau di-generate ulang setiap ada data baru? | Menentukan apakah skill inventory bisa dibandingkan antar kuartal (R-03). | **Bekukan.** Generate ulang hanya saat naik level atau ganti role, dan catat di `log.md`. |
+| OQ-02 | Apakah backup mingguan cukup? | RPO saat ini 7 hari. | **Harian 03:00.** Biayanya hampir nol karena tidak ada pesan kalau tidak ada perubahan. |
+| OQ-03 | Op `archive` di SCHEMA masih perlu setelah session export dihapus? | Daftar op seharusnya hanya berisi op yang benar-benar dipakai. | Pakai untuk penutupan career di UC1b, atau hapus dari daftar. |
+| OQ-04 | Apa yang terjadi kalau tidak ada career aktif? | Prosedur UC1 belum mendefinisikan kasus ini. | Jangan menulis file. Tanya user apakah mau mendaftarkan pekerjaan dulu. |
+| OQ-05 | `roadmap.md` dan `completed.md` dipertahankan atau tidak? | Disebut di blueprint, tapi tidak ada prosedur yang menulisnya. | Hapus dari spec sampai ada kebutuhan nyata. |
+| OQ-06 | Apakah `project-skills/` dipindah ke sistem Skill resmi Hermes (`SKILL.md`, `external_dirs`)? | Hemat token karena lazy-load, dan setiap skill otomatis menjadi slash command di Telegram. | Evaluasi setelah Phase 2 selesai. |
+| OQ-07 | Sumber daily briefing: web research bebas, atau skill RSS/watchers resmi Hermes? | Kualitas dan konsistensi briefing. | Jalankan versi sekarang selama 2 minggu, nilai relevansinya, baru putuskan. |
+| OQ-08 | Pin versi Hermes, atau tetap `:latest`? | Stabilitas versus update otomatis (R-05). | Pin setelah Phase 2 stabil. |
+| OQ-09 | Bagaimana nasib `docs/iGROW_FINAL.md` setelah PRD ada? | Isinya banyak tumpang tindih dengan PRD, dan ini risiko drift (R-07). | Pindahkan ke `archive/` sebagai blueprint historis. |
+| OQ-10 | Apakah target metrik di [01 · §7](01-overview.md#7-ukuran-sukses) disetujui? | Tanpa target yang disepakati, sukses tidak bisa dinilai. | Tinjau setelah 1 bulan pemakaian nyata. |

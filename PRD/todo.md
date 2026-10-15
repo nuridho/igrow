@@ -1,18 +1,19 @@
-# dev-todo — iGROW template
+# To-Do — iGROW
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C21 / W44 / I26. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
-> `FIN` = `iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
+> Nomor berikutnya: C22 / W47 / I28. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
+> `FIN` = `docs/iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
 > Semua temuan sudah diverifikasi ke file / CLI / eksekusi. Yang tidak bisa dipastikan ditandai "(belum diverifikasi)".
 > Isi list = bug + kontradiksi antar file. Kosmetik dokumen sengaja dibuang, jangan ditambahkan lagi.
 > `hermes-home/` = source of truth. Kalau FIN/build/testing bentrok, yang nurut mereka.
+> Item selesai → centang di sini + catat di [`backlog.md`](backlog.md).
 
 ## Prioritas aktif
 
 - [ ] **U13** Migrasi penuh iGROW ke Jev (parked/speculative)
-  - Act: Baca `ignore/jev-full-migration.md`; lakukan POC routing, keputusan typed, capture, dan use case lengkap sebelum mengubah runtime.
+  - Act: Baca `parked/jev-full-migration.md`; lakukan POC routing, keputusan typed, capture, dan use case lengkap sebelum mengubah runtime.
   - Impact: keputusan go/no-go berbasis akurasi, biaya, latency, kualitas output, privasi, dan rollback — bukan klaim marketing.
 
 ## Phase 2 ToDo
@@ -38,7 +39,7 @@
 - [x] ~~**C19**~~ ~~`session-export.sh:38` cuma copy `skills/igrow/` — folder itu nggak ada.~~
   - Act: session-export dihapus total (`.md` + `.sh` + cron job 5 + rujukan di AGENTS/FIN/build). Di VPS: `hermes cron remove session-export` kalau job sudah dibuat.
   - Impact: nggak ada lagi arsip yang diam-diam nggak lengkap; backup tetap lewat git (`backup.sh`).
-- [ ] **C20** `core.autocrlf=true` tanpa `.gitattributes` → `.sh`/`.md` balik CRLF tiap git checkout (akar I9/C12/C13)
+- [x] **C20** `core.autocrlf=true` tanpa `.gitattributes` → `.sh`/`.md` balik CRLF tiap git checkout (akar I9/C12/C13)
   - Act: bikin `.gitattributes` isi `* text=auto eol=lf` (index sudah LF semua, nggak perlu renormalize).
   - Impact: file yang dikirim ke VPS selalu LF; script nggak patah gara-gara `\r` lagi.
 - [ ] **W37** `SCHEMA.md:92` Skill Inventory = "topik mastered" (sisa fitur testing) vs `career-review.md:12` "topik target yang sudah ada notenya"
@@ -48,33 +49,56 @@
   - Act: SCHEMA:41 → skill-map = `type: data` (frontmatter minimal), buang "(bukan data type …)".
   - Impact: generator & lint sepakat bentuk frontmatter skill-map.
 - [ ] **W39** W28 & W26 dicentang `[x]` tapi belum beres
-  - Act: hapus kalimat fallback push via `igrow.nuridho.com` di `build.md:1095` (W28); hapus section "🧩 TODO" di `FIN:951-955` (W26) — isinya pindah ke sini kalau masih dipakai.
+  - Act: hapus kalimat fallback push via `igrow.nuridho.com` di `build.md:1093` (W28); hapus section "🧩 TODO" di `FIN:947-951` (W26) — isinya pindah ke sini kalau masih dipakai.
   - Impact: status `[x]` di dev-todo bisa dipercaya lagi.
 - [ ] **W40** FIN masih sisa skema lama
   - Act:
-    - Tabel file referensi `FIN:616-627`: nomor UC → ikut AGENTS (mentor=2, briefing=3, study=4, review=5); `||` → `|`.
+    - Tabel file referensi `FIN:616-625`: nomor UC → ikut AGENTS (mentor=2, briefing=3, study=4, review=5); `||` → `|`.
     - "3 Sumber Data" `FIN:397-402` isinya cuma 2; buang "hasil test" di `FIN:416` + `FIN:432`.
-    - Tree `FIN:747`: `profile/` ke-indent di level `igrow/`, harusnya di bawah `wiki/`.
+    - Tree `FIN:745`: `profile/` ke-indent di level `igrow/`, harusnya di bawah `wiki/`.
     - Status `FIN:587` "AGENTS.md belum pernah dites" → sudah (checklist Phase 2 build.md).
   - Impact: FIN nggak ngajarin nomor UC & struktur yang beda dari runtime.
-- [ ] **W41** Blok "Bikin 14 file inti" `build.md:585-1061` basi vs `hermes-home/` (SCHEMA masih ada `query`, mentor masih baca `tests/`, tanpa A1–A6 & session-export) + instruksi rsync C8 nggak ada lagi
-  - Act: ganti blok salinan jadi 1 instruksi `rsync -a --exclude '_index.md' --exclude 'log.md' hermes-home/ <vps>:~/whatsinsidegit/igrow-hermes/hermes-home/` (setup pertama tanpa exclude); sekalian "(via SSH)" `build.md:1080` → HTTPS + token (sesuai prasyarat Job 2).
+- [ ] **W41** Blok "Bikin 14 file inti" `build.md:585-1060` basi vs `hermes-home/` (SCHEMA masih ada `query`, mentor masih baca `tests/`, tanpa A1–A6 & session-export) + instruksi rsync C8 nggak ada lagi
+  - Act: ganti blok salinan jadi 1 instruksi `rsync -a --exclude '_index.md' --exclude 'log.md' hermes-home/ <vps>:~/whatsinsidegit/igrow-hermes/hermes-home/` (setup pertama tanpa exclude); sekalian "(via SSH)" `build.md:1079` → HTTPS + token (sesuai prasyarat Job 2).
   - Impact: setup dari nol = runtime yang sama persis; deploy ulang nggak nge-reset `_index.md`/`log.md` VPS.
 - [ ] **W42** `testing/test-flow.md` basi vs mentor & career-review sekarang
   - Act: 4.1 expected → skill-map ke-generate otomatis dari careers (bukan "minta isi manual"); 4.2 → buang langkah isi manual; 5.4 → % = topik yang ada notenya ÷ target skill-map (bukan "score ≥5"); Checklist #10 "dari 17" → "dari 16".
   - Impact: test-flow nggak nge-FAIL perilaku yang benar (pola W24).
-- [ ] **W43** `testing/check.sh:15` masih cek dir `raw/notes` (dihapus W35) → FAIL palsu
-  - Act: buang `raw/notes` dari loop.
-  - Impact: check.sh hijau di struktur yang benar.
-- [ ] **I23** `testing/home-check.py` FAIL palsu + buta `maintenance/`
-  - Act: regex op → `\bop: ([a-z/]+)` (sekarang nyangkut "Cek top: proses" di `capture-experience.md:85`); scan `project-skills/` rekursif termasuk `maintenance/`.
-  - Impact: path rusak kayak C14 ketangkep otomatis; nggak FAIL gara-gara kata biasa.
-- [ ] **I24** `testing/todo-check.py` FAIL: kode A1–A9 nggak dikenali; `C9`/`C11`/`W31` ada di daftar void tapi item-nya masih ada
-  - Act: regex item → `^- \[([ x])\] (?:~~)?\*\*([CWIUA]\d+)\*\*`; A6 "Act (revisi lazy …):" → "Act:"; C9/C11/W31 → keluarin dari daftar void ATAU hapus item-nya (pilih satu).
-  - Impact: todo-check hijau; dev-todo bisa dicek otomatis lagi.
-- [ ] **I25** File sisa di root
+- [x] ~~**W43**~~ ~~`testing/check.sh:15` masih cek dir `raw/notes` (dihapus W35) → FAIL palsu~~
+  - Act: script cek di `testing/` dihapus semua (check.sh dihapus) — cek manual lewat `test-flow.md`.
+  - Impact: tidak ada lagi FAIL palsu; verifikasi manual.
+- [x] ~~**I23**~~ ~~`testing/home-check.py` FAIL palsu + buta `maintenance/`~~
+  - Act: script cek di `testing/` dihapus semua (home-check.py dihapus) — cek manual lewat `test-flow.md`.
+  - Impact: tidak ada lagi FAIL palsu; verifikasi manual.
+- [x] ~~**I24**~~ ~~`testing/todo-check.py` FAIL: kode A1–A9 nggak dikenali; `C9`/`C11`/`W31` ada di daftar void tapi item-nya masih ada~~
+  - Act: script cek di `testing/` dihapus semua (todo-check.py dihapus) — cek manual lewat `test-flow.md`.
+  - Impact: tidak ada lagi FAIL palsu; verifikasi manual.
+- [x] **I25** File sisa di root
   - Act: hapus `.probe.py` + `.probe2.py` (import `confidence_calc` yang sudah dihapus → crash) dan `.cmp.py` (duplikat crosscheck W19); `hermes-home.zip` (untracked, identik `hermes-home/`) hapus atau masuk `.gitignore`.
   - Impact: root cuma isi file yang kepakai.
+
+## Temuan PRD (2026-10-16)
+
+> Celah yang ketemu saat menyusun PRD. Item bertanda "(menunggu OQ-xx)" butuh keputusan owner dulu, lihat `06-risks-decisions.md` §3.
+
+- [ ] **C21** Skill map di-generate ulang tiap ada data baru → penyebut skill inventory ikut berubah, angka antar kuartal tidak sebanding (R-03) (menunggu OQ-01)
+  - Act: `skill-map.md` dibekukan per level; generate ulang hanya saat naik level / ganti role, dicatat di `log.md` (op `update`); sesuaikan `mentor.md` ("auto-update setiap ada data baru"), `career-review.md`, dan `SCHEMA.md`.
+  - Impact: skill inventory bisa dibandingkan antar kuartal (NFR-05); "hitung, bukan kira-kira" berlaku untuk pembilang dan penyebut.
+- [ ] **W44** `capture-experience.md` tidak mendefinisikan kasus "tidak ada career aktif" (OQ-04)
+  - Act: tambah fallback di Langkah 1: tidak ada `about.md` tanpa tanggal selesai → jangan tulis file, tanya user mau daftar kerjaan baru (UC1b) dulu.
+  - Impact: cerita kerja tidak nyasar ke folder career yang sudah ditutup atau ke lokasi karangan.
+- [ ] **W45** `roadmap.md` + `completed.md` disebut di FIN (UC2 Output, data file) tapi tidak ada prosedur yang menulisnya (OQ-05)
+  - Act: hapus keduanya dari FIN (`FIN:157-158`, `FIN:694-695`, tree `FIN:740-741`); `wiki/roadmap/` tinggal `skill-map.md` + `weak-topics.md`.
+  - Impact: spec = perilaku runtime; agent tidak bingung file mana yang wajib ada.
+- [ ] **W46** Update in-place belum eksplisit di `capture-experience.md` padahal `testing/test-flow.md` 1.9 mengharapkannya (FR-12)
+  - Act: tambah 1 baris di Langkah 2: cerita lanjutan untuk incident/knowledge yang sama → edit file lama (`updated:` berubah, `created:` tetap), log op `update`, jangan bikin file baru.
+  - Impact: tidak ada note duplikat untuk satu kejadian.
+- [ ] **I26** Backup mingguan = RPO 7 hari (menunggu OQ-02)
+  - Act: jadwal `backup-knowledge` → `0 3 * * *` (harian) di `build.md`, `AGENTS.md`, `backup.md`, PRD.
+  - Impact: maksimal 1 hari catatan hilang kalau VPS mati; tanpa pesan tambahan karena no-change tetap diam.
+- [ ] **I27** Op `archive` di `SCHEMA.md:25` tidak dipakai lagi setelah session-export dihapus (menunggu OQ-03)
+  - Act: pakai `archive` untuk penutupan career di UC1b, ATAU hapus dari daftar ops.
+  - Impact: daftar ops = ops yang benar-benar dipakai (pola W7).
 
 ## Critical
 

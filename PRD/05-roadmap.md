@@ -1,0 +1,78 @@
+# 05 · Roadmap & Release Plan
+
+To-do rinci per item (bug, kontradiksi, dan improvement) ada di [`todo.md`](todo.md), dan riwayat perubahan ada di [`backlog.md`](backlog.md). Dokumen ini adalah ringkasan level produk: fase, milestone, dan prioritas.
+
+## 1. Status Fase
+
+| Phase | Lingkup | Status | Exit criteria |
+|---|---|---|---|
+| **1 · Foundation** | Docker, NPM, Portainer, Glance, Homepage, UFW, SSL | ✅ Selesai | Semua checklist Phase 1 di `build.md` dicentang |
+| **2 · iGROW Core** | `igrow-hermes` + `igrow/` + UC1–UC5 + maintenance | 🟡 Berjalan | Lihat §2 |
+| **3 · Observability** | Dozzle | ⏳ Belum mulai | Log semua container bisa dibaca dari browser |
+| **4 · Dashboard** | 4a: `igrow-web` statis (data dummy). 4b: `igrow-api` + data asli | ⏳ Belum mulai | Dashboard menampilkan data asli tanpa memanggil LLM |
+| **5 · Opsional** | Obsidian LiveSync (CouchDB), Netdata, Loki, Gatus/Uptime Kuma | ⏳ Sesuai kebutuhan | Dikerjakan hanya kalau ada kebutuhan nyata |
+
+Urutan ini sengaja: dashboard (Phase 4) ditunda sampai Hermes punya data asli. Tidak ada gunanya membangun "kaca jendela" sebelum ada isinya.
+
+## 2. Phase 2: Jalan Menuju "Done"
+
+Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesai, `AGENTS.md` terbukti dimuat, dan capture pertama lewat Telegram berhasil menulis file.
+
+### M2.1 · Runtime Bersih
+
+**Target:** sebelum data nyata diisi.
+
+- [ ] Rapikan `SCHEMA.md`: hapus baris duplikat `|-` (baris 18–19), samakan definisi skill inventory ([W37](todo.md)), dan tegaskan skill map sebagai `type: data` ([W38](todo.md)).
+- [ ] Deploy ulang `hermes-home/` ke VPS: contoh few-shot yang sudah diperbaiki (C17), `backup.sh` yang ikut membackup `AGENTS.md`, dan `AGENTS.md` tanpa session-export.
+- [ ] Hapus sisa session-export di VPS: cron job (kalau sudah dibuat), file prosedurnya, dan folder `log/sessions/archive/`.
+
+### M2.2 · Automation Aktif
+
+- [ ] Siapkan prasyarat backup: `git init` di `igrow/`, remote repo privat `igrow-backup`, dan token dengan scope minimal.
+- [ ] Buat 4 cron job (`daily-briefing`, `backup-knowledge`, `lint-mingguan`, `career-review`). Pastikan `hermes cron list` menampilkan 4 job.
+- [ ] Verifikasi minggu pertama: briefing tiba setiap pagi, backup menghasilkan commit, dan lint mengirim laporan.
+
+### M2.3 · Tervalidasi dengan Data Nyata
+
+- [ ] Perbarui `testing/test-flow.md` supaya sesuai perilaku sekarang ([W42](todo.md)).
+- [ ] Isi minimal 10 note nyata (campuran incident, knowledge, dan study).
+- [ ] Jalankan test-flow secara manual, termasuk mentor (UC2) dan career review manual (UC5).
+- [ ] Putuskan kebijakan skill map: dibekukan per level atau di-generate ulang ([OQ-01](06-risks-decisions.md#3-pertanyaan-terbuka)).
+
+**Definisi Phase 2 selesai:** M2.1–M2.3 tercapai, dan career review otomatis pertama berjalan tanpa intervensi pada **1 Januari 2027 pukul 09:00**.
+
+## 3. Prioritas Backlog
+
+| Horizon | Item | Sumber |
+|---|---|---|
+| **Now** | Bersihkan SCHEMA (duplikat, W37, W38) | todo |
+| **Now** | Cron + prasyarat backup | build.md checklist Phase 2 |
+| **Now** | Deploy ulang runtime | §2 M2.1 |
+| **Next** | Role Fit Trend memakai baseline tersimpan | C18 |
+| **Next** | Perbarui test-flow, lalu uji dengan data nyata | W42 |
+| **Next** | Bersihkan dokumen basi: blok salinan di build.md, sisa skema lama di FIN, status `[x]` yang belum benar-benar beres | W39, W40, W41 |
+| **Next** | Update in-place ditulis eksplisit di prosedur capture | FR-12 |
+| **Later** | Phase 3 (Dozzle), Phase 4 (dashboard) | vpslab.md |
+| **Later** | Export PDF career review, perintah koreksi note (`/cek` / `/audit`) | FR-25, FR-26 |
+| **Later** | Evaluasi migrasi `project-skills/` ke sistem Skill resmi Hermes | OQ-06 |
+
+## 4. Parked
+
+Tidak dikerjakan sampai ada bukti bahwa versi sekarang kurang:
+
+| Item | Alasan ditunda | Rujukan |
+|---|---|---|
+| **U13** Migrasi ke Jev (decision model) + n8n | Spekulatif. Mengubah iGROW dari assistant menjadi workflow app. Wajib POC (≥ 100 pesan anonim) sebelum keputusan go/no-go. | [`parked/jev-full-migration.md`](../parked/jev-full-migration.md) |
+| **A7** Multi-turn confirmation untuk Daftar Kerjaan Baru | Biaya dan latency naik 3–4×. Tidak mungkin dipakai untuk cron. | todo |
+| **A8** Validasi format berbasis regex di prompt | Lint mingguan sudah menangkap error format. | todo |
+| **A9** Negative examples per UC | Kerjakan hanya kalau error yang sama berulang di lint. | todo |
+
+## 5. Kalender Operasional
+
+| Kapan | Apa yang terjadi |
+|---|---|
+| Setiap hari 07:00 | Daily briefing |
+| Minggu 03:00 | Backup `igrow/` ke GitHub |
+| Minggu 08:00 | Laporan lint |
+| 1 Jan / 1 Apr / 1 Jul / 1 Okt, 09:00 | Career review kuartalan |
+| Setiap kuartal (manual) | Cek privasi `raw/` dan `wiki/`, serta tinjau ulang target metrik di [01 · §7](01-overview.md#7-ukuran-sukses) |

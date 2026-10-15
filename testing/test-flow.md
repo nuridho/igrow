@@ -270,7 +270,7 @@ systemctl status nginx && journalctl -u nginx -b -p err
 
 > ⏸️ fitur testing ditunda. `test-me.md`, `confidence_calc.py`, `wiki/tests/` sengaja tidak ada di `hermes-home/`.
 > Case 3.1/3.2 + case mentor yang butuh skor dilewati karena fitur testing belum aktif.
-> Backlog fitur testing: `dev-todo.md` (jika diaktifkan lagi).
+> Backlog fitur testing: `PRD/todo.md` (jika diaktifkan lagi).
 
 ## 3.1 Jawab benar
 **Prompt:** "Uji saya soal Linux troubleshooting. Jangan kasih petunjuk."

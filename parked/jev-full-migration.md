@@ -201,4 +201,4 @@ Gunakan n8n hanya sebagai orchestrator POC. Jev tetap decision engine, Markdown 
 
 Jangan full migration dulu. Cari tahu apakah Jev bisa menjadi decision layer murah. Full migration hanya dipertimbangkan setelah POC membuktikan input parsing dan kualitas output tanpa LLM naratif.
 
-Artefak eksperimen nanti, jika disetujui: `ignore/jev-poc/`.
+Artefak eksperimen nanti, jika disetujui: `parked/jev-poc/`.
