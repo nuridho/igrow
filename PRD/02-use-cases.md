@@ -18,7 +18,7 @@ Legenda status pada acceptance criteria (AC):
 | UC5 | Career Review | Cron kuartalan atau permintaan manual | Laporan kuartal + skill inventory | [`career-review.md`](../hermes-home/igrow/project-skills/career-review.md) |
 | — | `/recall` | `/recall <pertanyaan>` | Jawaban dari wiki, atau "belum ada catatan" | [`AGENTS.md`](../hermes-home/AGENTS.md) § Perintah |
 | M1 | Lint Mingguan | Cron Minggu 08:00 | Laporan kesehatan wiki | [`maintenance/lint.md`](../hermes-home/igrow/project-skills/maintenance/lint.md) |
-| M2 | Backup Mingguan | Cron Minggu 03:00 | Commit + push `igrow/` ke GitHub privat | [`maintenance/backup.md`](../hermes-home/igrow/project-skills/maintenance/backup.md) |
+| M2 | Backup | Cron Senin, Rabu, Sabtu 05:00 | Commit + push `igrow/` ke GitHub privat | [`maintenance/backup.md`](../hermes-home/igrow/project-skills/maintenance/backup.md) |
 
 ## Bagaimana UC Saling Memberi Makan
 
@@ -97,8 +97,8 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 - ✅ Setelah menulis: `wiki/_index.md`, master `_index.md` (Total pages + Last updated), dan `log.md` (op `ingest`/`update`) ikut diperbarui.
 - ✅ Kalau cerita baru bertentangan dengan note lama: Hermes bertanya sekali, field `contradictions` diisi, dan note lama tidak dihapus.
 - ✅ Kalau tidak ada tag yang cocok (< 60%): Hermes bertanya sekali dengan 3 opsi terdekat.
-- ⚠ Cerita lanjutan tentang incident yang sama seharusnya memperbarui file lama, bukan membuat duplikat. Ini diuji di `testing/test-flow.md` 1.9, tapi belum tertulis eksplisit di prosedur.
-- ⚠ Kalau tidak ada career aktif, perilakunya belum didefinisikan (lihat [OQ-04](06-risks-decisions.md#3-pertanyaan-terbuka)).
+- ✅ Cerita lanjutan tentang incident yang sama memperbarui file lama (`updated:` diganti, `created:` tetap), bukan membuat duplikat.
+- ✅ Kalau tidak ada career aktif: Hermes tidak menulis file dan menawarkan alur Daftar Kerjaan Baru.
 
 ## UC1b · Daftar Kerjaan Baru
 
@@ -107,7 +107,7 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 **Trigger:** "daftar kerjaan baru", "pindah kerjaan", atau cerita soal tempat kerja baru.
 
 **Acceptance criteria:**
-- ✅ Hermes bertanya satu ronde: company, role, vendor/client, lokasi, tanggal mulai, dan jobdesc singkat.
+- ✅ Hermes bertanya satu ronde: company, role beserta level (mis. Infra Engineer L1), vendor/client, lokasi, tanggal mulai, dan jobdesc singkat.
 - ✅ `about.md` career lama diberi tanggal selesai (`Period: <start> s/d <hari ini>`).
 - ✅ Folder baru `wiki/careers/career-N-{company}-{role}/` dibuat, dengan N = nomor berikutnya.
 - ✅ `about.md` berformat plain `Key: value` tanpa frontmatter, dan `skills.md` dibuat kosong.
@@ -134,8 +134,8 @@ Dengan pemisahan per career, setiap note otomatis punya konteks "dari pekerjaan 
 **Trigger:** pertanyaan seperti "harus belajar apa", "kelemahan saya apa", atau "role apa yang cocok".
 
 **Alur utama:**
-1. Pastikan `wiki/roadmap/skill-map.md` ada dan lebih baru dari `about.md`. Kalau tidak, generate dulu dari `careers/` dan `self-development/`.
-2. Bandingkan topik target di skill map dengan katalog `_index.md`. Gap = topik target yang tidak muncul sama sekali, atau hanya disebut sekali.
+1. Pastikan `wiki/roadmap/skill-map.md` ada. Kalau belum, generate dulu dari `careers/` dan `self-development/`. Skill map beku per level: tidak di-generate ulang karena ada data baru.
+2. Beri status tiap topik target: Known (punya note), Weak (cuma disinggung di note lain), atau Belum (tidak muncul). Gap = Weak + Belum.
 3. Beri jawaban sesuai jenis pertanyaan:
    - **Roadmap:** tabel Known / Weak / Belum, rekomendasi personal, update `weak-topics.md`.
    - **Role fit:** tabel kecocokan role dalam bentuk X/Y topik, 2 role paling cocok dan 2 paling jauh, beserta gap masing-masing.
@@ -186,7 +186,7 @@ Topik target tanpa note, atau hanya disebut sekali = knowledge gap
 
 **Prasyarat:** fitur ini butuh bahan. Urutannya: rutin capture (UC1) dan study (UC4) dulu, baru minta gap analysis (UC2/UC5). Skill map dibuat otomatis, jadi kekosongan data karier adalah satu-satunya alasan jawaban menjadi tipis.
 
-**Konsistensi nama topik:** kalau topik yang sama ditulis dengan nama berbeda setiap kali, hasil gap analysis terpecah. Mitigasinya: tag dari taxonomy SCHEMA dan fuzzy-match nama topik. Cara mencocokkan topik skill map dengan note masih belum didefinisikan ([W50](todo.md)).
+**Konsistensi nama topik:** kalau topik yang sama ditulis dengan nama berbeda setiap kali, hasil gap analysis terpecah. Mitigasinya: tag dari taxonomy SCHEMA dan fuzzy-match nama topik. Aturan pencocokannya ada di SCHEMA: topik dihitung punya note kalau ada note yang judul atau Ringkasan-nya membahas topik itu. Yang cuma disinggung di note lain dihitung Weak.
 
 ## UC3 · Daily Briefing
 
@@ -229,7 +229,7 @@ Prinsip: lebih baik **5 informasi penting + alasan kenapa perlu peduli** daripad
 - ✅ Sebelum format akhir, Hermes menulis satu baris alasan pemilihan per item.
 - ✅ Secara default tidak ada yang ditulis ke `wiki/`. Hanya berita yang layak dijadikan page yang di-ingest (dengan aturan index dan log).
 - ⚠ Sumber berita berasal dari web research bebas, sehingga kualitasnya bergantung pada tool search Hermes (lihat [OQ-07](06-risks-decisions.md#3-pertanyaan-terbuka)).
-- ⚠ Format item CVE (Affected technology, Severity) dan item Career (tren teknologi + skill relevan) belum ada di prosedur runtime, yang saat ini hanya punya format topik + berita + "Why it matters" ([W47](todo.md)).
+- ✅ Item CVE wajib menyertakan Affected technology dan Severity. Boleh ada 1 item Career (tren teknologi + skill relevan).
 
 ## UC4 · Study (`/study`)
 
@@ -351,11 +351,11 @@ Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
 - ✅ Setiap persentase menampilkan pembilang dan penyebut ("Linux = 4/5 topik = 80%").
 - ✅ `wiki/profile/skills.md` dan `wiki/profile/career-summary.md` diperbarui.
 - ✅ Index output dan log diperbarui (op `review`).
-- ⚠ Data yang sama harus menghasilkan angka yang sama. Ini belum terjamin karena penyebutnya (skill map) bisa berubah setiap kali di-generate ulang ([R-03](06-risks-decisions.md#1-risk-register)).
-- ⚠ Role Fit Trend butuh angka periode lalu, tapi angka itu belum disimpan di mana pun. Targetnya: ambil dari laporan `output/` sebelumnya, dan tulis "baseline" kalau belum ada ([C18](todo.md)).
-- ⚠ Definisi skill inventory di `SCHEMA.md` ("topik mastered") berbeda dengan `career-review.md` ("topik yang punya note") ([W37](todo.md)).
-- ⚠ Aturan "target = satu level di atas posisi sekarang" belum tertulis di `career-review.md` maupun `SCHEMA.md` ([W48](todo.md)).
-- ⚠ Blueprint juga meminta analisis topik yang paling sering muncul, topik yang stagnan, dan kesalahan yang berulang. Prosedur runtime baru mencakup 4 bagian (Learned/Experienced/Improved/Weak) ([W49](todo.md)).
+- ✅ Data yang sama menghasilkan angka yang sama: skill map beku per level, dan aturan pencocokan topik ↔ note tertulis di SCHEMA dengan file bukti per topik.
+- ✅ Role Fit Trend dibandingkan dengan laporan `output/` kuartal sebelumnya. Run pertama ditulis "baseline"; kalau level berubah, tidak dibandingkan.
+- ✅ `SCHEMA.md` dan `career-review.md` memakai definisi skill inventory yang sama.
+- ✅ Target = satu level di atas level yang tertulis di `Role` `about.md` career aktif. Naik level → bar di-reset.
+- ✅ Laporan punya bagian Pola: tag paling sering di log kuartal itu, topik stagnan, dan kesalahan berulang.
 
 ## `/recall` · Tanya Knowledge Base
 
@@ -378,6 +378,7 @@ Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
 - ⏳ Cron belum dibuat di VPS.
 - ✅ Ada lima pemeriksaan: page orphan, wikilink rusak (kecuali yang ditandai placeholder), frontmatter tidak lengkap, tag di luar taxonomy, dan entri index yang file-nya sudah tidak ada.
 - ✅ Hanya melapor. Tidak ada file note yang diubah.
+- ✅ `about.md`, `careers/*/skills.md`, dan data file tidak dilaporkan, karena frontmatter-nya memang berbeda dari note naratif.
 - ✅ Wiki kosong dilaporkan sebagai "wiki kosong", bukan error. Index yang hilang dilaporkan sebagai temuan tersendiri.
 - ✅ Ringkasan ditambahkan ke `log.md` (op `lint`) dan dikirim ke Telegram. Kalau semua bersih, cukup "wiki sehat".
 
@@ -385,7 +386,7 @@ Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
 
 **Tujuan:** knowledge tidak hilang meskipun VPS, Hermes, atau provider bermasalah.
 
-**Trigger:** cron setiap Minggu pukul 03:00 (`0 3 * * 0`).
+**Trigger:** cron setiap Senin, Rabu, dan Sabtu pukul 05:00 (`0 5 * * 1,3,6`).
 
 **Acceptance criteria:**
 - ⏳ Cron dan prasyarat repo (`git init`, remote, token) belum terkonfirmasi di VPS.

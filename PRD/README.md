@@ -60,7 +60,7 @@ Blueprint awal (`iGROW_FINAL.md`) sudah diarsipkan di `archive/`. Seluruh isinya
 | **Career aktif** | Folder `wiki/careers/career-N-*` yang `about.md`-nya belum punya tanggal selesai. |
 | **`raw/`** | Sumber mentah yang immutable (artikel, screenshot yang sudah diredaksi). |
 | **`wiki/`** | Konten hasil kompilasi agent. |
-| **Skill map** | `wiki/roadmap/skill-map.md`: daftar topik target per level (L1/L2/L3). Dasar gap analysis dan skill inventory. |
+| **Skill map** | `wiki/roadmap/skill-map.md`: daftar topik target per level (L1/L2/L3) dan topik per role. Dibekukan per level. Dasar gap analysis, skill inventory, dan role fit. |
 | **Skill inventory** | Persentase per area skill = topik target yang sudah punya note ÷ total topik target, diukur terhadap target satu level di atas posisi sekarang. |
 | **Honest gaps** | Aturan bahwa agent wajib bilang "belum ada catatan" alih-alih mengarang jawaban. |
 | **Dual-link** | Format link See Also: `[[slug\|Name]] ([Name](../path/slug.md))`. Dibaca oleh Obsidian maupun markdown biasa. |

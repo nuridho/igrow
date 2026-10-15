@@ -1,7 +1,7 @@
 # To-Do — iGROW
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C22 / W51 / I28. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
+> Nomor berikutnya: C22 / W52 / I28. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
 > `FIN` = `archive/iGROW_FINAL.md` (diarsipkan 2026-10-16, D-21). Item yang hanya membetulkan FIN sudah ditutup. Format rujukan lama: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
@@ -33,21 +33,24 @@
   - Act: tag contoh → tag taxonomy SCHEMA (atau tambah tag baru ke taxonomy dulu); See Also → dual-link; `sources` study → `igrow/raw/articles/...`; self-check poin 4 (`capture-experience.md:48`, `study.md:21`) "format `[[slug]]`" → format dual-link SCHEMA.
   - Selesai: tag → taxonomy (`linux, performance, incident` / `storage, performance` / `linux`); contoh capture dilengkapi Finding + Lesson Learned + Referensi, See Also dual-link, tanggal 2026; study `sources` → `raw/articles/`.
   - Impact: contoh = aturan; model nggak niru tag liar & See Also tanpa path.
-- [ ] **C18** `career-review.md:16` Role Fit Trend butuh % "tahun lalu", tapi skill-map ditimpa tiap generate — angka lama nggak disimpan di mana pun
+- [x] **C18** `career-review.md:16` Role Fit Trend butuh % "tahun lalu", tapi skill-map ditimpa tiap generate — angka lama nggak disimpan di mana pun
   - Act: step 4 → angka lama diambil dari `igrow/output/career-review-*.md` sebelumnya; belum ada → tulis "baseline, belum ada pembanding"; periode disamakan (step "tahun lalu" vs contoh `career-review.md:25` "Q4 2024").
   - Impact: trend dari data tersimpan; run pertama nggak ngarang angka.
+  - Selesai 2026-10-16: Role Fit Trend di `career-review.md` step 4 dibandingkan dengan laporan `output/` kuartal sebelumnya; belum ada → "baseline"; level berubah → tidak dibandingkan.
 - [x] ~~**C19**~~ ~~`session-export.sh:38` cuma copy `skills/igrow/` — folder itu nggak ada.~~
   - Act: session-export dihapus total (`.md` + `.sh` + cron job 5 + rujukan di AGENTS/FIN/build). Di VPS: `hermes cron remove session-export` kalau job sudah dibuat.
   - Impact: nggak ada lagi arsip yang diam-diam nggak lengkap; backup tetap lewat git (`backup.sh`).
 - [x] **C20** `core.autocrlf=true` tanpa `.gitattributes` → `.sh`/`.md` balik CRLF tiap git checkout (akar I9/C12/C13)
   - Act: bikin `.gitattributes` isi `* text=auto eol=lf` (index sudah LF semua, nggak perlu renormalize).
   - Impact: file yang dikirim ke VPS selalu LF; script nggak patah gara-gara `\r` lagi.
-- [ ] **W37** `SCHEMA.md:93` Skill Inventory = "topik mastered" (sisa fitur testing) vs `career-review.md:12` "topik target yang sudah ada notenya"
+- [x] **W37** `SCHEMA.md:93` Skill Inventory = "topik mastered" (sisa fitur testing) vs `career-review.md:12` "topik target yang sudah ada notenya"
   - Act: SCHEMA:93 → "(topik target yang sudah ada notenya) / (total topik target skill-map) per area".
   - Impact: SCHEMA & career-review ngitung hal yang sama.
-- [ ] **W38** `SCHEMA.md:41` bilang skill-map "bukan data type", tapi contoh data file `SCHEMA.md:66-67` = `title: Skill Map` + `type: data`
+  - Selesai 2026-10-16: SCHEMA: `% Skill Inventory` = topik target yang punya note / total topik target (sama dengan `career-review.md`).
+- [x] **W38** `SCHEMA.md:41` bilang skill-map "bukan data type", tapi contoh data file `SCHEMA.md:66-67` = `title: Skill Map` + `type: data`
   - Act: SCHEMA:41 → skill-map = `type: data` (frontmatter minimal), buang "(bukan data type …)".
   - Impact: generator & lint sepakat bentuk frontmatter skill-map.
+  - Selesai 2026-10-16: SCHEMA: file `roadmap/` & `profile/` = data file `type: data`; section "Data file" dirapikan.
 - [ ] **W39** W28 & W26 dicentang `[x]` tapi belum beres
   - Act: hapus kalimat fallback push via `igrow.nuridho.com` di `build.md:1093` (W28); bagian W26 (section TODO di FIN) gugur karena FIN diarsipkan; isinya sudah menjadi FR-25 s/d FR-27 di PRD.
   - Impact: status `[x]` di dev-todo bisa dipercaya lagi.
@@ -77,36 +80,48 @@
 
 > Celah yang ketemu saat menyusun PRD. Item bertanda "(menunggu OQ-xx)" butuh keputusan owner dulu, lihat `06-risks-decisions.md` §3.
 
-- [ ] **C21** Skill map di-generate ulang tiap ada data baru → penyebut skill inventory ikut berubah, angka antar kuartal tidak sebanding (R-03) (menunggu OQ-01)
+- [x] **C21** Skill map di-generate ulang tiap ada data baru → penyebut skill inventory ikut berubah, angka antar kuartal tidak sebanding (R-03) (menunggu OQ-01)
   - Act: `skill-map.md` dibekukan per level; generate ulang hanya saat naik level / ganti role, dicatat di `log.md` (op `update`); sesuaikan `mentor.md` ("auto-update setiap ada data baru"), `career-review.md`, dan `SCHEMA.md`.
   - Impact: skill inventory bisa dibandingkan antar kuartal (NFR-05); "hitung, bukan kira-kira" berlaku untuk pembilang dan penyebut.
-- [ ] **W44** `capture-experience.md` tidak mendefinisikan kasus "tidak ada career aktif" (OQ-04)
+  - Selesai 2026-10-16: keputusan owner: skill map beku per level (SCHEMA "skill-map.md format", D-22); `mentor.md` & `career-review.md` tidak generate ulang karena data baru.
+- [x] **W44** `capture-experience.md` tidak mendefinisikan kasus "tidak ada career aktif" (OQ-04)
   - Act: tambah fallback di Langkah 1: tidak ada `about.md` tanpa tanggal selesai → jangan tulis file, tanya user mau daftar kerjaan baru (UC1b) dulu.
   - Impact: cerita kerja tidak nyasar ke folder career yang sudah ditutup atau ke lokasi karangan.
+  - Selesai 2026-10-16: `capture-experience.md` step 1: tidak ada career aktif → tidak tulis file, tawarkan Daftar Kerjaan Baru.
 - [x] ~~**W45**~~ ~~`roadmap.md` + `completed.md` disebut di FIN (UC2 Output, data file) tapi tidak ada prosedur yang menulisnya (OQ-05)~~
   - Act: gugur — satu-satunya yang menyebut `roadmap.md`/`completed.md` adalah FIN, yang sudah diarsipkan (D-21). OQ-05 selesai.
   - Impact: tidak ada lagi sumber spec lama yang perlu dijaga sinkron.
-- [ ] **W46** Update in-place belum eksplisit di `capture-experience.md` padahal `testing/test-flow.md` 1.9 mengharapkannya (FR-12)
+- [x] **W46** Update in-place belum eksplisit di `capture-experience.md` padahal `testing/test-flow.md` 1.9 mengharapkannya (FR-12)
   - Act: tambah 1 baris di Langkah 2: cerita lanjutan untuk incident/knowledge yang sama → edit file lama (`updated:` berubah, `created:` tetap), log op `update`, jangan bikin file baru.
   - Impact: tidak ada note duplikat untuk satu kejadian.
-- [ ] **I26** Backup mingguan = RPO 7 hari (menunggu OQ-02)
+  - Selesai 2026-10-16: `capture-experience.md` step 2: cerita lanjutan → edit file lama (`updated:` diganti, `created:` tetap, op `update`).
+- [x] **I26** Backup mingguan = RPO 7 hari (menunggu OQ-02)
   - Act: jadwal `backup-knowledge` → `0 3 * * *` (harian) di `build.md`, `AGENTS.md`, `backup.md`, PRD.
   - Impact: maksimal 1 hari catatan hilang kalau VPS mati; tanpa pesan tambahan karena no-change tetap diam.
-- [ ] **I27** Op `archive` di `SCHEMA.md:25` tidak dipakai lagi setelah session-export dihapus (menunggu OQ-03)
+  - Selesai 2026-10-16: keputusan owner: backup Senin, Rabu, Sabtu 05:00 (`0 5 * * 1,3,6`), RPO ≤ 3 hari (D-23). Diubah di `AGENTS.md`, `backup.md`, `build.md`, PRD.
+- [x] **I27** Op `archive` di `SCHEMA.md:25` tidak dipakai lagi setelah session-export dihapus (menunggu OQ-03)
   - Act: pakai `archive` untuk penutupan career di UC1b, ATAU hapus dari daftar ops.
   - Impact: daftar ops = ops yang benar-benar dipakai (pola W7).
-- [ ] **W47** Format `daily-briefing.md` lebih miskin dari blueprint: tidak ada field CVE (Affected technology, Severity) dan item Career (tren teknologi + skill relevan)
+  - Selesai 2026-10-16: keputusan owner: `archive` dihapus dari daftar ops SCHEMA (D-24).
+- [x] **W47** Format `daily-briefing.md` lebih miskin dari blueprint: tidak ada field CVE (Affected technology, Severity) dan item Career (tren teknologi + skill relevan)
   - Act: blok format `daily-briefing.md` → item `[CVE]` wajib punya `Affected technology` + `Severity`; boleh 1 item `Career` (`[Technology trend]` + `Relevant skill`); contoh eksekusi disesuaikan.
   - Impact: briefing CVE langsung bisa ditindaklanjuti; ada kaitan berita ke pengembangan skill.
-- [ ] **W48** Aturan "target skill inventory = satu level di atas posisi sekarang" cuma ada di blueprint (sekarang PRD UC5), tidak di runtime
+  - Selesai 2026-10-16: `daily-briefing.md`: format item CVE (Affected technology + Severity wajib) + item Career opsional; contoh diperbarui.
+- [x] **W48** Aturan "target skill inventory = satu level di atas posisi sekarang" cuma ada di blueprint (sekarang PRD UC5), tidak di runtime
   - Act: `career-review.md` step 3 + section skill-map `SCHEMA.md`: penyebut = topik `## Target L<n+1>`, n = level dari `Role` di `about.md` career aktif (level tidak tertulis → tanya user 1x); naik level → bar di-reset.
   - Impact: penyebut jelas; agent tidak memakai target level yang salah.
-- [ ] **W49** Career review runtime cuma 4 bagian; blueprint juga minta topik paling sering muncul, topik stagnan, dan kesalahan berulang
+  - Selesai 2026-10-16: SCHEMA + `career-review.md`: target = `## Target L<n+1>` dari `Role` career aktif; `Role` di `about.md` wajib memuat level.
+- [x] **W49** Career review runtime cuma 4 bagian; blueprint juga minta topik paling sering muncul, topik stagnan, dan kesalahan berulang
   - Act: tambah bagian "Pola" di `career-review.md` step 2: top topik (hitung tag entri `log.md` kuartal itu), topik stagnan (ada note kuartal lalu, 0 note baru kuartal ini), kesalahan berulang (lesson-learned dengan tag sama ≥ 2).
   - Impact: review menjawab "apa yang paling sering saya lakukan?" dari data, bukan opini.
-- [ ] **W50** Belum ada aturan pencocokan topik skill-map ↔ note → pembilang skill inventory masih bergantung penilaian LLM (R-03)
+  - Selesai 2026-10-16: `career-review.md` step 2: bagian Pola (3 tag terbanyak di log kuartal, topik stagnan, kesalahan berulang).
+- [x] **W50** Belum ada aturan pencocokan topik skill-map ↔ note → pembilang skill inventory masih bergantung penilaian LLM (R-03)
   - Act: tetapkan di `SCHEMA.md` + `career-review.md`: topik dihitung "punya note" kalau ada note yang `title` atau `## Ringkasan`-nya membahas topik itu; incident yang cuma menyinggung tidak dihitung; agent wajib menyebut file bukti per topik.
   - Impact: setiap angka bisa diaudit sampai ke file; dua run pada data sama menghasilkan angka sama.
+  - Selesai 2026-10-16: SCHEMA: topik "punya note" = ada note yang title/Ringkasan-nya membahas topik; cuma disinggung tidak dihitung; file bukti wajib disebut (D-26).
+- [x] **W51** Audit `hermes-home/` 2026-10-16: isi out of context / tidak perlu
+  - Act: SCHEMA → wajib, bukan advisory (keputusan owner, D-25); baris kepemilikan duplikat `|-` dirapikan jadi section "Career aktif & kepemilikan"; `type: profile` (tidak dipakai) dibuang dari enum; `contradictions` ditegaskan hanya untuk slug note. capture-experience → skip tag tidak lagi menyalahgunakan `contradictions: ['taxonomy-mismatch']`; self-check jadi step bernomor. mentor → label tabel Known/Weak/Belum (dulu kolom "Experience" tapi isinya "belum tersentuh"); prasyarat dobel digabung; contoh role fit dibetulkan (CI/CD dihitung punya di SRE tapi kurang di DevOps, tanpa X/Y, 3 role padahal aturan 2+2). lint → tidak lagi melaporkan `about.md`/data file. AGENTS → `roadmap/` tanpa `roadmap.md` (gugur W45). `project-skills/.gitkeep` dihapus (folder sudah berisi file). study → aturan satu note per sub-topik (D-20) masuk runtime.
+  - Impact: `hermes-home/` hanya berisi aturan yang konsisten dan dipakai; tidak ada contoh yang mengajarkan pelanggaran.
 
 ## Critical
 

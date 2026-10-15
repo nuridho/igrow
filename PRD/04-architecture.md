@@ -116,7 +116,7 @@ Scheduler Hermes (di dalam container) → prompt "Baca <prosedur> lalu kerjakan.
 | Job | Jadwal (Asia/Kuala_Lumpur) | Prosedur |
 |---|---|---|
 | `daily-briefing` | `0 7 * * *`: setiap hari 07:00 | `daily-briefing.md` |
-| `backup-knowledge` | `0 3 * * 0`: Minggu 03:00 | `maintenance/backup.md` |
+| `backup-knowledge` | `0 5 * * 1,3,6`: Senin, Rabu, Sabtu 05:00 | `maintenance/backup.md` |
 | `lint-mingguan` | `0 8 * * 0`: Minggu 08:00 | `maintenance/lint.md` |
 | `career-review` | `0 9 1 1,4,7,10 *`: tanggal 1 setiap kuartal, 09:00 | `career-review.md` |
 

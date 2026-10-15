@@ -10,8 +10,10 @@ ulang isi konten.
    terdekat. Lewati file berawalan `_` dan `.gitkeep`.
 2. Broken wikilink: `[[slug]]` tanpa file target — KECUALI slug tercatat di
    `_index.md` dengan tanda `(placeholder)` (unresolved sengaja, lewati).
-3. Frontmatter note: 7 field wajib SCHEMA (title, created, updated, type,
-   tags, sources, confidence) — `contradictions` opsional.
+3. Frontmatter sesuai jenis file (SCHEMA): note naratif → 7 field wajib
+   (`contradictions` opsional); data file (`roadmap/`, `profile/`) → title/type/updated;
+   `about.md` & `careers/*/skills.md` → tanpa frontmatter (JANGAN dilaporkan).
+   `type` di luar enum SCHEMA = temuan.
 4. Tag di luar taxonomy SCHEMA.
 5. `_index.md` vs filesystem: entri index yang file-nya sudah tidak ada.
 

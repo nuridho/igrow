@@ -22,8 +22,8 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 **Target:** sebelum data nyata diisi.
 
-- [ ] Rapikan `SCHEMA.md`: hapus baris duplikat `|-` (baris 18–19), samakan definisi skill inventory ([W37](todo.md)), dan tegaskan skill map sebagai `type: data` ([W38](todo.md)).
-- [ ] Deploy ulang `hermes-home/` ke VPS: contoh few-shot yang sudah diperbaiki (C17), `backup.sh` yang ikut membackup `AGENTS.md`, dan `AGENTS.md` tanpa session-export.
+- [x] Rapikan `SCHEMA.md`: duplikat kepemilikan, definisi skill inventory (W37), skill map sebagai `type: data` (W38), dan SCHEMA jadi wajib. Selesai 2026-10-16 (W51).
+- [ ] Deploy ulang `hermes-home/` ke VPS: contoh few-shot yang sudah diperbaiki (C17), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`).
 - [ ] Hapus sisa session-export di VPS: cron job (kalau sudah dibuat), file prosedurnya, dan folder `log/sessions/archive/`.
 
 ### M2.2 · Automation Aktif
@@ -37,7 +37,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 - [ ] Perbarui `testing/test-flow.md` supaya sesuai perilaku sekarang ([W42](todo.md)).
 - [ ] Isi minimal 10 note nyata (campuran incident, knowledge, dan study).
 - [ ] Jalankan test-flow secara manual, termasuk mentor (UC2) dan career review manual (UC5).
-- [ ] Putuskan kebijakan skill map: dibekukan per level atau di-generate ulang ([OQ-01](06-risks-decisions.md#3-pertanyaan-terbuka)).
+- [x] Putuskan kebijakan skill map: dibekukan per level (D-22).
 
 **Definisi Phase 2 selesai:** M2.1–M2.3 tercapai, dan career review otomatis pertama berjalan tanpa intervensi pada **1 Januari 2027 pukul 09:00**.
 
@@ -45,14 +45,10 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 | Horizon | Item | Sumber |
 |---|---|---|
-| **Now** | Bersihkan SCHEMA (duplikat, W37, W38) | todo |
 | **Now** | Cron + prasyarat backup | build.md checklist Phase 2 |
 | **Now** | Deploy ulang runtime | §2 M2.1 |
-| **Next** | Role Fit Trend memakai baseline tersimpan | C18 |
 | **Next** | Perbarui test-flow, lalu uji dengan data nyata | W42 |
 | **Next** | Bersihkan dokumen basi: blok salinan di build.md dan status `[x]` yang belum benar-benar beres | W39, W41 |
-| **Next** | Update in-place ditulis eksplisit di prosedur capture | W46 |
-| **Next** | Samakan runtime dengan PRD: format CVE briefing, target level skill inventory, dimensi analisis review, aturan pencocokan topik | W47–W50 |
 | **Later** | Phase 3 (Dozzle), Phase 4 (dashboard) | vpslab.md |
 | **Later** | Export PDF career review, perintah koreksi note (`/cek` / `/audit`) | FR-25, FR-26 |
 | **Later** | Evaluasi migrasi `project-skills/` ke sistem Skill resmi Hermes | OQ-06 |
@@ -73,7 +69,7 @@ Tidak dikerjakan sampai ada bukti bahwa versi sekarang kurang:
 | Kapan | Apa yang terjadi |
 |---|---|
 | Setiap hari 07:00 | Daily briefing |
-| Minggu 03:00 | Backup `igrow/` ke GitHub |
+| Senin, Rabu, Sabtu 05:00 | Backup `igrow/` ke GitHub |
 | Minggu 08:00 | Laporan lint |
 | 1 Jan / 1 Apr / 1 Jul / 1 Okt, 09:00 | Career review kuartalan |
 | Setiap kuartal (manual) | Cek privasi `raw/` dan `wiki/`, serta tinjau ulang target metrik di [01 · §7](01-overview.md#7-ukuran-sukses) |

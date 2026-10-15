@@ -1,6 +1,6 @@
-# Backup Knowledge (Maintenance — Cron Mingguan)
+# Backup Knowledge (Maintenance — Cron 3x Seminggu)
 
-Dipicu cron Minggu 03:00. Push `igrow/` ke GitHub privat `igrow-backup`.
+Dipicu cron Senin, Rabu, Sabtu 05:00 (`0 5 * * 1,3,6`). Push `igrow/` ke GitHub privat `igrow-backup`.
 
 ## Langkah
 

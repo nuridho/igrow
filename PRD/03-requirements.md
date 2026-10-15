@@ -29,7 +29,7 @@ Status:
 | FR-09 | Setiap operasi tulis diakhiri dengan update `_index.md` terdekat, master `_index.md` (Total pages + Last updated), dan entri `log.md`. | Must | Semua tulis | ✅ |
 | FR-10 | `raw/` bersifat immutable dan punya satu jalur: `inbox/` → diproses → `articles/`. | Must | UC4 | ✅ |
 | FR-11 | Cerita yang bertentangan dengan note lama tidak menimpa diam-diam. Pertentangannya dicatat di field `contradictions`. | Should | UC1 | ✅ |
-| FR-12 | Cerita lanjutan tentang hal yang sama memperbarui note lama (in-place), bukan membuat duplikat. | Should | UC1 | ⚠ Diuji di test-flow, belum eksplisit di prosedur |
+| FR-12 | Cerita lanjutan tentang hal yang sama memperbarui note lama (in-place), bukan membuat duplikat. | Should | UC1 | ✅ |
 
 ### 1.3 Analisis & Laporan
 
@@ -37,19 +37,19 @@ Status:
 |---|---|---|---|---|
 | FR-13 | `/recall` menjawab dari wiki, dan bilang jujur kalau tidak ada catatan. | Must | /recall | ✅ |
 | FR-14 | Gap analysis berbasis data pribadi. Kalau data tidak cukup, Hermes menolak membuat roadmap generik. | Must | UC2 | ✅ |
-| FR-15 | Skill map di-generate otomatis dari `about.md`, `careers/`, dan `self-development/`. User boleh mengedit, tapi tidak wajib. | Must | UC2, UC5 | ⚠ Stabilitas penyebut belum terjamin ([R-03](06-risks-decisions.md#1-risk-register)) |
+| FR-15 | Skill map di-generate otomatis dari `about.md`, `careers/`, dan `self-development/`, lalu dibekukan per level. Generate ulang hanya saat naik level atau ganti role. | Must | UC2, UC5 | ✅ |
 | FR-16 | Role fit ditampilkan dalam bentuk pembilang/penyebut, dengan 2 role paling cocok dan 2 paling jauh. | Should | UC2 | ✅ |
-| FR-17 | Skill inventory dihitung dengan menghitung file, bukan perkiraan LLM, selalu menampilkan X/Y, dan diukur terhadap target satu level di atas posisi sekarang. | Must | UC5 | ⚠ W37, W48, W50 |
-| FR-18 | Career review kuartalan ditulis ke `output/` dan memperbarui `wiki/profile/`. | Must | UC5 | ⏳ Cron belum dibuat · ⚠ dimensi analisis kurang (W49) |
-| FR-19 | Role Fit Trend dibandingkan dengan angka dari laporan sebelumnya. Run pertama ditandai "baseline". | Could | UC5 | ⚠ C18 |
+| FR-17 | Skill inventory dihitung dengan menghitung file, bukan perkiraan LLM, selalu menampilkan X/Y dan file bukti, dan diukur terhadap target satu level di atas posisi sekarang. | Must | UC5 | ✅ |
+| FR-18 | Career review kuartalan ditulis ke `output/` dan memperbarui `wiki/profile/`. | Must | UC5 | ⏳ Cron belum dibuat |
+| FR-19 | Role Fit Trend dibandingkan dengan angka dari laporan sebelumnya. Run pertama ditandai "baseline". | Could | UC5 | ✅ |
 
 ### 1.4 Automation & Maintenance
 
 | ID | Requirement | Prioritas | UC | Status |
 |---|---|---|---|---|
-| FR-20 | Daily briefing setiap hari 07:00, maksimal 5 item dengan alasan relevansi. Item CVE menyertakan teknologi terdampak dan severity. | Should | UC3 | ⏳ Cron belum dibuat · ⚠ format CVE (W47) |
+| FR-20 | Daily briefing setiap hari 07:00, maksimal 5 item dengan alasan relevansi. Item CVE menyertakan teknologi terdampak dan severity. | Should | UC3 | ⏳ Cron belum dibuat |
 | FR-21 | Lint struktur wiki setiap minggu, hanya melapor. | Should | M1 | ⏳ Cron belum dibuat |
-| FR-22 | Backup `igrow/` + salinan `AGENTS.md` ke repo GitHub privat setiap minggu. Diam kalau tidak ada perubahan, lapor kalau gagal. | Must | M2 | ⏳ Cron + prasyarat repo |
+| FR-22 | Backup `igrow/` + salinan `AGENTS.md` ke repo GitHub privat setiap Senin, Rabu, dan Sabtu 05:00. Diam kalau tidak ada perubahan, lapor kalau gagal. | Must | M2 | ⏳ Cron + prasyarat repo |
 | FR-23 | Semua output cron dikirim ke Telegram (`--deliver telegram`). | Must | UC3, UC5, M1, M2 | ⏳ |
 
 ### 1.5 Fitur Mendatang
@@ -69,7 +69,7 @@ Status:
 | NFR-01 | **Portabilitas** | Semua knowledge berupa markdown + YAML frontmatter, tanpa database. Bisa dibaca tanpa Hermes, tanpa tool khusus, dan tanpa provider LLM tertentu. |
 | NFR-02 | **Privasi** | Tidak ada data sensitif (lihat §3) di `raw/`, `wiki/`, maupun `output/`. Redaksi dilakukan sebelum ingest. |
 | NFR-03 | **Keamanan** | `igrow-hermes` tidak mem-publish port dan tidak terdaftar di reverse proxy mana pun. `igrow-api` hanya bisa membaca (`:ro`) dan hanya punya endpoint GET. CouchDB tidak boleh terbuka ke publik tanpa proteksi. Repo backup harus privat. |
-| NFR-04 | **Reliabilitas** | Container memakai `restart: unless-stopped`. **RPO ≤ 7 hari** (konsekuensi backup mingguan). **RTO usulan ≤ 1 jam**: clone repo backup → deploy `hermes-home/` → `hermes setup`. |
+| NFR-04 | **Reliabilitas** | Container memakai `restart: unless-stopped`. **RPO ≤ 3 hari** (backup Senin, Rabu, Sabtu). **RTO usulan ≤ 1 jam**: clone repo backup → deploy `hermes-home/` → `hermes setup`. |
 | NFR-05 | **Konsistensi** | Angka (skill inventory, role fit) dapat direproduksi: data yang sama menghasilkan angka yang sama. |
 | NFR-06 | **Efisiensi resource** | Seluruh stack (Phase 1–4) muat di VPS 2 core / 4 GB RAM / 60 GB storage. |
 | NFR-07 | **Efisiensi biaya LLM** | `AGENTS.md` dibuat sepadat mungkin karena dimuat di setiap sesi. Prosedur detail hanya dimuat saat relevan. Dashboard tidak memanggil LLM sama sekali. |
@@ -123,7 +123,7 @@ Yang **tidak pernah** keluar: `.env` (token Telegram, API key LLM), `config.yaml
 | File | Pemilik | Aturan |
 |---|---|---|
 | `about.md` (setiap career) | User | Agent hanya boleh menulis saat alur Daftar Kerjaan Baru (UC1b). |
-| `skill-map.md` | Agent (auto-generate) | User boleh mengedit, tapi tidak wajib. |
+| `skill-map.md` | Agent (auto-generate, beku per level) | User boleh mengedit, tapi tidak wajib. Generate ulang hanya saat naik level atau ganti role. |
 | `raw/*` | Immutable | Tidak diedit setelah masuk. |
 | `wiki/*`, `output/*` | Agent | User jarang mengedit langsung. |
 | `AGENTS.md`, `SCHEMA.md`, `project-skills/*` | User (via repo ini) | Dideploy dari `hermes-home/` di repo ini. |

@@ -1,28 +1,27 @@
 ---
 title: iGROW Schema
-schema_state: advisory
 created: 2026-08-25
-updated: 2026-08-25
+updated: 2026-10-16
 ---
 
 # iGROW Schema
 
-Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
+Aturan main wiki iGROW. **Wajib diikuti.** Kasus yang tidak tercakup aturan mana pun → ikuti aturan terdekat, lalu sebutkan di balasan. Jangan menyimpang dari aturan yang sudah ada.
 
 ## Layer
 - `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `igrow/raw/inbox/`, agent proses → pindah `igrow/raw/articles/` (inbox kosong = semua sudah diproses). Path di frontmatter & body SELALU lengkap dari root: `igrow/raw/...`.
 - `wiki/` — semua konten compiled, agent-owned.
 - `output/` — laporan turunan (career review, dst).
-- Career aktif: `about.md` yang belum ada tanggal selesai = aktif. Incident baru masuk ke career itu.
 
-|- Pengecualian human-owned (agent update cuma kalau diminta): semua `about.md` (kecuali saat daftar kerjaan baru — agent boleh auto-tutup career lama & auto-bikin about.md career baru).
-|- Pengecualian human-owned lain: semua `about.md`.
-|- `skill-map.md` = AUTO-GENERATE (bukan human-owned). Agent baca `about.md` + seluruh `careers/` + `self-development/` + `lessons-learned/` → generate skill map per level + role-fit matching. User boleh edit manual, tapi bukan keharusan.
+## Career aktif & kepemilikan
+- Career aktif = folder `wiki/careers/career-N-*` yang `about.md`-nya belum punya tanggal selesai. Cerita kerja baru masuk ke career itu.
+- `about.md` = milik user. Agent hanya boleh menulisnya di alur Daftar Kerjaan Baru (tutup career lama + bikin `about.md` career baru). `Role` wajib memuat level (mis. `Infra Engineer L1`).
+- `skill-map.md` = dibuat agent, beku per level (lihat "skill-map.md format"). User boleh edit manual.
 
 ## Tiap operasi tulis WAJIB diakhiri
 1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
 2. Update master `igrow/_index.md`.
-3. Append `log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, lint, review, archive.
+3. Append `log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, lint, review.
 
 ## Frontmatter page wiki/
 ```yaml
@@ -30,15 +29,16 @@ Aturan main wiki iGROW. Advisory: agent boleh deviasi, tapi harus bilang.
 title: Judul
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-type: knowledge | incident | lesson | learning | profile | data
+type: knowledge | incident | lesson | learning | data
 tags: [dari taxonomy]
 sources: [igrow/raw/articles/xxxx.md]   # selalu ada; `[]` kalau murni cerita user
 confidence: high | medium | low   # dukungan SUMBER (bukan penguasaanmu)
-contradictions: [slug-lain]       # opsional
+contradictions: [slug-lain]       # opsional; HANYA slug note yang isinya bertentangan
 ---
 ```
-- `about.md` & `careers/*/skills.md` tetap plain `Key: value` (bukan frontmatter).
-- `skill-map.md` → frontmatter minimal + body list/key:value per level (bukan data type — auto-generate, bukan manual input).
+- Note naratif (`knowledge`, `incident`, `lesson`, `learning`) → 7 field wajib di atas.
+- Data file (`roadmap/`, `profile/`) → `type: data`, frontmatter minimal (lihat "Data file").
+- `about.md` & `careers/*/skills.md` → plain `Key: value`, TANPA frontmatter.
 
 ## Body note (wiki/careers/, wiki/self-development/)
 ```markdown
@@ -60,17 +60,23 @@ Sumber (URL / igrow/raw/... / sesi) — buat napak tilas.
 Min 2 dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
 ```
 Khusus incident di careers/, Detail diganti alur: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
-Data file (`roadmap/`, `profile/`) → body list/key:value, bukan narasi. Frontmatter minimal:
+
+## Data file
+Frontmatter minimal:
 ```yaml
 ---
-title: Skill Map
+title: <Judul>
 type: data
 updated: YYYY-MM-DD
 ---
 ```
-Body per data file: `weak-topics.md` → `- topik — alasan`; `profile/skills.md` → `- Area  ███████░░░  NN% (X/Y)` (bar 10 blok, angka sama dengan Skill Inventory career review terakhir); `profile/career-summary.md` → 1 baris per career: `- <folder career>: <Role> · <Period> · N incident · N knowledge · N lesson` (Role & Period dari `about.md`, career aktif = `s/d sekarang`; N = hitung file: `knowledge/incidents/`, `knowledge/` tanpa `incidents/`, `lessons-learned/`); `skill-map.md` → lihat section format di bawah.
+Body berupa list, bukan narasi:
+- `roadmap/weak-topics.md` → `- topik — alasan`
+- `roadmap/skill-map.md` → lihat "skill-map.md format"
+- `profile/skills.md` → `- Area  ███████░░░  NN% (X/Y)` (bar 10 blok, angka sama dengan Skill Inventory career review terakhir)
+- `profile/career-summary.md` → 1 baris per career: `- <folder career>: <Role> · <Period> · N incident · N knowledge · N lesson` (Role & Period dari `about.md`, career aktif = `s/d sekarang`; N = hitung file: `knowledge/incidents/`, `knowledge/` tanpa `incidents/`, `lessons-learned/`)
 
-## Tag taxonomy (tambah baru di sini DULU)
+## Tag taxonomy (tag baru ditambah di sini DULU, hanya kalau user setuju)
 linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve
 
 ## Link
@@ -85,13 +91,18 @@ linux, networking, monitoring, incident, docker, kubernetes, cloud, security, st
 
 ## skill-map.md format
 ```markdown
-# Skill Map — <Level>
+# Skill Map — <Role>
 ## Target L<n>
 - Area: topik, topik, topik
+## Role Fit
+- <Role lain>: topik, topik, topik
 ```
-- Template baku untuk `wiki/roadmap/skill-map.md` (AUTO-GENERATE, bukan manual input).
-- `% Skill Inventory` = (topik mastered) / (total topik di skill-map) per area.
-- `skill-map.md` juga punya section `## Role Fit` — daftar role yang user cocok (persentase kecocokan berdasarkan skill yang ada) + gap per role.
+- Dibuat dari `about.md` career aktif + seluruh `careers/` + `self-development/`.
+- **Beku per level.** Generate ulang HANYA kalau: file belum ada, user naik level, atau `Role` career aktif berubah. Data baru TIDAK memicu generate ulang. Setiap generate ulang → log op `update` + alasannya.
+- **Target Skill Inventory** = `## Target L<n+1>`, n = level di `Role` career aktif. Level tidak tertulis → tanya user 1x. Naik level → bar di-reset ke target baru.
+- **Topik "punya note"** = ada note yang `title` atau `## Ringkasan`-nya membahas topik itu. Cuma disinggung di note lain (mis. di incident) = belum dihitung. Selalu sebut file buktinya.
+- `% Skill Inventory` per area = topik target yang punya note / total topik target area itu. Selalu tulis X/Y.
+- `% Role Fit` per role = topik role yang punya note / total topik role itu (X/Y). Skill map hanya menyimpan daftar topik; persentase dihitung saat dipakai.
 
 ## Honest gaps
 Wiki gak punya jawaban → bilang jujur + usulkan ingest apa.

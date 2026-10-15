@@ -10,22 +10,22 @@ Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 2. Note terstruktur → `igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama>/`
    Frontmatter ikut SCHEMA (type: learning, sources: [igrow/raw/...]).
    Body ikut template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also.
+   Satu folder per sumber belajar, isinya satu atau lebih note per sub-topik (masing-masing template lengkap). JANGAN pecah per jenis isi (concepts/commands/references).
 3. Topik fuzzy-match ke taxonomy SCHEMA (konsisten lintas sesi).
    → OUTPUT: "Topik = <tag> (cocok dengan taxonomy SCHEMA: <alasan singkat>)"
 4. See Also: min 2 dual-link.
 
-Self-check sebelum commit ke disk:
-1. Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
-2. Tags ⊂ taxonomy SCHEMA? (linux|networking|monitoring|..., cek igrow/SCHEMA.md)
-3. sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
-4. Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
-Kalau ada yang kurang → STOP, perbaiki dulu sebelum tulis file.
-
-5. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md + master + log.md (op: ingest).
+5. Self-check sebelum tulis file — ada yang kurang → STOP, perbaiki dulu:
+   - Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
+   - Tags ⊂ taxonomy SCHEMA?
+   - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
+   - Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
+6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md + master + log.md (op: ingest).
 
 ## Perintah
 "/study baru selesai materi X di KodeKloud: ..." → strukturkan.
 "/study bandingkan A dengan B" → page komparasi, tetap di folder sumber yg relevan.
+"/study ... ringkasin buat level saya" → kedalaman disesuaikan level di `Role` about.md career aktif.
 
 ## Contoh Eksekusi
 

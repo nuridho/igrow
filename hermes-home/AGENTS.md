@@ -19,7 +19,7 @@ wiki/ = executable.
 - `igrow/wiki/`            → semua konten compiled, kamu yang maintain
   - `careers/career-N-.../` → knowledge TERIKAT satu pekerjaan (about.md, knowledge/, lessons-learned/, skills.md)
   - `self-development/`    → knowledge UMUM (Project/, Bootcamp/, Dokumentasi/)
-  - `roadmap/`            → roadmap, skill-map.md (target skill per level), weak-topics
+  - `roadmap/`            → skill-map.md (target skill per level, beku per level), weak-topics.md
   - `profile/`             → ringkasan karier — gabungan semua career
 - `igrow/output/`          → laporan turunan (career review quarterly, dst)
 - `igrow/project-skills/`     → file referensi prosedur (baca kalau relevan)
@@ -30,7 +30,7 @@ wiki/ = executable.
   - `career-review.md`      → UC5
   - `maintenance/`          → maintenance scripts (lint, backup)
 
-`igrow/` adalah git repo — di-backup cron mingguan ke GitHub privat. Jangan utak-atik `.git/`.
+`igrow/` adalah git repo — di-backup otomatis ke GitHub privat. Jangan utak-atik `.git/`.
 
 ## Aturan Penempatan Cepat
 | Cerita soal...                    | Taruh di                                        |
@@ -67,7 +67,7 @@ wiki/ = executable.
 
 ### Maintenance (bukan UC)
 - igrow/project-skills/maintenance/lint.md    → Cron Minggu 08:00 → health check wiki
-- igrow/project-skills/maintenance/backup.md  → Cron Minggu 03:00 → push igrow/ ke GitHub
+- igrow/project-skills/maintenance/backup.md  → Cron Senin/Rabu/Sabtu 05:00 → push igrow/ ke GitHub
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential, API key/token, IP internal, hostname sensitif, data client,

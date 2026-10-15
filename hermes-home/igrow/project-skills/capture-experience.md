@@ -6,13 +6,13 @@ Dipakai kalau user cerita incident/pengalaman kerja (bukan /study).
 
 ## Daftar Kerjaan Baru
 Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru:
-1. Tanya 1 ronde: company, role, vendor/client, lokasi, period start, jobdesc singkat.
+1. Tanya 1 ronde: company, role (+ level, mis. Infra Engineer L1), vendor/client, lokasi, period start, jobdesc singkat.
 2. Cek career aktif sebelumnya → tambah `Period: <start> s/d <hari ini>` di `about.md`-nya.
 3. Bikin folder baru: `igrow/wiki/careers/career-N-{company}-{role}/` (N = urutan berikutnya).
 4. Tulis `about.md`:
    ```
    Company: <nama>
-   Role: <role>
+   Role: <role + level, mis. Infra Engineer L1>
    Vendor/Client: <nama> (kalau ada)
    Lokasi: <kota>
    Period: <start> s/d
@@ -25,12 +25,14 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
 ## Langkah
 1. Tentukan career aktif: `igrow/wiki/careers/*/about.md` yg belum ada tanggal selesai.
    → OUTPUT: "Career aktif = career-N (about.md tanpa tanggal selesai)"
+   Tidak ada career aktif → JANGAN tulis file. Balas: "Belum ada career aktif. Mau daftar kerjaan dulu?" → alur Daftar Kerjaan Baru.
 2. Rapikan cerita jadi note terstruktur:
    - Incident → `igrow/wiki/careers/career-N/knowledge/incidents/`
    - Knowledge umum (SOP, cara kerja, setup — tanpa kejadian) → `igrow/wiki/careers/career-N/knowledge/<slug>.md` (FLAT, JANGAN bikin subfolder per topik — topik lewat tags)
    - Lesson → `igrow/wiki/careers/career-N/lessons-learned/`
    - Skill terpakai → update `igrow/wiki/careers/career-N/skills.md`
    - Screenshot → `igrow/raw/assets/YYYYMMDD-deskripsi.png` (WAJIB redact); rujuk dari note via `sources: [igrow/raw/assets/...]` + `![](../../raw/assets/...)` di body
+   - Cerita lanjutan untuk incident/knowledge yang sudah ada (cek `_index.md`) → EDIT file lama: `updated:` diganti, `created:` tetap, op `update`. JANGAN bikin file baru.
 
    Tentukan type & folder — TULIS REASONING 1 BARIS:
    - Cerita "server mati pas backup" → incident atau knowledge?
@@ -38,17 +40,15 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    - Pilih: incident → igrow/wiki/careers/career-N/knowledge/incidents/
 3. Format frontmatter ikut `igrow/SCHEMA.md` (type: incident|lesson|knowledge).
    Body incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
-   Tag fuzzy-match ke taxonomy SCHEMA. Kalau tidak ada yang cocok (<60% similarity) → tanya user 1x "Tag mana yang cocok: [3 opsi terdekat]?", jangan tebak. Kalau user skip → pakai terdekat + catat di `contradictions: ['taxonomy-mismatch']`.
+   Tag fuzzy-match ke taxonomy SCHEMA. Kalau tidak ada yang cocok (<60% similarity) → tanya user 1x "Tag mana yang cocok: [3 opsi terdekat]?", jangan tebak. Kalau user skip → pakai tag terdekat dan sebutkan di balasan. Tag baru hanya ditambah ke taxonomy SCHEMA kalau user setuju.
 4. See Also: minimal 2 link (dual-link format).
 
-Self-check sebelum commit ke disk:
-1. Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
-2. Tags ⊂ taxonomy SCHEMA? (linux|networking|monitoring|..., cek igrow/SCHEMA.md)
-3. sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
-4. Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
-Kalau ada yang kurang → STOP, perbaiki dulu sebelum tulis file.
-
-5. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: ingest/update).
+5. Self-check sebelum tulis file — ada yang kurang → STOP, perbaiki dulu:
+   - Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
+   - Tags ⊂ taxonomy SCHEMA?
+   - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
+   - Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
+6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: ingest/update).
 
 ## Larangan
 Ikut DILARANG KERAS di AGENTS.md — redact data client sebelum nulis.
