@@ -11,7 +11,7 @@ Dipicu cron quarterly (review kuartal yang baru selesai) atau user minta review.
    - Experienced: incident/pengalaman kuartal ini
    - Improved: topik yang note-nya bertambah/makin dalam
    - Weak: topik target skill map yang statusnya Weak/Belum
-   - Pola: 3 tag paling sering di entri `log.md` kuartal ini; topik stagnan (ada note sebelum kuartal ini, 0 note baru); kesalahan berulang (≥ 2 lesson-learned dengan tag sama)
+   - Pola: 3 tag paling sering di note yang dibuat/diupdate kuartal ini (frontmatter `tags`, `updated` dalam kuartal); topik stagnan (ada note sebelum kuartal ini, 0 note baru); kesalahan berulang (≥ 2 lesson-learned dengan tag sama)
 3. Skill Inventory — hitung, bukan kira-kira (aturan hitung + target level di SCHEMA):
    - Target = `## Target L<n+1>` di skill map.
    - Per area: X/Y + bar 10 blok + file bukti + insight singkat (kenapa segitu, langkah berikutnya).

@@ -7,7 +7,7 @@ Dipakai kalau user cerita incident/pengalaman kerja (bukan /study).
 ## Daftar Kerjaan Baru
 Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru:
 1. Tanya 1 ronde: company, role (+ level, mis. Infra Engineer L1), vendor/client, lokasi, period start, jobdesc singkat.
-2. Cek career aktif sebelumnya → tambah `Period: <start> s/d <hari ini>` di `about.md`-nya.
+2. Cek career aktif sebelumnya → ubah baris `Period:` di `about.md`-nya jadi `<start> s/d <hari ini>`.
 3. Bikin folder baru: `igrow/wiki/careers/career-N-{company}-{role}/` (N = urutan berikutnya).
 4. Tulis `about.md`:
    ```
@@ -59,7 +59,7 @@ Tanya klarifikasi singkat (1x), catat apa adanya, lalu isi field `contradictions
 di frontmatter (SCHEMA). Lesson lama TIDAK dihapus — dua-duanya hidup, kontradiksi terdokumentasi.
 
 ## Contoh Eksekusi
-```
+````
 Input: "Kemarin server production down 2 jam. CPU 100% gara-gara backup MySQL jalan pas jam sibuk. Akhirnya matiin backup, server normal lagi."
 
 Output:
@@ -72,6 +72,8 @@ tags: [linux, performance, incident]
 sources: []
 confidence: high
 ---
+
+# MySQL Backup CPU Spike Incident
 
 ## Ringkasan
 Server production down 2 jam karena CPU 100% saat backup MySQL berjalan.
@@ -98,6 +100,13 @@ Server kembali normal setelah backup dihentikan.
 ## Lesson Learned
 Jadwalkan job berat di luar jam sibuk; cek crontab sebelum menyalahkan aplikasi.
 
+## Contoh
+```
+top -o %CPU                  # cari proses yang makan CPU
+crontab -l | grep mysqldump  # cek jadwal backup
+0 3 * * * /usr/local/bin/mysql-backup.sh   # jadwal baru, off-peak
+```
+
 ## Referensi
 Sesi Telegram (cerita user).
 
@@ -105,4 +114,4 @@ Sesi Telegram (cerita user).
 - [[backup-scheduling|Backup Scheduling]] ([Backup Scheduling](../backup-scheduling.md))
 - [[cpu-spike-triage|CPU Spike Triage]] ([CPU Spike Triage](../cpu-spike-triage.md))
 
-```
+````

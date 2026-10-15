@@ -355,7 +355,7 @@ Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
 - ✅ Role Fit Trend dibandingkan dengan laporan `output/` kuartal sebelumnya. Run pertama ditulis "baseline"; kalau level berubah, tidak dibandingkan.
 - ✅ `SCHEMA.md` dan `career-review.md` memakai definisi skill inventory yang sama.
 - ✅ Target = satu level di atas level yang tertulis di `Role` `about.md` career aktif. Naik level → bar di-reset.
-- ✅ Laporan punya bagian Pola: tag paling sering di log kuartal itu, topik stagnan, dan kesalahan berulang.
+- ✅ Laporan punya bagian Pola: tag paling sering di note kuartal itu, topik stagnan, dan kesalahan berulang.
 
 ## `/recall` · Tanya Knowledge Base
 

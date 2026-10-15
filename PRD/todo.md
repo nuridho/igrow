@@ -112,9 +112,9 @@
   - Impact: penyebut jelas; agent tidak memakai target level yang salah.
   - Selesai 2026-10-16: SCHEMA + `career-review.md`: target = `## Target L<n+1>` dari `Role` career aktif; `Role` di `about.md` wajib memuat level.
 - [x] **W49** Career review runtime cuma 4 bagian; blueprint juga minta topik paling sering muncul, topik stagnan, dan kesalahan berulang
-  - Act: tambah bagian "Pola" di `career-review.md` step 2: top topik (hitung tag entri `log.md` kuartal itu), topik stagnan (ada note kuartal lalu, 0 note baru kuartal ini), kesalahan berulang (lesson-learned dengan tag sama ≥ 2).
+  - Act: tambah bagian "Pola" di `career-review.md` step 2: top topik (hitung `tags` note yang `updated` dalam kuartal itu), topik stagnan (ada note kuartal lalu, 0 note baru kuartal ini), kesalahan berulang (lesson-learned dengan tag sama ≥ 2).
   - Impact: review menjawab "apa yang paling sering saya lakukan?" dari data, bukan opini.
-  - Selesai 2026-10-16: `career-review.md` step 2: bagian Pola (3 tag terbanyak di log kuartal, topik stagnan, kesalahan berulang).
+  - Selesai 2026-10-16: `career-review.md` step 2: bagian Pola (3 tag terbanyak di note yang diupdate kuartal itu, topik stagnan, kesalahan berulang).
 - [x] **W50** Belum ada aturan pencocokan topik skill-map ↔ note → pembilang skill inventory masih bergantung penilaian LLM (R-03)
   - Act: tetapkan di `SCHEMA.md` + `career-review.md`: topik dihitung "punya note" kalau ada note yang `title` atau `## Ringkasan`-nya membahas topik itu; incident yang cuma menyinggung tidak dihitung; agent wajib menyebut file bukti per topik.
   - Impact: setiap angka bisa diaudit sampai ke file; dua run pada data sama menghasilkan angka sama.
