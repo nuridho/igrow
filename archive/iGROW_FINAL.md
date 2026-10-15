@@ -1,3 +1,7 @@
+# [ARSIP — bukan spec aktif]
+
+Diarsipkan 2026-10-16 (D-21). Seluruh isi yang masih berlaku sudah dipindah ke `PRD/`. Jangan dibaca sebagai acuan; rujukan nomor baris `FIN:N` di `PRD/todo.md` mengacu ke file ini sebelum header ini ditambahkan (+4 baris).
+
 # 🧠 Project: iGROW — terus bertumbuh seiring waktu
 
 > Blueprint proyek. Dokumen ini adalah rangkuman konsep supaya sesi baru bisa langsung dilanjutkan tanpa mengulang pembahasan dari awal.

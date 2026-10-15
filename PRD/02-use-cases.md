@@ -48,6 +48,8 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 
 **User story:** Sebagai IT worker, saya ingin menceritakan incident atau pengalaman kerja lewat Telegram dengan bahasa bebas, supaya ceritanya otomatis tersimpan sebagai note terstruktur di arsip career saya.
 
+**Target jangka panjang:** bisa menjawab *"Apa saja yang sebenarnya sudah saya kerjakan selama 3 tahun?"*
+
 **Trigger:** user bercerita soal pekerjaan (bukan `/study`).
 
 **Alur utama:**
@@ -67,6 +69,24 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 | Lesson learned | `wiki/careers/<aktif>/lessons-learned/` |
 | Skill yang terpakai | `wiki/careers/<aktif>/skills.md` |
 | Screenshot (sudah diredaksi) | `raw/assets/YYYYMMDD-deskripsi.png` |
+
+**Contoh:**
+
+Input di Telegram:
+
+> "Hari ini ada alert CPU tinggi. Saya cek monitoring, ternyata proses X yang menyebabkan spike. Setelah beberapa menit CPU normal lagi. Saya belajar bahwa pattern ini kemungkinan workload spike."
+
+Inti note yang dihasilkan (format lengkap mengikuti SCHEMA dan contoh di `capture-experience.md`):
+
+```text
+Incident: High CPU
+Symptom:        CPU utilization > 90%
+Investigation:  cek monitoring → proses X penyebab spike
+Finding:        workload spike, bukan masalah resource permanen
+Action:         pantau, tanpa intervensi
+Result:         CPU normal kembali setelah beberapa menit
+Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
+```
 
 **Acceptance criteria:**
 - ✅ Cerita incident menghasilkan file baru di folder `incidents/` career aktif, dengan body alur Symptom / Investigation / Finding / Action / Result / Lesson Learned.
@@ -94,6 +114,19 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 - ✅ Index dan log diperbarui (op `update`).
 - ℹ Career pertama boleh dibuat manual oleh user (`about.md` adalah file milik user). Agent hanya boleh menulis `about.md` di alur ini.
 
+**Contoh `about.md`** (format mengikuti `capture-experience.md`; tanpa tanggal selesai berarti career aktif):
+
+```text
+Company: PT ABC
+Role: Infra Engineer L1
+Vendor/Client: client A (anonim)
+Lokasi: Kuala Lumpur
+Period: 2025-01-01 s/d
+Jobdesc: Monitoring & incident response, troubleshooting Linux/Windows Server, escalation handling.
+```
+
+Dengan pemisahan per career, setiap note otomatis punya konteks "dari pekerjaan mana". Saat resign, folder `career-1-...` menjadi arsip final dan catatan baru masuk ke `career-2-...`.
+
 ## UC2 · Mentor
 
 **User story:** Sebagai IT worker yang ingin naik level, saya ingin tahu topik apa yang harus dipelajari dan role apa yang cocok berdasarkan catatan saya sendiri, supaya waktu belajar dipakai untuk gap yang nyata, bukan tutorial acak.
@@ -107,6 +140,19 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
    - **Roadmap:** tabel Known / Weak / Belum, rekomendasi personal, update `weak-topics.md`.
    - **Role fit:** tabel kecocokan role dalam bentuk X/Y topik, 2 role paling cocok dan 2 paling jauh, beserta gap masing-masing.
 
+**Contoh:**
+
+```text
+Saya: "Saya mau belajar networking lebih dalam."
+
+Known:       ✓ Ping   ✓ DNS basic   ✓ TCP/IP basic
+Weak:        ⚠ Routing   ⚠ Packet analysis   ⚠ TCP behavior
+Experience:  ✓ Connection timeout   ✓ Packet loss
+
+Hermes: "Karena kamu sudah pernah mengalami timeout dan packet loss,
+         kita mulai dari TCP connection lifecycle sebelum masuk ke routing."
+```
+
 **Acceptance criteria:**
 - ✅ Kalau `careers/` kosong: jawab "Data karier belum cukup untuk gap analysis (minimal 3 incident/knowledge)" dan tidak mengarang roadmap generik.
 - ✅ Kalau skill map belum ada: generate dulu, jangan menolak menjawab.
@@ -114,7 +160,33 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 - ✅ Persentase role fit menampilkan pembilang dan penyebut ("6/8 topik", bukan hanya "75%").
 - ✅ Rekomendasi menyebut note atau incident yang menjadi dasarnya.
 - ✅ Kalau ada file yang ditulis (skill map, weak topics): index dan log diperbarui (op `update`).
-- ⚠ Blueprint menyebut `roadmap.md` dan `completed.md`, tapi tidak ada prosedur yang menulis keduanya (lihat [OQ-05](06-risks-decisions.md#3-pertanyaan-terbuka)).
+
+### Cara Knowledge Gap Ditemukan
+
+Gap bukan tebakan insting Hermes. Gap adalah hasil perbandingan dua sumber data:
+
+| Sumber | Lokasi | Menjawab |
+|---|---|---|
+| Knowledge yang sudah terdokumentasi | `wiki/careers/*/knowledge/` (termasuk `incidents/`), `wiki/careers/*/skills.md`, `wiki/self-development/` | "Apa yang sudah saya punya?" |
+| Target skill | `wiki/roadmap/skill-map.md` (level berikutnya) | "Apa yang *seharusnya* saya kuasai?" |
+
+```text
+skill-map.md (target level berikutnya)
+        │  dibandingkan dengan
+        ▼
+careers/*/knowledge/ + careers/*/skills.md + self-development/
+        │
+        ▼
+Topik target tanpa note, atau hanya disebut sekali = knowledge gap
+```
+
+**Contoh konkret:** `career-1/knowledge/` penuh catatan Linux dan monitoring, tapi tidak ada satu pun note tentang automation, baik di `careers/` maupun `self-development/`. Output yang diharapkan:
+
+> "Automation/IaC belum pernah didokumentasikan sama sekali, kemungkinan gap. Networking dasar sudah kuat, tapi routing baru muncul sekali di satu incident."
+
+**Prasyarat:** fitur ini butuh bahan. Urutannya: rutin capture (UC1) dan study (UC4) dulu, baru minta gap analysis (UC2/UC5). Skill map dibuat otomatis, jadi kekosongan data karier adalah satu-satunya alasan jawaban menjadi tipis.
+
+**Konsistensi nama topik:** kalau topik yang sama ditulis dengan nama berbeda setiap kali, hasil gap analysis terpecah. Mitigasinya: tag dari taxonomy SCHEMA dan fuzzy-match nama topik. Cara mencocokkan topik skill map dengan note masih belum didefinisikan ([W50](todo.md)).
 
 ## UC3 · Daily Briefing
 
@@ -124,12 +196,40 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 
 **Topik:** linux, windows-server, kubernetes, docker, vmware, cloud, networking, monitoring, devops, sre, security, cve.
 
+**Contoh output (format yang diinginkan):**
+
+```text
+DAILY INFRA BRIEFING
+10 August 2026
+
+1. Linux
+   [News] ...
+   Why it matters: ...
+
+2. Kubernetes
+   [Release/update] ...
+   Why it matters: ...
+
+3. Security
+   [CVE] ...
+   Affected technology: ...
+   Severity: ...
+   Why you should care: ...
+
+4. Career
+   [Technology trend] ...
+   Relevant skill: ...
+```
+
+Prinsip: lebih baik **5 informasi penting + alasan kenapa perlu peduli** daripada banyak berita.
+
 **Acceptance criteria:**
 - ⏳ Briefing tiba di Telegram sekitar pukul 07:00 setiap hari (cron belum dibuat di VPS).
 - ✅ Maksimal 5 item. Setiap item punya topik, isi berita, dan "Why it matters".
 - ✅ Sebelum format akhir, Hermes menulis satu baris alasan pemilihan per item.
 - ✅ Secara default tidak ada yang ditulis ke `wiki/`. Hanya berita yang layak dijadikan page yang di-ingest (dengan aturan index dan log).
 - ⚠ Sumber berita berasal dari web research bebas, sehingga kualitasnya bergantung pada tool search Hermes (lihat [OQ-07](06-risks-decisions.md#3-pertanyaan-terbuka)).
+- ⚠ Format item CVE (Affected technology, Severity) dan item Career (tren teknologi + skill relevan) belum ada di prosedur runtime, yang saat ini hanya punya format topik + berita + "Why it matters" ([W47](todo.md)).
 
 ## UC4 · Study (`/study`)
 
@@ -140,6 +240,21 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 **Variasi perintah:**
 - `/study baru selesai materi X di KodeKloud: ...` → note terstruktur.
 - `/study bandingkan A dengan B` → page komparasi di folder sumber yang relevan.
+- `/study baru belajar networking Kubernetes, ringkasin buat level saya` → ringkasan disesuaikan dengan level user (dari `about.md` dan skill map).
+
+**Contoh:**
+
+```text
+Saya: "/study baru selesai materi systemd di KodeKloud: service unit, target, journalctl, dst."
+
+raw/articles/2026-08-22-kodekloud-systemd.md        (sumber, kalau ada link atau materi)
+wiki/self-development/Bootcamp/kodekloud-systemd/
+├── systemd-service-unit.md
+├── systemd-target.md
+└── journalctl.md                                    (setiap note: tags [linux], template lengkap SCHEMA)
+```
+
+Satu folder per sumber belajar, berisi satu atau lebih note per sub-topik. Setiap note memakai template lengkap SCHEMA. Note tidak dipecah per jenis isi seperti `concepts.md` / `commands.md` / `references.md`, karena Contoh dan Referensi sudah menjadi section di setiap note ([D-20](06-risks-decisions.md#2-decision-log)).
 
 **Acceptance criteria:**
 - ✅ Sumber mentah (link, PDF, artikel) masuk ke `raw/inbox/`, diproses, lalu dipindah ke `raw/articles/` dengan nama `YYYY-MM-DD-nama.md`. Inbox kosong berarti semua sudah diproses.
@@ -163,6 +278,73 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 - **Skill Inventory:** persentase per area (topik target yang punya note ÷ total topik target), disertai insight singkat.
 - **Role Fit Trend:** perbandingan kecocokan role dengan periode sebelumnya.
 
+**Pertanyaan yang harus bisa dijawab dari laporan ini:**
+- "Apakah skill saya benar-benar berkembang?"
+- "Apa kelemahan terbesar saya?"
+- "Apa yang paling sering saya lakukan?"
+- "Apa yang belum pernah saya sentuh?"
+- "Apa yang harus saya pelajari untuk L2?"
+
+### Aturan Skill Inventory
+
+- **Rumus:** % per area = topik target yang sudah punya note ÷ total topik target di area itu. Angka berasal dari menghitung file, bukan penilaian LLM.
+- **Target selalu satu level di atas posisi sekarang.** Posisi L1 diukur terhadap target L2, dan posisi L2 diukur terhadap target L3.
+- **Bar di-reset saat naik level.** 80% Linux ketika masih L1 tidak sama artinya dengan 80% ketika sudah L2, karena targetnya lebih banyak.
+- Hanya topik yang sudah punya note di knowledge base yang dihitung.
+- Setiap bar disertai insight singkat: kenapa angkanya segitu dan apa langkah berikutnya. Insight ini yang mengisi bagian Improved dan Weak di laporan.
+
+**Contoh `skill-map.md`:**
+
+```markdown
+---
+title: Skill Map
+type: data
+updated: 2026-08-22
+---
+
+# Skill Map: Infra Engineer
+
+## Target L2 (dipakai sebagai 100% kalau posisi sekarang L1)
+- Linux: performance tuning, kernel basics, systemd advanced
+- Monitoring: alert correlation, dashboard design
+- Networking: routing, VLAN, packet analysis
+- Automation: Ansible dasar, scripting Bash lanjutan
+- Docker: image building, networking container
+- Incident Handling: RCA mandiri
+- Troubleshooting: multi-layer (app + infra) diagnosis
+```
+
+**Contoh laporan** (angka konsisten dengan skill map di atas):
+
+```text
+CAREER REVIEW: Q1 2026
+
+Learned       ✓ Linux performance   ✓ systemd   ✓ DNS troubleshooting
+Experienced   ✓ High CPU incident   ✓ Service failure   ✓ Network timeout
+Improved      ↑ Troubleshooting   ↑ Monitoring   ↑ Incident analysis
+Weak          ⚠ Automation   ⚠ Infrastructure as Code   ⚠ Advanced networking
+
+Skill Inventory: target L2 (posisi saat ini L1)
+Linux              ███████░░░   67%  (2/3)
+Monitoring         ██████████  100%  (2/2)
+Networking         ███░░░░░░░   33%  (1/3)
+Automation         █████░░░░░   50%  (1/2)
+Docker             █████░░░░░   50%  (1/2)
+Incident Handling  ██████████  100%  (1/1)
+Troubleshooting    ░░░░░░░░░░    0%  (0/1)
+
+Automation 50%
+→ Sudah ada note scripting Bash lanjutan. Belum ada note Ansible sama sekali (target L2).
+  Rekomendasi: mulai dari Ansible playbook dasar.
+
+Networking 33%
+→ Packet analysis sudah ada note. Routing & VLAN pernah ditangani di 2 incident,
+  tapi belum ada note khusus yang membahas konsepnya.
+  Rekomendasi: tulis note routing dari 2 incident itu.
+
+Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
+```
+
 **Acceptance criteria:**
 - ⏳ Laporan otomatis dibuat setiap awal kuartal (cron belum dibuat di VPS).
 - ✅ Laporan ditulis ke `output/career-review-<YYYY>-Q<n>.md`.
@@ -172,6 +354,8 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 - ⚠ Data yang sama harus menghasilkan angka yang sama. Ini belum terjamin karena penyebutnya (skill map) bisa berubah setiap kali di-generate ulang ([R-03](06-risks-decisions.md#1-risk-register)).
 - ⚠ Role Fit Trend butuh angka periode lalu, tapi angka itu belum disimpan di mana pun. Targetnya: ambil dari laporan `output/` sebelumnya, dan tulis "baseline" kalau belum ada ([C18](todo.md)).
 - ⚠ Definisi skill inventory di `SCHEMA.md` ("topik mastered") berbeda dengan `career-review.md` ("topik yang punya note") ([W37](todo.md)).
+- ⚠ Aturan "target = satu level di atas posisi sekarang" belum tertulis di `career-review.md` maupun `SCHEMA.md` ([W48](todo.md)).
+- ⚠ Blueprint juga meminta analisis topik yang paling sering muncul, topik yang stagnan, dan kesalahan yang berulang. Prosedur runtime baru mencakup 4 bagian (Learned/Experienced/Improved/Weak) ([W49](todo.md)).
 
 ## `/recall` · Tanya Knowledge Base
 

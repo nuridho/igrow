@@ -296,7 +296,7 @@ Jawab dengan benar.
 ❌ Gagal kalau: langsung keluar roadmap generik.
 
 ## 4.2 Skill-map terisi → roadmap dari data
-Isi manual `wiki/roadmap/skill-map.md` (contoh di iGROW_FINAL.md: target L2 = automation/Ansible, networking lanjutan, dst). **Prompt:**
+Isi manual `wiki/roadmap/skill-map.md` (contoh di `PRD/02-use-cases.md` UC5: target L2 = automation/Ansible, networking lanjutan, dst). **Prompt:**
 > "Oke skill-map sudah saya isi. Sekarang, saya harus belajar apa biar naik L2?"
 
 **Expected:** roadmap menyebut gap **nyata** dari data testing ini: Linux/systemd sudah ada (Fase 1–2), automation & networking kosong → diprioritaskan. Menyebut file sumbernya.

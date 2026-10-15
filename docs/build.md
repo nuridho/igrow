@@ -490,7 +490,7 @@ Telegram ──chat──▶ igrow-hermes (image resmi nousresearch/hermes-agent
 
 > **`build` vs `image` di compose:** `image:` dipakai kalau software-nya udah jadi, tinggal pakai (kayak `nginx:alpine`, `portainer/portainer-ce`). `build:` dipakai kalau software-nya kode custom yang kamu tulis sendiri.
 >
-> **Keputusan final (lihat `iGROW_FINAL.md` bagian "Implementasi Teknis"):** `igrow-hermes` pakai **image resmi** `nousresearch/hermes-agent` (jadi `image:`, **bukan** `build:`) — infrastruktur agent (Telegram gateway, memory, skill system) udah disediain, tinggal "diajarin" format iGROW lewat `AGENTS.md` + skill custom, bukan nulis bot dari nol.
+> **Keputusan final (lihat `PRD/06-risks-decisions.md` D-01):** `igrow-hermes` pakai **image resmi** `nousresearch/hermes-agent` (jadi `image:`, **bukan** `build:`) — infrastruktur agent (Telegram gateway, memory, skill system) udah disediain, tinggal "diajarin" format iGROW lewat `AGENTS.md` + skill custom, bukan nulis bot dari nol.
 
 #### Struktur folder
 
@@ -517,7 +517,7 @@ whatsinsidegit/
                                   #   (BUKAN sistem Skill resmi Hermes — cukup markdown biasa)
 ```
 
-> Detail lengkap isi tiap subfolder `igrow/` (dengan seluruh sub-kategori, contoh isi `AGENTS.md` & `project-skills/*.md`) ada di `iGROW_FINAL.md` bagian "🛠️ Implementasi Teknis — Hermes Agent" — itu satu-satunya acuan tree lengkap, tidak diulang di sini.
+> Detail lengkap isi tiap subfolder `igrow/` (dengan seluruh sub-kategori, contoh isi `AGENTS.md` & `project-skills/*.md`) ada langsung di `hermes-home/` repo ini, ringkasannya di `PRD/04-architecture.md` §5 — tidak diulang di sini.
 
 > `igrow-hermes` **tidak punya** `Dockerfile`/`main.py` sendiri — badannya udah disediain image resmi. "Kode custom" kamu buat Hermes wujudnya `AGENTS.md` + file-file di `igrow/project-skills/` (markdown instruksi, bukan program Python/JS).
 
@@ -581,7 +581,7 @@ Bikin folder `igrow/` + `AGENTS.md` (di **root** `hermes-home/`, bukan di dalam 
 mkdir -p ~/whatsinsidegit/igrow-hermes/hermes-home/igrow/{raw/{inbox,articles,assets},wiki/{careers,self-development,roadmap,profile},output,project-skills}
 nano ~/whatsinsidegit/igrow-hermes/hermes-home/AGENTS.md
 ```
-Isi `AGENTS.md` (lengkap + contoh, lihat `iGROW_FINAL.md` bagian "Implementasi Teknis").
+Isi `AGENTS.md`: salin dari `hermes-home/AGENTS.md` di repo ini.
 **Bikin 14 file inti `igrow/` (WAJIB sebelum test Telegram):**
 
 Salin semua file ini ke VPS. Path tujuan sama persis dengan yang sudah ada di `hermes-home/`:
@@ -1332,7 +1332,7 @@ Detail konfigurasi CouchDB + setup plugin LiveSync di Obsidian app menyusul kala
 - [x] Ownership `igrow-hermes/hermes-home/` di host sudah milik user kamu (bukan `root`) — cek `ls -la`
 - [x] `hermes doctor` jalan tanpa error, `docker exec -it igrow-hermes ls /opt/data` nampilin `.env`, `config.yaml`, `SOUL.md`, dst
 - [x] Folder `igrow-hermes/hermes-home/igrow/` udah dibuat manual (subfolder `raw/`, `wiki/`, `output/`, `project-skills/`, `maintenance/`), **plus** 14 file inti (`SCHEMA.md`, `_index.md`, `log.md`, `raw/_index.md`, `wiki/_index.md`, `output/_index.md`, `project-skills/{capture-experience,mentor,daily-briefing,study,career-review}.md`, `project-skills/maintenance/{lint,backup}.md`, `project-skills/maintenance/backup.sh`)
-- [x] `AGENTS.md` ada di **root** `hermes-home/` (`hermes-home/AGENTS.md`), **bukan** di dalam `igrow/` — sudah diisi (lihat `iGROW_FINAL.md`)
+- [x] `AGENTS.md` ada di **root** `hermes-home/` (`hermes-home/AGENTS.md`), **bukan** di dalam `igrow/` — sudah diisi (salin dari `hermes-home/AGENTS.md`)
 - [x] `igrow-hermes/hermes-home/igrow/project-skills/` udah ada minimal 1 file markdown (`capture-experience.md` atau `mentor.md`), di-refer dari `AGENTS.md`
 - [x] Tes chat lewat Telegram: Hermes bisa jawab dia lagi di direktori mana & nyebut aturan iGROW dari `AGENTS.md`
 - [x] Tes capture 1 cerita/pengalaman lewat Telegram, cek file baru muncul di `igrow-hermes/hermes-home/igrow/` sesuai aturan penempatan

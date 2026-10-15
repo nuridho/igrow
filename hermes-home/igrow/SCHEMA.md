@@ -68,6 +68,7 @@ type: data
 updated: YYYY-MM-DD
 ---
 ```
+Body per data file: `weak-topics.md` → `- topik — alasan`; `profile/skills.md` → `- Area  ███████░░░  NN% (X/Y)` (bar 10 blok, angka sama dengan Skill Inventory career review terakhir); `profile/career-summary.md` → 1 baris per career: `- <folder career>: <Role> · <Period> · N incident · N knowledge · N lesson` (Role & Period dari `about.md`, career aktif = `s/d sekarang`; N = hitung file: `knowledge/incidents/`, `knowledge/` tanpa `incidents/`, `lessons-learned/`); `skill-map.md` → lihat section format di bawah.
 
 ## Tag taxonomy (tambah baru di sini DULU)
 linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve

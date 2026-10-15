@@ -89,6 +89,8 @@ hermes-home/                    → /opt/data (HERMES_HOME)
 
 Detail field dan aturannya ada di [`SCHEMA.md`](../hermes-home/igrow/SCHEMA.md). Bagian ini sengaja tidak menyalinnya.
 
+**Frontmatter adalah kontrak data untuk `igrow-api`.** Dashboard membaca frontmatter untuk index dan kategori, sedangkan body dibaca manusia. Mengubah nama atau arti field berarti mengubah API.
+
 ## 6. Alur Utama
 
 ### 6.1 Pesan Telegram → Knowledge
@@ -131,9 +133,18 @@ Recovery: clone igrow-backup → letakkan sebagai hermes-home/igrow/
 
 Yang tidak bisa dipulihkan dari backup: memory dan skill internal Hermes, serta riwayat sesi. Ini sesuai prinsip bahwa sumber kebenaran hanya `igrow/`.
 
+**Skenario migrasi yang harus tetap aman** (syaratnya backup berjalan rutin):
+
+| Skenario | Yang dibawa |
+|---|---|
+| Hermes versi A → versi B | `igrow/` + `AGENTS.md` |
+| Provider LLM A → provider B | Tidak ada yang perlu dipindah; cukup `hermes setup` ulang |
+| VPS A → VPS B | Clone `igrow-backup` + deploy `hermes-home/` |
+| Hermes → agent lain | `igrow/` tetap terbaca karena markdown biasa; `AGENTS.md` dan `project-skills/` perlu disesuaikan dengan format instruksi agent baru |
+
 ## 7. Deployment
 
-- **Konfigurasi container:** `image: nousresearch/hermes-agent:latest`, `command: gateway run`, environment `HERMES_UID`/`HERMES_GID`/`TZ`, dan satu volume `./igrow-hermes/hermes-home:/opt/data`. Tidak ada `env_file:`; secret ditulis oleh `hermes setup`.
+- **Konfigurasi container:** `image: nousresearch/hermes-agent:latest`, `command: gateway run`, environment `HERMES_UID`/`HERMES_GID`/`TZ`, dan satu volume `./igrow-hermes/hermes-home:/opt/data`. Tidak ada `env_file:`; secret ditulis oleh `hermes setup`. `HERMES_HOME` tidak bisa dipindah lewat env var; path-nya tetap `/opt/data`.
 - **Deploy runtime:** `rsync -a --exclude '_index.md' --exclude 'log.md'` dari `hermes-home/` di repo ini ke VPS, supaya katalog dan log di VPS tidak tertimpa template kosong. Saat setup pertama, jalankan tanpa exclude.
 - ⚠ Blok "Bikin 14 file inti" di `docs/build.md` sudah basi dibanding `hermes-home/`. Jangan dipakai untuk setup baru ([W41](todo.md)).
 

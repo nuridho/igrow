@@ -1,8 +1,8 @@
 # To-Do — iGROW
 
 > Kode item (C/W/I + nomor) permanen — jangan dinomori ulang saat nambah.
-> Nomor berikutnya: C22 / W47 / I28. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
-> `FIN` = `docs/iGROW_FINAL.md`. Format rujukan: `FIN:873` = file itu baris 873.
+> Nomor berikutnya: C22 / W51 / I28. Void: `W4` `C9` `C11` `W22`(→C9) `W23`(→U10) `W31` `I1` `I2` `I4` `I7` `I8` `I10`(→U12) `I11`(→U11) `I13` `I14` `I16`(→W33) `I19`.
+> `FIN` = `archive/iGROW_FINAL.md` (diarsipkan 2026-10-16, D-21). Item yang hanya membetulkan FIN sudah ditutup. Format rujukan lama: `FIN:873` = file itu baris 873.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres.
 > Item `[x]` Act-nya lampau (sudah dilakukan), Impact-nya sudah berlaku sekarang.
 > Semua temuan sudah diverifikasi ke file / CLI / eksekusi. Yang tidak bisa dipastikan ditandai "(belum diverifikasi)".
@@ -42,22 +42,18 @@
 - [x] **C20** `core.autocrlf=true` tanpa `.gitattributes` → `.sh`/`.md` balik CRLF tiap git checkout (akar I9/C12/C13)
   - Act: bikin `.gitattributes` isi `* text=auto eol=lf` (index sudah LF semua, nggak perlu renormalize).
   - Impact: file yang dikirim ke VPS selalu LF; script nggak patah gara-gara `\r` lagi.
-- [ ] **W37** `SCHEMA.md:92` Skill Inventory = "topik mastered" (sisa fitur testing) vs `career-review.md:12` "topik target yang sudah ada notenya"
-  - Act: SCHEMA:92 → "(topik target yang sudah ada notenya) / (total topik target skill-map) per area".
+- [ ] **W37** `SCHEMA.md:93` Skill Inventory = "topik mastered" (sisa fitur testing) vs `career-review.md:12` "topik target yang sudah ada notenya"
+  - Act: SCHEMA:93 → "(topik target yang sudah ada notenya) / (total topik target skill-map) per area".
   - Impact: SCHEMA & career-review ngitung hal yang sama.
-- [ ] **W38** `SCHEMA.md:41` bilang skill-map "bukan data type", tapi contoh data file `SCHEMA.md:66-67` = `title: Skill Map` + `type: data` (`FIN:353-354` juga)
+- [ ] **W38** `SCHEMA.md:41` bilang skill-map "bukan data type", tapi contoh data file `SCHEMA.md:66-67` = `title: Skill Map` + `type: data`
   - Act: SCHEMA:41 → skill-map = `type: data` (frontmatter minimal), buang "(bukan data type …)".
   - Impact: generator & lint sepakat bentuk frontmatter skill-map.
 - [ ] **W39** W28 & W26 dicentang `[x]` tapi belum beres
-  - Act: hapus kalimat fallback push via `igrow.nuridho.com` di `build.md:1093` (W28); hapus section "🧩 TODO" di `FIN:947-951` (W26) — isinya pindah ke sini kalau masih dipakai.
+  - Act: hapus kalimat fallback push via `igrow.nuridho.com` di `build.md:1093` (W28); bagian W26 (section TODO di FIN) gugur karena FIN diarsipkan; isinya sudah menjadi FR-25 s/d FR-27 di PRD.
   - Impact: status `[x]` di dev-todo bisa dipercaya lagi.
-- [ ] **W40** FIN masih sisa skema lama
-  - Act:
-    - Tabel file referensi `FIN:616-625`: nomor UC → ikut AGENTS (mentor=2, briefing=3, study=4, review=5); `||` → `|`.
-    - "3 Sumber Data" `FIN:397-402` isinya cuma 2; buang "hasil test" di `FIN:416` + `FIN:432`.
-    - Tree `FIN:745`: `profile/` ke-indent di level `igrow/`, harusnya di bawah `wiki/`.
-    - Status `FIN:587` "AGENTS.md belum pernah dites" → sudah (checklist Phase 2 build.md).
-  - Impact: FIN nggak ngajarin nomor UC & struktur yang beda dari runtime.
+- [x] ~~**W40**~~ ~~FIN masih sisa skema lama~~
+  - Act: tidak dikerjakan — FIN diarsipkan ke `archive/` (D-21); isi yang masih berlaku sudah dipindah ke PRD.
+  - Impact: tidak ada lagi sumber spec lama yang perlu dijaga sinkron.
 - [ ] **W41** Blok "Bikin 14 file inti" `build.md:585-1060` basi vs `hermes-home/` (SCHEMA masih ada `query`, mentor masih baca `tests/`, tanpa A1–A6 & session-export) + instruksi rsync C8 nggak ada lagi
   - Act: ganti blok salinan jadi 1 instruksi `rsync -a --exclude '_index.md' --exclude 'log.md' hermes-home/ <vps>:~/whatsinsidegit/igrow-hermes/hermes-home/` (setup pertama tanpa exclude); sekalian "(via SSH)" `build.md:1079` → HTTPS + token (sesuai prasyarat Job 2).
   - Impact: setup dari nol = runtime yang sama persis; deploy ulang nggak nge-reset `_index.md`/`log.md` VPS.
@@ -87,9 +83,9 @@
 - [ ] **W44** `capture-experience.md` tidak mendefinisikan kasus "tidak ada career aktif" (OQ-04)
   - Act: tambah fallback di Langkah 1: tidak ada `about.md` tanpa tanggal selesai → jangan tulis file, tanya user mau daftar kerjaan baru (UC1b) dulu.
   - Impact: cerita kerja tidak nyasar ke folder career yang sudah ditutup atau ke lokasi karangan.
-- [ ] **W45** `roadmap.md` + `completed.md` disebut di FIN (UC2 Output, data file) tapi tidak ada prosedur yang menulisnya (OQ-05)
-  - Act: hapus keduanya dari FIN (`FIN:157-158`, `FIN:694-695`, tree `FIN:740-741`); `wiki/roadmap/` tinggal `skill-map.md` + `weak-topics.md`.
-  - Impact: spec = perilaku runtime; agent tidak bingung file mana yang wajib ada.
+- [x] ~~**W45**~~ ~~`roadmap.md` + `completed.md` disebut di FIN (UC2 Output, data file) tapi tidak ada prosedur yang menulisnya (OQ-05)~~
+  - Act: gugur — satu-satunya yang menyebut `roadmap.md`/`completed.md` adalah FIN, yang sudah diarsipkan (D-21). OQ-05 selesai.
+  - Impact: tidak ada lagi sumber spec lama yang perlu dijaga sinkron.
 - [ ] **W46** Update in-place belum eksplisit di `capture-experience.md` padahal `testing/test-flow.md` 1.9 mengharapkannya (FR-12)
   - Act: tambah 1 baris di Langkah 2: cerita lanjutan untuk incident/knowledge yang sama → edit file lama (`updated:` berubah, `created:` tetap), log op `update`, jangan bikin file baru.
   - Impact: tidak ada note duplikat untuk satu kejadian.
@@ -99,6 +95,18 @@
 - [ ] **I27** Op `archive` di `SCHEMA.md:25` tidak dipakai lagi setelah session-export dihapus (menunggu OQ-03)
   - Act: pakai `archive` untuk penutupan career di UC1b, ATAU hapus dari daftar ops.
   - Impact: daftar ops = ops yang benar-benar dipakai (pola W7).
+- [ ] **W47** Format `daily-briefing.md` lebih miskin dari blueprint: tidak ada field CVE (Affected technology, Severity) dan item Career (tren teknologi + skill relevan)
+  - Act: blok format `daily-briefing.md` → item `[CVE]` wajib punya `Affected technology` + `Severity`; boleh 1 item `Career` (`[Technology trend]` + `Relevant skill`); contoh eksekusi disesuaikan.
+  - Impact: briefing CVE langsung bisa ditindaklanjuti; ada kaitan berita ke pengembangan skill.
+- [ ] **W48** Aturan "target skill inventory = satu level di atas posisi sekarang" cuma ada di blueprint (sekarang PRD UC5), tidak di runtime
+  - Act: `career-review.md` step 3 + section skill-map `SCHEMA.md`: penyebut = topik `## Target L<n+1>`, n = level dari `Role` di `about.md` career aktif (level tidak tertulis → tanya user 1x); naik level → bar di-reset.
+  - Impact: penyebut jelas; agent tidak memakai target level yang salah.
+- [ ] **W49** Career review runtime cuma 4 bagian; blueprint juga minta topik paling sering muncul, topik stagnan, dan kesalahan berulang
+  - Act: tambah bagian "Pola" di `career-review.md` step 2: top topik (hitung tag entri `log.md` kuartal itu), topik stagnan (ada note kuartal lalu, 0 note baru kuartal ini), kesalahan berulang (lesson-learned dengan tag sama ≥ 2).
+  - Impact: review menjawab "apa yang paling sering saya lakukan?" dari data, bukan opini.
+- [ ] **W50** Belum ada aturan pencocokan topik skill-map ↔ note → pembilang skill inventory masih bergantung penilaian LLM (R-03)
+  - Act: tetapkan di `SCHEMA.md` + `career-review.md`: topik dihitung "punya note" kalau ada note yang `title` atau `## Ringkasan`-nya membahas topik itu; incident yang cuma menyinggung tidak dihitung; agent wajib menyebut file bukti per topik.
+  - Impact: setiap angka bisa diaudit sampai ke file; dua run pada data sama menghasilkan angka sama.
 
 ## Critical
 

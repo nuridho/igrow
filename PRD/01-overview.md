@@ -26,7 +26,7 @@ Setelah beberapa tahun dipakai, user bisa menjawab:
 | Progress | "Ini perkembangan saya dari waktu ke waktu." |
 | Learning roadmap | "Ini yang harus saya pelajari selanjutnya." |
 | Career archive | "Ini perjalanan saya sebagai Infra Engineer." |
-| Offline archive | Semua tersimpan sebagai markdown biasa, tetap bisa dibaca walau berhenti memakai Hermes. |
+| Offline archive | Semua tersimpan sebagai markdown biasa, tetap bisa dibaca walau berhenti memakai Hermes. Laporan career review bisa diekspor ke PDF kalau perlu (FR-25). |
 
 ## 3. Tujuan (Goals)
 
@@ -49,6 +49,7 @@ Hal-hal berikut **sengaja tidak** dikerjakan:
 - **Session history Hermes bukan sumber kebenaran.** Yang dianggap aset hanya file di `igrow/`. Memory dan skill internal agent tidak dimigrasikan.
 - **Bukan pengganti dokumentasi resmi kantor.** iGROW adalah catatan pribadi yang sudah diredaksi, bukan SOP perusahaan.
 - **Tidak memakai database atau vector store.** Markdown + index file dianggap cukup sampai terbukti tidak.
+- **Tidak ada fitur uji/latihan troubleshooting.** Fitur ini pernah dirancang lalu dihapus (D-14). Ukuran kemampuan berasal dari note yang terdokumentasi, bukan dari skor tes.
 
 ## 5. Target User & Persona
 

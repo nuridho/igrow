@@ -8,11 +8,11 @@ Skala: **H** (tinggi), **M** (sedang), **L** (rendah).
 |---|---|---|---|---|---|
 | R-01 | Agent tidak patuh SCHEMA: tag di luar taxonomy, link tanpa path, salah folder. | M | H | Self-check sebelum menulis, contoh few-shot yang mematuhi aturan (C17 sudah diperbaiki), dan lint mingguan. | Termitigasi sebagian |
 | R-02 | Data sensitif bocor ke provider LLM atau GitHub. | H | M | Redaksi sebelum bercerita, aturan larangan di `AGENTS.md` dan `SCHEMA.md`, repo backup privat, dan cek manual setiap kuartal. Redaksi tetap bergantung pada disiplin user dan kepatuhan agent. | Termitigasi sebagian |
-| R-03 | **Skill inventory tidak bisa dibandingkan antar kuartal.** Pembilangnya dihitung dari file, tapi penyebutnya (skill map) di-generate ulang oleh LLM, sehingga daftar topik target bisa bergeser. | H | H | Usulan: bekukan skill map per level, dan setiap perubahan dilakukan eksplisit lalu dicatat di `log.md` ([OQ-01](#3-pertanyaan-terbuka)). | **Terbuka** |
+| R-03 | **Skill inventory tidak bisa dibandingkan antar kuartal.** Pembilangnya dihitung dari file, tapi penyebutnya (skill map) di-generate ulang oleh LLM, sehingga daftar topik target bisa bergeser. | H | H | Usulan: bekukan skill map per level, dan setiap perubahan dilakukan eksplisit lalu dicatat di `log.md` ([OQ-01](#3-pertanyaan-terbuka)). Pembilangnya juga masih bergantung pada penilaian LLM soal note mana yang mencakup topik mana ([W50](todo.md)). | **Terbuka** |
 | R-04 | VPS menjadi single point of failure. Dengan backup mingguan, hingga 7 hari catatan bisa hilang. | M | L | Backup Git ke GitHub. Frekuensi bisa dinaikkan ([OQ-02](#3-pertanyaan-terbuka)). | Diterima |
 | R-05 | Update `:latest` Hermes mengubah perilaku (argumen CLI cron, cara memuat `AGENTS.md`). | M | M | Pin versi setelah stabil ([OQ-08](#3-pertanyaan-terbuka)). Setelah update, cek `hermes cron create --help` dan ulangi tes Telegram Phase 2. | Terbuka |
 | R-06 | Token GitHub tersimpan plaintext di container (`credential.helper store`). | M | L | Gunakan fine-grained token dengan scope satu repo, dan rotasi berkala. | Diterima |
-| R-07 | Dokumen saling menyimpang (FIN, build, PRD, runtime). Sejak script cek otomatis dihapus, tidak ada pengaman otomatis. | M | H | Hierarki sumber kebenaran ([README](README.md#hierarki-sumber-kebenaran)), PRD tidak menyalin aturan runtime, dan setiap perubahan runtime langsung diikuti update dokumen terkait. | Terbuka |
+| R-07 | Dokumen saling menyimpang (build, PRD, runtime). Sejak script cek otomatis dihapus, tidak ada pengaman otomatis. | M | H | Hierarki sumber kebenaran ([README](README.md#hierarki-sumber-kebenaran)), PRD tidak menyalin aturan runtime, dan setiap perubahan runtime langsung diikuti update dokumen terkait. | Terbuka |
 | R-08 | Adopsi rendah: user berhenti bercerita, sehingga UC2 dan UC5 tidak punya bahan. | H | M | Friction dibuat rendah (cukup chat bebas) dan metrik adopsi dipantau. Usulan: pengingat kalau 7 hari tidak ada `ingest`. | Terbuka |
 | R-09 | Biaya token LLM naik (briefing harian dengan web research, review kuartalan). | M | M | `AGENTS.md` ringkas, prosedur dimuat sesuai kebutuhan, dashboard tanpa LLM. Pantau tagihan provider setiap bulan. | Termitigasi sebagian |
 | R-10 | Memory dan skill internal agent hilang saat migrasi, karena session export sudah dihapus. | L | H | Diterima. Prosedur yang penting harus ditulis di `project-skills/`, bukan hanya hidup di skill buatan agent. | Diterima |
@@ -41,6 +41,8 @@ Skala: **H** (tinggi), **M** (sedang), **L** (rendah).
 | D-17 | 2026-10-16 | `AGENTS.md` ikut di-backup sebagai `igrow/AGENTS.backup.md`. | File itu ada di luar `igrow/`. Diberi nama berbeda supaya tidak dianggap aturan aktif. | Mengandalkan salinan di repo saja. |
 | D-18 | 2026-10-16 | Script testing otomatis dihapus. Verifikasi dilakukan manual lewat `test-flow.md`. | Pilihan owner. Script sering memberi FAIL palsu. | Memperbaiki script (I23, I24). |
 | D-19 | 2026-10-16 | Struktur repo dirapikan (`docs/`, `web/`, `archive/`, `parked/`), `.gitattributes` mengunci LF, dan PRD dibuat. | Root lebih bersih dan setiap folder punya satu peran jelas. | — |
+| D-20 | 2026-10-16 | Note belajar: satu folder per sumber belajar, isinya note per sub-topik dengan template lengkap SCHEMA. | Template SCHEMA sudah memuat Contoh dan Referensi di setiap note. | Pecah per jenis isi (`concepts.md`, `commands.md`, `troubleshooting.md`, `references.md`) seperti di blueprint lama. |
+| D-21 | 2026-10-16 | `iGROW_FINAL.md` diarsipkan ke `archive/`. Isinya dipindah ke PRD, dan format data file yang hanya ada di FIN dipindah ke `SCHEMA.md`. | Mengurangi sumber drift (R-07). Menutup OQ-05 dan OQ-09. | Mempertahankan FIN berdampingan dengan PRD. |
 
 Tanggal "—" berarti keputusan diambil sebelum ada pencatatan tanggal.
 
@@ -52,9 +54,9 @@ Tanggal "—" berarti keputusan diambil sebelum ada pencatatan tanggal.
 | OQ-02 | Apakah backup mingguan cukup? | RPO saat ini 7 hari. | **Harian 03:00.** Biayanya hampir nol karena tidak ada pesan kalau tidak ada perubahan. |
 | OQ-03 | Op `archive` di SCHEMA masih perlu setelah session export dihapus? | Daftar op seharusnya hanya berisi op yang benar-benar dipakai. | Pakai untuk penutupan career di UC1b, atau hapus dari daftar. |
 | OQ-04 | Apa yang terjadi kalau tidak ada career aktif? | Prosedur UC1 belum mendefinisikan kasus ini. | Jangan menulis file. Tanya user apakah mau mendaftarkan pekerjaan dulu. |
-| OQ-05 | `roadmap.md` dan `completed.md` dipertahankan atau tidak? | Disebut di blueprint, tapi tidak ada prosedur yang menulisnya. | Hapus dari spec sampai ada kebutuhan nyata. |
+| OQ-05 | ~~`roadmap.md` dan `completed.md` dipertahankan atau tidak?~~ | **Selesai (D-21):** hanya disebut di FIN yang sudah diarsipkan, jadi keduanya tidak ada lagi di spec. | Kalau fitur roadmap/completed dibutuhkan lagi, buka item baru di `todo.md`. |
 | OQ-06 | Apakah `project-skills/` dipindah ke sistem Skill resmi Hermes (`SKILL.md`, `external_dirs`)? | Hemat token karena lazy-load, dan setiap skill otomatis menjadi slash command di Telegram. | Evaluasi setelah Phase 2 selesai. |
 | OQ-07 | Sumber daily briefing: web research bebas, atau skill RSS/watchers resmi Hermes? | Kualitas dan konsistensi briefing. | Jalankan versi sekarang selama 2 minggu, nilai relevansinya, baru putuskan. |
 | OQ-08 | Pin versi Hermes, atau tetap `:latest`? | Stabilitas versus update otomatis (R-05). | Pin setelah Phase 2 stabil. |
-| OQ-09 | Bagaimana nasib `docs/iGROW_FINAL.md` setelah PRD ada? | Isinya banyak tumpang tindih dengan PRD, dan ini risiko drift (R-07). | Pindahkan ke `archive/` sebagai blueprint historis. |
+| OQ-09 | ~~Bagaimana nasib `docs/iGROW_FINAL.md` setelah PRD ada?~~ | **Selesai (D-21):** diarsipkan ke `archive/iGROW_FINAL.md`. | — |
 | OQ-10 | Apakah target metrik di [01 · §7](01-overview.md#7-ukuran-sukses) disetujui? | Tanpa target yang disepakati, sukses tidak bisa dinilai. | Tinjau setelah 1 bulan pemakaian nyata. |

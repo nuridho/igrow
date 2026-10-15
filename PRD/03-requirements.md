@@ -39,15 +39,15 @@ Status:
 | FR-14 | Gap analysis berbasis data pribadi. Kalau data tidak cukup, Hermes menolak membuat roadmap generik. | Must | UC2 | ✅ |
 | FR-15 | Skill map di-generate otomatis dari `about.md`, `careers/`, dan `self-development/`. User boleh mengedit, tapi tidak wajib. | Must | UC2, UC5 | ⚠ Stabilitas penyebut belum terjamin ([R-03](06-risks-decisions.md#1-risk-register)) |
 | FR-16 | Role fit ditampilkan dalam bentuk pembilang/penyebut, dengan 2 role paling cocok dan 2 paling jauh. | Should | UC2 | ✅ |
-| FR-17 | Skill inventory dihitung dengan menghitung file, bukan perkiraan LLM, dan selalu menampilkan X/Y. | Must | UC5 | ⚠ Definisi di SCHEMA berbeda (W37) |
-| FR-18 | Career review kuartalan ditulis ke `output/` dan memperbarui `wiki/profile/`. | Must | UC5 | ⏳ Cron belum dibuat |
+| FR-17 | Skill inventory dihitung dengan menghitung file, bukan perkiraan LLM, selalu menampilkan X/Y, dan diukur terhadap target satu level di atas posisi sekarang. | Must | UC5 | ⚠ W37, W48, W50 |
+| FR-18 | Career review kuartalan ditulis ke `output/` dan memperbarui `wiki/profile/`. | Must | UC5 | ⏳ Cron belum dibuat · ⚠ dimensi analisis kurang (W49) |
 | FR-19 | Role Fit Trend dibandingkan dengan angka dari laporan sebelumnya. Run pertama ditandai "baseline". | Could | UC5 | ⚠ C18 |
 
 ### 1.4 Automation & Maintenance
 
 | ID | Requirement | Prioritas | UC | Status |
 |---|---|---|---|---|
-| FR-20 | Daily briefing setiap hari 07:00, maksimal 5 item dengan alasan relevansi. | Should | UC3 | ⏳ Cron belum dibuat |
+| FR-20 | Daily briefing setiap hari 07:00, maksimal 5 item dengan alasan relevansi. Item CVE menyertakan teknologi terdampak dan severity. | Should | UC3 | ⏳ Cron belum dibuat · ⚠ format CVE (W47) |
 | FR-21 | Lint struktur wiki setiap minggu, hanya melapor. | Should | M1 | ⏳ Cron belum dibuat |
 | FR-22 | Backup `igrow/` + salinan `AGENTS.md` ke repo GitHub privat setiap minggu. Diam kalau tidak ada perubahan, lapor kalau gagal. | Must | M2 | ⏳ Cron + prasyarat repo |
 | FR-23 | Semua output cron dikirim ke Telegram (`--deliver telegram`). | Must | UC3, UC5, M1, M2 | ⏳ |

@@ -50,8 +50,9 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 | **Now** | Deploy ulang runtime | §2 M2.1 |
 | **Next** | Role Fit Trend memakai baseline tersimpan | C18 |
 | **Next** | Perbarui test-flow, lalu uji dengan data nyata | W42 |
-| **Next** | Bersihkan dokumen basi: blok salinan di build.md, sisa skema lama di FIN, status `[x]` yang belum benar-benar beres | W39, W40, W41 |
-| **Next** | Update in-place ditulis eksplisit di prosedur capture | FR-12 |
+| **Next** | Bersihkan dokumen basi: blok salinan di build.md dan status `[x]` yang belum benar-benar beres | W39, W41 |
+| **Next** | Update in-place ditulis eksplisit di prosedur capture | W46 |
+| **Next** | Samakan runtime dengan PRD: format CVE briefing, target level skill inventory, dimensi analisis review, aturan pencocokan topik | W47–W50 |
 | **Later** | Phase 3 (Dozzle), Phase 4 (dashboard) | vpslab.md |
 | **Later** | Export PDF career review, perintah koreksi note (`/cek` / `/audit`) | FR-25, FR-26 |
 | **Later** | Evaluasi migrasi `project-skills/` ke sistem Skill resmi Hermes | OQ-06 |
