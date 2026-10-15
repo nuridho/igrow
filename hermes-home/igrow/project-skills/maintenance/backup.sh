@@ -11,6 +11,9 @@ if ! git rev-parse --git-dir > /dev/null 2>&1; then
   exit 1
 fi
 
+# AGENTS.md ada di root HERMES_HOME (di luar igrow/) — salin ke sini biar ikut ke-push.
+[ -f /opt/data/AGENTS.md ] && cp /opt/data/AGENTS.md AGENTS.backup.md
+
 git add -A
 if git diff --cached --quiet; then
   echo "backup: no changes, skipping" >&2

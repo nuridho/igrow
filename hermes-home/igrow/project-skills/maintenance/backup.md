@@ -10,6 +10,6 @@ Dipicu cron Minggu 03:00. Push `igrow/` ke GitHub privat `igrow-backup`.
 
 ## Aturan
 
-- Script cuma backup subfolder `igrow/`, bukan seluruh `HERMES_HOME/`.
+- Script backup subfolder `igrow/` + salinan `AGENTS.md` (jadi `igrow/AGENTS.backup.md`, hanya arsip — jangan diedit/dibaca sebagai aturan). Bukan seluruh `HERMES_HOME/`.
 - Jangan utak-atik `.git/` manual.
 - Prasyarat: repo sudah diinisialisasi + remote (`git remote add origin`).

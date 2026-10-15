@@ -576,7 +576,7 @@ git push -u origin master
 exit
 ```
 
-> Script ini hanya backup subfolder `igrow/`, bukan seluruh `HERMES_HOME/` (state internal Hermes tidak perlu di-push). Jangan utak-atik `.git/` manual.
+> Script ini backup subfolder `igrow/` + salinan `AGENTS.md` (jadi `igrow/AGENTS.backup.md`), bukan seluruh `HERMES_HOME/` (state internal Hermes tidak perlu di-push). Jangan utak-atik `.git/` manual.
 
 ---
 
