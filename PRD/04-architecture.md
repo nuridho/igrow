@@ -4,22 +4,37 @@ Dokumen ini menjelaskan bentuk sistem di tingkat produk. Langkah instalasi ada d
 
 ## 1. System Context
 
-```text
-   User (HP) ──Telegram──▶ igrow-hermes ──API──▶ Provider LLM
-                           (Hermes Agent)
-                                │  tulis
-                                ▼
-                hermes-home/igrow/  (markdown = aset utama)
-                   │                      │
-                   │ baca (:ro)           │ git push mingguan
-                   ▼                      ▼
-              igrow-api             GitHub privat (igrow-backup)
-                   │ JSON
-                   ▼
-              igrow-web ◀── browser via NPM (igrow.nuridho.com)
+```mermaid
+flowchart LR
+    user(["User · HP"])
+    browser(["Browser"])
+    tg["Telegram"]
+    llm["Provider LLM"]
+    gh[("GitHub privat<br/>igrow-backup")]
+
+    subgraph vps["VPS · Docker Compose"]
+        npm["Nginx Proxy Manager"]
+        hermes["igrow-hermes<br/>Hermes Agent · gateway · cron"]
+        data[("hermes-home/igrow/<br/>markdown = aset utama")]
+        api["igrow-api"]
+        web["igrow-web"]
+    end
+
+    user <-->|chat| tg
+    tg <-->|"pesan & laporan cron"| hermes
+    hermes <-->|API| llm
+    hermes -->|tulis| data
+    data -->|"git push · Sen/Rab/Sab"| gh
+    data -->|"baca :ro"| api
+    browser -->|igrow.nuridho.com| npm
+    npm --> web
+    npm -->|"/api → JSON"| api
+
+    classDef planned stroke-dasharray: 5 5
+    class api,web planned
 ```
 
-Semua service berjalan di satu VPS memakai Docker Compose, di belakang Nginx Proxy Manager (NPM).
+Semua service berjalan di satu VPS memakai Docker Compose, di belakang Nginx Proxy Manager (NPM). Kotak bergaris putus-putus belum dibangun (Phase 4). `igrow-hermes` sengaja tidak tersambung ke NPM (prinsip 3).
 
 ## 2. Komponen
 
@@ -47,7 +62,7 @@ Semua service berjalan di satu VPS memakai Docker Compose, di belakang Nginx Pro
 
 | Lapisan | File | Kapan dimuat | Isi |
 |---|---|---|---|
-| 1. Aturan inti | `hermes-home/AGENTS.md` | Otomatis, setiap sesi | Struktur folder, aturan penempatan, protokol tulis, larangan data sensitif, daftar prosedur |
+| 1. Aturan inti | `hermes-home/AGENTS.md` | Otomatis di setiap sesi Telegram. Sesi cron hanya kalau job dibuat dengan `--workdir /opt/data` | Struktur folder, aturan penempatan, protokol tulis, larangan data sensitif, daftar prosedur |
 | 2. Aturan format | `igrow/SCHEMA.md` | Sebelum setiap operasi tulis | Frontmatter, body template, taxonomy tag, link, threshold, format skill map |
 | 3. Prosedur per UC | `igrow/project-skills/*.md` | Hanya saat relevan | Langkah detail, fallback, self-check, contoh eksekusi |
 
@@ -63,7 +78,7 @@ hermes-home/                    → /opt/data (HERMES_HOME)
 ├── .env, config.yaml, SOUL.md  milik Hermes (hasil `hermes setup`), tidak di-backup
 ├── (sessions/ memories/ skills/ cron/ ...)   state internal Hermes
 └── igrow/                      ★ aset portable, di-backup ke Git
-    ├── SCHEMA.md · _index.md · log.md
+    ├── SCHEMA.md · _index.md · log.md · AGENTS.backup.md (salinan dari backup.sh)
     ├── raw/            inbox/ → articles/, assets/      (immutable)
     ├── wiki/
     │   ├── careers/career-N-{company}-{role}/
@@ -95,23 +110,53 @@ Detail field dan aturannya ada di [`SCHEMA.md`](../hermes-home/igrow/SCHEMA.md).
 
 ### 6.1 Pesan Telegram → Knowledge
 
-```text
-Pesan user → gateway → sesi Hermes (AGENTS.md otomatis dimuat)
-   → Hermes memilih prosedur project-skills yang relevan
-        ├─ tidak ada yang cocok → jawab langsung, tidak ada file ditulis
-        └─ cocok → baca prosedur → baca SCHEMA → redaksi → tulis note
-              → update _index.md terdekat + master _index.md + log.md
-              → balas ke Telegram
+```mermaid
+flowchart TD
+    A(["Pesan user di Telegram"]) --> B["Gateway → sesi Hermes<br/>AGENTS.md dimuat otomatis"]
+    B --> C{"Cocok dengan prosedur<br/>project-skills?"}
+    C -- Tidak --> D["Jawab langsung<br/>/recall: cari lewat _index.md"]
+    C -- Ya --> E["Baca prosedur UC"]
+    E --> F{"Info cukup?"}
+    F -- Belum --> G["Tanya user"]
+    G -. balasan .-> F
+    F -- Cukup --> H{"Ada file<br/>yang ditulis?"}
+    H -- Ya --> I["Baca SCHEMA.md"]
+    I --> J["Redaksi data sensitif"]
+    J --> K{"Self-check lolos?"}
+    K -- Tidak --> L["Perbaiki"] --> K
+    K -- Ya --> M["Tulis / edit note"]
+    M --> N["Update _index.md terdekat<br/>+ master _index.md + log.md"]
+    N --> Z(["Balas ke Telegram"])
+    H -- Tidak --> Z
+    D --> Z
 ```
+
+Kapan perlu bertanya, isi self-check, dan file apa yang ditulis diatur di masing-masing prosedur `project-skills/`. Diagram ini hanya menunjukkan bentuk alurnya.
 
 `AGENTS.md` bukan pengambil keputusan. File itu hanya konteks yang selalu tersedia, dan keputusan tetap diambil oleh LLM.
 
 ### 6.2 Cron → Laporan
 
-```text
-Scheduler Hermes (di dalam container) → prompt "Baca <prosedur> lalu kerjakan."
-   → Hermes menjalankan prosedur → output dikirim ke Telegram (--deliver telegram)
+```mermaid
+sequenceDiagram
+    participant S as Scheduler Hermes
+    participant H as Sesi Hermes baru
+    participant D as igrow/
+    participant T as Telegram
+    S->>H: prompt "Baca igrow/project-skills/X.md lalu kerjakan."
+    Note over H: AGENTS.md ikut dimuat karena job<br/>dibuat dengan --workdir /opt/data
+    H->>D: baca prosedur + data
+    opt prosedur menulis file
+        H->>D: tulis hasil + _index.md + log.md
+    end
+    alt jawaban berisi [SILENT]
+        Note over H,T: tidak ada pesan terkirim
+    else selain itu
+        H->>T: jawaban akhir (--deliver telegram)
+    end
 ```
+
+Setiap job berjalan di sesi baru tanpa riwayat chat. Tanpa `--workdir /opt/data`, sesi cron **tidak** memuat `AGENTS.md` (dokumentasi resmi Hermes, fitur cron). Jawaban yang berisi `[SILENT]` tidak dikirim. Mekanisme ini yang membuat backup tanpa perubahan bisa diam, tapi runtime belum memakainya ([W22](todo.md)).
 
 | Job | Jadwal (Asia/Kuala_Lumpur) | Prosedur |
 |---|---|---|
@@ -124,11 +169,24 @@ Command pembuatan job ada di [`docs/build.md`](../docs/build.md) § Setup 4 Cron
 
 ### 6.3 Backup & Recovery
 
-```text
-Backup:   cron → backup.sh → salin AGENTS.md → git add -A → commit → push (repo privat)
-Recovery: clone igrow-backup → letakkan sebagai hermes-home/igrow/
-          → salin AGENTS.backup.md menjadi hermes-home/AGENTS.md
-          → compose up igrow-hermes → hermes setup + gateway setup → buat ulang cron
+```mermaid
+flowchart TD
+    subgraph backup["Backup · cron Sen/Rab/Sab 05:00"]
+        b1(["cron backup-knowledge"]) --> b2["backup.sh<br/>salin AGENTS.md → igrow/AGENTS.backup.md"]
+        b2 --> b3{"git add -A<br/>ada perubahan?"}
+        b3 -- Tidak --> b4(["Selesai tanpa pesan"])
+        b3 -- Ya --> b5["commit + push"]
+        b5 --> b6{"Berhasil?"}
+        b6 -- Tidak --> b7(["Error dikirim ke Telegram"])
+    end
+    b6 -- Ya --> gh[("GitHub privat<br/>igrow-backup")]
+    subgraph recovery["Recovery · manual"]
+        r1["Clone igrow-backup<br/>jadi hermes-home/igrow/"] --> r2["Salin AGENTS.backup.md<br/>jadi hermes-home/AGENTS.md"]
+        r2 --> r3["compose up igrow-hermes"]
+        r3 --> r4["hermes setup + gateway setup"]
+        r4 --> r5["Buat ulang 4 cron job"]
+    end
+    gh --> r1
 ```
 
 Yang tidak bisa dipulihkan dari backup: memory dan skill internal Hermes, serta riwayat sesi. Ini sesuai prinsip bahwa sumber kebenaran hanya `igrow/`.

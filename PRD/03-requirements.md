@@ -14,9 +14,9 @@ Status:
 | ID | Requirement | Prioritas | UC | Status |
 |---|---|---|---|---|
 | FR-01 | User berinteraksi dengan iGROW hanya lewat Telegram (Hermes gateway mode). | Must | Semua | ✅ |
-| FR-02 | `AGENTS.md` dimuat otomatis di setiap sesi, termasuk sesi dari Telegram dan cron. | Must | Semua | ✅ Teruji di Phase 2 |
+| FR-02 | `AGENTS.md` dimuat otomatis di setiap sesi, termasuk sesi dari Telegram dan cron. | Must | Semua | ✅ Telegram teruji di Phase 2 · ⏳ Cron: job wajib dibuat dengan `--workdir /opt/data`, karena tanpa itu sesi cron tidak memuat `AGENTS.md` |
 | FR-03 | Hermes memilih prosedur `project-skills/` yang relevan berdasarkan isi pesan. Pesan umum dijawab langsung tanpa menulis file. | Must | Semua | ✅ |
-| FR-04 | Hermes membaca `SCHEMA.md` sebelum setiap operasi tulis. | Must | UC1, UC2, UC4, UC5 | ✅ |
+| FR-04 | Hermes membaca `SCHEMA.md` sebelum setiap operasi tulis. | Must | Semua tulis | ✅ |
 
 ### 1.2 Penulisan Knowledge
 
@@ -49,7 +49,7 @@ Status:
 |---|---|---|---|---|
 | FR-20 | Daily briefing setiap hari 07:00, maksimal 5 item dengan alasan relevansi. Item CVE menyertakan teknologi terdampak dan severity. | Should | UC3 | ⏳ Cron belum dibuat |
 | FR-21 | Lint struktur wiki setiap minggu, hanya melapor. | Should | M1 | ⏳ Cron belum dibuat |
-| FR-22 | Backup `igrow/` + salinan `AGENTS.md` ke repo GitHub privat setiap Senin, Rabu, dan Sabtu 05:00. Diam kalau tidak ada perubahan, lapor kalau gagal. | Must | M2 | ⏳ Cron + prasyarat repo |
+| FR-22 | Backup `igrow/` + salinan `AGENTS.md` ke repo GitHub privat setiap Senin, Rabu, dan Sabtu 05:00. Diam kalau tidak ada perubahan, lapor kalau gagal. | Must | M2 | ⏳ Cron + prasyarat repo · ⚠ "Diam" butuh jawaban `[SILENT]` ([W22](todo.md)) |
 | FR-23 | Semua output cron dikirim ke Telegram (`--deliver telegram`). | Must | UC3, UC5, M1, M2 | ⏳ |
 
 ### 1.5 Fitur Mendatang
@@ -76,7 +76,7 @@ Status:
 | NFR-08 | **Auditability** | Setiap operasi tulis tercatat di `log.md` (append-only) dengan format `## [YYYY-MM-DD] op \| subjek`. |
 | NFR-09 | **Maintainability** | Setiap aturan hanya punya satu sumber. `hermes-home/` adalah source of truth. Line ending dikunci ke LF (`.gitattributes`) supaya script tidak rusak di VPS. |
 | NFR-10 | **Waktu** | Container dan cron memakai `TZ=Asia/Kuala_Lumpur`. |
-| NFR-11 | **Keterbacaan jangka panjang** | Setiap note wajib punya Ringkasan, sumber, dan konteks career, sehingga bisa dipahami bertahun-tahun kemudian tanpa konteks tambahan. |
+| NFR-11 | **Keterbacaan jangka panjang** | Setiap note wajib punya Ringkasan, sumber, dan konteks asal (career atau sumber belajar), sehingga bisa dipahami bertahun-tahun kemudian tanpa konteks tambahan. |
 
 ## 3. Kebijakan Data
 
@@ -100,13 +100,23 @@ Berlaku untuk seluruh `igrow/`, termasuk `raw/`. Redaksi wajib dilakukan **sebel
 |---|---|
 | `client ABC server PROD-DB-07 (10.x.x.x) mengalami...` | `production server mengalami high CPU` |
 
+⚠ Daftar larangan di runtime (`AGENTS.md`, `SCHEMA.md`) belum memuat serial number, raw log client, dan konfigurasi proprietary ([W25](todo.md)).
+
 ### 3.2 Alur Screenshot
 
-```text
-Screenshot → crop / redaksi identifier → kirim ke Hermes → analisis → knowledge
+```mermaid
+flowchart LR
+    subgraph hp["Di HP (user)"]
+        A(["Screenshot"]) --> B["Crop / redaksi<br/>identifier"]
+    end
+    subgraph agent["Hermes"]
+        C["Analisis"] --> D[("igrow/raw/assets/<br/>YYYYMMDD-deskripsi.png")]
+        C --> E["Note di wiki/<br/>merujuk ke gambar"]
+    end
+    B -->|kirim lewat Telegram| C
 ```
 
-Screenshot yang sudah diredaksi disimpan di `raw/assets/YYYYMMDD-deskripsi.png`.
+Redaksi dilakukan di HP sebelum dikirim, karena gambar ikut terkirim ke provider LLM (§3.3). Cara note merujuk ke gambar diatur di `capture-experience.md`.
 
 ### 3.3 Data yang Keluar dari VPS
 
@@ -116,7 +126,7 @@ Screenshot yang sudah diredaksi disimpan di `raw/assets/YYYYMMDD-deskripsi.png`.
 | GitHub (repo privat `igrow-backup`) | Seluruh `igrow/` + `AGENTS.backup.md` | Token GitHub sebaiknya hanya punya scope ke repo itu. |
 | Telegram | Balasan agent, output cron | — |
 
-Yang **tidak pernah** keluar: `.env` (token Telegram, API key LLM), `config.yaml`, serta state internal Hermes (sessions, memories, skills, `state.db`).
+Yang **tidak** ikut di-backup ke GitHub: `.env` (token Telegram, API key LLM), `config.yaml`, dan state internal Hermes (sessions, memories, skills, `state.db`). Tapi isi memory dimasukkan ke system prompt setiap sesi dan riwayat sesi menjadi konteks percakapan, jadi keduanya tetap terkirim ke provider LLM.
 
 ### 3.4 Kepemilikan File
 
@@ -126,4 +136,4 @@ Yang **tidak pernah** keluar: `.env` (token Telegram, API key LLM), `config.yaml
 | `skill-map.md` | Agent (auto-generate, beku per level) | User boleh mengedit, tapi tidak wajib. Generate ulang hanya saat naik level atau ganti role. |
 | `raw/*` | Immutable | Tidak diedit setelah masuk. |
 | `wiki/*`, `output/*` | Agent | User jarang mengedit langsung. |
-| `AGENTS.md`, `SCHEMA.md`, `project-skills/*` | User (via repo ini) | Dideploy dari `hermes-home/` di repo ini. |
+| `AGENTS.md`, `SCHEMA.md`, `project-skills/*` | User (via repo ini) | Dideploy dari `hermes-home/` di repo ini. ⚠ Agent boleh menambah tag ke taxonomy `SCHEMA.md` di VPS (kalau user setuju), dan deploy berikutnya menimpanya ([W26](todo.md)). |

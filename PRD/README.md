@@ -4,9 +4,9 @@
 |---|---|
 | **Produk** | iGROW: Personal Career & Knowledge OS untuk IT worker |
 | **Owner** | Nuridho (Product Owner, sekaligus satu-satunya user) |
-| **Versi PRD** | 1.2 |
+| **Versi PRD** | 1.3 |
 | **Status produk** | Phase 1 selesai · Phase 2 berjalan (runtime jalan, automation belum aktif) |
-| **Terakhir diperbarui** | 2026-10-16 |
+| **Terakhir diperbarui** | 2026-10-17 |
 
 ## Ringkasan Eksekutif
 
@@ -56,7 +56,7 @@ Blueprint awal (`iGROW_FINAL.md`) sudah diarsipkan di `archive/`. Seluruh isinya
 | **`AGENTS.md`** | Aturan inti yang otomatis dimuat Hermes di setiap sesi. |
 | **Project skill** | File markdown prosedur per use case di `igrow/project-skills/`. Dibaca Hermes saat relevan. Bukan sistem Skill resmi Hermes. |
 | **`SCHEMA.md`** | Aturan format wiki: frontmatter, taxonomy tag, link, dan threshold. |
-| **UC** | Use case (UC1–UC5). |
+| **UC** | Use case (UC1–UC5, plus UC1b Daftar Kerjaan Baru). M1/M2 adalah job maintenance (lint, backup), bukan UC. |
 | **Career aktif** | Folder `wiki/careers/career-N-*` yang `about.md`-nya belum punya tanggal selesai. |
 | **`raw/`** | Sumber mentah yang immutable (artikel, screenshot yang sudah diredaksi). |
 | **`wiki/`** | Konten hasil kompilasi agent. |
@@ -73,3 +73,4 @@ Blueprint awal (`iGROW_FINAL.md`) sudah diarsipkan di `archive/`. Seluruh isinya
 | 1.0 | 2026-10-16 | Versi pertama. Disusun dari `docs/iGROW_FINAL.md`, `docs/build.md`, `docs/vpslab.md`, dev-todo, dan isi `hermes-home/`. |
 | 1.1 | 2026-10-16 | `docs/dev-todo.md` dipindah menjadi `todo.md`, ditambah `backlog.md` (riwayat update) dan `CLAUDE.md` di root. |
 | 1.2 | 2026-10-16 | Sisa isi `iGROW_FINAL.md` dipindah ke PRD: contoh output per UC, mekanisme gap, aturan skill inventory, dan skenario migrasi. FIN diarsipkan. |
+| 1.3 | 2026-10-17 | Diagram Mermaid (sistem, alur pesan, cron, backup & recovery, aliran antar-UC, gap analysis, screenshot). Review menyeluruh: status cron dikoreksi (butuh `--workdir`), contoh skill map dan laporan UC5 diselaraskan dengan SCHEMA, temuan runtime dicatat sebagai W22–W26 dan I8. |

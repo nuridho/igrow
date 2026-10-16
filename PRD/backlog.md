@@ -18,6 +18,18 @@ Format entri:
 
 ---
 
+## [2026-10-17] Review menyeluruh PRD + diagram opsional
+- **Apa:** (1) Diagram Mermaid untuk § 6.2 Cron (sequence) dan § 6.3 Backup & Recovery di architecture, gap analysis di use cases, dan alur screenshot di requirements. (2) Review PRD terhadap `hermes-home/` dan dokumentasi resmi Hermes. Yang diperbaiki di PRD: FR-02 (sesi cron hanya memuat `AGENTS.md` kalau job dibuat dengan `--workdir /opt/data`), § 3.3 (memory dan riwayat sesi tetap terkirim ke provider LLM), urutan alur UC1 (self-check sebelum tulis), ambang UC2 (< 3 note, bukan "kosong"), sumber bukti gap (`lessons-learned/`, bukan `skills.md`), isi laporan UC5 (+ Pola), contoh `skill-map.md` disesuaikan dengan format SCHEMA (+ `## Role Fit`), contoh laporan UC5 (Weak/Recommended konsisten dengan skill map, + Pola dan Role Fit Trend baseline), metrik backup mingguan → Sen/Rab/Sab, item test-flow di roadmap dilengkapi, versi PRD 1.3. AC yang ternyata belum didukung runtime diberi ⚠ dan dicatat sebagai todo W22–W26 + I8. (3) Command cron di `build.md` + fakta teknis cron di `CLAUDE.md` ditambah `--workdir /opt/data` dan `[SILENT]`.
+- **Kenapa:** permintaan owner (diagram opsional + review ulang PRD). Fakta cron dicek ke dokumentasi resmi (hermes-agent.nousresearch.com, fitur cron dan memory).
+- **File:** `PRD/README.md`, `PRD/01`–`05`, `PRD/todo.md`, `PRD/backlog.md`, `docs/build.md`, `CLAUDE.md`
+- **Deploy VPS:** tidak (belum ada perubahan `hermes-home/`). Saat membuat cron nanti, pakai command baru di `build.md` (dengan `--workdir /opt/data`). Kalau ada job yang terlanjur dibuat tanpa flag itu, hapus lalu buat ulang.
+
+## [2026-10-17] Diagram Mermaid di architecture & use cases
+- **Apa:** diagram ASCII diganti Mermaid. Architecture: § 1 System Context jadi diagram sistem (komponen + aliran data, komponen Phase 4 bergaris putus-putus), § 6.1 jadi flowchart penanganan pesan. Use cases: "Bagaimana UC Saling Memberi Makan" jadi diagram aliran data antar-UC (trigger tiap UC, folder yang ditulis/dibaca, peran `wiki/roadmap/`). Sisa label basi soal backup mingguan dikoreksi: "git push mingguan" jadi Sen/Rab/Sab, judul "M2 · Backup Mingguan" jadi "M2 · Backup" (D-23).
+- **Kenapa:** permintaan owner: flowchart dan diagram alur sistem di architecture, lalu diagram use case.
+- **File:** `PRD/04-architecture.md`, `PRD/02-use-cases.md`
+- **Deploy VPS:** tidak
+
 ## [2026-10-16] Todo dinomori ulang
 - **Apa:** kode item di `todo.md` dinomori ulang berurutan dari atas per huruf (C1–C8, W1–W21, I1–I7; A1–A9 tetap). Semua rujukan di PRD dan backlog ikut diganti. Pemetaan lama → baru: C14→C1 · C17→C2 · C18→C3 · C19→C4 · W37→W1 · W38→W2 · C21→C5 · W44→W3 · W46→W4 · I26→I1 · I27→I2 · W47→W5 · W48→W6 · W49→W7 · W50→W8 · W51→W9 · C1→C6 · C2→C7 · C3→C8 · W1→W10 · W2→W11 · W5→W12 · W7→W13 · W8→W14 · W14→W15 · W15→W16 · W16→W17 · W20→W18 · W21→W19 · W30→W20 · W35→W21 · I3→I3 · I5→I4 · I9→I5 · I21→I6 · I17→I7.
 - **Kenapa:** todo sekarang khusus `hermes-home/`; nomor lama bolong-bolong setelah 42 item dihapus.

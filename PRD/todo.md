@@ -1,13 +1,14 @@
 # To-Do — iGROW (hermes-home)
 
 > Fokus: hanya item yang menyentuh `hermes-home/` (AGENTS.md, SCHEMA, project-skills, struktur `igrow/`). Item VPS, docs, testing, web, dan migrasi dihapus 2026-10-16; jejaknya ada di git history dan `05-roadmap.md`.
-> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W22 / I8 / A10.
+> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W27 / I9 / A10.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres. Item `[x]` Act-nya lampau, Impact-nya sudah berlaku.
 > Isi list = bug + kontradiksi di runtime. Kosmetik sengaja tidak dicatat. `FIN` di item lama = `archive/iGROW_FINAL.md`.
 > Item selesai → centang di sini + catat di [`backlog.md`](backlog.md).
 
 ## Terbuka
 
+- **W22–W26, I8**: temuan review PRD 2026-10-17. Kerjakan sebelum deploy ulang. Detail di § Review PRD.
 - **A7, A8, A9** (Advanced Prompting Tier 3): diparkir, kerjakan hanya kalau Tier 1–2 terbukti kurang. Detail di bawah.
 
 ## Audit runtime (2026-10-10)
@@ -78,6 +79,29 @@
 - [x] **W9** Audit `hermes-home/` 2026-10-16: isi out of context / tidak perlu
   - Act: SCHEMA → wajib, bukan advisory (keputusan owner, D-25); baris kepemilikan duplikat `|-` dirapikan jadi section "Career aktif & kepemilikan"; `type: profile` (tidak dipakai) dibuang dari enum; `contradictions` ditegaskan hanya untuk slug note. capture-experience → skip tag tidak lagi menyalahgunakan `contradictions: ['taxonomy-mismatch']`; self-check jadi step bernomor. mentor → label tabel Known/Weak/Belum (dulu kolom "Experience" tapi isinya "belum tersentuh"); prasyarat dobel digabung; contoh role fit dibetulkan (CI/CD dihitung punya di SRE tapi kurang di DevOps, tanpa X/Y, 3 role padahal aturan 2+2). lint → tidak lagi melaporkan `about.md`/data file. AGENTS → `roadmap/` tanpa `roadmap.md` (gugur karena FIN diarsipkan). `project-skills/.gitkeep` dihapus (folder sudah berisi file). study → aturan satu note per sub-topik (D-20) masuk runtime.
   - Impact: `hermes-home/` hanya berisi aturan yang konsisten dan dipakai; tidak ada contoh yang mengajarkan pelanggaran.
+
+## Review PRD (2026-10-17)
+
+> Celah runtime yang ketemu saat mencocokkan PRD dengan `hermes-home/` dan dokumentasi resmi Hermes (fitur cron).
+
+- [ ] **W22** `maintenance/backup.md` step 3 "jangan kirim pesan" tidak punya mekanisme. Cron Hermes selalu mengirim jawaban akhir agent, kecuali jawaban yang berisi `[SILENT]`; jawaban kosong malah dicatat sebagai gagal kirim.
+  - Act: step 3 → "Exit 0 + output 'no changes' → balas persis `[SILENT]`."
+  - Impact: backup tanpa perubahan benar-benar diam (M2, FR-22); Telegram hanya menerima error atau hasil push.
+- [ ] **W23** Penanda `(placeholder)` untuk wikilink ke note yang belum ada cuma dikenal `lint.md`. SCHEMA, `capture-experience.md`, dan `study.md` mewajibkan min 2 link, tapi tidak mengajarkan cara mencatat placeholder (contoh few-shot capture sendiri menaut ke `backup-scheduling` dan `cpu-spike-triage` yang belum ada).
+  - Act: SCHEMA § Link + 1 baris: "Link ke note yang belum ada → catat slug-nya di `_index.md` terdekat dengan tanda `(placeholder)`." `lint.md` cek 5 (entri index tanpa file) ikut melewati entri bertanda `(placeholder)`.
+  - Impact: lint mingguan hanya melaporkan link yang benar-benar rusak, sehingga laporan "wiki sehat" (metrik 01 §7) bisa tercapai.
+- [ ] **W24** `career-review.md` step 7 cuma memperbarui `output/_index.md`, padahal step 6 menulis `wiki/profile/` (dan step 1 bisa membuat `wiki/roadmap/skill-map.md`). File itu tidak tercatat di `wiki/_index.md`, sehingga lint melaporkannya sebagai orphan.
+  - Act: step 7 → "update `output/_index.md` + `wiki/_index.md` (file `profile/`/`roadmap/` yang ditulis) + master + log.md (op: review)".
+  - Impact: semua file hasil UC5 tercatat di index terdekat sesuai protokol tulis; tidak ada orphan palsu.
+- [ ] **W25** Aturan ganda di `AGENTS.md` dan `SCHEMA.md` mulai beda: protokol tulis (hanya AGENTS yang menyebut "Total pages" + "Last updated") dan daftar DILARANG KERAS (dua salinan). Kedua daftar larangan juga lebih sempit dari kebijakan data PRD 03 §3.1: belum ada serial number, raw log client, dan konfigurasi proprietary.
+  - Act: daftar larangan lengkap hanya di `AGENTS.md` (selalu dimuat), SCHEMA § DILARANG KERAS → 1 baris rujuk. Protokol tulis lengkap hanya di SCHEMA § "Tiap operasi tulis WAJIB diakhiri" (prosedur UC sudah merujuk ke sana), `AGENTS.md` → 1 baris rujuk.
+  - Impact: satu aturan satu sumber di runtime; agent menyaring semua jenis data yang dilarang kebijakan; `AGENTS.md` lebih padat.
+- [ ] **W26** Tag baru yang ditambah agent ke taxonomy `SCHEMA.md` di VPS (diizinkan `capture-experience.md` step 3 dan SCHEMA § Tag taxonomy, kalau user setuju) tertimpa saat deploy, karena `rsync` hanya meng-exclude `_index.md` dan `log.md`. Note yang memakai tag itu lalu dilaporkan lint sebagai tag di luar taxonomy.
+  - Act: pilih satu: (a) agent tidak mengedit `SCHEMA.md`; tag yang disetujui dicatat di `log.md` (op `update`), lalu owner menambahkannya ke `hermes-home/igrow/SCHEMA.md` di repo sebelum deploy; atau (b) tetap boleh, dan runbook deploy wajib menarik `SCHEMA.md` dari VPS lalu merge ke repo dulu.
+  - Impact: taxonomy di VPS dan repo tidak saling menimpa; kepemilikan `SCHEMA.md` di PRD 03 §3.4 sesuai dengan runtime.
+- [ ] **I8** `/recall` di `AGENTS.md` § Perintah tidak meminta agent menyebut page sumber jawabannya, padahal AC `/recall` di PRD 02 mengharapkannya.
+  - Act: "ketemu → baca page & jawab" → "ketemu → baca page & jawab + sebut page-nya".
+  - Impact: jawaban recall bisa ditelusuri ke file (persona "diri sendiri, 3 tahun lagi").
 
 ## Critical
 

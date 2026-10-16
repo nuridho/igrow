@@ -5,6 +5,7 @@ Legenda status pada acceptance criteria (AC):
 - ✅ Sudah tertulis di prosedur runtime (`hermes-home/`)
 - ⚠ Gap yang sudah diketahui, sudah ada kode backlog atau pertanyaan terbuka
 - ⏳ Belum aktif di VPS
+- ℹ Catatan, bukan kriteria uji
 
 ## Ringkasan
 
@@ -13,7 +14,7 @@ Legenda status pada acceptance criteria (AC):
 | UC1 | Capture Experience | User bercerita pengalaman kerja | Note incident, knowledge, atau lesson di folder career aktif | [`capture-experience.md`](../hermes-home/igrow/project-skills/capture-experience.md) |
 | UC1b | Daftar Kerjaan Baru | "pindah kerja" / "daftar kerjaan baru" | Folder `career-N` baru, career lama ditutup | `capture-experience.md` § Daftar Kerjaan Baru |
 | UC2 | Mentor | Pertanyaan roadmap, kelemahan, atau role fit | Analisis gap + rekomendasi personal | [`mentor.md`](../hermes-home/igrow/project-skills/mentor.md) |
-| UC3 | Daily Briefing | Cron setiap hari 07:00 | Ringkasan 5 berita di Telegram | [`daily-briefing.md`](../hermes-home/igrow/project-skills/daily-briefing.md) |
+| UC3 | Daily Briefing | Cron setiap hari 07:00 | Ringkasan maks. 5 berita di Telegram | [`daily-briefing.md`](../hermes-home/igrow/project-skills/daily-briefing.md) |
 | UC4 | Study | `/study` atau cerita selesai belajar | Learning note di `self-development/` | [`study.md`](../hermes-home/igrow/project-skills/study.md) |
 | UC5 | Career Review | Cron kuartalan atau permintaan manual | Laporan kuartal + skill inventory | [`career-review.md`](../hermes-home/igrow/project-skills/career-review.md) |
 | — | `/recall` | `/recall <pertanyaan>` | Jawaban dari wiki, atau "belum ada catatan" | [`AGENTS.md`](../hermes-home/AGENTS.md) § Perintah |
@@ -22,23 +23,23 @@ Legenda status pada acceptance criteria (AC):
 
 ## Bagaimana UC Saling Memberi Makan
 
-```text
-           Capture (UC1)                Study (UC4)
-                │                           │
-                ▼                           ▼
-       wiki/careers/career-N/      wiki/self-development/
-                └─────────────┬─────────────┘
-                              ▼
-                       Knowledge Base
-                              │
-         ┌────────────────────┼────────────────────┐
-         ▼                    ▼                    ▼
-    Mentor (UC2)       /recall (tanya)      Career Review (UC5)
-  gap & role fit                            skill inventory + trend
-
-   Daily Briefing (UC3) berdiri sendiri: hanya menulis ke wiki
-   kalau ada berita yang layak dijadikan page.
+```mermaid
+flowchart TD
+    uc1["UC1 Capture · UC1b Daftar Kerjaan<br/>chat"] -->|tulis| careers[("wiki/careers/career-N/")]
+    uc4["UC4 Study<br/>/study"] -->|tulis| selfdev[("wiki/self-development/")]
+    uc3["UC3 Daily Briefing<br/>cron 07:00"] -. "hanya kalau layak jadi page" .-> kb
+    careers --> kb{{"Knowledge Base"}}
+    selfdev --> kb
+    kb --> uc2["UC2 Mentor<br/>gap & role fit"]
+    kb --> recall["/recall<br/>tanya"]
+    kb --> uc5["UC5 Career Review<br/>cron kuartal / manual"]
+    roadmap[("wiki/roadmap/<br/>skill-map · weak-topics")] -->|target| uc2
+    roadmap -->|target| uc5
+    uc2 -. "weak-topics" .-> roadmap
+    uc5 -->|"laporan + skill inventory"| out[("output/ · wiki/profile/")]
 ```
+
+Daily Briefing (UC3) berdiri sendiri: tidak membaca knowledge base, dan hanya menulis ke wiki kalau ada berita yang layak dijadikan page. Skill map di-generate oleh UC2 atau UC5 kalau belum ada, lalu beku per level.
 
 Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 sebagai pengalaman yang sudah dimiliki, dan dihitung UC5 di review kuartal.
 
@@ -56,8 +57,8 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 1. Hermes menentukan career aktif dan menyebutkannya di balasan.
 2. Hermes mengklasifikasi cerita menjadi incident, knowledge, atau lesson, dan menuliskan satu baris alasannya.
 3. Data sensitif diredaksi.
-4. Note ditulis sesuai `SCHEMA.md`, termasuk pencocokan tag ke taxonomy.
-5. Self-check sebelum file ditulis.
+4. Note disusun sesuai `SCHEMA.md`, termasuk pencocokan tag ke taxonomy.
+5. Self-check, lalu file ditulis.
 6. Index dan log diperbarui.
 
 **Lokasi output:**
@@ -154,7 +155,7 @@ Hermes: "Karena kamu sudah pernah mengalami timeout dan packet loss,
 ```
 
 **Acceptance criteria:**
-- ✅ Kalau `careers/` kosong: jawab "Data karier belum cukup untuk gap analysis (minimal 3 incident/knowledge)" dan tidak mengarang roadmap generik.
+- ✅ Kalau note di `careers/` kurang dari 3: jawab "Data karier belum cukup untuk gap analysis (minimal 3 incident/knowledge)" dan tidak mengarang roadmap generik.
 - ✅ Kalau skill map belum ada: generate dulu, jangan menolak menjawab.
 - ✅ Setiap baris skill menyebut bukti konkret (nama note atau incident beserta tanggal, atau "0 note").
 - ✅ Persentase role fit menampilkan pembilang dan penyebut ("6/8 topik", bukan hanya "75%").
@@ -167,17 +168,18 @@ Gap bukan tebakan insting Hermes. Gap adalah hasil perbandingan dua sumber data:
 
 | Sumber | Lokasi | Menjawab |
 |---|---|---|
-| Knowledge yang sudah terdokumentasi | `wiki/careers/*/knowledge/` (termasuk `incidents/`), `wiki/careers/*/skills.md`, `wiki/self-development/` | "Apa yang sudah saya punya?" |
+| Knowledge yang sudah terdokumentasi | `wiki/careers/*/knowledge/` (termasuk `incidents/`), `wiki/careers/*/lessons-learned/`, `wiki/self-development/` | "Apa yang sudah saya punya?" |
 | Target skill | `wiki/roadmap/skill-map.md` (level berikutnya) | "Apa yang *seharusnya* saya kuasai?" |
 
-```text
-skill-map.md (target level berikutnya)
-        │  dibandingkan dengan
-        ▼
-careers/*/knowledge/ + careers/*/skills.md + self-development/
-        │
-        ▼
-Topik target tanpa note, atau hanya disebut sekali = knowledge gap
+```mermaid
+flowchart LR
+    target[("skill-map.md<br/>target level berikutnya")] --> cek{"Cek tiap<br/>topik target"}
+    notes[("Note di careers/<br/>dan self-development/")] --> cek
+    cek --> known["Known<br/>punya note sendiri"]
+    cek --> weak["Weak<br/>cuma disinggung di note lain"]
+    cek --> belum["Belum<br/>tidak muncul sama sekali"]
+    weak --> gap(["Knowledge gap"])
+    belum --> gap
 ```
 
 **Contoh konkret:** `career-1/knowledge/` penuh catatan Linux dan monitoring, tapi tidak ada satu pun note tentang automation, baik di `careers/` maupun `self-development/`. Output yang diharapkan:
@@ -225,7 +227,7 @@ Prinsip: lebih baik **5 informasi penting + alasan kenapa perlu peduli** daripad
 
 **Acceptance criteria:**
 - ⏳ Briefing tiba di Telegram sekitar pukul 07:00 setiap hari (cron belum dibuat di VPS).
-- ✅ Maksimal 5 item. Setiap item punya topik, isi berita, dan "Why it matters".
+- ✅ Maksimal 5 item. Setiap item punya topik, isi berita, dan alasan kenapa penting (item Career: skill yang relevan).
 - ✅ Sebelum format akhir, Hermes menulis satu baris alasan pemilihan per item.
 - ✅ Secara default tidak ada yang ditulis ke `wiki/`. Hanya berita yang layak dijadikan page yang di-ingest (dengan aturan index dan log).
 - ⚠ Sumber berita berasal dari web research bebas, sehingga kualitasnya bergantung pada tool search Hermes (lihat [OQ-07](06-risks-decisions.md#3-pertanyaan-terbuka)).
@@ -240,7 +242,7 @@ Prinsip: lebih baik **5 informasi penting + alasan kenapa perlu peduli** daripad
 **Variasi perintah:**
 - `/study baru selesai materi X di KodeKloud: ...` → note terstruktur.
 - `/study bandingkan A dengan B` → page komparasi di folder sumber yang relevan.
-- `/study baru belajar networking Kubernetes, ringkasin buat level saya` → ringkasan disesuaikan dengan level user (dari `about.md` dan skill map).
+- `/study baru belajar networking Kubernetes, ringkasin buat level saya` → ringkasan disesuaikan dengan level user (dari `Role` di `about.md` career aktif).
 
 **Contoh:**
 
@@ -274,9 +276,10 @@ Satu folder per sumber belajar, berisi satu atau lebih note per sub-topik. Setia
 - **Learned:** skill baru yang terdokumentasi kuartal ini.
 - **Experienced:** incident dan pengalaman kerja.
 - **Improved:** topik yang note-nya makin dalam.
-- **Weak:** topik target di skill map yang belum tersentuh.
+- **Weak:** topik target di skill map yang berstatus Weak atau Belum.
+- **Pola:** tag yang paling sering muncul, topik yang stagnan, dan kesalahan yang berulang.
 - **Skill Inventory:** persentase per area (topik target yang punya note ÷ total topik target), disertai insight singkat.
-- **Role Fit Trend:** perbandingan kecocokan role dengan periode sebelumnya.
+- **Role Fit Trend:** perbandingan kecocokan role dengan kuartal sebelumnya.
 
 **Pertanyaan yang harus bisa dijawab dari laporan ini:**
 - "Apakah skill saya benar-benar berkembang?"
@@ -286,6 +289,8 @@ Satu folder per sumber belajar, berisi satu atau lebih note per sub-topik. Setia
 - "Apa yang harus saya pelajari untuk L2?"
 
 ### Aturan Skill Inventory
+
+Bagian ini menjelaskan maksud aturannya. Aturan yang dijalankan runtime ada di [`SCHEMA.md`](../hermes-home/igrow/SCHEMA.md) § skill-map.md format.
 
 - **Rumus:** % per area = topik target yang sudah punya note ÷ total topik target di area itu. Angka berasal dari menghitung file, bukan penilaian LLM.
 - **Target selalu satu level di atas posisi sekarang.** Posisi L1 diukur terhadap target L2, dan posisi L2 diukur terhadap target L3.
@@ -302,9 +307,9 @@ type: data
 updated: 2026-08-22
 ---
 
-# Skill Map: Infra Engineer
+# Skill Map — Infra Engineer L1
 
-## Target L2 (dipakai sebagai 100% kalau posisi sekarang L1)
+## Target L2
 - Linux: performance tuning, kernel basics, systemd advanced
 - Monitoring: alert correlation, dashboard design
 - Networking: routing, VLAN, packet analysis
@@ -312,7 +317,13 @@ updated: 2026-08-22
 - Docker: image building, networking container
 - Incident Handling: RCA mandiri
 - Troubleshooting: multi-layer (app + infra) diagnosis
+
+## Role Fit
+- SRE: alert correlation, RCA mandiri, scripting Bash lanjutan, terraform
+- DevOps: Ansible dasar, scripting Bash lanjutan, image building, CI/CD, terraform
 ```
+
+Posisi sekarang L1 (dari `Role` di `about.md`), jadi `## Target L2` yang dipakai sebagai 100%. Persentase Role Fit tidak disimpan di file ini, tapi dihitung saat dipakai.
 
 **Contoh laporan** (angka konsisten dengan skill map di atas):
 
@@ -321,8 +332,11 @@ CAREER REVIEW: Q1 2026
 
 Learned       ✓ Linux performance   ✓ systemd   ✓ DNS troubleshooting
 Experienced   ✓ High CPU incident   ✓ Service failure   ✓ Network timeout
-Improved      ↑ Troubleshooting   ↑ Monitoring   ↑ Incident analysis
-Weak          ⚠ Automation   ⚠ Infrastructure as Code   ⚠ Advanced networking
+Improved      ↑ Monitoring   ↑ Incident handling
+Weak          ⚠ Kernel basics   ⚠ Routing   ⚠ VLAN   ⚠ Ansible
+              ⚠ Networking container   ⚠ Multi-layer diagnosis
+Pola          Tag terbanyak: linux (9), monitoring (6), performance (4)
+              Stagnan: docker · Kesalahan berulang: 2 lesson bertag storage
 
 Skill Inventory: target L2 (posisi saat ini L1)
 Linux              ███████░░░   67%  (2/3)
@@ -342,7 +356,9 @@ Networking 33%
   tapi belum ada note khusus yang membahas konsepnya.
   Rekomendasi: tulis note routing dari 2 incident itu.
 
-Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
+Role Fit Trend: baseline, belum ada pembanding
+
+Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-layer diagnosis
 ```
 
 **Acceptance criteria:**
@@ -350,7 +366,7 @@ Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
 - ✅ Laporan ditulis ke `output/career-review-<YYYY>-Q<n>.md`.
 - ✅ Setiap persentase menampilkan pembilang dan penyebut ("Linux = 4/5 topik = 80%").
 - ✅ `wiki/profile/skills.md` dan `wiki/profile/career-summary.md` diperbarui.
-- ✅ Index output dan log diperbarui (op `review`).
+- ⚠ Index `output/`, index `wiki/` (untuk file `profile/`), master index, dan log diperbarui (op `review`). Runtime baru memperbarui index `output/` ([W24](todo.md)).
 - ✅ Data yang sama menghasilkan angka yang sama: skill map beku per level, dan aturan pencocokan topik ↔ note tertulis di SCHEMA dengan file bukti per topik.
 - ✅ Role Fit Trend dibandingkan dengan laporan `output/` kuartal sebelumnya. Run pertama ditulis "baseline"; kalau level berubah, tidak dibandingkan.
 - ✅ `SCHEMA.md` dan `career-review.md` memakai definisi skill inventory yang sama.
@@ -363,7 +379,7 @@ Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
 
 **Acceptance criteria:**
 - ✅ Hermes membaca `igrow/_index.md` terlebih dahulu sebelum memindai folder.
-- ✅ Kalau ketemu: baca page terkait dan jawab dengan menyebut sumbernya.
+- ⚠ Kalau ketemu: baca page terkait dan jawab dengan menyebut sumbernya. Runtime belum mewajibkan menyebut sumber ([I8](todo.md)).
 - ✅ Kalau tidak ketemu: jawab jujur "belum ada catatan", lalu tawarkan riset atau menulis note baru.
 
 ---
@@ -377,12 +393,13 @@ Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
 **Acceptance criteria:**
 - ⏳ Cron belum dibuat di VPS.
 - ✅ Ada lima pemeriksaan: page orphan, wikilink rusak (kecuali yang ditandai placeholder), frontmatter tidak lengkap, tag di luar taxonomy, dan entri index yang file-nya sudah tidak ada.
+- ⚠ Penanda `(placeholder)` baru dikenal lint. Prosedur penulis (UC1, UC4) belum mengajarkan cara mencatatnya, jadi link ke note yang belum ditulis akan selalu dilaporkan rusak ([W23](todo.md)).
 - ✅ Hanya melapor. Tidak ada file note yang diubah.
 - ✅ `about.md`, `careers/*/skills.md`, dan data file tidak dilaporkan, karena frontmatter-nya memang berbeda dari note naratif.
 - ✅ Wiki kosong dilaporkan sebagai "wiki kosong", bukan error. Index yang hilang dilaporkan sebagai temuan tersendiri.
 - ✅ Ringkasan ditambahkan ke `log.md` (op `lint`) dan dikirim ke Telegram. Kalau semua bersih, cukup "wiki sehat".
 
-## M2 · Backup Mingguan
+## M2 · Backup
 
 **Tujuan:** knowledge tidak hilang meskipun VPS, Hermes, atau provider bermasalah.
 
@@ -391,6 +408,6 @@ Recommended Next: 1. Bash scripting  2. Ansible  3. Terraform
 **Acceptance criteria:**
 - ⏳ Cron dan prasyarat repo (`git init`, remote, token) belum terkonfirmasi di VPS.
 - ✅ `backup.sh` menyalin `/opt/data/AGENTS.md` ke `igrow/AGENTS.backup.md`, lalu menjalankan `git add -A`, commit, dan push seluruh `igrow/`.
-- ✅ Kalau tidak ada perubahan, tidak ada pesan yang dikirim.
+- ⚠ Kalau tidak ada perubahan, tidak ada pesan yang dikirim. Hermes hanya menahan jawaban cron yang berisi `[SILENT]`, dan `backup.md` belum memakainya ([W22](todo.md)).
 - ✅ Kalau gagal (exit non-zero), error dikirim ke Telegram.
 - ✅ Yang di-backup hanya `igrow/` + salinan `AGENTS.md`. State internal Hermes (`.env`, memory, sessions) tidak ikut.

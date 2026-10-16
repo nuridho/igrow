@@ -26,7 +26,7 @@ Setelah beberapa tahun dipakai, user bisa menjawab:
 | Progress | "Ini perkembangan saya dari waktu ke waktu." |
 | Learning roadmap | "Ini yang harus saya pelajari selanjutnya." |
 | Career archive | "Ini perjalanan saya sebagai Infra Engineer." |
-| Offline archive | Semua tersimpan sebagai markdown biasa, tetap bisa dibaca walau berhenti memakai Hermes. Laporan career review bisa diekspor ke PDF kalau perlu (FR-25). |
+| Offline archive | Semua tersimpan sebagai markdown biasa, tetap bisa dibaca walau berhenti memakai Hermes. Ekspor laporan career review ke PDF masih di backlog (FR-25). |
 
 ## 3. Tujuan (Goals)
 
@@ -36,7 +36,7 @@ Setelah beberapa tahun dipakai, user bisa menjawab:
 | G2 | Rekomendasi belajar berbasis data pribadi (apa yang sudah dan belum didokumentasikan), bukan roadmap generik. | P2 | UC2 |
 | G3 | Perkembangan skill terukur secara kuantitatif dan bisa direproduksi setiap kuartal. | P3 | UC5 |
 | G4 | Briefing teknologi harian yang singkat (maks. 5 item) dan relevan dengan stack user. | P4 | UC3 |
-| G5 | Knowledge portable: markdown biasa, ter-backup ke Git, tidak terikat Hermes, provider LLM, maupun VPS. | P5 | Backup, arsitektur |
+| G5 | Knowledge portable: markdown biasa, ter-backup ke Git, tidak terikat Hermes, provider LLM, maupun VPS. | P5 | M2 (backup), arsitektur |
 
 ## 4. Non-Goals
 
@@ -91,7 +91,7 @@ Berperan sebagai *compiler* (cerita mentah → note wiki) sekaligus *query engin
 |---|---|---|---|
 | Adopsi | Note baru per minggu (UC1 + UC4) | ≥ 2 | Entri `ingest` di `igrow/log.md` |
 | Kualitas data | Minggu dengan laporan lint "wiki sehat" | ≥ 80% | Pesan lint mingguan di Telegram |
-| Reliabilitas | Backup mingguan berhasil | 100% | Tidak ada pesan error backup + commit baru di repo `igrow-backup` |
+| Reliabilitas | Backup terjadwal (Senin, Rabu, Sabtu) berhasil | 100% | Tidak ada pesan error backup, dan setiap perubahan muncul sebagai commit di repo `igrow-backup` |
 | Konsistensi | Skill inventory dihitung dua kali pada data yang sama | Hasil identik | Uji manual saat career review |
 | Privasi | Kebocoran data sensitif | 0 | Cek manual `raw/` dan `wiki/` setiap kuartal |
 | Relevansi | Briefing harian terkirim | ≥ 95% hari | Riwayat chat Telegram |

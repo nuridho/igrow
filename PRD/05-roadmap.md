@@ -23,18 +23,19 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 **Target:** sebelum data nyata diisi.
 
 - [x] Rapikan `SCHEMA.md`: duplikat kepemilikan, definisi skill inventory (W1), skill map sebagai `type: data` (W2), dan SCHEMA jadi wajib. Selesai 2026-10-16 (W9).
+- [ ] Kerjakan item todo hasil review PRD 2026-10-17 (W22–W26, I8) sebelum deploy ulang, supaya cukup sekali deploy.
 - [ ] Deploy ulang `hermes-home/` ke VPS: contoh few-shot yang sudah diperbaiki (C2), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`).
 - [ ] Hapus sisa session-export di VPS: cron job (kalau sudah dibuat), file prosedurnya, dan folder `log/sessions/archive/`.
 
 ### M2.2 · Automation Aktif
 
 - [ ] Siapkan prasyarat backup: `git init` di `igrow/`, remote repo privat `igrow-backup`, dan token dengan scope minimal.
-- [ ] Buat 4 cron job (`daily-briefing`, `backup-knowledge`, `lint-mingguan`, `career-review`). Pastikan `hermes cron list` menampilkan 4 job.
+- [ ] Buat 4 cron job (`daily-briefing`, `backup-knowledge`, `lint-mingguan`, `career-review`) dengan `--deliver telegram` dan `--workdir /opt/data`. Pastikan `hermes cron list` menampilkan 4 job.
 - [ ] Verifikasi minggu pertama: briefing tiba setiap pagi, backup menghasilkan commit, dan lint mengirim laporan.
 
 ### M2.3 · Tervalidasi dengan Data Nyata
 
-- [ ] Perbarui `testing/test-flow.md` supaya sesuai perilaku sekarang: 4.1/4.2 skill map dibuat otomatis (bukan diisi manual), 5.4 skill inventory = topik yang punya note ÷ target skill map, checklist #10 taxonomy berisi 16 tag, dan `about.md` di Step 0 memakai Role + level.
+- [ ] Perbarui `testing/test-flow.md` supaya sesuai perilaku sekarang: 4.1/4.2 skill map dibuat otomatis (bukan diisi manual); 4.3/4.4 tidak lagi di-skip (weak-topics dan kesiapan L2 dihitung dari note); 4.7 tanpa `roadmap.md` (D-21); 5.4 skill inventory = topik yang punya note ÷ target skill map, plus bagian Pola dan Role Fit Trend; hapus Fase 3 dan checklist #5 (fitur testing sudah dihapus, D-14); checklist #10 taxonomy berisi 16 tag; `about.md` di Step 0 memakai Role + level.
 - [ ] Isi minimal 10 note nyata (campuran incident, knowledge, dan study).
 - [ ] Jalankan test-flow secara manual, termasuk mentor (UC2) dan career review manual (UC5).
 - [x] Putuskan kebijakan skill map: dibekukan per level (D-22).
@@ -46,7 +47,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 | Horizon | Item | Sumber |
 |---|---|---|
 | **Now** | Cron + prasyarat backup | build.md checklist Phase 2 |
-| **Now** | Deploy ulang runtime | §2 M2.1 |
+| **Now** | Kerjakan todo hasil review PRD (W22–W26, I8), lalu deploy ulang runtime | §2 M2.1, [`todo.md`](todo.md) |
 | **Next** | Perbarui test-flow, lalu uji dengan data nyata | §2 M2.3 |
 | **Next** | Bersihkan `build.md`: ganti blok salinan "Bikin 14 file inti" dengan 1 instruksi rsync (exclude `_index.md` + `log.md`), hapus kalimat fallback push via `igrow.nuridho.com`, ganti "(via SSH)" di tabel cron jadi HTTPS + token | `docs/build.md` |
 | **Later** | Phase 3 (Dozzle), Phase 4 (dashboard) | vpslab.md |

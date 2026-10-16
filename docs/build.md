@@ -1071,7 +1071,7 @@ Chat ke bot kamu, coba beberapa hal:
 
 ### Setup 4 Cron Job (maintenance rutin iGROW)
 
-4 job dibuat **sekali** dari shell host pakai `hermes cron create` di dalam container (scheduler-nya jalan di dalam gateway `igrow-hermes`, jadi job tetap hidup selama container jalan; `--deliver telegram` wajib — job dari shell host tidak punya chat asal, tanpa flag ini output bisa tersimpan tanpa terkirim).
+4 job dibuat **sekali** dari shell host pakai `hermes cron create` di dalam container (scheduler-nya jalan di dalam gateway `igrow-hermes`, jadi job tetap hidup selama container jalan; `--deliver telegram` wajib — job dari shell host tidak punya chat asal, tanpa flag ini output bisa tersimpan tanpa terkirim; `--workdir /opt/data` juga wajib — tanpa flag ini sesi cron tidak memuat `AGENTS.md`).
 
 | # | Job | Schedule | Yang dikerjakan |
 |---|-----|----------|-----------------|
@@ -1097,25 +1097,25 @@ exit
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 7 * * *' \
   'Baca igrow/project-skills/daily-briefing.md lalu kerjakan.' \
-  --name daily-briefing --deliver telegram
+  --name daily-briefing --deliver telegram --workdir /opt/data
 ```
 
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 5 * * 1,3,6' \
   'Baca igrow/project-skills/maintenance/backup.md lalu kerjakan.' \
-  --name backup-knowledge --deliver telegram
+  --name backup-knowledge --deliver telegram --workdir /opt/data
 ```
 
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 8 * * 0' \
   'Baca igrow/project-skills/maintenance/lint.md lalu kerjakan.' \
-  --name lint-mingguan --deliver telegram
+  --name lint-mingguan --deliver telegram --workdir /opt/data
 ```
 
 ```bash
 docker exec -it igrow-hermes hermes cron create '0 9 1 1,4,7,10 *' \
   'Baca igrow/project-skills/career-review.md lalu kerjakan untuk kuartal yang baru selesai.' \
-  --name career-review --deliver telegram
+  --name career-review --deliver telegram --workdir /opt/data
 ```
 
 Prompt itu POSITIONAL (`hermes cron create [opts] SCHEDULE PROMPT`) — tidak ada flag `--prompt`. Kalau format argumennya beda di versi Hermes kamu, cek `docker exec -it igrow-hermes hermes cron create --help` — atau fallback ke chat Telegram: `/cron` → create, isi schedule + prompt yang sama.
