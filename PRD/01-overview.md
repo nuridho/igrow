@@ -107,4 +107,4 @@ Berperan sebagai *compiler* (cerita mentah → note wiki) sekaligus *query engin
 | Batasan | VPS: 2 core CPU, 4 GB RAM, 60 GB storage. |
 | Batasan | LLM dipanggil lewat API provider eksternal, sehingga isi cerita terkirim ke provider. Ini alasan redaksi wajib dilakukan sebelum bercerita. |
 | Batasan | Hermes memakai image `:latest` sehingga perilaku bisa berubah saat update (lihat [06 · Risiko](06-risks-decisions.md)). |
-| Batasan | Zona waktu seluruh jadwal: `Asia/Kuala_Lumpur`. |
+| Batasan | Zona waktu seluruh jadwal: `Asia/Jakarta`. |

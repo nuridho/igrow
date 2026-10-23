@@ -4,37 +4,21 @@ Isinya:
 
 | File | Fungsi |
 |------|--------|
-| `setupvps.sh` | Init VPS: user, hostname, fail2ban, timezone, sshd |
-| `setupdocker.sh` | Install Docker + semua service Phase 1 (NPM, Portainer, Glance, Homepage) |
+| `setupvps.sh` | Init VPS (aman diulang): user `nuridho` (sudo + docker), hostname, fail2ban, timezone, Docker, Nginx Proxy Manager + web dummy di `~/whatsinsidegit/proxy/`, UFW (SSH/80/443, langsung aktif), hardening sshd (root ditutup, `AllowUsers nuridho`, key root disalin ke nuridho) |
 | `igrow-setup.sh` | Pasang iGROW (Phase 2) dari nol: git + SSH GitHub, Docker, container Hermes, LLM + Telegram, runtime, backup, cron. Juga `deploy` (aturan terbaru dari repo) dan `status`. Penjelasan: [`PRD/07-setup.md`](../PRD/07-setup.md) |
-
-iGROW bisa dipasang tanpa Phase 1: cukup `setupvps.sh` (user + sudo), lalu `bash igrow-setup.sh` sebagai user itu.
 
 ## Workflow
 
 ```bash
-# 1. Copy semua ke VPS
-scp Setup/*.sh nuridho@labs.nuridho:~/
+# 1. Init VPS (sebagai root, sebelum user nuridho ada)
+scp Setup/setupvps.sh root@<vps>:~/
+ssh root@<vps> bash setupvps.sh
 
-# 2. Run init VPS
-sudo bash setupvps.sh
-# → sshd hardening, user nuridho, timezone
-
-# 3. Copy konfigurasi Docker
-scp whatsinsidegit/* nuridho@labs.nuridho:~/whatsinsidegit/
-# (docker-compose.yml, .env, homepage/, dll)
-
-# 4. Install & start Docker services
-cd ~/whatsinsidegit
-sudo bash setupdocker.sh
+# 2. Pasang iGROW sebagai nuridho
+scp Setup/igrow-setup.sh nuridho@<vps>:~/
+ssh -t nuridho@<vps> bash igrow-setup.sh
 ```
 
-## Requirement
+Admin NPM (port 81) sengaja hanya terbuka di `127.0.0.1`, karena port Docker menembus UFW. Akses lewat tunnel: `ssh -L 8181:localhost:81 nuridho@<vps>` → `http://localhost:8181`. Web dummy diproxy dengan forward ke `web:80`.
 
-- `docker-compose.yml` + `.env` harus ada di `~/whatsinsidegit/` sebelum `setupdocker.sh`
-- `.env` minimal: `NPM_PORT`, `PORTAINER_PORT`, `GLANCE_PORT`
-- `homepage/` harus ada `index.html`
-
-## Domain
-
-Scripts pakai `nuridho.com` — edit `DOMAIN=` di `setupdocker.sh` kalau perlu.
+Portainer, Glance, Homepage dari `setupdocker.sh` lama tidak dibawa; ambil dari `git log` kalau perlu lagi.

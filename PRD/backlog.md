@@ -18,6 +18,30 @@ Format entri:
 
 ---
 
+## [2026-10-24] Zona waktu pindah ke Asia/Jakarta
+- **Apa:** semua `Asia/Kuala_Lumpur` diganti `Asia/Jakarta`: PRD 01 (batasan), 02 (trigger briefing), 03 (NFR-10), 04 (tabel jadwal cron), `docs/build.md` (compose `TZ` + contoh Glance), `Setup/setupvps.sh` (`timedatectl`). "Lokasi: Kuala Lumpur" di contoh lowongan (PRD 02, `test-flow.md`, `peta-igrow.html`) dibiarkan karena itu data contoh, bukan zona waktu.
+- **Kenapa:** keputusan owner: jadwal cron & briefing ikut WIB (UTC+7, sebelumnya UTC+8).
+- **File:** `PRD/{01-overview,02-use-cases,03-requirements,04-architecture,backlog}.md`, `docs/build.md`, `Setup/setupvps.sh`
+- **Deploy VPS:** perlu (sekali, manual): `sudo timedatectl set-timezone Asia/Jakarta`; di compose Hermes ganti `TZ` (atau `IGROW_TZ` di `.env`) jadi `Asia/Jakarta`, lalu `docker compose up -d` supaya container dibuat ulang. Ekspresi cron tidak perlu diubah; `0 7 * * *` jadi 07:00 WIB.
+
+## [2026-10-24] `setupvps.sh`: NPM + web dummy, UFW & hardening sshd otomatis
+- **Apa:** `Setup/setupvps.sh` sekarang memasang Nginx Proxy Manager + web dummy (`nginx:alpine`) lewat compose di `/home/nuridho/whatsinsidegit/proxy/` (dilewati kalau port 80 sudah dipakai). Admin NPM hanya di `127.0.0.1:81` (port Docker menembus UFW), diakses lewat SSH tunnel. UFW: port SSH dibaca dari `sshd -T`, plus 80/443, lalu langsung `ufw --force enable`. Hardening sshd otomatis: key root disalin ke nuridho kalau nuridho belum punya, drop-in `sshd_config.d/00-hardening.conf` (`PermitRootLogin no`, `AllowUsers nuridho`), divalidasi `sshd -t` sebelum reload (gagal → file dihapus). User jadi satu variabel `U`. `Setup/README.md`, `PRD/07-setup.md` §6 ikut diperbarui.
+- **Kenapa:** permintaan owner: NPM dibawa lagi dengan web dummy, dan script harus seamless (tidak ada langkah "jalankan manual").
+- **File:** `Setup/setupvps.sh`, `Setup/README.md`, `PRD/{07-setup,backlog}.md`
+- **Deploy VPS:** tidak.
+
+## [2026-10-24] `setupdocker.sh` digabung ke `setupvps.sh`
+- **Apa:** `Setup/setupdocker.sh` dihapus. Bagian yang masih berguna pindah ke `setupvps.sh`: install Docker (dilewati kalau sudah ada) + user `nuridho` masuk grup docker, UFW hanya `OpenSSH` (80/443/81 tidak dibuka lagi karena NPM tidak dipakai). Service Phase 1 (NPM, Portainer, Glance, Homepage) tidak dibawa. `apt update` dipindah sebelum install fail2ban. `Setup/README.md` ditulis ulang (2 script, alur root → nuridho), `PRD/07-setup.md` §6 diperbarui.
+- **Kenapa:** permintaan owner: `setupdocker.sh` tidak dipakai lagi, cukup satu script init VPS.
+- **File:** `Setup/setupvps.sh`, `Setup/setupdocker.sh` (dihapus), `Setup/README.md`, `PRD/{07-setup,backlog}.md`
+- **Deploy VPS:** tidak.
+
+## [2026-10-24] Setup script: folder data wajib diisi, timezone default Jakarta
+- **Apa:** `Setup/igrow-setup.sh` langkah 5: folder data Hermes tidak punya default lagi (user wajib mengisi; `~` dan path relatif diubah jadi path absolut), timezone default `Asia/Jakarta`. `deploy_runtime` berhenti kalau folder data belum ditentukan (sebelumnya `HH` kosong berarti rsync ke `/`). `PRD/07-setup.md` tabel langkah 5 ikut diperbarui.
+- **Kenapa:** permintaan owner: lokasi data ditentukan user, zona waktu Jakarta.
+- **File:** `Setup/igrow-setup.sh`, `PRD/{07-setup,backlog}.md`
+- **Deploy VPS:** tidak. Instalasi yang sudah ada tidak terpengaruh (container lama terdeteksi, folder data diambil dari situ).
+
 ## [2026-10-24] Script setup iGROW + PRD 07 Setup
 - **Apa:** `Setup/igrow-setup.sh` baru: TUI interaktif 9 langkah (paket dasar, git + SSH key GitHub, Docker, clone repo, compose Hermes resmi, wizard LLM + token Telegram yang dicek ke `getMe`, deploy runtime 2 langkah + `skills.write_approval` + tools cron + start gateway + `hermes doctor`, backup `igrow/` ke repo privat dengan fine-grained token di `hermes-home/.git-credentials` + uji `backup.sh`, 4 cron + uji `lint-privacy.sh`). Aman diulang (langkah yang beres dilewati), mendeteksi container `igrow-hermes` yang sudah ada, menawarkan restore kalau repo backup sudah berisi data, plus perintah `deploy`, `status`, `step N`. Secret hanya diketik saat diminta, tidak masuk repo/log/daftar proses. `PRD/07-setup.md` menjelaskan alur, isian, lokasi hasil, dan keputusan desain (repo di-clone di host, bukan di container). Rujukan ditambah di PRD README (tabel dokumen, versi 1.5), PRD 04 §7, roadmap §3 (baris Now cron + backup), `docs/build.md` (callout di Setup `igrow-hermes`), `Setup/README.md`, `CLAUDE.md` (peta repo).
 - **Kenapa:** permintaan owner: setup VPS cukup mengisi yang diperlukan, tanpa menyalin perintah satu per satu. Fakta CLI dicek ke dokumentasi resmi Hermes (Docker: user `hermes` + `HERMES_UID`; `hermes config set`; `hermes setup model`; toolset cron di `hermes tools`; env Telegram termasuk `TELEGRAM_HOME_CHANNEL`).

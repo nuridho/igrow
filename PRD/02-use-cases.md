@@ -201,7 +201,7 @@ flowchart LR
 
 **User story:** Sebagai IT worker, saya ingin menerima ringkasan berita teknologi yang relevan setiap pagi, supaya tidak ketinggalan hal penting (terutama CVE) tanpa harus membaca banyak sumber.
 
-**Trigger:** cron setiap hari pukul 07:00 (`0 7 * * *`, zona waktu Asia/Kuala_Lumpur).
+**Trigger:** cron setiap hari pukul 07:00 (`0 7 * * *`, zona waktu Asia/Jakarta).
 
 **Topik:** linux, windows-server, kubernetes, docker, vmware, cloud, networking, monitoring, devops, sre, security, cve.
 

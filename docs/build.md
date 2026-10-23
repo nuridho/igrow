@@ -156,11 +156,11 @@ pages:
           - type: clock
             hour-format: 24h
             timezones:
-              - timezone: Asia/Kuala_Lumpur
-                label: Kuala Lumpur
+              - timezone: Asia/Jakarta
+                label: Jakarta
 
           - type: weather
-            location: Kuala Lumpur, Malaysia
+            location: Jakarta, Indonesia
             units: metric
             hour-format: 24h
 
@@ -533,7 +533,7 @@ whatsinsidegit/
     environment:
       - HERMES_UID=${HERMES_UID}        # samain ownership file dengan user host — cek nilainya: `id -u` / `id -g`
       - HERMES_GID=${HERMES_GID}
-      - TZ=Asia/Kuala_Lumpur            # timezone cron & container — wajib agar cron `0 7` bunyi jam benar
+      - TZ=Asia/Jakarta            # timezone cron & container — wajib agar cron `0 7` bunyi jam benar
     volumes:
       - ./igrow-hermes/hermes-home:/opt/data     # SATU-SATUNYA volume — path resmi Hermes, jangan diubah
 ```

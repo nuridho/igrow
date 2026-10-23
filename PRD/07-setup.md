@@ -52,7 +52,7 @@ Semua langkah **aman diulang**: yang sudah beres dicek lalu dilewati (`↷ sudah
 | 2 | Git & GitHub | Nama + email commit (kalau belum ada) | `git config --global` di VPS; SSH key `~/.ssh/id_ed25519` (tanpa passphrase, supaya bisa dipakai tanpa interaksi). Script menunggu sampai `ssh -T git@github.com` berhasil. |
 | 3 | Docker & Compose | — | Docker dari `get.docker.com`, user masuk grup `docker` (aktif setelah login ulang; sampai itu script memakai sudo). |
 | 4 | Repo iGROW | URL SSH repo, folder clone (default `~/iGROW`) | Clone, atau `git pull` kalau sudah ada. |
-| 5 | Container Hermes | Folder data (default `~/whatsinsidegit/igrow-hermes/hermes-home`), timezone (default `Asia/Kuala_Lumpur`) | `docker-compose.yml` + `.env` (UID/GID/TZ) di `igrow-hermes/`, image ditarik. Kalau container `igrow-hermes` sudah ada (mis. dari compose root lama), langkah ini dilewati dan script memakai compose serta folder data container itu. |
+| 5 | Container Hermes | Folder data (tanpa default, wajib diisi dan berakhiran `/hermes-home`), timezone (default `Asia/Jakarta`) | `docker-compose.yml` + `.env` (UID/GID/TZ) di folder induk `hermes-home/`, image ditarik. Kalau container `igrow-hermes` sudah ada (mis. dari compose root lama), langkah ini dilewati dan script memakai compose serta folder data container itu. |
 | 6 | LLM & Telegram | Wizard `hermes setup model`; token bot; user ID | API key oleh wizard resmi. `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USERS`, `TELEGRAM_HOME_CHANNEL` ditulis ke `hermes-home/.env` (mode 600). Token dicek langsung ke Telegram (`getMe`) sebelum disimpan. |
 | 7 | Runtime & tools | Approval memory? (default tidak); layar `hermes tools` | Deploy 2 langkah dari repo (PRD 04 §7) + hapus master `igrow/_index.md` lama (D-32). `skills.write_approval: true` (R-12). Tools platform `cron`: web, terminal, file. Gateway dinyalakan, lalu `hermes doctor`. |
 | 8 | Backup | Repo backup, token | `git init` di `igrow/` (identitas level repo), remote HTTPS **tanpa** token, push pertama, lalu uji `backup.sh` persis seperti cron. Repo backup sudah berisi data → tawaran restore (lihat §4.4). |
@@ -107,7 +107,7 @@ Dokumentasi resmi Hermes mendukung tiga cara mengisi Telegram, dan salah satunya
 
 ## 6. Di Luar Script
 
-- **Phase 1** (NPM, Portainer, Glance, UFW, SSL): tetap lewat `setupvps.sh` + `setupdocker.sh` (lihat `Setup/README.md`). iGROW tidak membuka port apa pun, jadi tidak butuh proxy host.
+- **Init VPS** (user, fail2ban, timezone, Docker, Nginx Proxy Manager + web dummy, UFW, hardening sshd): `Setup/setupvps.sh`, dijalankan sebagai root sebelum script ini (lihat `Setup/README.md`). iGROW tidak membuka port apa pun, jadi tidak butuh proxy host.
 - **Uji dokumen Word/PDF** (roadmap M2.2) dan **test-flow manual** (`testing/test-flow.md`) tetap dilakukan sendiri setelah setup.
 - **Skill buatan Hermes:** cek `/skills pending` di Telegram sesekali (R-12).
 

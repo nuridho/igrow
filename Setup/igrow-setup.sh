@@ -104,8 +104,8 @@ run() { # run <label> <perintah…> → output ke log, spinner di layar
 [ -f "$CONF" ] && . "$CONF"
 : "${REPO_DIR:=$HOME/iGROW}"
 : "${REPO_URL:=}"
-: "${HH:=$HOME/whatsinsidegit/igrow-hermes/hermes-home}"   # HERMES_HOME di host → /opt/data di container
-: "${TZ_NAME:=Asia/Kuala_Lumpur}"
+: "${HH:=}"   # HERMES_HOME di host → /opt/data di container; tanpa default, ditanya di langkah 5
+: "${TZ_NAME:=Asia/Jakarta}"
 : "${GH_USER:=}"
 : "${BACKUP_REPO:=}"
 : "${BOT_NAME:=}"
@@ -167,6 +167,7 @@ gh_repo() { # gh_repo <token> → cetak "private"/"public" kalau token bisa akse
 
 deploy_runtime() { # PRD 04 §7 — 2 langkah, TANPA --delete (wiki/raw/output hanya ada di VPS)
   local src="$REPO_DIR/hermes-home/"
+  [ -n "$HH" ] || die "Folder data belum ditentukan — jalankan langkah 5"
   [ -f "$src/AGENTS.md" ] || die "Tidak ketemu $src/AGENTS.md — jalankan langkah 4"
   mkdir -p "$HH"
   run "Runtime terbaru (AGENTS.md, SCHEMA, project-skills)" \
@@ -243,7 +244,8 @@ step5() {
   step_head 5 "Container Hermes" "Compose resmi nousresearch/hermes-agent; data di hermes-home/ = /opt/data."
   load_docker; find_container
   if [ -n "$CNAME" ]; then skip "Container $CNAME (compose: $COMPOSE_DIR, data: $HH)"; save_conf; return; fi
-  ask HH "Folder data Hermes di host" "$HH"
+  ask HH "Folder data Hermes di host (akhiran /hermes-home, mis. ~/igrow/hermes-home)" "$HH"
+  HH=$(realpath -m "${HH/#\~/$HOME}")   # read tidak mengurai ~
   ask TZ_NAME "Timezone (jam cron & briefing)" "$TZ_NAME"
   COMPOSE_DIR="$(dirname "$HH")"
   [ "$(basename "$HH")" = hermes-home ] || die "Nama folder data harus hermes-home (dipakai compose: ./hermes-home)"

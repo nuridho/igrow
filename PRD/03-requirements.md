@@ -75,7 +75,7 @@ Status:
 | NFR-07 | **Efisiensi biaya LLM** | `AGENTS.md` dibuat sepadat mungkin karena dimuat di setiap sesi. Prosedur detail hanya dimuat saat relevan. Dashboard tidak memanggil LLM sama sekali. |
 | NFR-08 | **Auditability** | Setiap operasi tulis tercatat di `log.md` (append-only) dengan format `## [YYYY-MM-DD] op \| subjek`. |
 | NFR-09 | **Maintainability** | Setiap aturan hanya punya satu sumber. `hermes-home/` adalah source of truth. Line ending dikunci ke LF (`.gitattributes`) supaya script tidak rusak di VPS. |
-| NFR-10 | **Waktu** | Container dan cron memakai `TZ=Asia/Kuala_Lumpur`. |
+| NFR-10 | **Waktu** | Container dan cron memakai `TZ=Asia/Jakarta`. |
 | NFR-11 | **Keterbacaan jangka panjang** | Setiap note wajib punya Ringkasan, sumber, dan konteks asal (career atau sumber belajar), sehingga bisa dipahami bertahun-tahun kemudian tanpa konteks tambahan. |
 
 ## 3. Kebijakan Data

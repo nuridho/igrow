@@ -158,7 +158,7 @@ sequenceDiagram
 
 Setiap job berjalan di sesi baru tanpa riwayat chat. Tanpa `--workdir /opt/data`, sesi cron **tidak** memuat `AGENTS.md` (dokumentasi resmi Hermes, fitur cron). Jawaban yang berisi `[SILENT]` tidak dikirim. Saat ini tidak ada job yang memakainya; backup sengaja selalu lapor (D-27).
 
-| Job | Jadwal (Asia/Kuala_Lumpur) | Prosedur |
+| Job | Jadwal (Asia/Jakarta) | Prosedur |
 |---|---|---|
 | `daily-briefing` | `0 7 * * *`: setiap hari 07:00 | `daily-briefing.md` |
 | `backup-knowledge` | `0 5 * * 1,3,6`: Senin, Rabu, Sabtu 05:00 | `maintenance/backup.md` |
