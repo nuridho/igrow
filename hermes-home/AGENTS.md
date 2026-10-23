@@ -55,6 +55,7 @@ wiki/ = executable.
   path page yang dipakai (`igrow/wiki/...`); nggak ketemu → bilang jujur "belum ada catatan", tawarin riset/tulis baru (honest gaps)
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)
+Prosedur iGROW hanya dari file di bawah (selalu baca versi di disk). Jangan simpan alur atau data iGROW (mis. career aktif, aturan, tag) sebagai skill/memory Hermes; yang sudah tersimpan diabaikan.
 
 ### Use Case (5)
 - igrow/project-skills/capture-experience.md → UC1: Incident/knowledge/career new → wiki

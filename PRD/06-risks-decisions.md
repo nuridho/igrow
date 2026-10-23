@@ -17,6 +17,7 @@ Skala: **H** (tinggi), **M** (sedang), **L** (rendah).
 | R-09 | Biaya token LLM naik (briefing harian dengan web research, review kuartalan). | M | M | `AGENTS.md` ringkas, prosedur dimuat sesuai kebutuhan, dashboard tanpa LLM. Pantau tagihan provider setiap bulan. | Termitigasi sebagian |
 | R-10 | Memory dan skill internal agent hilang saat migrasi, karena session export sudah dihapus. | L | H | Diterima. Prosedur yang penting harus ditulis di `project-skills/`, bukan hanya hidup di skill buatan agent. | Diterima |
 | R-11 | RAM 4 GB tidak cukup saat Phase 3–5 ditambahkan. | M | L | Pilih tool ringan, pantau `docker stats`, tambahkan swap, upgrade kalau perlu. | Diterima |
+| R-12 | Skill atau memory yang dibuat Hermes sendiri menyimpan salinan prosedur atau data iGROW yang lama, lalu dipakai menggantikan `project-skills/` (default Hermes menulis keduanya bebas dan memuatnya di setiap sesi). | H | M | `AGENTS.md`: prosedur hanya dari `project-skills/`; alur dan data iGROW tidak disimpan sebagai skill/memory (W37). Di VPS: `skills.write_approval: true`, cek `/skills pending` sesekali. | Termitigasi sebagian |
 
 ## 2. Decision Log
 

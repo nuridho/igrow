@@ -68,7 +68,7 @@ Semua service berjalan di satu VPS memakai Docker Compose, di belakang Nginx Pro
 
 **Catatan penting:** `AGENTS.md` harus diletakkan di root `HERMES_HOME`, bukan di dalam `igrow/`. Di mode gateway, working directory Hermes selalu `/opt/data` (issue resmi `NousResearch/hermes-agent#5200`). Perilaku ini sudah teruji di Phase 2.
 
-`project-skills/` adalah markdown biasa yang dirujuk dari `AGENTS.md`, **bukan** sistem Skill resmi Hermes (`SKILL.md`). Opsi upgrade ke sistem resmi dibahas di [OQ-06](06-risks-decisions.md#3-pertanyaan-terbuka).
+`project-skills/` adalah markdown biasa yang dirujuk dari `AGENTS.md`, **bukan** sistem Skill resmi Hermes (`SKILL.md`). Opsi upgrade ke sistem resmi dibahas di [OQ-06](06-risks-decisions.md#3-pertanyaan-terbuka). Skill dan memory yang dibuat Hermes sendiri tidak dipakai untuk alur iGROW: `AGENTS.md` melarangnya, dan di VPS `skills.write_approval: true` menahan skill baru sampai disetujui owner (R-12).
 
 ## 5. Struktur Data
 

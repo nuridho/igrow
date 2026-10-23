@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-23] Prosedur iGROW tidak disimpan sebagai skill/memory Hermes (W37)
+- **Apa:** `AGENTS.md` § File Referensi + 1 baris: "Prosedur iGROW hanya dari file di bawah (selalu baca versi di disk). Jangan simpan alur atau data iGROW (mis. career aktif, aturan, tag) sebagai skill/memory Hermes; yang sudah tersimpan diabaikan." Roadmap M2.2 + item VPS: `skills.write_approval: true` (cek `/skills pending` sesekali; `memory.write_approval` opsional). PRD 04 (catatan lapisan instruksi), PRD 06 R-12, README (riwayat 1.4), `CLAUDE.md` (fakta teknis), dan todo (W37 dicentang, rujukan W44 `AGENTS.md:78` → `:79`, § Terbuka, sisa item) diselaraskan.
+- **Kenapa:** W37. Dokumentasi resmi Hermes: agent menulis skill dan memory sendiri secara default (termasuk lewat background review) dan memuatnya di setiap sesi, sehingga salinan prosedur lama bisa dipakai menggantikan `project-skills/` terbaru.
+- **File:** `hermes-home/AGENTS.md`, `CLAUDE.md`, `PRD/{README,04-architecture,05-roadmap,06-risks-decisions,todo,backlog}.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1) + set `skills.write_approval: true` di `config.yaml` (roadmap M2.2).
+
 ## [2026-10-23] Daftar Kerjaan Baru: tanggal terakhir career lama ditanya (W32)
 - **Apa:** `capture-experience.md` § Daftar Kerjaan Baru: step 1 + tanya tanggal terakhir di kerjaan lama (hanya kalau ada career aktif, di ronde yang sama); step 2 menutup career lama dengan tanggal itu (skip → sehari sebelum tanggal mulai kerjaan baru; tidak ada career aktif → dilewati); template `Period` + format YYYY-MM-DD; step 7 + balasan (folder career baru, period career lama, catatan kalau tanggal diisi otomatis). Semua di baris yang sama, rujukan nomor baris tidak bergeser. PRD 02 UC1b (AC), roadmap M2.3 (+ skenario test Daftar Kerjaan Baru), README (riwayat 1.4), todo (W32 dicentang, § Terbuka, sisa item) diselaraskan.
 - **Kenapa:** W32. `s/d <hari ini>` salah kalau kerjaan baru didaftarkan beberapa minggu setelah pindah, dan period-nya tumpang-tindih dengan career baru.

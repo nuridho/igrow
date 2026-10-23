@@ -24,7 +24,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 - [x] Rapikan `SCHEMA.md`: duplikat kepemilikan, definisi skill inventory (W1), skill map sebagai `type: data` (W2), dan SCHEMA jadi wajib. Selesai 2026-10-16 (W9).
 - [x] Kerjakan item todo hasil review PRD 2026-10-17 (W22–W26, I8). Selesai 2026-10-23.
-- [ ] Kerjakan item todo hasil review runtime 2026-10-22 dan 2026-10-23 (sisa: W29, W30, W37–W42, W44, I11, I14, I16) sebelum deploy ulang, supaya cukup sekali deploy.
+- [ ] Kerjakan item todo hasil review runtime 2026-10-22 dan 2026-10-23 (sisa: W29, W30, W38–W42, W44, I11, I14, I16) sebelum deploy ulang, supaya cukup sekali deploy.
 - [ ] Deploy ulang `hermes-home/` ke VPS (2 langkah rsync, PRD 04 §7): contoh few-shot yang sudah diperbaiki (C2), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`). Setelah deploy, pastikan `igrow/taxonomy.md` ada di VPS (tersalin oleh langkah 2).
 - [ ] Hapus sisa session-export di VPS: cron job (kalau sudah dibuat), file prosedurnya, dan folder `log/sessions/archive/`.
 
@@ -32,6 +32,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 - [ ] Siapkan prasyarat backup: `git init` di `igrow/`, remote repo privat `igrow-backup`, dan token dengan scope minimal. Jalankan sebagai user yang sama dengan proses gateway (bandingkan `id` di `docker exec` dengan pemilik file yang pernah ditulis Hermes, mis. hasil capture pertama); kalau beda, git menolak repo ("dubious ownership") atau gagal menulis `.git/` saat cron. Identitas commit di level repo (tanpa `--global`). Uji `bash igrow/project-skills/maintenance/backup.sh` sekali sebelum cron dibuat.
 - [ ] Cek toolset platform `cron` di `hermes tools`: web (daily briefing), terminal (backup, cek privasi lint: uji `bash igrow/project-skills/maintenance/lint-privacy.sh` sekali), file (semua job). Kalau config cron tidak terbaca, Hermes menggagalkan run, bukan memakai semua tool (dokumentasi resmi, fitur cron).
+- [ ] Set `skills.write_approval: true` di `config.yaml` (atau `/skills approval on` di Telegram), supaya skill buatan Hermes, termasuk dari background review, menunggu persetujuan owner (W37, R-12; dokumentasi resmi, fitur Skills). Dokumentasi tidak menyebut notifikasi saat ada skill tertahan: cek `/skills pending` sesekali dan tolak (`/skills reject <id>`) skill yang menyalin alur iGROW. Opsional: `memory.write_approval: true` kalau memory Hermes mulai berisi salinan aturan atau data iGROW.
 - [ ] Buat 4 cron job (`daily-briefing`, `backup-knowledge`, `lint-mingguan`, `career-review`) dengan `--deliver telegram` dan `--workdir /opt/data`. Pastikan `hermes cron list` menampilkan 4 job.
 - [ ] Verifikasi minggu pertama: briefing tiba setiap pagi dan tiap item punya baris `Sumber:`, setiap jadwal backup mengirim 1 pesan (D-27) dan perubahan muncul sebagai commit, dan lint mengirim laporan tanpa temuan "cek privasi gagal".
 
