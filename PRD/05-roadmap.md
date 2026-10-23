@@ -50,7 +50,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 | Horizon | Item | Sumber |
 |---|---|---|
-| **Now** | Cron + prasyarat backup | build.md checklist Phase 2 |
+| **Now** | Cron + prasyarat backup: setelah W44 selesai, jalankan `bash igrow-setup.sh` di VPS. Langkah 7 sekaligus deploy ulang runtime (M2.1), langkah 7–9 menutup item M2.2 (approval skill, tools cron, prasyarat + uji backup, uji `lint-privacy.sh`, 4 cron); container dan Telegram yang sudah ada dideteksi dan dilewati | [07 · Setup](07-setup.md) |
 | **Now** | Kerjakan sisa todo runtime (W44), lalu deploy ulang runtime | §2 M2.1, [`todo.md`](todo.md) |
 | **Next** | Perbarui test-flow, lalu uji dengan data nyata | §2 M2.3 |
 | **Next** | Bersihkan `build.md`: ganti blok salinan "Bikin 14 file inti" dengan instruksi deploy 2 langkah (rujuk PRD 04 §7), hapus kalimat fallback push via `igrow.nuridho.com`, ganti "(via SSH)" di tabel cron jadi HTTPS + token, token di prasyarat Job 2 jadi fine-grained khusus repo `igrow-backup` (Contents read/write), bukan classic scope `repo` | `docs/build.md` |

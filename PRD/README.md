@@ -4,9 +4,9 @@
 |---|---|
 | **Produk** | iGROW: Personal Career & Knowledge OS untuk IT worker |
 | **Owner** | Nuridho (Product Owner, sekaligus satu-satunya user) |
-| **Versi PRD** | 1.4 |
+| **Versi PRD** | 1.5 |
 | **Status produk** | Phase 1 selesai · Phase 2 berjalan (runtime jalan, automation belum aktif) |
-| **Terakhir diperbarui** | 2026-10-23 |
+| **Terakhir diperbarui** | 2026-10-24 |
 
 ## Ringkasan Eksekutif
 
@@ -24,8 +24,9 @@ Pengalaman kerja seorang IT worker (incident yang ditangani, hal yang dipelajari
 | 04 | [Architecture](04-architecture.md) | Bagaimana sistem disusun dan data mengalir |
 | 05 | [Roadmap](05-roadmap.md) | Fase rilis, status saat ini, dan backlog prioritas |
 | 06 | [Risks & Decisions](06-risks-decisions.md) | Risiko, keputusan yang sudah diambil, dan pertanyaan terbuka |
+| 07 | [Setup](07-setup.md) | Cara memasang iGROW di VPS dengan `Setup/igrow-setup.sh`, dari nol sampai bot jalan |
 
-Urutan baca yang disarankan: 01 → 02 → 05, lalu 03/04/06 sesuai kebutuhan.
+Urutan baca yang disarankan: 01 → 02 → 05, lalu 03/04/06 sesuai kebutuhan. Mau memasang di VPS: langsung 07.
 
 ### Dokumen Kerja (selalu diperbarui)
 
@@ -76,3 +77,4 @@ Blueprint awal (`iGROW_FINAL.md`) sudah diarsipkan di `archive/`. Seluruh isinya
 | 1.2 | 2026-10-16 | Sisa isi `iGROW_FINAL.md` dipindah ke PRD: contoh output per UC, mekanisme gap, aturan skill inventory, dan skenario migrasi. FIN diarsipkan. |
 | 1.3 | 2026-10-17 | Diagram Mermaid (sistem, alur pesan, cron, backup & recovery, aliran antar-UC, gap analysis, screenshot). Review menyeluruh: status cron dikoreksi (butuh `--workdir`), contoh skill map dan laporan UC5 diselaraskan dengan SCHEMA, temuan runtime dicatat sebagai W22–W26 dan I8. |
 | 1.4 | 2026-10-23 | Todo review PRD 2026-10-17 selesai (W22–W26, I8): backup selalu lapor (D-27), taxonomy jadi `igrow/taxonomy.md` + deploy 2 langkah (D-28), placeholder untuk link ke note yang belum ada, satu sumber untuk protokol tulis dan daftar larangan (+ serial number, raw log client, konfigurasi proprietary), `/recall` menyebut page sumber. Act item todo terbuka dipertajam; diagram backup (§ 6.3 architecture) dan metrik reliabilitas diselaraskan dengan D-27. Lanjutan di hari yang sama: self-check privasi + cara redact yang menjaga command dan konteks (A10), alur raw study + tanggal kejadian + balasan berangkuman (W33, I9, I10), status topik di SCHEMA, slug unik + nama incident bertanggal (D-29), dan link balik (W34, I13, W36). Lint mingguan diperluas: path dual-link dan gambar, slug ganda, inbox `raw/`, dan cek privasi lewat `lint-privacy.sh` (W35, I12). Daily briefing: tanpa baris alasan pemilihan, tiap item bersumber dari search ≤ 24 jam, pesan gagal kalau search gagal (W27, W28), dan jawaban akhir = isi pesan untuk briefing dan lint (I15). Nama client boleh ditulis, tapi hanya di `Vendor/Client` `about.md` (D-30; W31 tidak jadi). Daily briefing hanya info, tidak menulis file apa pun (D-31, W43). Daftar Kerjaan Baru menanyakan tanggal terakhir di kerjaan lama (W32). Prosedur dan data iGROW tidak boleh disimpan sebagai skill/memory Hermes, + `skills.write_approval` di VPS (W37, R-12). Backup tetap push walau tidak ada perubahan baru, jadi commit yang tertunda ikut terkirim (W38); mentor menulis ulang `weak-topics.md` dari Gap terbaru (I14). Master `igrow/_index.md` dihapus: daftar note cukup di `wiki/_index.md`, protokol tulis jadi 2 langkah (W40, D-32). `career-N` = nama folder career lengkap, lebih dari satu career aktif → tanya user (I16); kriteria incident / lesson / knowledge dan pola kesalahan berulang dari akar masalah yang sama (W39). `skills.md` per career terisi otomatis: 1 baris per tag, skill baru disebut di balasan (W42). Career review: nama file = kuartal yang direview, tidak bertanya ke user (data kurang → "dilewati"), balasan 3–5 baris + path laporan (W29, W30, I11). Contoh eksekusi mentor dipecah per alur (roadmap + role fit) dengan label tujuan (W45). Screenshot disimpan asli tanpa redaksi, path gambar di note diperbaiki (D-33, W41). Dokumen Word/PDF disimpan asli, note ditulis dari isinya (D-34, W46). |
+| 1.5 | 2026-10-24 | [07 · Setup](07-setup.md) + `Setup/igrow-setup.sh`: pasang iGROW di VPS dengan satu script interaktif (9 langkah, aman diulang), termasuk restore dari repo backup saat pindah VPS, serta perintah `deploy` dan `status`. |

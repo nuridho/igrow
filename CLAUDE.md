@@ -9,9 +9,9 @@ Bahasa: Bahasa Indonesia (santai di chat, rapi di dokumen). Owner = satu-satunya
 | Folder | Isi | Catatan |
 |---|---|---|
 | `hermes-home/` | Runtime Hermes: `AGENTS.md` + `igrow/` (SCHEMA, prosedur UC, maintenance) | **Source of truth.** Di-rsync ke VPS `~/whatsinsidegit/igrow-hermes/hermes-home/`. Jangan dipindah atau di-rename. |
-| `PRD/` | Dokumen produk (01–06), `todo.md`, `backlog.md` | Mulai dari `PRD/README.md` |
+| `PRD/` | Dokumen produk (01–07), `todo.md`, `backlog.md` | Mulai dari `PRD/README.md` |
 | `docs/` | `build.md` (runbook VPS), `vpslab.md` (infra lab), `peta-igrow.html` (gambaran visual, ilustrasi) | Detail teknis & operasional |
-| `Setup/` | Script init VPS & Docker | |
+| `Setup/` | Script init VPS & Docker, `igrow-setup.sh` (pasang iGROW end-to-end, penjelasan di `PRD/07-setup.md`) | Perintah Hermes di script ikut dicek kalau CLI Hermes berubah |
 | `testing/` | `test-flow.md`: skenario uji **manual** lewat Telegram | Jangan tambah script test (D-18) |
 | `web/` | `portfolio.html`, `igrow-dashboard.html` (dummy), `src/` | |
 | `parked/`, `archive/` | Ide ditunda; spec lama termasuk `iGROW_FINAL.md` (blueprint awal, isinya sudah pindah ke PRD) | **Bukan acuan**, jangan diikuti |

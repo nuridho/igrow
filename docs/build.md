@@ -488,6 +488,8 @@ Telegram ──chat──▶ igrow-hermes (image resmi nousresearch/hermes-agent
 
 ### Setup `igrow-hermes`
 
+> **Cara cepat:** `Setup/igrow-setup.sh` mengerjakan seluruh bagian ini (compose, `hermes setup`, Telegram, deploy runtime, prasyarat backup, 4 cron) secara interaktif, dengan penjelasan di `PRD/07-setup.md`. Langkah manual di bawah tetap berlaku sebagai referensi.
+
 > **`build` vs `image` di compose:** `image:` dipakai kalau software-nya udah jadi, tinggal pakai (kayak `nginx:alpine`, `portainer/portainer-ce`). `build:` dipakai kalau software-nya kode custom yang kamu tulis sendiri.
 >
 > **Keputusan final (lihat `PRD/06-risks-decisions.md` D-01):** `igrow-hermes` pakai **image resmi** `nousresearch/hermes-agent` (jadi `image:`, **bukan** `build:`) — infrastruktur agent (Telegram gateway, memory, skill system) udah disediain, tinggal "diajarin" format iGROW lewat `AGENTS.md` + skill custom, bukan nulis bot dari nol.

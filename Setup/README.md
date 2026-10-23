@@ -6,6 +6,9 @@ Isinya:
 |------|--------|
 | `setupvps.sh` | Init VPS: user, hostname, fail2ban, timezone, sshd |
 | `setupdocker.sh` | Install Docker + semua service Phase 1 (NPM, Portainer, Glance, Homepage) |
+| `igrow-setup.sh` | Pasang iGROW (Phase 2) dari nol: git + SSH GitHub, Docker, container Hermes, LLM + Telegram, runtime, backup, cron. Juga `deploy` (aturan terbaru dari repo) dan `status`. Penjelasan: [`PRD/07-setup.md`](../PRD/07-setup.md) |
+
+iGROW bisa dipasang tanpa Phase 1: cukup `setupvps.sh` (user + sudo), lalu `bash igrow-setup.sh` sebagai user itu.
 
 ## Workflow
 
