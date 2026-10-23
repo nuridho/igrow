@@ -1,46 +1,56 @@
-<title>Dua Jalur igrowctl.sh</title>
+<title>Simulator Setup iGROW</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: satu kolom sempit; diagram keputusan di atas, lalu terminal per jalur (tab), lalu kasus khusus. */
+/* Layout: judul → diagram pemilihan jalur → konsol simulator (tab script, kontrol, terminal + panel langkah) → catatan.
+   Terminal selalu gelap seperti terminal sungguhan; kulit halaman mengikuti tema. */
 :root {
-  --bg: #eef1f4; --surface: #ffffff; --ink: #1b2430; --muted: #5a6573; --line: #d3d9e0;
-  --accent: #2f6fb0; --a: #a8661a; --a-soft: #f6ead9; --b: #18807a; --b-soft: #dcf0ee;
-  --term-bg: #0f1419; --term-fg: #d7dde3; --t-cyan: #56c2d6; --t-mag: #c792ea; --t-green: #8bd17c;
-  --t-yel: #e5c07b; --t-red: #f07178; --t-dim: #6b7785; --term-edge: #0f1419;
+  --bg: #eceff3; --surface: #ffffff; --surface-2: #f4f6f9; --ink: #18212b; --muted: #566272; --line: #d2d9e1;
+  --accent: #1f64a8; --accent-ink: #ffffff;
+  --a: #a15f12; --a-soft: #f7ebd8; --b: #17766f; --b-soft: #dbf0ed;
+  --ok: #1d7a43; --ok-soft: #dff1e6; --bad: #b3302a; --bad-soft: #f8e1df; --run-soft: #dfeaf6;
+  --term-bg: #0d1218; --term-bar: #151c24; --term-fg: #d5dce3; --term-edge: #233040;
+  --t-dim: #7a8795; --t-cyan: #5cc8dc; --t-mag: #c99bf0; --t-green: #8bd17c; --t-yel: #e8c46f; --t-red: #f27780;
+  --g1: #00ffff; --g2: #00d7ff; --g3: #00afff; --g4: #3d9bff; --g5: #7b7bf0;
   --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #12171d; --surface: #1a2129; --ink: #e6ebf0; --muted: #98a4b1; --line: #2c3742;
-  --accent: #6aa6e0; --a: #e3a957; --a-soft: #3a2c19; --b: #52c4bb; --b-soft: #163634; --term-edge: #2c3742;
+  --bg: #11161c; --surface: #19202a; --surface-2: #202935; --ink: #e5eaf0; --muted: #9aa6b4; --line: #2c3745;
+  --accent: #6aa6e0; --accent-ink: #0c1620;
+  --a: #e3a957; --a-soft: #3a2c19; --b: #52c4bb; --b-soft: #163634;
+  --ok: #7fd49c; --ok-soft: #173325; --bad: #f0928c; --bad-soft: #3a1d1b; --run-soft: #1b2c40;
   color-scheme: dark } }
 :root[data-theme="dark"] {
-  --bg: #12171d; --surface: #1a2129; --ink: #e6ebf0; --muted: #98a4b1; --line: #2c3742;
-  --accent: #6aa6e0; --a: #e3a957; --a-soft: #3a2c19; --b: #52c4bb; --b-soft: #163634; --term-edge: #2c3742;
+  --bg: #11161c; --surface: #19202a; --surface-2: #202935; --ink: #e5eaf0; --muted: #9aa6b4; --line: #2c3745;
+  --accent: #6aa6e0; --accent-ink: #0c1620;
+  --a: #e3a957; --a-soft: #3a2c19; --b: #52c4bb; --b-soft: #163634;
+  --ok: #7fd49c; --ok-soft: #173325; --bad: #f0928c; --bad-soft: #3a1d1b; --run-soft: #1b2c40;
   color-scheme: dark }
 
 body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
-.wrap { max-width: 920px; margin: 0 auto; padding-block: 40px 64px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid; gap: 40px; }
-h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
-h1 { font-size: clamp(26px, 4.4vw, 36px); font-weight: 700; letter-spacing: -0.01em; }
-h1 code { font-family: var(--mono); font-weight: 600; font-size: 0.86em; color: var(--accent); }
-h2 { font-size: 20px; font-weight: 600; }
-p { margin: 0; max-width: 66ch; }
-.lede { color: var(--muted); font-size: 16px; margin-top: 10px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 40px 72px; display: grid; gap: 44px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; line-height: 1.2; text-wrap: balance; }
+h1 { font-size: clamp(28px, 4.6vw, 40px); font-weight: 700; letter-spacing: -0.015em; }
+h2 { font-size: 21px; font-weight: 600; }
+h3 { font-size: 15px; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+code, kbd { font-family: var(--mono); font-size: 0.9em; }
+kbd { background: var(--surface-2); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; }
 .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-section { display: grid; gap: 16px; }
-code, .mono { font-family: var(--mono); font-size: 0.92em; }
+.lede { color: var(--muted); font-size: 16px; margin-top: 12px; }
+section { display: grid; gap: 18px; min-width: 0; }
+.sec-head { display: grid; gap: 6px; }
+.sec-head p { color: var(--muted); }
 
-/* ── Diagram keputusan ── */
-.flow { display: grid; gap: 0; justify-items: center; background: var(--surface); border: 1px solid var(--line);
-  border-radius: 10px; padding: 24px 16px; overflow-x: auto; }
-.node { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; background: var(--bg);
-  text-align: center; max-width: 440px; font-size: 14px; }
+/* ── Diagram pemilihan jalur ── */
+.flow { display: grid; justify-items: center; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 12px; padding: 24px 16px; overflow-x: auto; }
+.node { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; background: var(--surface-2);
+  text-align: center; max-width: 460px; font-size: 14px; }
 .node.cmd { font-family: var(--mono); background: var(--term-bg); color: var(--term-fg); border-color: var(--term-edge); }
 .node.cmd .p { color: var(--t-green); }
 .node.q { border-style: dashed; border-width: 1.5px; }
@@ -51,126 +61,174 @@ code, .mono { font-family: var(--mono); font-size: 0.92em; }
 .down::after { content: "▼"; font-size: 9px; line-height: 1; color: var(--line); margin-top: -2px; }
 .down span { order: -1; }
 .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
-.side { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
-.side::before { content: ""; width: 26px; height: 1.5px; background: var(--line); }
+.side-note { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+.side-note::before { content: ""; width: 26px; height: 1.5px; background: var(--line); }
 .node.direct { background: transparent; text-align: left; font-size: 13px; max-width: 280px; }
-.branches { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 760px; margin-top: 4px; }
+.branches { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 780px; margin-top: 4px; }
 .branch { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 6px; padding: 14px 16px;
-  border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface); min-width: 0; }
+  border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); min-width: 0; align-content: start; }
 .branch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .branch .tag { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
-.branch .when { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
-.branch h3 { font-size: 16px; }
-.branch ol { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink); display: grid; gap: 2px; }
-.branch.a .tag { color: var(--a); } .branch.b .tag { color: var(--b); }
+.branch ol { margin: 0; padding-left: 18px; font-size: 13.5px; display: grid; gap: 2px; }
+.branch .go { font-size: 12.5px; font-weight: 600; margin-top: 4px; }
+.branch.a .tag, .branch.a .go { color: var(--a); } .branch.b .tag, .branch.b .go { color: var(--b); }
 .branch.a[aria-pressed="true"] { border-color: var(--a); background: var(--a-soft); }
 .branch.b[aria-pressed="true"] { border-color: var(--b); background: var(--b-soft); }
-.loop { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); justify-content: center; text-align: center; }
-.loop .arrow { flex: 1; max-width: 180px; height: 1.5px; background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 10px); }
-.loop code { color: var(--ink); }
+.loop { grid-column: 1 / -1; font-size: 13px; color: var(--muted); text-align: center; }
 
-/* ── Tab jalur ── */
-.tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-.tab { all: unset; cursor: pointer; padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line);
-  font-weight: 600; font-size: 14px; color: var(--muted); background: var(--surface); }
-.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.tab[aria-selected="true"].a { color: var(--a); border-color: var(--a); background: var(--a-soft); }
-.tab[aria-selected="true"].b { color: var(--b); border-color: var(--b); background: var(--b-soft); }
-.envfile { display: grid; gap: 4px; }
-.envfile .label { font-size: 12.5px; color: var(--muted); }
-.envfile pre { margin: 0; font-family: var(--mono); font-size: 13px; background: var(--surface); border: 1px solid var(--line);
-  border-radius: 6px; padding: 10px 12px; overflow-x: auto; }
-.envfile .hl { padding: 1px 4px; border-radius: 3px; font-weight: 600; }
-.envfile .hl.a { color: var(--a); background: var(--a-soft); }
-.envfile .hl.b { color: var(--b); background: var(--b-soft); }
-.panel { display: grid; gap: 14px; }
-.panel > p { color: var(--muted); }
+/* ── Konsol simulator ── */
+.console { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; display: grid; min-width: 0; overflow: hidden; }
+.bar { display: flex; gap: 12px 20px; flex-wrap: wrap; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.bar.tabsbar { background: var(--surface-2); justify-content: space-between; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.tab { all: unset; cursor: pointer; font-family: var(--mono); font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 7px;
+  border: 1.5px solid transparent; color: var(--muted); }
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.tab:focus-visible, .btn:focus-visible, .seg button:focus-visible, .chip:focus-visible, .tog:focus-visible, .link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actions { display: flex; gap: 8px; }
+.btn { all: unset; cursor: pointer; box-sizing: border-box; font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--line);
+  color: var(--ink); background: var(--surface); display: inline-flex; gap: 8px; align-items: center; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn[hidden] { display: none; }
+.ctl { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.ctl > span { font-weight: 500; }
+.seg { display: inline-flex; border: 1.5px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { all: unset; cursor: pointer; font-size: 12.5px; font-weight: 600; padding: 5px 11px; color: var(--muted); border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); }
+.chk { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+.chk input { accent-color: var(--accent); width: 15px; height: 15px; margin: 0; }
+.cmdbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px 24px; align-items: start; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.cmdbar[hidden] { display: none; }
+.cmdlabel { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { all: unset; cursor: pointer; font-family: var(--mono); font-size: 12.5px; padding: 5px 10px; border-radius: 999px; border: 1.5px solid var(--line); color: var(--ink); background: var(--surface); }
+.chip:hover { border-color: var(--muted); }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--run-soft); color: var(--ink); }
+.envcard { font-family: var(--mono); font-size: 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; display: grid; gap: 2px; min-width: 250px; }
+.envcard .path { color: var(--muted); font-size: 11.5px; margin-bottom: 3px; }
+.envcard .v { color: var(--ink); }
+.tog { all: unset; cursor: pointer; font-family: var(--mono); font-size: 12px; display: inline-flex; gap: 8px; align-items: center; padding: 2px 6px; margin: 0 -6px; border-radius: 5px; }
+.tog:hover { background: var(--run-soft); }
+.tog .val { font-weight: 600; padding: 0 5px; border-radius: 3px; }
+.tog.off .val { background: var(--a-soft); color: var(--a); }
+.tog.on .val { background: var(--b-soft); color: var(--b); }
+.tog .hint { color: var(--muted); font-size: 11px; }
+.tog.flash { animation: flash 1.2s ease-out; }
+@keyframes flash { 0% { background: var(--run-soft); } 100% { background: transparent; } }
+.outcome { margin-top: 6px; font-family: var(--sans); font-size: 12.5px; font-weight: 600; }
+.outcome.a { color: var(--a); } .outcome.b { color: var(--b); } .outcome.c { color: var(--muted); }
 
-/* ── Terminal ── */
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 16px; padding: 16px; align-items: start; }
 .term { background: var(--term-bg); color: var(--term-fg); border: 1px solid var(--term-edge); border-radius: 10px; overflow: hidden; min-width: 0; }
-.term-bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; border-bottom: 1px solid #222b34; font-family: var(--mono); font-size: 12px; color: var(--t-dim); }
-.term-bar i { width: 10px; height: 10px; border-radius: 50%; background: #2a333d; display: inline-block; }
-.term-bar span { margin-left: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.term pre { margin: 0; padding: 14px 16px 18px; font-family: var(--mono); font-size: 12.5px; line-height: 1.5; overflow-x: auto; white-space: pre; }
-.c { color: var(--t-cyan); } .m { color: var(--t-mag); font-weight: 600; } .g { color: var(--t-green); }
-.y { color: var(--t-yel); } .r { color: var(--t-red); } .d { color: var(--t-dim); } .bo { font-weight: 600; }
-.fold { color: var(--t-dim); font-style: italic; }
-.cursor { display: inline-block; width: 0.6em; background: var(--term-fg); animation: blink 1.1s steps(1) infinite; }
+.term-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; background: var(--term-bar); border-bottom: 1px solid var(--term-edge);
+  font-family: var(--mono); font-size: 12px; color: var(--t-dim); }
+.term-bar .ttl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pill { font-family: var(--sans); font-weight: 600; font-size: 11.5px; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+.pill.idle { background: #243140; color: #9fb0c2; }
+.pill.running { background: #17324f; color: #8cc4ff; }
+.pill.paused { background: #4a3a14; color: #f0cd78; }
+.pill.done { background: #173a26; color: #8bd17c; }
+.pill.failed { background: #4a1f20; color: #f59a9f; }
+.pill.wait { background: #3d2c52; color: #d9b8f5; }
+.term-body { height: clamp(380px, 64vh, 640px); overflow-y: auto; padding: 12px 14px 16px; font-family: var(--mono); font-size: 12.75px; line-height: 1.55; outline: none; }
+.term-body:focus-visible { box-shadow: inset 0 0 0 2px #2f6fb0; }
+.ln { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1.55em; }
+.live { min-height: 1.55em; }
+.c { color: var(--t-cyan); } .m { color: var(--t-mag); } .g { color: var(--t-green); } .y { color: var(--t-yel); } .r { color: var(--t-red); } .d { color: var(--t-dim); } .b { font-weight: 600; }
+.g1 { color: var(--g1); } .g2 { color: var(--g2); } .g3 { color: var(--g3); } .g4 { color: var(--g4); } .g5 { color: var(--g5); }
+.spin { display: inline-block; width: 1ch; text-align: center; }
+.cur { display: inline-block; width: 0.6em; height: 1.1em; vertical-align: text-bottom; background: var(--term-fg); animation: blink 1.1s steps(1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
+.tin { all: unset; display: inline-block; vertical-align: bottom; font-family: var(--mono); font-size: inherit; color: #fff; caret-color: var(--t-cyan); border-bottom: 1px dashed var(--t-dim); min-width: 18ch; max-width: 44ch; }
+.tin::placeholder { color: var(--t-dim); }
+.ent { all: unset; cursor: pointer; font-size: 12px; color: var(--t-cyan); border: 1px solid var(--t-dim); border-radius: 4px; padding: 0 6px; margin-left: 8px; }
+.ent:hover { background: #1c2733; }
+.mrow { cursor: pointer; border-radius: 3px; }
+.mrow:hover { background: #17212c; }
+.mrow.sel { background: #14303a; }
 
-/* Menu interaktif */
-.menu-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
-.opts { display: grid; gap: 0; padding: 4px 8px 12px; }
-.opt { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 1.5ch 2.2ch 15ch 1fr; gap: 0 8px;
-  font-family: var(--mono); font-size: 12.5px; padding: 4px 8px; border-radius: 4px; color: var(--term-fg); }
-.opt .p { color: var(--t-cyan); font-weight: 600; visibility: hidden; }
-.opt[aria-pressed="true"] .p { visibility: visible; }
-.opt[aria-pressed="true"] .k, .opt[aria-pressed="true"] .n { color: var(--t-cyan); }
-.opt .k { color: var(--t-yel); font-weight: 600; }
-.opt .n { font-weight: 600; }
-.opt .t { color: var(--t-dim); }
-.opt:hover { background: #1c252e; }
-.opt:focus-visible { outline: 1.5px solid var(--t-cyan); }
-.opt[aria-pressed="true"] { background: #1f3a3a; }
-.opt[aria-pressed="true"] .t { color: var(--term-fg); }
-.explain { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
-.explain h3 { font-size: 16px; }
-.explain dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; font-size: 14px; }
-.explain dt { color: var(--muted); font-weight: 500; }
-.explain dd { margin: 0; min-width: 0; }
-.hint { font-size: 13px; color: var(--muted); }
-.ex { font-size: 12px; color: var(--muted); }
+.side { display: grid; gap: 12px; min-width: 0; }
+.panel { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 14px 14px; display: grid; gap: 10px; min-width: 0; }
+.panel h3 { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.steps li { display: grid; grid-template-columns: 20px 1fr; gap: 6px; font-size: 13.5px; padding: 4px 6px; border-radius: 6px; color: var(--muted); align-items: baseline; }
+.steps .mk { font-family: var(--mono); text-align: center; }
+.steps li.done { color: var(--ink); } .steps li.done .mk { color: var(--ok); }
+.steps li.act { background: var(--run-soft); color: var(--ink); font-weight: 600; } .steps li.act .mk { color: var(--accent); }
+.steps li.fail { background: var(--bad-soft); color: var(--ink); font-weight: 600; } .steps li.fail .mk { color: var(--bad); }
+.now { display: grid; gap: 4px; }
+.now b { font-size: 14px; }
+.now p { font-size: 13.5px; color: var(--muted); }
+.info dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; font-size: 13.5px; }
+.info dt { color: var(--muted); } .info dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.foot { padding: 0 16px 14px; font-size: 12.5px; color: var(--muted); }
 
-/* Kasus khusus */
+/* ── Catatan ── */
 .cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.case { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
-.case h3 { font-size: 15px; }
+.case { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
 .case p { font-size: 14px; color: var(--muted); }
-.case pre { margin: 0; font-family: var(--mono); font-size: 12.5px; background: var(--bg); border-radius: 6px; padding: 10px 12px; overflow-x: auto; }
 table { border-collapse: collapse; font-size: 13.5px; width: 100%; }
-td { padding: 5px 0; border-top: 1px solid var(--line); vertical-align: top; }
-td:first-child { font-family: var(--mono); font-size: 12.5px; padding-right: 12px; white-space: nowrap; }
+td { padding: 6px 0; border-top: 1px solid var(--line); vertical-align: top; }
 tr:first-child td { border-top: 0; }
+td:first-child { font-family: var(--mono); font-size: 12.5px; padding-right: 12px; white-space: nowrap; }
+.link { all: unset; cursor: pointer; color: var(--accent); font-weight: 600; font-size: 14px; }
+.link:hover { text-decoration: underline; }
 
-@media (max-width: 720px) {
-  .branches, .menu-grid, .cases { grid-template-columns: 1fr; }
-  .wrap { padding-block: 28px 48px; gap: 32px; }
+@media (max-width: 860px) {
+  .stage { grid-template-columns: minmax(0, 1fr); }
+  .side { order: -1; }
+  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cmdbar { grid-template-columns: minmax(0, 1fr); }
+  .envcard { min-width: 0; }
 }
+@media (max-width: 720px) {
+  .branches, .cases { grid-template-columns: 1fr; }
+  .wrap { padding-block: 28px 56px; gap: 34px; }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { .cur, .tog.flash { animation: none; } }
 </style>
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Setup/igrowctl.sh · tanpa argumen</div>
-    <h1>Dua jalur <code>bash igrowctl.sh</code></h1>
-    <p class="lede">Perintahnya sama, hasilnya tergantung satu baris di file setelan: kalau setup belum pernah selesai, script langsung memasang semuanya; kalau sudah, script menampilkan menu.</p>
+    <div class="eyebrow">Setup/ · simulator</div>
+    <h1>Simulator Setup iGROW</h1>
+    <p class="lede">Jalankan <code>setupvps.sh</code> dan <code>igrowctl.sh</code> di sini tanpa menyentuh VPS. Teks di terminal disalin dari script aslinya; kamu bisa memilih perintah, mengubah isi <code>setup.env</code>, mengisi sendiri pertanyaannya, atau memancing error.</p>
   </header>
 
   <section aria-labelledby="h-flow">
-    <h2 id="h-flow">Cara script memilih jalur</h2>
+    <div class="sec-head">
+      <h2 id="h-flow">Satu perintah, dua perilaku</h2>
+      <p>Kartu di bawah bisa diklik: simulator langsung menjalankan jalur yang dipilih.</p>
+    </div>
     <div class="flow">
-      <div class="node cmd"><span class="p">nuridho@vps:~$</span> bash igrowctl.sh</div>
+      <div class="node cmd"><span class="p">nuridho@labs:~$</span> bash igrowctl.sh</div>
       <div class="down"></div>
       <div class="row">
         <div class="node q"><b>Ada argumen?</b><span class="sub">mis. <code>deploy</code>, <code>status</code>, <code>step 6</code></span></div>
-        <div class="side">ya</div>
+        <div class="side-note">ya</div>
         <div class="node direct">Perintah itu langsung dijalankan. Penanda dan menu <b>tidak dicek</b>.</div>
       </div>
       <div class="down"><span>tidak</span></div>
-      <div class="node q"><b>Isi <code>~/.config/igrow/setup.env</code> ada <code>SETUP_DONE=1</code>?</b><span class="sub">penanda ditulis otomatis setelah langkah 9 selesai</span></div>
+      <div class="node q"><b>Isi <code>~/.config/igrow/setup.env</code> ada <code>SETUP_DONE=1</code>?</b><span class="sub">ditulis otomatis setelah langkah 9 selesai</span></div>
       <div class="down"></div>
       <div class="branches">
-        <button class="branch a" type="button" data-go="a" aria-pressed="true">
+        <button class="branch a" type="button" data-path="a" aria-pressed="false">
           <span class="tag">Belum ada · Jalur A</span>
           <h3>Setup lengkap</h3>
           <ol>
             <li>Kotak "yang perlu disiapkan" + <code>Mulai?</code></li>
             <li>Langkah 1–9 berurutan</li>
             <li>Kotak "iGROW siap"</li>
-            <li>Tulis <code>SETUP_DONE=1</code> ke setup.env</li>
+            <li>Tulis <code>SETUP_DONE=1</code></li>
           </ol>
+          <span class="go">Jalankan di simulator →</span>
         </button>
-        <button class="branch b" type="button" data-go="b" aria-pressed="false">
+        <button class="branch b" type="button" data-path="b" aria-pressed="false">
           <span class="tag">Sudah ada · Jalur B</span>
           <h3>Menu pilihan</h3>
           <ol>
@@ -179,200 +237,76 @@ tr:first-child td { border-top: 0; }
             <li>Script menjalankan pilihan itu</li>
             <li><code>h</code> → penjelasan, lalu menu tampil lagi</li>
           </ol>
+          <span class="go">Jalankan di simulator →</span>
         </button>
-        <div class="loop"><span class="arrow"></span><span>Selesai Jalur A sekali, berikutnya selalu Jalur B</span><span class="arrow"></span></div>
+        <div class="loop">Selesai Jalur A sekali, berikutnya selalu Jalur B.</div>
       </div>
     </div>
   </section>
 
-  <section aria-labelledby="h-sim">
-    <h2 id="h-sim">Coba lihat tampilannya</h2>
-    <div class="tabs" role="tablist" aria-label="Pilih jalur">
-      <button class="tab a" role="tab" id="tab-a" aria-controls="panel-a" aria-selected="true" type="button">Jalur A · Setup pertama</button>
-      <button class="tab b" role="tab" id="tab-b" aria-controls="panel-b" aria-selected="false" type="button" tabindex="-1">Jalur B · Menu</button>
+  <section id="sim" aria-labelledby="h-sim">
+    <div class="sec-head">
+      <h2 id="h-sim">Coba jalankan</h2>
+      <p>Pilih script, atur keadaan VPS-nya, lalu tekan Jalankan. Saat menu muncul, klik terminal supaya tombol keyboard aktif.</p>
     </div>
 
-    <div class="panel" id="panel-a" role="tabpanel" aria-labelledby="tab-a">
-      <div class="envfile">
-        <span class="label">Isi <code>~/.config/igrow/setup.env</code> sebelum script jalan (VPS baru)</span>
-        <pre>REPO_DIR="/home/nuridho/iGROW"
-PROJ="whatsinsidegit"      <span class="d"># dari setupvps.sh</span>
-<span class="hl a">SETUP_DONE=""</span>              <span class="d"># kosong → Jalur A</span></pre>
-      </div>
-      <div class="term" aria-label="Contoh tampilan Jalur A">
-        <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrowctl.sh</span></div>
-<pre><span class="c bo">     _  ____ ____   _____        __
-    (_)/ ___|  _ \ / _ \ \      / /
-    | | |  _| |_) | | | \ \ /\ / /
-    | | |_| |  _ &lt;| |_| |\ V  V /
-    |_|\____|_| \_\\___/  \_/\_/</span>
-<span class="d">    arsip karier &amp; knowledge base · Hermes + Telegram</span>
-  <span class="c">•</span> Minta sudo sekali untuk install paket…
-
-  <span class="c">╭─ <span class="bo">Yang perlu disiapkan (±15 menit)</span></span>
-  <span class="c">│</span> • Akun GitHub (repo iGROW + repo privat kosong untuk backup)
-  <span class="c">│</span> • Telegram: bot baru dari @BotFather + user ID dari @userinfobot
-  <span class="c">│</span> • API key LLM (OpenRouter / Anthropic / OpenAI / dll)
-  <span class="c">│</span> Langkah yang sudah beres otomatis dilewati. Gagal di tengah? Jalankan ulang saja.
-  <span class="c">╰─</span>
-
-  <span class="d">1 Paket · 2 Git · 3 Docker · 4 Repo · 5 Container · 6 LLM &amp; Telegram · 7 Runtime · 8 Backup · 9 Cron</span>
-
-  <span class="y">?</span> Mulai? <span class="d">[Y/n]</span> y
-
-
-
-<span class="m">━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">git, rsync, curl: alat wajib sebelum yang lain.</span>
-
-  <span class="c">›</span> <span class="d">Mengecek git, rsync, curl, ssh-keygen…</span>
-  <span class="g">✔</span> git version 2.43.0, rsync 3.2.7, curl 8.5.0 <span class="d">(sudah ada)</span>
-
-<span class="m">━━ [2/9] Git &amp; GitHub ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">Identitas commit + SSH key, supaya VPS bisa pull &amp; push ke GitHub.</span>
-
-  <span class="c">›</span> <span class="d">Mengecek identitas git…</span>
-  <span class="y">?</span> Nama untuk commit git: nuridho
-  <span class="y">?</span> Email GitHub (boleh alamat noreply GitHub): contoh-user@users.noreply.github.com
-  <span class="g">✔</span> Identitas git: nuridho &lt;contoh-user@users.noreply.github.com&gt;
-  <span class="c">›</span> <span class="d">Mengecek SSH key VPS…</span>
-  <span class="g">✔</span> SSH key baru: /home/nuridho/.ssh/id_ed25519
-  <span class="c">›</span> <span class="d">Mengetes koneksi SSH ke GitHub…</span>
-<span class="fold">  (kotak berisi SSH key → tempel di GitHub → Enter)</span>
-  <span class="g">✔</span> SSH ke GitHub tembus (akun contoh-user)
-
-<span class="m">━━ [3/9] Docker &amp; Compose ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">Mesin untuk menjalankan container Hermes.</span>
-
-  <span class="c">›</span> <span class="d">Mengecek Docker &amp; Compose…</span>
-  <span class="g">✔</span> Docker version 27.3.1, compose 2.29.7 <span class="d">(sudah ada)</span>
-  <span class="c">›</span> <span class="d">Memastikan service Docker aktif &amp; akses user nuridho…</span>
-  <span class="g">✔</span> User nuridho di grup docker <span class="d">(sudah ada)</span>
-  <span class="g">✔</span> Docker siap (service aktif)
-
-<span class="m">━━ [4/9] Repo iGROW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">Clone repo spec iGROW ke VPS: sumber file runtime hermes-home/.</span>
-
-  <span class="c">›</span> <span class="d">Mengecek repo iGROW di /home/nuridho/iGROW…</span>
-  <span class="y">?</span> URL SSH repo iGROW <span class="d">[git@github.com:contoh-user/iGROW.git]</span>: 
-  <span class="y">?</span> Clone ke folder <span class="d">[/home/nuridho/iGROW]</span>: 
-  <span class="g">✔</span> Clone git@github.com:contoh-user/iGROW.git <span class="d">3s</span>
-  <span class="g">✔</span> Repo: /home/nuridho/iGROW (a1b2c3d · 2 jam lalu)
-  <span class="c">•</span> Sumber runtime: /home/nuridho/iGROW/hermes-home/ (24 file)
-
-<span class="m">━━ [5/9] Container Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">Compose resmi nousresearch/hermes-agent; data di hermes-home/ = /opt/data.</span>
-
-  <span class="c">›</span> <span class="d">Mencari container igrow-hermes…</span>
-  <span class="c">•</span> Belum ada container igrow-hermes: compose baru akan dibuat
-  <span class="y">?</span> Mau install di mana? Nama folder project di /home/nuridho (mis. whatsinsidegit) <span class="d">[whatsinsidegit]</span>: 
-  <span class="c">•</span> Folder /home/nuridho/whatsinsidegit sudah ada, dipakai
-  <span class="y">?</span> Timezone (jam cron &amp; briefing) <span class="d">[Asia/Jakarta]</span>: 
-  <span class="c">›</span> <span class="d">Menyiapkan folder &amp; environment…</span>
-  <span class="g">✔</span> Folder data: /home/nuridho/whatsinsidegit/igrow-hermes/hermes-home
-  <span class="g">✔</span> Environment compose: UID/GID 1000:1000, TZ Asia/Jakarta (…/igrow-hermes/.env)
-  <span class="g">✔</span> docker-compose.yml dibuat di /home/nuridho/whatsinsidegit/igrow-hermes
-  <span class="g">✔</span> Tarik image nousresearch/hermes-agent <span class="d">48s</span>
-  <span class="c">•</span> Image: nousresearch/hermes-agent:latest (dibuat 2026-10-20)
-
-<span class="m">━━ [6/9] Otak (LLM) &amp; Telegram ━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">API key LLM + token bot, disimpan di hermes-home/.env (bukan di repo).</span>
-
-  <span class="c">›</span> <span class="d">Mengecek setelan LLM…</span>
-  <span class="c">•</span> Belum ada setelan LLM
-  <span class="y">?</span> Buka wizard LLM resmi Hermes (pilih provider → tempel API key → pilih model)? <span class="d">[Y/n]</span> y
-<span class="fold">  (wizard resmi Hermes: pilih provider → API key → model)</span>
-  <span class="g">✔</span> LLM tersimpan
-  <span class="c">›</span> <span class="d">Mengecek token bot Telegram…</span>
-  <span class="y">?</span> Token bot <span class="d">(tidak tampil di layar)</span>:
-  <span class="g">✔</span> Bot valid: @igrow_contoh_bot
-  <span class="y">?</span> User ID Telegram kamu: 123456789
-  <span class="g">✔</span> Telegram tersimpan: hanya user 123456789 yang dilayani, hasil cron masuk ke chat ini
-
-<span class="m">━━ [7/9] Runtime iGROW &amp; tools ━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">Salin hermes-home/ dari repo, kunci approval skill, pilih tools cron, nyalakan bot.</span>
-
-  <span class="c">›</span> <span class="d">Menyalin aturan iGROW dari repo ke …/hermes-home…</span>
-  <span class="g">✔</span> Runtime terbaru (AGENTS.md, SCHEMA, project-skills)
-  <span class="g">✔</span> File milik agent yang belum ada (katalog, log, tag)
-  <span class="c">›</span> <span class="d">Mengunci approval skill buatan Hermes…</span>
-  <span class="g">✔</span> skills.write_approval = true (skill buatan Hermes menunggu persetujuanmu) <span class="d">3s</span>
-  <span class="y">?</span> Wajibkan approval juga untuk memory Hermes (memory.write_approval)? <span class="d">[y/N]</span>
-<span class="fold">  (layar hermes tools: platform cron → web, terminal, file)</span>
-  <span class="c">›</span> <span class="d">Menyalakan gateway Telegram…</span>
-  <span class="g">✔</span> Nyalakan gateway (docker compose up -d) <span class="d">6s</span>
-  <span class="g">✔</span> Gateway jalan: igrow-hermes (bot @igrow_contoh_bot)
-  <span class="g">✔</span> hermes doctor <span class="d">4s</span>
-
-<span class="m">━━ [8/9] Backup knowledge ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">igrow/ di-push ke repo GitHub privat. Repo backup sudah berisi → tawarkan restore.</span>
-
-  <span class="c">›</span> <span class="d">Mengecek git di container &amp; sambungan repo backup…</span>
-  <span class="y">?</span> Repo backup GitHub (pemilik/nama), PRIVAT <span class="d">[contoh-user/igrow-backup]</span>: 
-<span class="fold">  (kotak petunjuk: buat repo privat + fine-grained token → Enter)</span>
-  <span class="y">?</span> Fine-grained token <span class="d">(tidak tampil di layar)</span>:
-  <span class="g">✔</span> Token valid, repo privat
-  <span class="g">✔</span> Push pertama ke contoh-user/igrow-backup <span class="d">3s</span>
-  <span class="g">✔</span> Uji backup.sh (persis seperti cron) <span class="d">4s</span>
-
-<span class="m">━━ [9/9] Cron job ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">Briefing 07:00 · backup Sen/Rab/Sab 05:00 · lint Minggu 08:00 · career review tiap kuartal.</span>
-
-  <span class="c">›</span> <span class="d">Membaca daftar cron yang sudah ada…</span>
-  <span class="g">✔</span> daily-briefing (0 7 * * *) <span class="d">3s</span>
-  <span class="g">✔</span> backup-knowledge (0 5 * * 1,3,6) <span class="d">2s</span>
-  <span class="g">✔</span> lint-mingguan (0 8 * * 0) <span class="d">2s</span>
-  <span class="g">✔</span> career-review (0 9 1 1,4,7,10 *) <span class="d">2s</span>
-  <span class="g">✔</span> Uji lint-privacy.sh (dipakai lint mingguan)
-<span class="fold">  (di sini script menulis SETUP_DONE=1 ke setup.env)</span>
-
-<span class="g bo">━━ iGROW siap ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="g">✔ 33 dikerjakan</span>  <span class="d">✔ 3 sudah ada</span>  <span class="y">! 0 peringatan</span>  <span class="d">waktu 9m12s</span>
-
-  <span class="c">╭─ <span class="bo">Coba sekarang</span></span>
-  <span class="c">│</span> Telegram → @igrow_contoh_bot → kirim: halo
-  <span class="c">│</span> Lalu ikuti skenario uji: /home/nuridho/iGROW/testing/test-flow.md
-  <span class="c">╰─</span>
-
-  <span class="c">╭─ <span class="bo">Berikutnya</span></span>
-  <span class="c">│</span> bash igrowctl.sh   → menu: deploy, status, update, ganti LLM/token, backup, help
-  <span class="c">│</span> Telegram: /skills pending → cek skill buatan Hermes yang menunggu persetujuan
-  <span class="c">╰─</span></pre>
-      </div>
-      <p class="ex">Contoh: tiap langkah diringkas jadi satu baris hasil. Nama akun dan bot fiktif.</p>
-    </div>
-
-    <div class="panel" id="panel-b" role="tabpanel" aria-labelledby="tab-b" hidden>
-      <div class="envfile">
-        <span class="label">Isi <code>~/.config/igrow/setup.env</code> setelah setup pernah selesai</span>
-        <pre>REPO_DIR="/home/nuridho/iGROW"
-PROJ="whatsinsidegit"
-<span class="hl b">SETUP_DONE="1"</span>             <span class="d"># terisi → Jalur B</span></pre>
-      </div>
-      <div class="menu-grid">
-        <div class="term" aria-label="Menu igrowctl.sh">
-          <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrowctl.sh</span></div>
-<pre style="padding-bottom:4px"><span class="c">  ╭─ <span class="bo">Mau ngapain?</span></span>
-<span class="c">  │</span> <span class="d">↑/↓ pilih · Enter jalankan · atau tekan angkanya</span></pre>
-          <div class="opts" id="opts" role="group" aria-label="Pilihan menu"></div>
-<pre style="padding-top:0;padding-bottom:4px"><span class="c">  ╰─</span></pre>
+    <div class="console">
+      <div class="bar tabsbar">
+        <div class="tabs" role="tablist" aria-label="Script">
+          <button class="tab" role="tab" id="tab-ig" type="button" data-tab="ig" aria-selected="true">igrowctl.sh</button>
+          <button class="tab" role="tab" id="tab-vps" type="button" data-tab="vps" aria-selected="false" tabindex="-1">setupvps.sh</button>
         </div>
-        <div class="explain" id="explain" aria-live="polite"></div>
+        <div class="actions">
+          <button class="btn" id="btn-stop" type="button" hidden>■ Berhenti</button>
+          <button class="btn primary" id="btn-run" type="button">▶ Jalankan</button>
+        </div>
       </div>
-      <p class="hint">Klik pilihan, pakai ↑/↓, atau tekan angkanya di keyboard. Hasil di terminal bawah adalah contoh.</p>
-      <div class="term" aria-label="Contoh hasil pilihan">
-        <div class="term-bar"><i></i><i></i><i></i><span id="out-title">hasil pilihan</span></div>
-        <pre id="out"></pre>
+
+      <div class="bar">
+        <div class="ctl" id="ctl-world"><span>Keadaan VPS</span><div class="seg" id="seg-world" role="radiogroup" aria-label="Keadaan VPS"></div></div>
+        <div class="ctl"><span>Kecepatan</span><div class="seg" id="seg-speed" role="radiogroup" aria-label="Kecepatan"></div></div>
+        <div class="ctl"><span>Pertanyaan</span><div class="seg" id="seg-auto" role="radiogroup" aria-label="Cara mengisi pertanyaan"></div></div>
+        <label class="ctl chk" title="Memancing kegagalan di langkah yang butuh jaringan: tarik image (igrowctl), pasang Docker (setupvps), status container"><input type="checkbox" id="chk-err"><span>Simulasikan error</span></label>
       </div>
+
+      <div class="cmdbar" id="cmdbar">
+        <div>
+          <div class="cmdlabel">Perintah</div>
+          <div class="chips" id="chips" role="group" aria-label="Perintah igrowctl.sh"></div>
+        </div>
+        <div class="envcard" id="envcard">
+          <div class="path">~/.config/igrow/setup.env</div>
+          <div class="v">REPO_DIR="/home/nuridho/iGROW"</div>
+          <div class="v">PROJ="whatsinsidegit"</div>
+          <button class="tog off" id="tog-done" type="button" aria-label="Ubah SETUP_DONE"><span>SETUP_DONE=<span class="val" id="done-val">""</span></span><span class="hint">klik untuk ubah</span></button>
+          <div class="outcome c" id="outcome"></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="term">
+          <div class="term-bar"><span class="ttl" id="term-ttl">nuridho@labs: ~</span><span class="pill idle" id="pill">siap</span></div>
+          <div class="term-body" id="out" tabindex="0" role="log" aria-live="off" aria-label="Terminal simulasi"></div>
+        </div>
+        <aside class="side" aria-label="Penjelasan">
+          <div class="panel" id="panel-steps">
+            <h3>Langkah</h3>
+            <ol class="steps" id="steps"></ol>
+            <div class="now" id="now"></div>
+          </div>
+          <div class="panel info" id="panel-info" hidden></div>
+        </aside>
+      </div>
+      <p class="foot">Nama, versi, dan keluaran perintah Hermes (daftar cron, wizard) hanya contoh fiktif. Teks tampilan script disalin dari script aslinya.</p>
     </div>
   </section>
 
   <section aria-labelledby="h-case">
-    <h2 id="h-case">Kasus yang perlu diingat</h2>
+    <div class="sec-head"><h2 id="h-case">Kasus yang perlu diingat</h2></div>
     <div class="cases">
       <div class="case">
         <h3>Perintah langsung selalu melewati menu</h3>
-        <p>Cocok untuk alias di laptop. Penanda <code>SETUP_DONE</code> tidak dicek.</p>
+        <p>Cocok untuk alias di laptop. Penanda <code>SETUP_DONE</code> tidak dicek. Klik chip perintah di simulator untuk melihatnya.</p>
         <table>
           <tr><td>deploy</td><td>sama dengan menu 1</td></tr>
           <tr><td>status</td><td>sama dengan menu 2</td></tr>
@@ -384,168 +318,1021 @@ PROJ="whatsinsidegit"
       </div>
       <div class="case">
         <h3>VPS yang setupnya dibuat sebelum ada menu</h3>
-        <p>File setelannya belum punya <code>SETUP_DONE</code>, jadi script masih masuk Jalur A. Itu aman karena langkah yang beres dilewati. Supaya langsung ke menu, pilih salah satu, cukup sekali:</p>
-        <pre>bash igrowctl.sh all
-<span class="d"># atau</span>
-echo 'SETUP_DONE=1' &gt;&gt; ~/.config/igrow/setup.env</pre>
+        <p>File setelannya belum punya <code>SETUP_DONE</code>, jadi script masih masuk Jalur A. Itu aman karena yang sudah ada dilewati. Supaya langsung ke menu, jalankan <code>bash igrowctl.sh all</code> sekali, atau tambahkan <code>SETUP_DONE=1</code> ke <code>setup.env</code>.</p>
+        <button class="link" id="try-lama" type="button">Coba di simulator: terpasang, tanpa penanda →</button>
       </div>
     </div>
   </section>
 </div>
 
 <script>
-const OPTIONS = [
-  { k: "1", name: "Deploy", short: "pasang aturan terbaru dari repo (habis git push)", runs: "cmd_deploy",
-    when: "Kamu mengubah aturan di hermes-home/ di laptop lalu git push.",
-    what: "git pull repo di VPS, lalu salin aturan ke hermes-home/. Note, raw, output tidak disentuh.",
-    after: "Kirim /new di Telegram supaya sesi baru membaca aturan terbaru.",
-    out: [["m","━━ · Deploy runtime ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  git pull repo → rsync 2 langkah ke hermes-home/. Data di VPS tidak disentuh."],[""],
-      ["g","  ✔ ","git pull (/home/nuridho/iGROW)"],["g","  ✔ ","Runtime terbaru (AGENTS.md, SCHEMA, project-skills)"],["g","  ✔ ","File milik agent yang belum ada (katalog, log, tag)"],["g","  ✔ ","Selesai. Mulai sesi baru di Telegram (/new) supaya aturan terbaru terbaca."]] },
-  { k: "2", name: "Status", short: "cek bot, Hermes, cron, backup terakhir", runs: "cmd_status",
-    when: "Bot diam, atau sekadar mau memastikan semuanya sehat.",
-    what: "Cek container jalan, hermes doctor, daftar cron, waktu backup terakhir. Tidak mengubah apa pun.",
-    after: "Ada yang merah? Pilihan 4–7 biasanya jawabannya.",
-    out: [["m","━━ · Status ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Kesehatan container, Hermes, cron, dan backup."],[""],
-      ["g","  ✔ ","Container igrow-hermes jalan (2026-10-24T05:02)"],["g","  ✔ ","hermes doctor bersih"],[""],
-      ["d","    (daftar cron dari hermes cron list: daily-briefing, backup-knowledge, lint-mingguan, career-review)"],[""],
-      ["g","  ✔ ","Backup terakhir: 2 hari lalu · backup otomatis"],["g","  ✔ ","Runtime repo: a1b2c3d · 3 jam lalu"]] },
-  { k: "3", name: "Update", short: "update Hermes ke versi terbaru", runs: "cmd_update",
-    when: "Hermes rilis versi baru (sesekali saja, mis. sebulan sekali).",
-    what: "Tarik image terbaru, buat ulang container, cek doctor dan cron. Kalau sudah terbaru, tidak ada yang diubah.",
-    after: "Versi baru bermasalah? Di akhir tampil baris image: …@sha256:… untuk balik ke versi lama.",
-    out: [["m","━━ · Update Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Tarik image terbaru → buat ulang container. Data di hermes-home/ tetap."],[""],
-      ["g","  ✔ ","Tarik image terbaru"],["g","  ✔ ","Buat ulang container"],["g","  ✔ ","Hermes 1.4.2 → 1.5.0"],["g","  ✔ ","hermes doctor"],[""],
-      ["c","  ╭─ Kalau versi baru bermasalah, balik ke versi lama"],["c","  │ ","Di /home/nuridho/whatsinsidegit/igrow-hermes/docker-compose.yml, service igrow-hermes:"],
-      ["c","  │ ","  image: nousresearch/hermes-agent@sha256:9f3c…"],["c","  │ ","lalu: cd … && docker compose up -d igrow-hermes"],["c","  ╰─"],
-      ["g","  ✔ ","Selesai. Kirim /new di Telegram, lalu cek job cron di atas masih lengkap."]] },
-  { k: "4", name: "LLM & Telegram", short: "ganti API key, model, atau token bot", runs: "step6",
-    when: "Ganti provider, API key, atau model LLM, atau ganti token bot Telegram.",
-    what: "Wizard resmi Hermes untuk LLM. Token bot dicek ke Telegram dulu sebelum disimpan.",
-    after: "Gateway di-restart otomatis supaya setelan baru terbaca.",
-    out: [["m","━━ [6/9] Otak (LLM) & Telegram ━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  API key LLM + token bot, disimpan di hermes-home/.env (bukan di repo)."],[""],
-      ["act","Mengecek setelan LLM…"],["c","  • ","Model sekarang: contoh-provider/contoh-model"],["y","  ? ","Buka wizard LLM resmi Hermes (pilih provider → tempel API key → pilih model)? [y/N]"],
-      ["act","Mengecek token bot Telegram…"],["y","  ? ","Token bot Telegram sudah ada. Ganti? [y/N]"],["g","  ✔ ","Restart gateway (setelan baru dibaca)"]] },
-  { k: "5", name: "Tools cron", short: "ganti tools untuk job cron", runs: "step7",
-    when: "Job cron gagal karena tool-nya mati, atau mau mengubah tools cron.",
-    what: "Aturan dari repo dipasang ulang, layar hermes tools dibuka (platform cron: web, terminal, file), bot di-restart.",
-    after: "Pastikan doctor di akhir bersih.",
-    out: [["m","━━ [7/9] Runtime iGROW & tools ━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Salin hermes-home/ dari repo, kunci approval skill, pilih tools cron, nyalakan bot."],[""],
-      ["act","Menyalin aturan iGROW dari repo ke hermes-home…"],["g","  ✔ ","Runtime terbaru (AGENTS.md, SCHEMA, project-skills)"],["act","Mengunci approval skill buatan Hermes…"],["g","  ✔ ","skills.write_approval = true (skill buatan Hermes menunggu persetujuanmu)"],
-      ["y","  ? ","Buka pengaturan tools sekarang? [Y/n]"],["d","    (layar hermes tools: pilih platform cron → web, terminal, file)"],
-      ["act","Menyalakan gateway Telegram…"],["g","  ✔ ","Restart gateway"],["g","  ✔ ","Gateway jalan: igrow-hermes"],["g","  ✔ ","hermes doctor"]] },
-  { k: "6", name: "Backup", short: "sambung ulang / ganti token backup", runs: "step8 (plus tawaran hapus token)",
-    when: "Token backup kedaluwarsa, push backup gagal, atau ganti repo backup.",
-    what: "Jawab y untuk menghapus token lama, masukkan token baru, lalu backup diuji persis seperti cron.",
-    after: "Token lama tidak perlu dihapus manual lagi.",
-    out: [["y","  ? ","Ganti token backup? (token lama dihapus, mis. karena kedaluwarsa) [y/N] y"],["c","  • ","Token lama dihapus"],[""],
-      ["m","━━ [8/9] Backup knowledge ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  igrow/ di-push ke repo GitHub privat. Repo backup sudah berisi → tawarkan restore."],[""],
-      ["act","Mengecek git di container & sambungan repo backup…"],["y","  ? ","Repo backup GitHub (pemilik/nama), PRIVAT [contoh-user/igrow-backup]:"],["y","  ? ","Fine-grained token (tidak tampil di layar):"],
-      ["g","  ✔ ","Token valid, repo privat"],["g","  ✔ ","Uji backup.sh (persis seperti cron)"]] },
-  { k: "7", name: "Setup ulang", short: "semua langkah; yang sudah beres dilewati", runs: "intro + langkah 1–9",
-    when: "Ada langkah yang dulu gagal, atau ragu setup sudah lengkap.",
-    what: "Langkah 1–9 dijalankan seperti Jalur A. Yang sudah beres dicek lalu dilewati. Aman.",
-    after: "Sama dengan bash igrowctl.sh all.",
-    out: [["y","  ? ","Mulai? [Y/n] y"],[""],["m","━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["g","  ✔ ","git version 2.x, rsync, curl (sudah ada)"],
-      ["m","━━ [2/9] Git & GitHub ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["g","  ✔ ","Identitas git: nuridho <…> (sudah ada)"],
-      ["fold","  … langkah 3–8: kebanyakan ✔ (sudah ada) …"],
-      ["m","━━ [9/9] Cron job ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["g","  ✔ ","daily-briefing (sudah ada)"],["g","  ✔ ","backup-knowledge (sudah ada)"],
-      ["g","  ✔ ","lint-mingguan (sudah ada)"],["g","  ✔ ","career-review (sudah ada)"],[""],["gb","━━ iGROW siap ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["g","  ✔ 0 dikerjakan","  ✔ 31 sudah ada  ! 0 peringatan  waktu 1m05s"]] },
-  { k: "h", name: "Help", short: "penjelasan tiap pilihan", runs: "cmd_help",
-    when: "Bingung maksud salah satu pilihan.",
-    what: "Tampil penjelasan pilihan 1–7: kapan dipakai dan apa yang terjadi.",
-    after: "Menu langsung tampil lagi, jadi bisa langsung memilih.",
-    out: [["m","━━ · Help ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Penjelasan tiap pilihan di menu."],[""],
-      ["cb","  1 · Deploy"],["","    Kapan: kamu mengubah aturan di hermes-home/ di laptop lalu git push."],["","    Yang terjadi: git pull repo di VPS → salin aturan ke hermes-home/. Note, raw, output tidak disentuh."],[""],
-      ["cb","  2 · Status"],["","    Kapan: bot diam, atau sekadar mau memastikan semuanya sehat."],[""],
-      ["fold","  … pilihan 3–7 dengan format yang sama …"],[""],
-      ["c","  ╭─ Mau ngapain?"],["fold","  (menu tampil lagi)"]] },
-  { k: "0", name: "Keluar", short: "", runs: "exit 0",
-    when: "Salah buka, atau sudah selesai.",
-    what: "Script berhenti tanpa mengubah apa pun.",
-    after: "",
-    out: [["d","nuridho@vps:~$"]] }
+/* FLOWS-BEGIN */
+'use strict';
+/* ───────── Keadaan simulasi ───────── */
+const W  = { setupDone: false, installed: false, hermes: '1.4.2', vps: false };   // keadaan "VPS"
+const UI = { tab: 'ig', cmd: '', speed: 10, auto: true, err: false };
+
+const IG = {
+  home: '/home/nuridho', repo: '/home/nuridho/iGROW', proj: 'whatsinsidegit',
+  url: 'git@github.com:contoh-user/iGROW.git', gh: 'contoh-user', bot: 'igrow_contoh_bot', uid: '123456789',
+  backup: 'contoh-user/igrow-backup', log: '/home/nuridho/.config/igrow/setup.log',
+};
+IG.compose = IG.home + '/' + IG.proj + '/igrow-hermes';
+IG.hh = IG.compose + '/hermes-home';
+const VPS_LOG = '/var/log/setupvps.log';
+const GIT_V = 'git version 2.43.0, rsync 3.2.7, curl 8.5.0';
+const DOCKER_V = 'Docker version 27.3.1, compose 2.29.7';
+const JOBS = [
+  ['daily-briefing', '0 7 * * *'], ['backup-knowledge', '0 5 * * 1,3,6'],
+  ['lint-mingguan', '0 8 * * 0'], ['career-review', '0 9 1 1,4,7,10 *'],
 ];
 
-const optsEl = document.getElementById("opts");
-const outEl = document.getElementById("out");
-const outTitle = document.getElementById("out-title");
-const explainEl = document.getElementById("explain");
+const ART_IG = [
+  String.raw`     _  ____ ____   _____        __`,
+  String.raw`    (_)/ ___|  _ \ / _ \ \      / /`,
+  String.raw`    | | |  _| |_) | | | \ \ /\ / /`,
+  String.raw`    | | |_| |  _ <| |_| |\ V  V /`,
+  String.raw`    |_|\____|_| \_\\___/  \_/\_/`,
+];
+const ART_VPS = [
+  String.raw`     __     ______  ____`,
+  String.raw`     \ \   / /  _ \/ ___|`,
+  String.raw`      \ \ / /| |_) \___ ` + '\\',
+  String.raw`       \ V / |  __/ ___) |`,
+  String.raw`        \_/  |_|   |____/`,
+];
 
-const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+const MENU_ITEMS = [
+  { k: '1', n: 'Deploy',         d: 'pasang aturan terbaru dari repo (habis git push)' },
+  { k: '2', n: 'Status',         d: 'cek bot, Hermes, cron, backup terakhir' },
+  { k: '3', n: 'Update',         d: 'update Hermes ke versi terbaru' },
+  { k: '4', n: 'LLM & Telegram', d: 'ganti API key, model, atau token bot' },
+  { k: '5', n: 'Tools cron',     d: 'ganti tools untuk job cron' },
+  { k: '6', n: 'Backup',         d: 'sambung ulang / ganti token backup' },
+  { k: '7', n: 'Setup ulang',    d: 'semua langkah; yang sudah beres dilewati' },
+  { k: 'h', n: 'Help',           d: 'penjelasan tiap pilihan' },
+  { k: '0', n: 'Keluar',         d: '' },
+];
 
-function line(l) {
-  const [cls, a = "", b] = l;
-  if (cls === "act") return `  <span class="c">›</span> <span class="d">${esc(a)}</span>`; // sedang dicek / dikerjakan
-  if (b !== undefined) return `<span class="${cls}">${esc(a)}</span>${esc(b)}`;
-  const map = { gb: "g bo", cb: "c bo" };
-  return cls ? `<span class="${map[cls] || cls}">${esc(a)}</span>` : esc(a);
+/* ───────── Konstruktor event ───────── */
+const E = {
+  banner: (art, sub) => ({ k: 'banner', art, sub }),
+  head: (n, title, desc) => ({ k: 'head', n, title, desc }),
+  act: t => ({ k: 'act', t }), info: t => ({ k: 'info', t }), warn: t => ({ k: 'warn', t }),
+  ok: (t, d) => ({ k: 'ok', t, d }), skip: t => ({ k: 'skip', t }),
+  dim: t => ({ k: 'dim', t }), blank: () => ({ k: 'blank' }),
+  run: (label, sec, fail) => ({ k: 'run', label, sec, fail }),
+  ask: (q, def, auto) => ({ k: 'ask', q, def: def || '', auto }),
+  secret: (q, auto) => ({ k: 'ask', q, def: '', auto, secret: true }),
+  confirm: (q, def, ans) => ({ k: 'confirm', q, def: def || 'Y', ans }),
+  pause: () => ({ k: 'pause' }),
+  box: (title, lines) => ({ k: 'box', title, lines }),
+  hitem: (title, lines) => ({ k: 'hitem', title, lines }),
+  menu: () => ({ k: 'menu' }),
+  reset: () => ({ k: 'reset' }),
+  finale: (title, bars) => ({ k: 'finale', title, bars }),
+  die: (msg, log) => ({ k: 'die', msg, log }),
+  sync: () => ({ k: 'sync' }),
+};
+
+/* ───────── Alur: igrowctl.sh ───────── */
+const fresh = () => !W.installed;
+
+function* igBanner() { yield E.banner(ART_IG, 'arsip karier & knowledge base · Hermes + Telegram'); }
+function* igPreflight() { yield E.info('Minta sudo sekali untuk install paket…'); }
+
+function* igIntro() {
+  yield E.box('Yang perlu disiapkan (±15 menit)', [
+    '• Akun GitHub (repo iGROW + repo privat kosong untuk backup)',
+    '• Telegram: bot baru dari @BotFather + user ID dari @userinfobot',
+    '• API key LLM (OpenRouter / Anthropic / OpenAI / dll)',
+    'Langkah yang sudah beres otomatis dilewati. Gagal di tengah? Jalankan ulang saja.',
+  ]);
+  yield E.dim('  1 Paket · 2 Git · 3 Docker · 4 Repo · 5 Container · 6 LLM & Telegram · 7 Runtime · 8 Backup · 9 Cron');
+  yield E.blank();
+  return yield E.confirm('Mulai?', 'Y');
 }
 
-OPTIONS.forEach(o => {
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "opt";
-  btn.dataset.k = o.k;
-  btn.setAttribute("aria-pressed", "false");
-  btn.innerHTML = `<span class="p" aria-hidden="true">❯</span><span class="k">${o.k}</span><span class="n">${esc(o.name)}</span><span class="t">${esc(o.short)}</span>`;
-  btn.addEventListener("click", () => pick(o.k));
-  optsEl.appendChild(btn);
-});
-
-function pick(k) {
-  const o = OPTIONS.find(x => x.k === k);
-  if (!o) return;
-  optsEl.querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === k)));
-  outTitle.textContent = `setelah memilih ${k} · ${o.name}`;
-  outEl.innerHTML = o.out.map(line).join("\n");
-  explainEl.innerHTML = `
-    <h3>${o.k} · ${esc(o.name)}</h3>
-    <dl>
-      <dt>Kapan</dt><dd>${esc(o.when)}</dd>
-      <dt>Yang terjadi</dt><dd>${esc(o.what)}</dd>
-      ${o.after ? `<dt>Sesudahnya</dt><dd>${esc(o.after)}</dd>` : ""}
-      <dt>Di script</dt><dd><code>${esc(o.runs)}</code></dd>
-    </dl>`;
+function* igStep1() {
+  yield E.head(1, 'Paket dasar', 'git, rsync, curl: alat wajib sebelum yang lain.');
+  yield E.act('Mengecek git, rsync, curl, ssh-keygen…');
+  if (fresh()) {
+    yield E.info('Belum ada: git rsync ssh-keygen');
+    yield E.run('apt update', 6);
+    yield E.run('Install git rsync openssh-client', 11);
+    yield E.ok(GIT_V);
+  } else yield E.skip(GIT_V);
 }
-pick("1");
 
-/* Tab jalur + kartu jalur di diagram */
-const tabs = { a: document.getElementById("tab-a"), b: document.getElementById("tab-b") };
-const panels = { a: document.getElementById("panel-a"), b: document.getElementById("panel-b") };
-function show(which, focus) {
-  for (const key of ["a", "b"]) {
-    const on = key === which;
-    tabs[key].setAttribute("aria-selected", String(on));
-    tabs[key].tabIndex = on ? 0 : -1;
-    panels[key].hidden = !on;
+function* igStep2() {
+  yield E.head(2, 'Git & GitHub', 'Identitas commit + SSH key, supaya VPS bisa pull & push ke GitHub.');
+  yield E.act('Mengecek identitas git…');
+  if (fresh()) {
+    const n = yield E.ask('Nama untuk commit git', '', 'nuridho');
+    const e = yield E.ask('Email GitHub (boleh alamat noreply GitHub)', '', 'contoh-user@users.noreply.github.com');
+    yield E.ok(`Identitas git: ${n} <${e}>`);
+  } else yield E.skip('Identitas git: nuridho <contoh-user@users.noreply.github.com>');
+  yield E.act('Mengecek SSH key VPS…');
+  if (fresh()) yield E.ok('SSH key baru: /home/nuridho/.ssh/id_ed25519');
+  else yield E.skip('SSH key: /home/nuridho/.ssh/id_ed25519');
+  yield E.act('Mengetes koneksi SSH ke GitHub…');
+  if (fresh()) {
+    yield E.box('Tempel key ini di GitHub → Settings → SSH and GPG keys → New SSH key',
+      ['ssh-ed25519 AAAAC3Nza…contoh-fiktif…xyz igrow-vps']);
+    yield E.pause();
   }
-  document.querySelectorAll(".branch").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.go === which)));
-  if (focus) tabs[which].focus();
+  yield E.ok(`SSH ke GitHub tembus (akun ${IG.gh})`);
 }
-tabs.a.addEventListener("click", () => show("a"));
-tabs.b.addEventListener("click", () => show("b"));
-document.querySelector('[role="tablist"]').addEventListener("keydown", e => {
-  if (e.key === "ArrowRight" || e.key === "ArrowLeft") show(tabs.a.getAttribute("aria-selected") === "true" ? "b" : "a", true);
-});
-document.querySelectorAll(".branch").forEach(b => b.addEventListener("click", () => {
-  show(b.dataset.go);
-  document.getElementById("h-sim").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
-}));
 
-/* ↑/↓ saat fokus di menu menggeser pilihan, seperti di terminal */
-optsEl.addEventListener("keydown", e => {
-  if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
-  e.preventDefault();
-  const btns = [...optsEl.querySelectorAll(".opt")];
-  const cur = btns.findIndex(b => b.getAttribute("aria-pressed") === "true");
-  const next = btns[(cur + (e.key === "ArrowDown" ? 1 : btns.length - 1)) % btns.length];
-  pick(next.dataset.k); next.focus();
-});
+function* igStep3() {
+  yield E.head(3, 'Docker & Compose', 'Mesin untuk menjalankan container Hermes.');
+  yield E.act('Mengecek Docker & Compose…');
+  yield E.skip(DOCKER_V);   // sudah dipasang setupvps.sh
+  yield E.act('Memastikan service Docker aktif & akses user nuridho…');
+  yield E.skip('User nuridho di grup docker');
+  yield E.ok('Docker siap (service aktif)');
+}
 
-/* Ketik pilihan langsung di keyboard saat Jalur B tampil */
-document.addEventListener("keydown", e => {
-  if (panels.b.hidden || e.ctrlKey || e.metaKey || e.altKey) return;
-  const k = e.key.toLowerCase();
-  if (OPTIONS.some(o => o.k === k)) pick(k);
-});
+function* igStep4() {
+  yield E.head(4, 'Repo iGROW', 'Clone repo spec iGROW ke VPS: sumber file runtime hermes-home/.');
+  yield E.act(`Mengecek repo iGROW di ${IG.repo}…`);
+  if (fresh()) {
+    const url = yield E.ask('URL SSH repo iGROW', IG.url);
+    yield E.ask('Clone ke folder', IG.repo);
+    yield E.run(`Clone ${url}`, 4);
+  } else yield E.run(`git pull (${IG.repo})`, 2);
+  yield E.ok(`Repo: ${IG.repo} (a1b2c3d · 2 jam lalu)`);
+  yield E.info(`Sumber runtime: ${IG.repo}/hermes-home/ (24 file)`);
+}
+
+function* igStep5() {
+  yield E.head(5, 'Container Hermes', 'Compose resmi nousresearch/hermes-agent; data di hermes-home/ = /opt/data.');
+  yield E.act('Mencari container igrow-hermes…');
+  if (!fresh()) { yield E.skip(`Container igrow-hermes (compose: ${IG.compose}, data: ${IG.hh})`); return; }
+  yield E.info('Belum ada container igrow-hermes: compose baru akan dibuat');
+  let proj;
+  for (;;) {
+    proj = yield E.ask(`Mau install di mana? Nama folder project di ${IG.home} (mis. whatsinsidegit)`, IG.proj);
+    if (!proj.includes('/')) break;
+    yield E.warn('Cukup nama folder, tanpa /');
+  }
+  yield E.info(proj === IG.proj ? `Folder ${IG.home}/${proj} sudah ada, dipakai` : `Folder ${IG.home}/${proj} dibuat`);
+  const tz = yield E.ask('Timezone (jam cron & briefing)', 'Asia/Jakarta');
+  const compose = `${IG.home}/${proj}/igrow-hermes`;
+  yield E.act('Menyiapkan folder & environment…');
+  yield E.ok(`Folder data: ${compose}/hermes-home`);
+  yield E.ok(`Environment compose: UID/GID 1000:1000, TZ ${tz} (${compose}/.env)`);
+  yield E.ok(`docker-compose.yml dibuat di ${compose}`);
+  if (UI.err) {
+    yield E.run('Tarik image nousresearch/hermes-agent', 12, [
+      'Error response from daemon: Get "https://registry-1.docker.io/v2/":',
+      'net/http: request canceled while waiting for connection',
+      '(Client.Timeout exceeded while awaiting headers)']);
+    yield E.die('Gagal menarik image', IG.log);
+    return;
+  }
+  yield E.run('Tarik image nousresearch/hermes-agent', 48);
+  yield E.info('Image: nousresearch/hermes-agent:latest (dibuat 2026-10-20)');
+}
+
+function* needCompose(direct) {   // step 6/7 dipanggil langsung di VPS yang belum punya compose
+  if (direct && fresh()) { yield E.die('Belum ada docker-compose — jalankan langkah 5', IG.log); return false; }
+  return true;
+}
+function* needRunning(direct) {
+  if (direct && fresh()) { yield E.die('Gateway belum jalan, jalankan langkah 7 dulu', IG.log); return false; }
+  return true;
+}
+
+function* igStep6(direct) {
+  yield E.head(6, 'Otak (LLM) & Telegram', 'API key LLM + token bot, disimpan di hermes-home/.env (bukan di repo).');
+  if (!(yield* needCompose(direct))) return;
+  yield E.act('Mengecek setelan LLM…');
+  let d = 'Y';
+  if (fresh()) yield E.info('Belum ada setelan LLM');
+  else { yield E.info('Model sekarang: contoh-provider/contoh-model'); d = 'N'; }
+  if (yield E.confirm('Buka wizard LLM resmi Hermes (pilih provider → tempel API key → pilih model)?', d, 'Y')) {
+    yield E.box('Wizard LLM', [
+      'Pilih provider yang kamu punya key-nya (OpenRouter, Anthropic, OpenAI, dll).',
+      'Key diketik di wizard resmi Hermes dan langsung masuk hermes-home/.env.']);
+    yield E.dim('  (wizard resmi Hermes berjalan di sini: provider → API key → model)');
+    yield E.ok('LLM tersimpan');
+  }
+  yield E.act('Mengecek token bot Telegram…');
+  if (!fresh() && !(yield E.confirm('Token bot Telegram sudah ada. Ganti?', 'N'))) {
+    yield E.skip(`Telegram (@${IG.bot})`);
+  } else {
+    yield E.box('Siapkan bot (±1 menit)', [
+      '1. Telegram → @BotFather → /newbot → ikuti → copy token',
+      '2. Telegram → @userinfobot → copy angka "Id" kamu (bukan @username)']);
+    for (;;) {
+      const tok = yield E.secret('Token bot', '123456789:AAFiktifTokenContohSimulasi');
+      if (/^\d+:[\w-]{10,}$/.test(tok)) break;
+      yield E.warn('Token ditolak Telegram, cek lagi.');
+    }
+    yield E.ok(`Bot valid: @${IG.bot}`);
+    let uid;
+    for (;;) {
+      uid = yield E.ask('User ID Telegram kamu', '', IG.uid);
+      if (/^[0-9]+$/.test(uid)) break;
+      yield E.warn('Harus angka.');
+    }
+    yield E.ok(`Telegram tersimpan: hanya user ${uid} yang dilayani, hasil cron masuk ke chat ini`);
+  }
+  if (!fresh()) yield E.run('Restart gateway (setelan baru dibaca)', 5);
+}
+
+function* igDeployRuntime() {
+  yield E.run('Runtime terbaru (AGENTS.md, SCHEMA, project-skills)', 2);
+  yield E.run('File milik agent yang belum ada (katalog, log, tag)', 1);
+}
+
+function* igStep7(direct) {
+  yield E.head(7, 'Runtime iGROW & tools', 'Salin hermes-home/ dari repo, kunci approval skill, pilih tools cron, nyalakan bot.');
+  if (!(yield* needCompose(direct))) return;
+  yield E.act(`Menyalin aturan iGROW dari repo ke ${IG.hh}…`);
+  yield* igDeployRuntime();
+  yield E.act('Mengunci approval skill buatan Hermes…');
+  yield E.run('skills.write_approval = true (skill buatan Hermes menunggu persetujuanmu)', 3);
+  if (yield E.confirm('Wajibkan approval juga untuk memory Hermes (memory.write_approval)?', 'N')) {
+    yield E.run('memory.write_approval = true', 3);
+  }
+  yield E.box('Tools untuk cron (layar berikut)', [
+    'Pilih platform "cron", nyalakan: web, terminal, file. Simpan, lalu keluar.',
+    'web = daily briefing · terminal = backup.sh & cek privasi lint · file = baca/tulis igrow/']);
+  if (yield E.confirm('Buka pengaturan tools sekarang?', 'Y')) {
+    yield E.dim('  (layar hermes tools: platform cron → nyalakan web, terminal, file → simpan)');
+  }
+  yield E.act('Menyalakan gateway Telegram…');
+  if (!fresh()) yield E.run('Restart gateway', 6);
+  else yield E.run('Nyalakan gateway (docker compose up -d)', 6);
+  yield E.ok(`Gateway jalan: igrow-hermes (bot @${IG.bot})`);
+  yield E.run('hermes doctor', 4);
+}
+
+function* igStep8(direct, tokenReset) {
+  yield E.head(8, 'Backup knowledge', 'igrow/ di-push ke repo GitHub privat. Repo backup sudah berisi → tawarkan restore.');
+  if (!(yield* needRunning(direct))) return;
+  yield E.act('Mengecek git di container & sambungan repo backup…');
+  if (!fresh() && !tokenReset) {
+    yield E.skip(`Repo backup tersambung (https://github.com/${IG.backup}.git)`);
+  } else {
+    const repo = yield E.ask('Repo backup GitHub (pemilik/nama), PRIVAT', IG.backup);
+    yield E.box('Siapkan di GitHub (sekali)', [
+      `1. github.com/new → ${repo} → Private → tanpa README`,
+      '2. Settings → Developer settings → Fine-grained tokens → Generate',
+      `   Repository access: Only select → ${repo}`,
+      '   Permissions → Contents: Read and write (yang lain biarkan)',
+      '   Kalau token bocor, yang terdampak hanya repo backup ini.']);
+    yield E.pause();
+    yield E.secret('Fine-grained token', 'github_pat_FiktifContohSimulasi');
+    yield E.ok('Token valid, repo privat');
+    if (fresh()) yield E.run('git init igrow/', 1);
+    yield E.run(`Push pertama ke ${repo}`, 4);
+  }
+  yield E.run('Uji backup.sh (persis seperti cron)', 4);
+  yield E.info('Hasil: backup selesai, push ke ' + IG.backup + ' berhasil');
+}
+
+function* igStep9(direct) {
+  yield E.head(9, 'Cron job', 'Briefing 07:00 · backup Sen/Rab/Sab 05:00 · lint Minggu 08:00 · career review tiap kuartal.');
+  if (!(yield* needRunning(direct))) return;
+  yield E.act('Membaca daftar cron yang sudah ada…');
+  for (const [name, sched] of JOBS) {
+    if (!fresh()) yield E.skip(name);
+    else yield E.run(`${name} (${sched})`, 2);
+  }
+  yield E.run('Uji lint-privacy.sh (dipakai lint mingguan)', 2);
+}
+
+function* igFinale() {
+  yield E.finale('iGROW siap', 44);
+  yield E.box('Coba sekarang', [
+    `Telegram → @${IG.bot} → kirim: halo`,
+    `Lalu ikuti skenario uji: ${IG.repo}/testing/test-flow.md`]);
+  yield E.box('Berikutnya', [
+    'bash igrowctl.sh   → menu: deploy, status, update, ganti LLM/token, backup, help',
+    'Telegram: /skills pending → cek skill buatan Hermes yang menunggu persetujuan']);
+}
+
+function* igAllSteps() {
+  yield E.reset();
+  yield* igStep1(); yield* igStep2(); yield* igStep3(); yield* igStep4(); yield* igStep5();
+  yield* igStep6(false); yield* igStep7(false); yield* igStep8(false); yield* igStep9(false);
+  W.setupDone = true; W.installed = true;   // SETUP_DONE=1; save_conf
+  yield E.sync();
+  yield* igFinale();
+}
+
+function* igCmdDeploy() {
+  yield* igBanner();
+  yield E.head('·', 'Deploy runtime', 'git pull repo → rsync 2 langkah ke hermes-home/. Data di VPS tidak disentuh.');
+  if (fresh()) {
+    yield E.run(`git pull (${IG.repo})`, 1, [`fatal: cannot change to '${IG.repo}': No such file or directory`]);
+    yield E.die('Pull gagal', IG.log); return;
+  }
+  yield E.run(`git pull (${IG.repo})`, 2);
+  yield* igDeployRuntime();
+  yield E.ok('Selesai. Mulai sesi baru di Telegram (/new) supaya aturan terbaru terbaca.');
+}
+
+function* igCmdStatus() {
+  yield* igBanner();
+  yield E.head('·', 'Status', 'Kesehatan container, Hermes, cron, dan backup.');
+  if (fresh()) { yield E.die('Container igrow-hermes tidak ditemukan', IG.log); return; }
+  if (UI.err) { yield E.warn('Container igrow-hermes TIDAK jalan'); return; }
+  yield E.ok('Container igrow-hermes jalan (2026-10-24T05:02)');
+  yield E.ok('hermes doctor bersih');
+  yield E.blank();
+  for (const [name, sched] of JOBS) yield E.dim(`    ${name.padEnd(18)}${sched}`);
+  yield E.blank();
+  yield E.ok('Backup terakhir: 2 hari lalu · backup otomatis');
+  yield E.ok('Runtime repo: a1b2c3d · 3 jam lalu');
+}
+
+function* igCmdUpdate() {
+  yield* igBanner();
+  yield E.head('·', 'Update Hermes', 'Tarik image terbaru → buat ulang container. Data di hermes-home/ tetap.');
+  if (fresh()) { yield E.die('Container igrow-hermes tidak ditemukan (bash igrowctl.sh step 5)', IG.log); return; }
+  if (UI.err) {
+    yield E.run('Tarik image terbaru', 12, ['Error response from daemon: Get "https://registry-1.docker.io/v2/":',
+      'net/http: request canceled while waiting for connection']);
+    yield E.die('Gagal menarik image', IG.log); return;
+  }
+  yield E.run('Tarik image terbaru', 9);
+  if (W.hermes === '1.5.0') { yield E.ok('Hermes 1.5.0 sudah versi terbaru, tidak ada yang diubah'); return; }
+  yield E.run('Buat ulang container', 8);
+  yield E.ok(`Hermes ${W.hermes} → 1.5.0`);
+  yield E.run('hermes doctor', 4);
+  yield E.blank();
+  for (const [name, sched] of JOBS) yield E.dim(`    ${name.padEnd(18)}${sched}`);
+  yield E.box('Kalau versi baru bermasalah, balik ke versi lama', [
+    `Di ${IG.compose}/docker-compose.yml, service igrow-hermes:`,
+    '  image: nousresearch/hermes-agent@sha256:9f3c…(contoh)',
+    `lalu: cd ${IG.compose} && docker compose up -d igrow-hermes`]);
+  W.hermes = '1.5.0';
+  yield E.ok('Selesai. Kirim /new di Telegram, lalu cek job cron di atas masih lengkap.');
+}
+
+function* igCmdHelp() {
+  yield E.head('·', 'Help', 'Penjelasan tiap pilihan di menu.');
+  yield E.hitem('1 · Deploy', ['Kapan: kamu mengubah aturan di hermes-home/ di laptop lalu git push.',
+    'Yang terjadi: git pull repo di VPS → salin aturan ke hermes-home/. Note, raw, output tidak disentuh.',
+    'Sesudahnya: kirim /new di Telegram supaya sesi baru membaca aturan terbaru.']);
+  yield E.hitem('2 · Status', ['Kapan: bot diam, atau sekadar mau memastikan semuanya sehat.',
+    'Yang dicek: container jalan, hermes doctor, daftar cron, waktu backup terakhir. Tidak mengubah apa pun.']);
+  yield E.hitem('3 · Update', ['Kapan: Hermes rilis versi baru (sesekali saja, mis. sebulan sekali).',
+    'Yang terjadi: tarik image terbaru → buat ulang container → cek doctor & cron.',
+    'Versi baru bermasalah? Di akhir ditampilkan baris untuk balik ke versi lama.']);
+  yield E.hitem('4 · LLM & Telegram (langkah 6)', ['Kapan: ganti provider/API key/model LLM, atau ganti token bot Telegram.',
+    'Yang terjadi: wizard resmi Hermes untuk LLM; token bot dicek ke Telegram dulu sebelum disimpan.']);
+  yield E.hitem('5 · Tools cron (langkah 7)', ['Kapan: job cron gagal karena tool-nya mati, atau mau mengubah tools cron.',
+    'Yang terjadi: aturan dari repo dipasang ulang, layar hermes tools dibuka (platform cron: web, terminal, file), bot di-restart.']);
+  yield E.hitem('6 · Backup (langkah 8)', ['Kapan: token backup kedaluwarsa, push backup gagal, atau ganti repo backup.',
+    'Yang terjadi: jawab Y untuk menghapus token lama → masukkan token baru → backup diuji persis seperti cron.']);
+  yield E.hitem('7 · Setup ulang', ['Kapan: ada langkah yang dulu gagal, atau ragu setup sudah lengkap.',
+    'Yang terjadi: langkah 1-9 dijalankan; yang sudah beres dicek lalu dilewati. Aman.']);
+  yield E.hitem('Tanpa menu (untuk alias/otomatis)', ['bash igrowctl.sh deploy | status | update | all | step <1-9> | help']);
+}
+
+function* igMenu() {
+  for (;;) {
+    const c = yield E.menu();
+    switch (c) {
+      case '1': yield* igCmdDeploy(); return;
+      case '2': yield* igCmdStatus(); return;
+      case '3': yield* igCmdUpdate(); return;
+      case '4': yield* igPreflight(); yield* igStep6(true); return;
+      case '5': yield* igPreflight(); yield* igStep7(true); return;
+      case '6':
+        yield* igPreflight();
+        if (yield E.confirm('Ganti token backup? (token lama dihapus, mis. karena kedaluwarsa)', 'N')) {
+          yield E.info('Token lama dihapus');
+          yield* igStep8(true, true);
+        } else yield* igStep8(true, false);
+        return;
+      case '7': {
+        yield* igPreflight();
+        if (yield* igIntro()) yield* igAllSteps();
+        return;
+      }
+      case 'h': yield* igCmdHelp(); break;   // menu tampil lagi di bawah penjelasan
+      default: return;
+    }
+  }
+}
+
+function* igrowMain() {
+  const cmd = UI.cmd;
+  if (cmd === '') {
+    yield* igBanner();
+    if (W.setupDone) yield* igMenu();
+    else { yield* igPreflight(); if (yield* igIntro()) yield* igAllSteps(); }
+  } else if (cmd === 'all') {
+    yield* igBanner(); yield* igPreflight(); if (yield* igIntro()) yield* igAllSteps();
+  } else if (cmd.startsWith('step ')) {
+    const n = +cmd.slice(5);
+    yield* igBanner(); yield* igPreflight();
+    if (n === 6) yield* igStep6(true); else if (n === 7) yield* igStep7(true); else yield* igStep8(true, false);
+  } else if (cmd === 'deploy') yield* igCmdDeploy();
+  else if (cmd === 'status') yield* igCmdStatus();
+  else if (cmd === 'update') yield* igCmdUpdate();
+  else if (cmd === 'help') { yield* igBanner(); yield* igCmdHelp(); }
+}
+
+/* ───────── Alur: setupvps.sh ───────── */
+const VU = 'nuridho';
+const vfresh = () => !W.vps;
+
+function* vpsIntro(ctx) {
+  yield E.box('Yang dipasang (±10 menit)', [
+    `• User ${VU} (sudo + docker) + folder project di /home/${VU}`,
+    '• Hostname labs.nuridho, timezone Asia/Jakarta, swap 2 GB',
+    '• Update sistem, tambalan keamanan otomatis, fail2ban',
+    '• Docker (log dibatasi) + Nginx Proxy Manager + web dummy',
+    `• Firewall (SSH, 80, 443) · SSH: root ditutup, hanya ${VU}`,
+    'Semua pertanyaan di awal; setelah itu jalan sendiri.']);
+  yield E.dim('  1 User · 2 Hostname · 3 Paket · 4 Timezone · 5 Swap · 6 Docker · 7 NPM · 8 Firewall · 9 SSH');
+  yield E.blank();
+  for (;;) {
+    ctx.proj = yield E.ask(`Nama folder project di /home/${VU} (mis. whatsinsidegit)`, '', 'whatsinsidegit');
+    if (!ctx.proj.includes('/')) break;
+    yield E.warn('Cukup nama folder, tanpa /');
+  }
+  for (;;) {
+    ctx.ip = yield E.ask('IP publik VPS (untuk ringkasan & cek URL di akhir)', '203.0.113.10');
+    if (/^[0-9]{1,3}(\.[0-9]{1,3}){3}$/.test(ctx.ip)) break;
+    yield E.warn('Format IPv4, mis. 203.0.113.10');
+  }
+  if (vfresh()) {
+    for (;;) {
+      const a = yield E.secret(`Password untuk user ${VU} (dipakai sudo)`, 'contoh-password');
+      const b = yield E.secret('Ulangi password', 'contoh-password');
+      if (a === b) break;
+      yield E.warn('Password tidak sama, ulangi');
+    }
+  }
+  yield E.blank();
+  return yield E.confirm('Mulai?', 'Y');
+}
+
+function* vpsSteps(ctx) {
+  const root = `/home/${VU}/${ctx.proj}`;
+  yield E.head(1, `User ${VU}`, 'User sehari-hari (sudo + docker). Root nanti ditutup dari SSH.');
+  yield E.act(`Mengecek user ${VU}…`);
+  if (vfresh()) { yield E.run(`Buat user ${VU}`, 2); yield E.ok(`Password ${VU} diset`); }
+  else yield E.skip(`User ${VU} (grup: ${VU},sudo,docker)`);
+  yield E.act('Menyiapkan folder project…');
+  if (vfresh()) { yield E.ok(`Folder ${root} dibuat`); yield E.ok('Nama folder dicatat untuk igrowctl.sh'); }
+  else yield E.skip(`Folder ${root}`);
+
+  yield E.head(2, 'Hostname', 'Nama mesin di prompt dan log.');
+  yield E.act('Mengecek hostname…');
+  if (vfresh()) { yield E.ok('Hostname → labs.nuridho'); yield E.ok('/etc/hosts memuat labs.nuridho'); }
+  else yield E.skip('Hostname labs.nuridho');
+
+  yield E.head(3, 'Paket & update', 'Upgrade sistem, fail2ban, ufw, dan tambalan keamanan otomatis.');
+  yield E.info('Sistem: Ubuntu 24.04.1 LTS, kernel 6.8.0-45-generic');
+  yield E.run('apt update', vfresh() ? 5 : 3);
+  yield E.run('Upgrade sistem (bisa beberapa menit)', vfresh() ? 74 : 2);
+  yield E.run('Install fail2ban, ufw, curl, unattended-upgrades', vfresh() ? 12 : 1);
+  yield E.run('Aktifkan fail2ban', 1);
+  yield E.ok('fail2ban 1.0.2, ufw 0.36.2');
+  yield E.ok('Tambalan keamanan otomatis tiap hari (tanpa reboot otomatis)');
+
+  yield E.head(4, 'Timezone', 'Jam sistem, cron, dan log.');
+  yield E.act('Mengecek timezone…');
+  if (vfresh()) yield E.ok('Timezone → Asia/Jakarta'); else yield E.skip('Timezone Asia/Jakarta');
+
+  yield E.head(5, 'Swap', 'Cadangan RAM: kalau memori penuh, sistem melambat, bukan mematikan container.');
+  yield E.act('Mengecek memori & swap…');
+  yield E.info('RAM 1.9Gi, disk kosong 38G');
+  if (vfresh()) yield E.run('Buat swap 2 GB', 3); else yield E.skip('Swap 2.0G');
+
+  yield E.head(6, 'Docker', 'Mesin container. Log tiap container dibatasi supaya disk tidak penuh.');
+  yield E.act('Mengecek batas log Docker…');
+  if (vfresh()) yield E.ok('Log Docker dibatasi 10 MB × 3 per container');
+  else yield E.skip('Batas log Docker (/etc/docker/daemon.json)');
+  yield E.act('Mengecek Docker & Compose…');
+  if (vfresh()) {
+    if (UI.err) {
+      yield E.run('Install Docker + Compose (get.docker.com)', 15, [
+        'curl: (6) Could not resolve host: get.docker.com',
+        'curl: (6) Could not resolve host: get.docker.com']);
+      yield E.die('Install Docker gagal', VPS_LOG); return false;
+    }
+    yield E.run('Install Docker + Compose (get.docker.com)', 58);
+    yield E.ok(DOCKER_V);
+  } else yield E.skip(DOCKER_V);
+  yield E.ok(`${VU} masuk grup docker (aktif setelah login ulang)`);
+
+  yield E.head(7, 'Nginx Proxy Manager', 'Reverse proxy + SSL untuk web, dengan web dummy sebagai contoh.');
+  yield E.act('Mengecek port 80…');
+  if (!vfresh()) yield E.info('Port 80 sudah dipakai (NPM lama?): NPM baru tidak dipasang');
+  else {
+    yield E.act(`Menyiapkan compose NPM + web dummy di ${root}/proxy…`);
+    yield E.ok(`Compose di ${root}/proxy`);
+    yield E.run('Jalankan NPM + web dummy', 21);
+    yield E.run('Tunggu NPM menjawab di port 80', 34);
+  }
+
+  yield E.head(8, 'Firewall', 'Hanya SSH, 80, 443 yang terbuka. SSH dibuka dulu supaya sesi ini tidak putus.');
+  yield E.act('Membaca port SSH…');
+  yield E.info('Port SSH: 22');
+  yield E.run('Buka port SSH (22), 80, 443', 1);
+  yield E.run('Aktifkan firewall', 1);
+
+  yield E.head(9, 'SSH', `Root tidak bisa login lagi; hanya ${VU}.`);
+  yield E.act(`Mengecek SSH key ${VU}…`);
+  if (vfresh()) yield E.ok(`SSH key root disalin ke ${VU} (supaya ${VU} tetap bisa login)`);
+  else yield E.skip(`SSH key ${VU} (1 key)`);
+  yield E.act('Menerapkan aturan SSH…');
+  yield E.run('Cek config SSH', 1);
+  yield E.run(`Terapkan: root ditutup, hanya ${VU}`, 1);
+  return true;
+}
+
+function* vpsMain() {
+  const ctx = {};
+  yield E.banner(ART_VPS, 'init VPS · user, Docker, NPM, firewall, SSH');
+  if (!(yield* vpsIntro(ctx))) return;
+  yield E.reset();
+  const was = vfresh();
+  if (!(yield* vpsSteps(ctx))) return;
+  W.vps = true; yield E.sync();
+  yield E.finale('VPS siap', 46);
+  yield E.box('1 · Tes login dulu (JANGAN tutup sesi root ini)', [`Di terminal baru: ssh ${VU}@${ctx.ip}`]);
+  yield E.box('2 · Cek lewat browser', [
+    `http://${ctx.ip} → halaman bawaan Nginx Proxy Manager = port 80 + firewall beres`,
+    'Web dummy baru tampil di domain kamu setelah Proxy Host dibuat (langkah 3)']);
+  yield E.box('3 · Admin Nginx Proxy Manager', [
+    `ssh -L 8181:localhost:81 ${VU}@${ctx.ip}`, 'Buka http://localhost:8181 → login pertama',
+    'Proxy Host: domain kamu → forward ke web:80 + SSL']);
+  yield E.box('4 · Pasang iGROW (dari laptop)', [
+    `scp Setup/igrowctl.sh ${VU}@${ctx.ip}:~/`, `ssh -t ${VU}@${ctx.ip} bash igrowctl.sh`]);
+  if (was) { yield E.blank(); yield E.warn('Ada update (mis. kernel) yang butuh reboot: sudo reboot, setelah langkah 1 berhasil'); }
+}
+
+/* ───────── Mesin: menjalankan event satu per satu ───────── */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const dur = n => n >= 60 ? `${Math.floor(n / 60)}m${String(n % 60).padStart(2, '0')}s` : `${n}s`;
+const CHECK = '✔︎';
+const okHtml = (t, d) => `  <span class="g">${CHECK}</span> ${esc(t)}${d ? ` <span class="d">${esc(d)}</span>` : ''}`;
+
+class Player {
+  constructor(sink, cfg) {
+    this.sink = sink; this.cfg = cfg; this.paused = false; this.stopped = false; this.halt = false; this.code = 0;
+    this.waiters = []; this.cnt = { ok: 0, skip: 0, warn: 0 }; this.clock = 0; this.t0 = 0;
+  }
+  get f() { return this.cfg.speed(); }
+  get lineMs() { return this.f === Infinity ? 0 : this.f >= 60 ? 18 : this.f >= 10 ? 55 : 140; }
+  async gate() { while (this.paused && !this.stopped) await new Promise(r => this.waiters.push(r)); }
+  pause() { this.paused = true; }
+  resume() { this.paused = false; this.waiters.splice(0).forEach(f => f()); }
+  stop() { this.stopped = true; this.resume(); this.sink.cancel(); }
+  async tick(ms) { if (ms > 0) await sleep(ms); await this.gate(); }
+  summaryHtml() {
+    const c = this.cnt, t = Math.round(this.clock - this.t0);
+    return `  <span class="g">${CHECK} ${c.ok} dikerjakan</span>  <span class="d">${CHECK} ${c.skip} sudah ada</span>  <span class="y">! ${c.warn} peringatan</span>  <span class="d">waktu ${dur(t)}</span>`;
+  }
+  async run(flow) {
+    const gen = flow(); let r = gen.next();
+    while (!r.done && !this.stopped && !this.halt) {
+      await this.gate(); if (this.stopped) break;
+      const v = await this.exec(r.value);
+      if (this.stopped || this.halt) break;
+      r = gen.next(v);
+    }
+    return this.stopped ? null : this.code;
+  }
+  async exec(e) {
+    const s = this.sink, add = async h => { s.add(h); await this.tick(this.lineMs); };
+    switch (e.k) {
+      case 'banner':
+        s.clear(); s.add('');
+        e.art.forEach((l, i) => s.add(`<span class="g${i + 1} b">${esc(l)}</span>`));
+        await add(`<span class="d">    ${esc(e.sub)}</span>`); return;
+      case 'head': {
+        const num = typeof e.n === 'number'; if (num) s.step(e.n);
+        const tag = num ? `[${e.n}/9]` : '·';
+        s.add('');
+        s.add(cols => `<span class="m b">━━ ${esc(tag)} ${esc(e.title)} ${'━'.repeat(Math.max(3, Math.min(46 - e.title.length, cols - tag.length - e.title.length - 6)))}</span>`);
+        s.add(`  <span class="d">${esc(e.desc)}</span>`); await add(''); return;
+      }
+      case 'finale':
+        s.step(10);
+        s.add('');
+        s.add(`<span class="g b">━━ ${esc(e.title)} ${'━'.repeat(e.bars)}</span>`);
+        await add(this.summaryHtml()); return;
+      case 'act':  await add(`  <span class="c">›</span> <span class="d">${esc(e.t)}</span>`); return;
+      case 'info': await add(`  <span class="c">•</span> ${esc(e.t)}`); return;
+      case 'ok':   this.cnt.ok++; await add(okHtml(e.t, e.d)); return;
+      case 'skip': this.cnt.skip++; await add(`  <span class="g">${CHECK}</span> ${esc(e.t)} <span class="d">(sudah ada)</span>`); return;
+      case 'warn': this.cnt.warn++; await add(`  <span class="y">!</span> ${esc(e.t)}`); return;
+      case 'dim':  await add(`<span class="d">${esc(e.t)}</span>`); return;
+      case 'blank': await add(''); return;
+      case 'box':
+        s.add(''); s.add(`  <span class="c">╭─ <span class="b">${esc(e.title)}</span></span>`);
+        e.lines.forEach(l => s.add(`  <span class="c">│</span> ${esc(l)}`));
+        s.add(`  <span class="c">╰─</span>`); await add(''); return;
+      case 'hitem':
+        s.add(`  <span class="c b">${esc(e.title)}</span>`);
+        e.lines.forEach(l => s.add(`    ${esc(l)}`)); await add(''); return;
+      case 'reset': this.cnt = { ok: 0, skip: 0, warn: 0 }; this.t0 = this.clock; return;
+      case 'sync': s.sync(); return;
+      case 'die':
+        s.add(''); s.add(`  <span class="r b">✘ ${esc(e.msg)}</span>`); s.add(`  <span class="d">Log lengkap: ${esc(e.log)}</span>`); s.add('');
+        this.halt = true; this.code = 1; s.step(-1); return;
+      case 'run': return this.execRun(e);
+      case 'ask': {
+        const auto = this.cfg.auto() ? (e.auto !== undefined ? e.auto : e.def) : null;
+        const v = await s.ask(e, auto, this); if (v === null) return null;
+        this.clock += 7; return v;
+      }
+      case 'confirm': {
+        const auto = this.cfg.auto() ? (e.ans || e.def).toLowerCase() : null;
+        const v = await s.confirm(e, auto, this); if (v === null) return null;
+        this.clock += 4; return v;
+      }
+      case 'pause': {
+        const v = await s.pause(this.cfg.auto(), this); this.clock += 25; return v;
+      }
+      case 'menu': return s.menu(MENU_ITEMS, this);
+    }
+  }
+  async execRun(e) {
+    const s = this.sink; let sim = 0, i = 0;
+    if (this.f !== Infinity) {
+      while (sim < e.sec) {
+        s.spin(e.label, Math.floor(sim), i++);
+        await sleep(100); await this.gate(); if (this.stopped) return false;
+        sim += 0.1 * this.f;
+      }
+    }
+    s.endSpin(); this.clock += e.sec;
+    const sec = Math.round(e.sec), t = sec >= 2 ? dur(sec) : '';
+    if (e.fail) {
+      s.add(`  <span class="r">✘</span> ${esc(e.label)}${t ? ` <span class="d">${t}</span>` : ''}`);
+      e.fail.slice(-12).forEach(l => s.add(`    <span class="d">│</span> ${esc(l)}`));
+      return false;
+    }
+    this.cnt.ok++; s.add(okHtml(e.label, t)); await this.tick(this.lineMs); return true;
+  }
+}
+/* FLOWS-END */
+
+/* ───────── Antarmuka ───────── */
+(() => {
+  const $ = s => document.querySelector(s);
+  const out = $('#out');
+  const st = document.createElement('div'), lv = document.createElement('div');
+  out.append(st, lv);
+  const meas = document.createElement('span');
+  meas.setAttribute('aria-hidden', 'true');
+  meas.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;pointer-events:none';
+  meas.textContent = 'M'.repeat(20);
+  out.appendChild(meas);
+
+  let interacted = false;
+  ['pointerdown', 'keydown'].forEach(t => addEventListener(t, () => { interacted = true; }, { once: true, capture: true }));
+
+  /* Terminal */
+  const term = {
+    lines: [], cols: 80, cancelFn: null, menuKey: null,
+    measure() {
+      const cw = meas.getBoundingClientRect().width / 20 || 8;
+      const cs = getComputedStyle(out);
+      const inner = out.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      this.cols = Math.max(28, Math.floor(inner / cw));
+    },
+    node(h) {
+      const d = document.createElement('div'); d.className = 'ln';
+      const html = typeof h === 'function' ? h(this.cols) : h;
+      d.innerHTML = html === '' ? '​' : html; return d;
+    },
+    near() { return out.scrollHeight - out.scrollTop - out.clientHeight < 70; },
+    stick(was) { if (was) out.scrollTop = out.scrollHeight; },
+    add(h) { const was = this.near(); this.lines.push(h); st.appendChild(this.node(h)); this.stick(was); },
+    relayout() { this.measure(); st.replaceChildren(...this.lines.map(h => this.node(h))); },
+    clear() { this.lines = []; st.replaceChildren(); this.endLive(); },
+    live() { let d = lv.firstChild; if (!d) { d = document.createElement('div'); d.className = 'ln live'; lv.appendChild(d); } return d; },
+    endLive() { lv.replaceChildren(); },
+    spin(label, sec, i) {
+      const was = this.near(); const F = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+      this.live().innerHTML = `  <span class="c spin">${F[i % 10]}</span> ${esc(label)} <span class="d">${sec}s</span>`; this.stick(was);
+    },
+    endSpin() { this.endLive(); },
+    step(n) { side.setStep(n); },
+    sync() { refresh(UI.tab === 'ig'); },
+    cancel() { if (this.cancelFn) { const f = this.cancelFn; this.cancelFn = null; f(); } },
+    charMs(p) { const f = p.f; return f === Infinity ? 0 : f >= 60 ? 8 : f >= 10 ? 28 : 55; },
+
+    /* prompt: ask / confirm / pause */
+    prompt(pre, opt) {
+      return new Promise(resolve => {
+        const was = this.near();
+        const host = this.live();
+        host.innerHTML = pre + `<input class="tin" type="${opt.secret ? 'password' : 'text'}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Jawaban"${opt.ph ? ` placeholder="${esc(opt.ph)}"` : ''}><button class="ent" type="button" aria-label="Kirim jawaban">⏎</button>`;
+        this.stick(was);
+        const inp = host.querySelector('input'), btn = host.querySelector('button');
+        let done = false;
+        const manual = opt.auto === null || opt.auto === undefined;
+        if (manual) pill('wait', 'menunggu jawaban');
+        const finish = val => {
+          if (done) return; done = true; this.cancelFn = null; this.endLive();
+          if (manual) setStatus(status);
+          this.add(pre + (opt.secret ? '' : esc(val))); resolve(val);
+        };
+        this.cancelFn = () => { done = true; this.endLive(); resolve(null); };
+        btn.addEventListener('click', () => finish(inp.value.trim()));
+        inp.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); finish(inp.value.trim()); } });
+        if (opt.auto !== null && opt.auto !== undefined) {
+          inp.disabled = true; btn.hidden = true;
+          (async () => {
+            const p = opt.player;
+            if (!opt.secret) for (const ch of opt.auto) { await sleep(this.charMs(p)); await p.gate(); if (done) return; inp.value += ch; }
+            else { await sleep(p.f === Infinity ? 0 : 500 / Math.min(p.f, 10)); await p.gate(); }
+            await sleep(p.f === Infinity ? 0 : 160); await p.gate(); if (!done) finish(opt.secret ? '\u0000' : opt.auto);
+          })();
+        } else if (opt.focus !== false) inp.focus({ preventScroll: true });
+      });
+    },
+    async ask(e, auto, p) {
+      for (;;) {
+        const pre = e.secret
+          ? `  <span class="y">?</span> ${esc(e.q)} <span class="d">(tidak tampil di layar)</span>: `
+          : `  <span class="y">?</span> ${esc(e.q)}${e.def ? ` <span class="d">[${esc(e.def)}]</span>` : ''}: `;
+        let v = await this.prompt(pre, { secret: e.secret, ph: e.def, auto, player: p });
+        if (v === null) return null;
+        if (v === '\u0000') v = e.auto;           // jawaban otomatis rahasia: nilainya tidak ditampilkan
+        v = v || e.def;
+        if (v) return v;                          // kosong tanpa default → ditanya lagi, seperti script
+      }
+    },
+    async confirm(e, auto, p) {
+      const pre = `  <span class="y">?</span> ${esc(e.q)} <span class="d">${e.def === 'N' ? '[y/N]' : '[Y/n]'}</span> `;
+      const v = await this.prompt(pre, { auto, player: p });
+      if (v === null) return null;
+      return /^[Yy]/.test(v || e.def);
+    },
+    async pause(auto, p) {
+      const pre = `  <span class="d">↵  Enter kalau sudah…</span> `;
+      const v = await this.prompt(pre, { auto: auto ? '' : null, player: p });
+      return v === null ? null : true;
+    },
+
+    /* menu panah */
+    menu(items, p) {
+      return new Promise(resolve => {
+        let i = 0; const n = items.length;
+        const mk = (sel) => {
+          const w = Math.max(10, this.cols - 28), rows = [];
+          rows.push('', `  <span class="c">╭─ <span class="b">Mau ngapain?</span></span>`,
+            `  <span class="c">│</span> <span class="d">↑/↓ pilih · Enter jalankan · atau tekan angkanya</span>`);
+          items.forEach((it, j) => {
+            const d = esc(it.d.slice(0, w));
+            rows.push(j === sel
+              ? `  <span class="c">│</span> <span class="c b">❯ ${it.k}  ${esc(it.n.padEnd(15, ' '))}</span> ${d}`
+              : `  <span class="c">│</span>   <span class="y">${it.k}</span>  ${esc(it.n.padEnd(15, ' '))} <span class="d">${d}</span>`);
+          });
+          rows.push(`  <span class="c">╰─</span>`);
+          return rows;
+        };
+        const draw = () => {
+          const was = this.near();
+          lv.replaceChildren(...mk(i).map((h, j) => {
+            const d = document.createElement('div'); d.className = 'ln' + (j >= 3 && j < 3 + n ? ' mrow' + (j - 3 === i ? ' sel' : '') : '');
+            d.innerHTML = h === '' ? '​' : h;
+            if (j >= 3 && j < 3 + n) d.addEventListener('click', () => choose(j - 3));
+            return d;
+          }));
+          this.stick(was); side.menuInfo(items[i].k);
+        };
+        const choose = idx => {
+          out.removeEventListener('keydown', onKey); this.cancelFn = null; this.endLive();
+          mk(idx).forEach(h => this.add(h)); side.menuInfo(null); setStatus(status); resolve(items[idx].k);
+        };
+        const onKey = ev => {
+          if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+          const k = ev.key;
+          if (k === 'ArrowUp' || k === 'k') { i = (i + n - 1) % n; draw(); }
+          else if (k === 'ArrowDown' || k === 'j') { i = (i + 1) % n; draw(); }
+          else if (k === 'Enter') choose(i);
+          else if (k === 'q' || k === 'Q') choose(n - 1);
+          else if (k === 'H') choose(items.findIndex(x => x.k === 'h'));
+          else if (items.some(x => x.k === k)) choose(items.findIndex(x => x.k === k));
+          else return;
+          ev.preventDefault();
+        };
+        out.addEventListener('keydown', onKey);
+        this.cancelFn = () => { out.removeEventListener('keydown', onKey); this.endLive(); side.menuInfo(null); resolve(null); };
+        draw(); if (interacted) out.focus({ preventScroll: true });   // saat halaman baru dibuka, jangan merebut fokus
+        pill('wait', 'menunggu pilihan');
+      });
+    },
+  };
+
+  /* Panel samping */
+  const STEP_NAMES = {
+    ig: ['Paket dasar', 'Git & GitHub', 'Docker', 'Repo iGROW', 'Container Hermes', 'LLM & Telegram', 'Runtime', 'Backup', 'Cron'],
+    vps: ['User', 'Hostname', 'Paket & update', 'Timezone', 'Swap', 'Docker', 'Nginx Proxy Manager', 'Firewall', 'SSH'],
+  };
+  const STEP_TEXT = {
+    ig: [
+      'Memastikan git, rsync, curl, dan ssh-keygen ada. Yang kurang dipasang lewat apt.',
+      'Mengisi identitas commit, membuat SSH key VPS, lalu menunggu GitHub menerima key-nya. Kamu menempel key di GitHub (Settings → SSH keys).',
+      'Mengecek Docker + Compose dan akses user. Biasanya sudah dipasang setupvps.sh, jadi dilewati.',
+      'Clone repo spec iGROW, sumber hermes-home/. Kalau sudah ada, cukup git pull.',
+      'Membuat folder project, compose resmi Hermes, dan menarik image. Di sini nama folder dan timezone ditanya.',
+      'Wizard resmi Hermes untuk API key LLM, lalu token bot Telegram (dicek ke Telegram dulu) dan user ID kamu.',
+      'Menyalin aturan iGROW ke hermes-home/, mengunci approval skill, memilih tools cron, lalu menyalakan bot.',
+      'Menyambungkan igrow/ ke repo GitHub privat (token fine-grained), push pertama, dan menguji backup.sh seperti cron.',
+      'Membuat 4 jadwal: briefing 07:00, backup Sen/Rab/Sab 05:00, lint Minggu 08:00, career review tiap kuartal.',
+    ],
+    vps: [
+      'Membuat user sehari-hari dengan sudo + docker. Root ditutup dari SSH di langkah akhir.',
+      'Memberi nama mesin dan mencatatnya di /etc/hosts supaya sudo tidak mengeluh "unable to resolve host".',
+      'Upgrade sistem, pasang fail2ban (blokir penebak password), dan tambalan keamanan otomatis tiap hari.',
+      'Mengatur zona waktu supaya jadwal cron (briefing 07:00) mengikuti WIB.',
+      'Swap 2 GB: kalau memori penuh, sistem melambat, bukan mematikan container.',
+      'Memasang Docker dan membatasi log tiap container (10 MB × 3) supaya disk tidak penuh.',
+      'Reverse proxy + SSL. Admin hanya di 127.0.0.1:81 (lewat SSH tunnel) karena port Docker menembus UFW.',
+      'Hanya SSH, 80, 443 yang terbuka. SSH dibuka dulu, baru firewall diaktifkan, supaya sesi tidak putus.',
+      'Root tidak bisa login lagi, hanya nuridho. Key root disalin dulu supaya nuridho tidak terkunci.',
+    ],
+  };
+  const CMD_INFO = {
+    '':       ['bash igrowctl.sh', [['Perilaku', 'Belum ada SETUP_DONE → setup lengkap (Jalur A). Sudah ada → menu (Jalur B).']]],
+    all:      ['bash igrowctl.sh all', [['Kapan', 'Mengulang semua langkah, walaupun penanda sudah ada.'], ['Yang terjadi', 'Langkah 1–9; yang sudah ada dicek lalu dilewati. Aman.']]],
+    deploy:   ['bash igrowctl.sh deploy', [['Kapan', 'Habis mengubah aturan di hermes-home/ dan git push dari laptop.'], ['Yang terjadi', 'git pull repo di VPS → salin aturan ke hermes-home/. Note, raw, output tidak disentuh.'], ['Sesudahnya', 'Kirim /new di Telegram.']]],
+    status:   ['bash igrowctl.sh status', [['Kapan', 'Bot diam, atau mau memastikan semuanya sehat.'], ['Yang dicek', 'Container, hermes doctor, daftar cron, backup terakhir. Tidak mengubah apa pun.']]],
+    update:   ['bash igrowctl.sh update', [['Kapan', 'Hermes rilis versi baru.'], ['Yang terjadi', 'Tarik image → buat ulang container → cek doctor & cron. Kalau sudah terbaru, tidak ada yang diubah.'], ['Kalau bermasalah', 'Di akhir tampil baris image: …@sha256:… untuk balik ke versi lama.']]],
+    'step 6': ['bash igrowctl.sh step 6', [['Kapan', 'Ganti provider, API key, model, atau token bot.'], ['Yang terjadi', 'Wizard resmi Hermes; token bot dicek ke Telegram dulu sebelum disimpan.']]],
+    'step 7': ['bash igrowctl.sh step 7', [['Kapan', 'Job cron gagal karena tool-nya mati, atau mau mengubah tools cron.'], ['Yang terjadi', 'Aturan dari repo dipasang ulang, layar hermes tools dibuka, bot di-restart.']]],
+    'step 8': ['bash igrowctl.sh step 8', [['Kapan', 'Token backup kedaluwarsa atau ganti repo backup.'], ['Yang terjadi', 'Menyambung repo backup, push, lalu menguji backup.sh seperti cron.']]],
+    help:     ['bash igrowctl.sh help', [['Yang terjadi', 'Menampilkan penjelasan tiap pilihan menu, tanpa mengubah apa pun.']]],
+  };
+  const MENU_INFO = {
+    '1': ['1 · Deploy', 'deploy'], '2': ['2 · Status', 'status'], '3': ['3 · Update', 'update'],
+    '4': ['4 · LLM & Telegram', 'step 6'], '5': ['5 · Tools cron', 'step 7'], '6': ['6 · Backup', 'step 8'],
+    '7': ['7 · Setup ulang', 'all'], h: ['h · Help', 'help'], '0': ['0 · Keluar', null],
+  };
+  const side = {
+    cur: 0, done: false, failed: false, menu: null, sawStep: false,
+    reset() { this.cur = 0; this.done = false; this.failed = false; this.menu = null; this.sawStep = false; this.render(); },
+    setStep(n) {
+      if (n === -1) this.failed = true; else if (n === 10) this.done = true; else { this.cur = n; this.sawStep = true; }
+      this.render();
+    },
+    menuInfo(k) { this.menu = k; this.render(); },
+    render() {
+      // Panel langkah: setiap kali ada langkah bernomor (termasuk dari menu → Setup ulang) atau perintah yang memang berlangkah.
+      const stepsMode = !this.menu && (UI.tab === 'vps' || this.sawStep || UI.cmd === 'all' || UI.cmd.startsWith('step ')
+        || (UI.cmd === '' && !W.setupDone));
+      $('#panel-steps').hidden = !stepsMode;
+      const info = $('#panel-info'); info.hidden = stepsMode;
+      const showInfo = !stepsMode;
+      const key = UI.tab;
+      if (stepsMode) {
+        $('#steps').innerHTML = STEP_NAMES[key].map((nm, i) => {
+          const n = i + 1; let cls = 'todo', mk = '·';
+          if (this.done || n < this.cur) { cls = 'done'; mk = CHECK; }
+          else if (n === this.cur) { cls = this.failed ? 'fail' : 'act'; mk = this.failed ? '✘' : '▸'; }
+          return `<li class="${cls}"><span class="mk">${mk}</span><span>${esc(nm)}</span></li>`;
+        }).join('');
+        const now = $('#now');
+        if (this.done) now.innerHTML = `<b>Selesai</b><p>${key === 'ig' ? 'Semua langkah beres. Jalankan lagi tanpa argumen untuk melihat menu.' : 'VPS siap. Lanjut ke igrowctl.sh.'}</p>`;
+        else if (this.cur) now.innerHTML = `<b>${this.cur}. ${esc(STEP_NAMES[key][this.cur - 1])}</b><p>${esc(STEP_TEXT[key][this.cur - 1])}</p>`;
+        else now.innerHTML = '<b>Belum mulai</b><p>Tekan Jalankan. Pertanyaan di awal bisa diisi otomatis atau sendiri.</p>';
+      }
+      if (showInfo) {
+        let title, rows;
+        if (this.menu) {
+          const [t, c] = MENU_INFO[this.menu]; title = t;
+          rows = c ? CMD_INFO[c][1] : [['Yang terjadi', 'Script berhenti tanpa mengubah apa pun.']];
+        } else [title, rows] = CMD_INFO[UI.cmd];
+        info.innerHTML = `<h3>${esc(title)}</h3><dl>${rows.map(([a, b]) => `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`;
+      }
+    },
+  };
+
+  /* Status & kontrol */
+  const sink = term;
+  let player = null, status = 'idle';
+  function pill(cls, text) { const p = $('#pill'); p.className = 'pill ' + cls; p.textContent = text; }
+  function setStatus(s) {
+    status = s;
+    const run = $('#btn-run'), stop = $('#btn-stop');
+    stop.hidden = !(s === 'running' || s === 'paused');
+    run.textContent = s === 'idle' ? '▶ Jalankan' : s === 'running' ? '⏸ Jeda' : s === 'paused' ? '▶ Lanjut' : '⟲ Jalankan lagi';
+    if (s === 'idle') pill('idle', 'siap'); else if (s === 'running') pill('running', 'berjalan');
+    else if (s === 'paused') pill('paused', 'jeda'); else if (s === 'done') pill('done', 'selesai'); else pill('failed', 'gagal · exit 1');
+  }
+  const cfg = { speed: () => UI.speed, auto: () => UI.auto };
+  function promptParts() { return UI.tab === 'ig' ? ['nuridho@labs:~$', 'bash igrowctl.sh' + (UI.cmd ? ' ' + UI.cmd : '')] : ['root@vps:~#', 'bash setupvps.sh']; }
+  function renderIdle() {
+    stopRun(); term.clear(); term.measure();
+    const [ps, cmd] = promptParts();
+    term.add(`<span class="g">${ps}</span> ${esc(cmd)}<span class="cur"> </span>`);
+    side.reset(); setStatus('idle'); refresh(false);
+  }
+  function stopRun() { if (player) { const p = player; player = null; p.stop(); } term.cancelFn = null; }
+  function startRun() {
+    stopRun(); term.clear(); term.measure(); side.reset(); setStatus('running');
+    const p = new Player(sink, cfg); player = p;
+    const flow = UI.tab === 'ig' ? igrowMain : vpsMain;
+    p.run(flow).then(code => {
+      if (player !== p || code === null) return;
+      const failed = code !== 0; if (failed) side.failed = true; else if (UI.cmd === '' || UI.cmd === 'all') { /* langkah ditandai selesai oleh finale */ }
+      setStatus(failed ? 'failed' : 'done'); side.render();
+    }).catch(err => { if (player === p) { term.add(`<span class="r">[error simulator] ${esc(err.message)}</span>`); setStatus('failed'); } });
+  }
+
+  /* Segmented & kontrol: opsi boleh berubah (preset per tab); listener dipasang sekali */
+  function seg(host, getOpts, get, set) {
+    host.addEventListener('click', ev => { const b = ev.target.closest('button'); if (b) set(b.dataset.v); });
+    return () => {
+      const opts = getOpts(), sig = opts.map(o => o[0]).join('|');
+      if (host.dataset.sig !== sig) {
+        host.dataset.sig = sig;
+        host.innerHTML = opts.map(([v, label]) => `<button type="button" role="radio" data-v="${v}" aria-checked="false">${label}</button>`).join('');
+      }
+      host.querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === String(get()))));
+    };
+  }
+  const PRESETS = {
+    ig: [['baru', 'VPS baru'], ['terpasang', 'Sudah terpasang'], ['lama', 'Terpasang, tanpa penanda']],
+    vps: [['kosong', 'VPS kosong'], ['sudah', 'Sudah pernah di-setup']],
+  };
+  function presetOf() {
+    if (UI.tab === 'vps') return W.vps ? 'sudah' : 'kosong';
+    if (!W.installed && !W.setupDone) return 'baru';
+    if (W.installed && W.setupDone) return 'terpasang';
+    if (W.installed && !W.setupDone) return 'lama';
+    return '';
+  }
+  function applyPreset(v) {
+    if (UI.tab === 'vps') W.vps = v === 'sudah';
+    else { W.installed = v !== 'baru'; W.setupDone = v === 'terpasang'; W.hermes = '1.4.2'; }
+    renderIdle();
+  }
+  const syncWorld = seg($('#seg-world'), () => PRESETS[UI.tab], presetOf, applyPreset);
+  const SPEEDS = [['1', '×1'], ['10', '×10'], ['60', '×60'], ['Infinity', 'Langsung']];
+  const AUTOS = [['auto', 'Isi otomatis'], ['manual', 'Saya isi sendiri']];
+  const syncSpeed = seg($('#seg-speed'), () => SPEEDS, () => UI.speed, v => { UI.speed = Number(v); refresh(false); });
+  const syncAuto = seg($('#seg-auto'), () => AUTOS, () => (UI.auto ? 'auto' : 'manual'), v => { UI.auto = v === 'auto'; refresh(false); });
+  $('#chk-err').addEventListener('change', e => { UI.err = e.target.checked; renderIdle(); });
+
+  const CMDS = [['', '(tanpa argumen)'], ['all', 'all'], ['deploy', 'deploy'], ['status', 'status'], ['update', 'update'], ['step 6', 'step 6'], ['step 7', 'step 7'], ['step 8', 'step 8'], ['help', 'help']];
+  $('#chips').innerHTML = CMDS.map(([v, l]) => `<button class="chip" type="button" data-v="${esc(v)}" aria-pressed="false">${esc(l)}</button>`).join('');
+  $('#chips').addEventListener('click', ev => { const b = ev.target.closest('.chip'); if (!b) return; UI.cmd = b.dataset.v; renderIdle(); startRun(); });
+
+  $('#tog-done').addEventListener('click', () => { W.setupDone = !W.setupDone; renderIdle(); flash(); });
+  function flash() { const t = $('#tog-done'); t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash'); }
+
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { UI.tab = t.dataset.tab; renderIdle(); }));
+  $('#btn-run').addEventListener('click', () => {
+    if (status === 'idle' || status === 'done' || status === 'failed') startRun();
+    else if (status === 'running') { player.pause(); setStatus('paused'); }
+    else if (status === 'paused') { player.resume(); setStatus('running'); }
+  });
+  $('#btn-stop').addEventListener('click', renderIdle);
+
+  document.querySelectorAll('.branch').forEach(b => b.addEventListener('click', () => {
+    UI.tab = 'ig'; UI.cmd = ''; W.installed = b.dataset.path === 'b'; W.setupDone = W.installed; renderIdle(); startRun();
+    $('#sim').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }));
+  $('#try-lama').addEventListener('click', () => {
+    UI.tab = 'ig'; UI.cmd = ''; W.installed = true; W.setupDone = false; renderIdle(); startRun();
+    $('#sim').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  });
+
+  /* Sinkronkan seluruh tampilan dengan keadaan */
+  function refresh(flashDone) {
+    document.querySelectorAll('.tab').forEach(t => { const on = t.dataset.tab === UI.tab; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; });
+    $('#cmdbar').hidden = UI.tab !== 'ig';
+    $('#term-ttl').textContent = UI.tab === 'ig' ? 'nuridho@labs: ~' : 'root@vps: ~';
+    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.v === UI.cmd)));
+    const tg = $('#tog-done'); tg.className = 'tog ' + (W.setupDone ? 'on' : 'off'); $('#done-val').textContent = W.setupDone ? '"1"' : '""';
+    if (flashDone) flash();
+    const o = $('#outcome');
+    if (UI.cmd !== '') { o.className = 'outcome c'; o.textContent = 'Ada argumen: penanda tidak dicek'; }
+    else if (W.setupDone) { o.className = 'outcome b'; o.textContent = 'Tanpa argumen → menu (Jalur B)'; }
+    else { o.className = 'outcome a'; o.textContent = 'Tanpa argumen → setup lengkap (Jalur A)'; }
+    const path = UI.tab === 'ig' && UI.cmd === '' ? (W.setupDone ? 'b' : 'a') : '';
+    document.querySelectorAll('.branch').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.path === path)));
+    syncWorld(); syncSpeed(); syncAuto(); side.render();
+  }
+
+  new ResizeObserver(() => term.relayout()).observe(out);
+  document.addEventListener('keydown', ev => {   // ← → pindah tab saat fokus di tab
+    if (!ev.target.matches || !ev.target.matches('.tab') || (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft')) return;
+    UI.tab = UI.tab === 'ig' ? 'vps' : 'ig'; renderIdle(); $('#tab-' + UI.tab).focus();
+  });
+
+  /* Awal: VPS sudah terpasang, jadi langsung tampil menu (Jalur B) */
+  W.installed = true; W.setupDone = true;
+  renderIdle(); startRun();
+})();
 </script>
