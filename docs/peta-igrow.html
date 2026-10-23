@@ -1,0 +1,1671 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Peta iGROW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: satu kolom baca (maks 1100px); penjelajah file = pohon kiri + pratinjau kanan, menumpuk di bawah 760px.
+   Sengaja satu tema (terang, putih lembut), apa pun tema perangkat. */
+:root {
+  color-scheme: light;
+  --bg: #fbfbf9;
+  --surface: #fefefd;
+  --surface-2: #f4f4f1;
+  --frame: #f7f7f4;
+  --fg: #262626;
+  --muted: #6b6b68;
+  --line: #e6e6e1;
+  --line-strong: #c2c2bb;
+  --accent: #1f1f1f;
+  --accent-soft: #eeeeea;
+  --chip: #f0f0ec;
+  --font-display: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+.wrap { max-width: 1100px; margin: 0 auto; padding-block: 44px 72px; display: grid; gap: 60px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(2.1rem, 5vw, 2.9rem); font-weight: 800; letter-spacing: -0.025em; }
+h2 { font-size: 1.65rem; font-weight: 700; letter-spacing: -0.015em; }
+h3 { font-size: 1.08rem; font-weight: 700; }
+p { margin: 0; max-width: 68ch; }
+code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+.eyebrow { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+header.intro { display: grid; gap: 14px; }
+.lead { font-size: 1.12rem; color: var(--fg); }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { font-family: var(--font-mono); font-size: 0.76rem; background: var(--chip); color: var(--muted); border-radius: 999px; padding: 3px 11px; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.95rem; font-weight: 600; padding-top: 8px; border-top: 1px solid var(--line); }
+nav.toc a { text-decoration: none; }
+nav.toc a:hover { text-decoration: underline; }
+
+section { display: grid; gap: 20px; scroll-margin-top: 16px; }
+.section-head { display: grid; gap: 6px; }
+.section-head p { color: var(--muted); }
+
+/* ---------- Diagram ---------- */
+figure { margin: 0; display: grid; gap: 10px; }
+.diagram-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+.diagram-scroll svg { display: block; width: 100%; min-width: 820px; height: auto; color: var(--fg); font-family: var(--font-body); }
+figcaption { color: var(--muted); font-size: 0.93rem; max-width: 80ch; }
+.d-frame { fill: var(--frame); stroke: var(--line); stroke-width: 1; }
+.d-box { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.2; }
+.d-row { fill: var(--surface-2); }
+.d-plan { fill: none; stroke: var(--line-strong); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.d-line { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+.d-line-dash { stroke: var(--muted); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+.d-line-accent { stroke: var(--accent); stroke-width: 2.4; fill: none; }
+.d-title { fill: var(--fg); font-size: 13.5px; font-weight: 700; }
+.d-title-mono { fill: var(--fg); font-size: 13px; font-weight: 500; font-family: var(--font-mono); }
+.d-text { fill: var(--fg); font-size: 12.5px; }
+.d-sub { fill: var(--muted); font-size: 12px; }
+.d-label { fill: var(--muted); font-size: 12px; }
+.d-label-accent { fill: var(--accent); font-size: 12.5px; font-weight: 700; }
+.d-frame-label { fill: var(--muted); font-size: 11px; letter-spacing: 0.06em; font-family: var(--font-mono); }
+.d-arrow { fill: var(--muted); }
+.d-arrow-accent { fill: var(--accent); }
+.d-arrow-muted { fill: var(--muted); }
+
+.cron { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.cron article { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+.cron .when { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.cron h3 { font-size: 1.04rem; }
+.cron p { font-size: 0.93rem; color: var(--muted); }
+
+/* ---------- Satu cerita ---------- */
+.story { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); }
+.bubble { max-width: 580px; border-radius: 16px; padding: 12px 15px; font-size: 0.96rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.bubble .who { display: block; font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); margin-bottom: 4px; white-space: normal; }
+.bubble.user { justify-self: end; background: var(--accent-soft); border-bottom-right-radius: 4px; }
+.bubble.bot { justify-self: start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; counter-reset: step; }
+ol.steps li { counter-increment: step; display: grid; grid-template-columns: 2.3rem minmax(0, 1fr); gap: 12px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+ol.steps li::before { content: counter(step); font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; color: var(--accent); width: 2.3rem; height: 2.3rem; border-radius: 50%; background: var(--accent-soft); display: grid; place-items: center; }
+.step-body { display: grid; gap: 4px; min-width: 0; }
+.step-body p { color: var(--muted); font-size: 0.94rem; }
+.step-file { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.step-file code { overflow-wrap: anywhere; }
+button.jump { font: inherit; font-size: 0.82rem; font-weight: 600; color: var(--accent); background: none; border: 1px solid var(--line-strong); border-radius: 999px; padding: 2px 11px; cursor: pointer; }
+button.jump:hover { background: var(--accent-soft); }
+
+/* ---------- Penjelajah ---------- */
+.explorer { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 760px) { .explorer { grid-template-columns: minmax(0, 1fr); } }
+.tree { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 8px; font-family: var(--font-mono); font-size: 0.82rem; max-height: 760px; overflow-y: auto; }
+.tree ul { list-style: none; margin: 0; padding: 0 0 0 14px; }
+.tree > ul { padding-left: 0; }
+.tree li { margin: 1px 0; }
+.tree summary { cursor: pointer; padding: 3px 6px; border-radius: 6px; color: var(--fg); font-weight: 500; }
+.tree summary:hover { background: var(--surface-2); }
+.tree .note { color: var(--muted); font-family: var(--font-body); font-size: 0.78rem; padding: 0 6px 4px 22px; display: block; }
+.tree button { font: inherit; color: var(--fg); background: none; border: 0; text-align: left; width: 100%; padding: 3px 6px; border-radius: 6px; cursor: pointer; overflow-wrap: anywhere; }
+.tree button:hover { background: var(--surface-2); }
+.tree button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+.preview { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; min-width: 0; display: grid; }
+.preview-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.preview-path { font-family: var(--font-mono); font-size: 0.84rem; overflow-wrap: anywhere; }
+dl.file-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; font-size: 0.84rem; }
+dl.file-meta div { display: flex; gap: 6px; }
+dl.file-meta dt { color: var(--muted); }
+dl.file-meta dd { margin: 0; }
+pre.file-body { margin: 0; padding: 14px 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.6; background: var(--surface-2); border-radius: 0 0 14px 14px; tab-size: 2; max-height: 680px; overflow-y: auto; }
+
+/* ---------- Tabel ---------- */
+.table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 0.93rem; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; background: var(--surface-2); }
+tr:last-child td { border-bottom: 0; }
+td code { overflow-wrap: anywhere; }
+
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 6px; }
+
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="intro">
+  <span class="eyebrow">iGROW · arsip karier lewat Telegram</span>
+  <h1>Peta iGROW</h1>
+  <p class="lead">Bagaimana kamu, Telegram, Hermes, dan folder <code>igrow/</code> saling terhubung, apa saja yang berubah waktu kamu bercerita, dan seperti apa isi <code>igrow/</code> setelah sekitar 6 bulan dipakai.</p>
+  <div class="meta-row">
+    <span class="tag">ilustrasi, data fiktif (PT Acme, Bank XYZ)</span>
+    <span class="tag">aturan per 23 Okt 2026</span>
+    <span class="tag">tidak ikut deploy</span>
+  </div>
+  <nav class="toc" aria-label="Isi halaman">
+    <a href="#arsitektur">Arsitektur</a>
+    <a href="#satu-cerita">Satu cerita, apa yang berubah</a>
+    <a href="#isi-igrow">Isi igrow/ setelah 6 bulan</a>
+    <a href="#siapa-menulis">Siapa menulis apa</a>
+  </nav>
+</header>
+
+<section id="arsitektur">
+  <div class="section-head">
+    <h2>Arsitektur</h2>
+    <p>Semua jalan di satu VPS. Kamu cuma berinteraksi lewat Telegram; Hermes satu-satunya yang menulis ke <code>igrow/</code>.</p>
+  </div>
+
+  <figure>
+    <div class="diagram-scroll">
+      <svg viewBox="0 0 1000 540" role="img" aria-label="Arsitektur iGROW: kamu chat lewat Telegram dengan igrow-hermes di VPS. Hermes membaca tiga lapis aturan, memanggil provider LLM, dan menjadi satu-satunya penulis folder igrow. Folder igrow di-push ke GitHub privat tiga kali seminggu, dan nanti dibaca dashboard secara read-only.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ah-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-accent" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ah-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="d-arrow-muted" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+
+        <!-- Kamu & Telegram -->
+        <rect class="d-box" x="20" y="120" width="150" height="60" rx="10"/>
+        <text class="d-title" x="95" y="146" text-anchor="middle">Kamu</text>
+        <text class="d-sub" x="95" y="164" text-anchor="middle">HP</text>
+        <rect class="d-box" x="20" y="230" width="150" height="60" rx="10"/>
+        <text class="d-title" x="95" y="256" text-anchor="middle">Telegram</text>
+        <text class="d-sub" x="95" y="274" text-anchor="middle">chat dengan bot</text>
+        <line class="d-line" x1="95" y1="183" x2="95" y2="227" marker-start="url(#ah)" marker-end="url(#ah)"/>
+        <text class="d-label" x="106" y="209">chat</text>
+
+        <!-- VPS -->
+        <rect class="d-frame" x="350" y="30" width="400" height="490" rx="14"/>
+        <text class="d-frame-label" x="368" y="53">VPS · DOCKER COMPOSE</text>
+
+        <!-- igrow-hermes -->
+        <rect class="d-box" x="370" y="70" width="360" height="250" rx="10"/>
+        <text class="d-title-mono" x="390" y="98">igrow-hermes</text>
+        <text class="d-sub" x="390" y="117">Hermes Agent: gateway Telegram + cron</text>
+        <rect class="d-row" x="388" y="134" width="324" height="50" rx="6"/>
+        <text class="d-title-mono" x="402" y="155">AGENTS.md</text>
+        <text class="d-sub" x="698" y="155" text-anchor="end">di setiap sesi</text>
+        <text class="d-sub" x="402" y="173">aturan inti, larangan data, daftar prosedur</text>
+        <rect class="d-row" x="388" y="190" width="324" height="50" rx="6"/>
+        <text class="d-title-mono" x="402" y="211">SCHEMA.md + taxonomy.md</text>
+        <text class="d-sub" x="698" y="211" text-anchor="end">sebelum menulis</text>
+        <text class="d-sub" x="402" y="229">format note, link, tag, skill map</text>
+        <rect class="d-row" x="388" y="246" width="324" height="50" rx="6"/>
+        <text class="d-title-mono" x="402" y="267">project-skills/*.md</text>
+        <text class="d-sub" x="698" y="267" text-anchor="end">saat relevan</text>
+        <text class="d-sub" x="402" y="285">langkah capture, study, mentor, review, lint</text>
+
+        <!-- Telegram <-> Hermes -->
+        <line class="d-line" x1="173" y1="260" x2="367" y2="260" marker-start="url(#ah)" marker-end="url(#ah)"/>
+        <text class="d-label" x="270" y="251" text-anchor="middle">pesan masuk</text>
+        <text class="d-label" x="270" y="277" text-anchor="middle">balasan + laporan cron</text>
+
+        <!-- LLM -->
+        <rect class="d-box" x="800" y="120" width="180" height="64" rx="10"/>
+        <text class="d-title" x="890" y="147" text-anchor="middle">Provider LLM</text>
+        <text class="d-sub" x="890" y="166" text-anchor="middle">dipanggil tiap jawaban</text>
+        <line class="d-line" x1="733" y1="152" x2="797" y2="152" marker-start="url(#ah)" marker-end="url(#ah)"/>
+        <text class="d-label" x="765" y="144" text-anchor="middle">API</text>
+
+        <!-- Hermes -> igrow/ -->
+        <line class="d-line-accent" x1="645" y1="323" x2="645" y2="386" marker-end="url(#ah-accent)"/>
+        <text class="d-label-accent" x="634" y="360" text-anchor="end">tulis · satu-satunya penulis</text>
+
+        <!-- igrow/ -->
+        <rect class="d-box" x="560" y="390" width="170" height="110" rx="10" style="stroke: var(--accent); stroke-width: 1.8"/>
+        <text class="d-title-mono" x="576" y="414">igrow/</text>
+        <text class="d-text" x="576" y="436"><tspan class="mono">raw/</tspan> sumber mentah</text>
+        <text class="d-text" x="576" y="454"><tspan class="mono">wiki/</tspan> note &amp; data</text>
+        <text class="d-text" x="576" y="472"><tspan class="mono">output/</tspan> laporan</text>
+        <text class="d-text" x="576" y="490"><tspan class="mono">log.md</tspan> jurnal</text>
+
+        <!-- Dashboard (Phase 4) -->
+        <rect class="d-plan" x="370" y="390" width="130" height="110" rx="10"/>
+        <text class="d-title" x="435" y="428" text-anchor="middle">igrow-api + web</text>
+        <text class="d-sub" x="435" y="447" text-anchor="middle">dashboard</text>
+        <text class="d-sub" x="435" y="469" text-anchor="middle">Phase 4,</text>
+        <text class="d-sub" x="435" y="485" text-anchor="middle">belum dibangun</text>
+        <line class="d-line-dash" x1="557" y1="445" x2="503" y2="445" marker-end="url(#ah-muted)"/>
+        <text class="d-label" x="530" y="437" text-anchor="middle">baca</text>
+        <text class="d-label" x="530" y="461" text-anchor="middle">:ro</text>
+
+        <!-- GitHub -->
+        <rect class="d-box" x="800" y="409" width="180" height="72" rx="10"/>
+        <text class="d-title" x="890" y="434" text-anchor="middle">GitHub privat</text>
+        <text class="d-title-mono" x="890" y="452" text-anchor="middle" style="font-size:12px">igrow-backup</text>
+        <text class="d-sub" x="890" y="470" text-anchor="middle">Sen/Rab/Sab 05:00</text>
+        <line class="d-line" x1="733" y1="445" x2="797" y2="445" marker-end="url(#ah)"/>
+        <text class="d-label" x="765" y="437" text-anchor="middle">push</text>
+      </svg>
+    </div>
+    <figcaption>Hermes membaca tiga lapis aturan (yang paling atas selalu ada, dua lainnya hanya saat perlu), memanggil provider LLM untuk berpikir, lalu menulis ke <code>igrow/</code>. Garis tebal = satu-satunya jalur tulis. Hanya <code>igrow/</code> yang di-backup ke GitHub; memory dan sesi internal Hermes tidak. Kotak putus-putus belum dibangun.</figcaption>
+  </figure>
+
+  <div class="cron" aria-label="Jadwal cron">
+    <article>
+      <span class="when">0 7 * * * · tiap hari 07:00</span>
+      <h3>Daily briefing</h3>
+      <p>Maks 5 berita infra yang terbit ≤ 24 jam, tiap item ada link sumber. Cuma pesan, tidak menulis file apa pun.</p>
+    </article>
+    <article>
+      <span class="when">0 5 * * 1,3,6 · Sen, Rab, Sab 05:00</span>
+      <h3>Backup</h3>
+      <p>Push <code>igrow/</code> ke GitHub. Selalu 1 pesan: berhasil di-push, tidak ada perubahan, atau gagal.</p>
+    </article>
+    <article>
+      <span class="when">0 8 * * 0 · Minggu 08:00</span>
+      <h3>Lint mingguan</h3>
+      <p>Cek struktur, link, slug ganda, inbox, dan pola IP/credential. Menulis 1 baris log, lalu lapor.</p>
+    </article>
+    <article>
+      <span class="when">0 9 1 1,4,7,10 * · awal kuartal 09:00</span>
+      <h3>Career review</h3>
+      <p>Laporan kuartal yang baru selesai ke <code>output/</code>, update <code>profile/</code>, balasan 3–5 baris.</p>
+    </article>
+  </div>
+</section>
+
+<section id="satu-cerita">
+  <div class="section-head">
+    <h2>Satu cerita, apa saja yang berubah</h2>
+    <p>Contoh pesan tanggal 20 September 2026. Satu cerita menyentuh enam file, tapi yang kamu lihat di Telegram cuma balasan di paling bawah.</p>
+  </div>
+
+  <div class="story">
+    <div class="bubble user"><span class="who">Kamu · Telegram</span>Kemarin server production down 2 jam. CPU 100% gara-gara backup MySQL jalan pas jam sibuk. Akhirnya matiin backup, server normal lagi.</div>
+
+    <ol class="steps">
+      <li>
+        <div class="step-body">
+          <h3>Tentukan career aktif</h3>
+          <p>Cari <code>about.md</code> yang belum punya tanggal selesai. Ketemu satu: nama folder lengkapnya dipakai di semua path.</p>
+          <div class="step-file"><code>wiki/careers/career-1-acme-sysadmin/about.md</code><button class="jump" type="button" data-file="about">lihat file</button></div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <h3>Tulis note incident</h3>
+          <p>"Kemarin" diubah jadi tanggal kejadian (19 Sep), data sensitif diredaksi, lalu self-check sebelum file ditulis.</p>
+          <div class="step-file"><code>knowledge/incidents/2026-09-19-mysql-backup-cpu-spike.md</code><button class="jump" type="button" data-file="incident-0919">lihat file</button></div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <h3>Link balik di note lama</h3>
+          <p>Note baru menaut ke <code>cpu-spike-triage</code>, jadi note lama itu dapat 1 baris di See Also. Tanggal <code>updated</code>-nya tidak berubah.</p>
+          <div class="step-file"><code>knowledge/cpu-spike-triage.md</code><button class="jump" type="button" data-file="cpu-triage">lihat file</button></div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <h3>Tambah skill yang terlihat</h3>
+          <p>Skill baru ditambah per tag (<code>linux: cek jadwal cron</code>, <code>performance: jadwalkan ulang job berat</code>); yang sudah ada tidak ditulis ulang.</p>
+          <div class="step-file"><code>wiki/careers/career-1-acme-sysadmin/skills.md</code><button class="jump" type="button" data-file="skills">lihat file</button></div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <h3>Catat di daftar isi</h3>
+          <p>Baris note baru, baris placeholder untuk <code>backup-scheduling</code> yang belum ada, dan tanggal baris <code>skills.md</code>.</p>
+          <div class="step-file"><code>wiki/_index.md</code><button class="jump" type="button" data-file="wiki-index">lihat file</button></div>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <h3>Tulis jurnal</h3>
+          <p>Satu baris di log, termasuk note lama yang dapat link balik.</p>
+          <div class="step-file"><code>log.md</code><button class="jump" type="button" data-file="log">lihat file</button></div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="bubble bot"><span class="who">Hermes · balasan ke Telegram</span>Tersimpan: wiki/careers/career-1-acme-sysadmin/knowledge/incidents/2026-09-19-mysql-backup-cpu-spike.md
+Career aktif = career-1-acme-sysadmin (about.md tanpa tanggal selesai)
+Type = incident (ada symptom + investigation + result)
+
+Rangkuman:
+- Kejadian: 2026-09-19, server production down 2 jam, CPU 100%
+- Penyebab: backup MySQL terjadwal jam 14:00, bentrok dengan jam sibuk
+- Tindakan: backup dihentikan, jadwal dipindah ke 03:00 (off-peak)
+- Pelajaran: jadwalkan job berat di luar jam sibuk; cek crontab sebelum menyalahkan aplikasi
+
+Tags: linux, performance, incident
+Skill baru di skills.md: linux: cek jadwal cron (crontab -l) · performance: jadwalkan ulang job berat ke jam off-peak (crontab)
+Link placeholder baru: backup-scheduling
+Link balik ditambahkan di: cpu-spike-triage
+Diredaksi: tidak ada</div>
+  </div>
+</section>
+
+<section id="isi-igrow">
+  <div class="section-head">
+    <h2>Isi igrow/ setelah 6 bulan</h2>
+    <p>Kondisi 20 Oktober 2026, sejak mulai dipakai 1 April: 6 incident, 5 knowledge, 2 lesson, 5 note belajar, 1 screenshot, 2 laporan career review, dan 15 link yang masih placeholder (note yang ditunggu). Klik file untuk melihat isinya.</p>
+  </div>
+
+  <div class="explorer" id="explorer">
+    <nav class="tree" aria-label="Folder igrow">
+      <ul>
+        <li><details open><summary>igrow/</summary>
+          <ul>
+            <li><button type="button" data-file="schema">SCHEMA.md</button></li>
+            <li><button type="button" data-file="taxonomy">taxonomy.md</button></li>
+            <li><button type="button" data-file="log">log.md</button></li>
+            <li><button type="button" data-file="agents-backup">AGENTS.backup.md</button></li>
+            <li><details open><summary>raw/</summary>
+              <ul>
+                <li><button type="button" data-file="raw-index">_index.md</button></li>
+                <li><details><summary>inbox/</summary><span class="note">kosong = semua sumber sudah diproses</span></details></li>
+                <li><details open><summary>articles/</summary>
+                  <ul>
+                    <li><button type="button" data-file="raw-k8s">2026-06-14-kubernetes-docs.md</button></li>
+                    <li><button type="button" data-file="raw-redis">2026-09-20-redis-caching.md</button></li>
+                    <li><button type="button" data-file="raw-redis-persist">2026-09-21-redis-persistence.md</button></li>
+                  </ul>
+                </details></li>
+                <li><details open><summary>assets/</summary>
+                  <ul><li><button type="button" data-file="asset-cert">20260708-cert-expired.png</button></li></ul>
+                </details></li>
+              </ul>
+            </details></li>
+            <li><details open><summary>wiki/</summary>
+              <ul>
+                <li><button type="button" data-file="wiki-index">_index.md</button></li>
+                <li><details open><summary>careers/</summary>
+                  <ul>
+                    <li><details open><summary>career-1-acme-sysadmin/</summary>
+                      <ul>
+                        <li><button type="button" data-file="about">about.md</button></li>
+                        <li><button type="button" data-file="skills">skills.md</button></li>
+                        <li><details open><summary>knowledge/</summary>
+                          <ul>
+                            <li><button type="button" data-file="cpu-triage">cpu-spike-triage.md</button></li>
+                            <li><button type="button" data-file="dns-ts">dns-troubleshooting.md</button></li>
+                            <li><button type="button" data-file="nginx-rp">nginx-reverse-proxy-setup.md</button></li>
+                            <li><button type="button" data-file="prom-rules">prometheus-alert-rules.md</button></li>
+                            <li><button type="button" data-file="ssh-hard">ssh-hardening.md</button></li>
+                            <li><details open><summary>incidents/</summary>
+                              <ul>
+                                <li><button type="button" data-file="incident-0422">2026-04-22-nginx-502-oom.md</button></li>
+                                <li><button type="button" data-file="incident-0530">2026-05-30-dns-record-hilang.md</button></li>
+                                <li><button type="button" data-file="incident-0708">2026-07-08-ssl-cert-expired.md</button></li>
+                                <li><button type="button" data-file="incident-0818">2026-08-18-disk-full-app.md</button></li>
+                                <li><button type="button" data-file="incident-0914">2026-09-14-disk-full-db.md</button></li>
+                                <li><button type="button" data-file="incident-0919">2026-09-19-mysql-backup-cpu-spike.md</button></li>
+                              </ul>
+                            </details></li>
+                          </ul>
+                        </details></li>
+                        <li><details open><summary>lessons-learned/</summary>
+                          <ul>
+                            <li><button type="button" data-file="lesson-jumat">jangan-deploy-jumat-sore.md</button></li>
+                            <li><button type="button" data-file="lesson">systemctl-status-bisa-bohong.md</button></li>
+                          </ul>
+                        </details></li>
+                      </ul>
+                    </details></li>
+                  </ul>
+                </details></li>
+                <li><details open><summary>self-development/</summary>
+                  <ul>
+                    <li><details open><summary>Bootcamp/Redis-Caching/</summary>
+                      <ul>
+                        <li><button type="button" data-file="redis-basics">redis-basics.md</button></li>
+                        <li><button type="button" data-file="redis-persist">redis-persistence.md</button></li>
+                      </ul>
+                    </details></li>
+                    <li><details open><summary>Dokumentasi/Kubernetes-Docs/</summary>
+                      <ul>
+                        <li><button type="button" data-file="k8s-pod">k8s-pod-lifecycle.md</button></li>
+                        <li><button type="button" data-file="k8s-svc">k8s-services.md</button></li>
+                      </ul>
+                    </details></li>
+                    <li><details open><summary>Project/Homelab-Monitoring/</summary>
+                      <ul><li><button type="button" data-file="grafana">grafana-dashboard.md</button></li></ul>
+                    </details></li>
+                  </ul>
+                </details></li>
+                <li><details open><summary>roadmap/</summary>
+                  <ul>
+                    <li><button type="button" data-file="skill-map">skill-map.md</button></li>
+                    <li><button type="button" data-file="weak-topics">weak-topics.md</button></li>
+                  </ul>
+                </details></li>
+                <li><details open><summary>profile/</summary>
+                  <ul>
+                    <li><button type="button" data-file="profile-skills">skills.md</button></li>
+                    <li><button type="button" data-file="career-summary">career-summary.md</button></li>
+                  </ul>
+                </details></li>
+              </ul>
+            </details></li>
+            <li><details open><summary>output/</summary>
+              <ul>
+                <li><button type="button" data-file="output-index">_index.md</button></li>
+                <li><button type="button" data-file="review-q2">career-review-2026-Q2.md</button></li>
+                <li><button type="button" data-file="review-q3">career-review-2026-Q3.md</button></li>
+              </ul>
+            </details></li>
+            <li><button type="button" data-file="project-skills">project-skills/</button></li>
+          </ul>
+        </details></li>
+      </ul>
+    </nav>
+
+    <div class="preview" aria-live="polite">
+      <div class="preview-head">
+        <div class="preview-path" id="file-path"></div>
+        <dl class="file-meta" id="file-meta"></dl>
+      </div>
+      <pre class="file-body" id="file-body"></pre>
+    </div>
+  </div>
+</section>
+
+<section id="siapa-menulis">
+  <div class="section-head">
+    <h2>Siapa menulis apa</h2>
+    <p>Setiap operasi tulis diakhiri dua langkah: update <code>_index.md</code> terdekat, lalu satu baris di <code>log.md</code>.</p>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>File / folder</th><th>Ditulis oleh</th><th>Kapan</th></tr></thead>
+      <tbody>
+        <tr><td><code>careers/*/knowledge/</code>, <code>lessons-learned/</code>, <code>skills.md</code></td><td>Capture (kamu cerita kerja)</td><td>Setiap cerita</td></tr>
+        <tr><td><code>careers/*/about.md</code></td><td>Kamu sendiri, atau alur Daftar Kerjaan Baru</td><td>Saat mulai atau pindah kerja</td></tr>
+        <tr><td><code>self-development/</code>, <code>raw/articles/</code></td><td><code>/study</code></td><td>Saat kamu kirim materi belajar</td></tr>
+        <tr><td><code>raw/assets/</code></td><td>Capture</td><td>Kalau kamu kirim screenshot yang sudah diredaksi</td></tr>
+        <tr><td><code>roadmap/skill-map.md</code></td><td>Mentor atau career review</td><td>Sekali per level (beku sampai naik level)</td></tr>
+        <tr><td><code>roadmap/weak-topics.md</code></td><td>Mentor</td><td>Setiap kamu tanya "harus belajar apa" (ditulis ulang)</td></tr>
+        <tr><td><code>profile/</code>, <code>output/</code></td><td>Career review</td><td>Awal setiap kuartal</td></tr>
+        <tr><td><code>wiki/</code>, <code>raw/</code>, <code>output/_index.md</code></td><td>Semua operasi tulis</td><td>Setiap menulis</td></tr>
+        <tr><td><code>log.md</code></td><td>Semua operasi tulis + lint</td><td>Setiap menulis, dan setiap Minggu</td></tr>
+        <tr><td><code>taxonomy.md</code></td><td>Hermes, kalau kamu setuju tag baru</td><td>Jarang</td></tr>
+        <tr><td><code>SCHEMA.md</code>, <code>project-skills/</code>, <code>AGENTS.md</code></td><td>Kamu, lewat repo lalu deploy</td><td>Saat aturan berubah</td></tr>
+        <tr><td>(tidak menulis apa pun)</td><td>Daily briefing</td><td>Cuma kirim pesan</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <p>Aturan resminya tetap di <code>hermes-home/igrow/SCHEMA.md</code> dan <code>project-skills/</code>. Halaman ini ilustrasi yang disusun dari contoh eksekusi di prosedur dan PRD; isinya tidak ikut deploy dan bisa tertinggal kalau aturan berubah.</p>
+</footer>
+
+</div>
+
+<!-- ================= Isi file contoh ================= -->
+<script type="text/plain" id="src-schema" data-path="igrow/SCHEMA.md" data-writer="kamu (repo), tersalin saat deploy" data-when="saat aturan berubah" data-kind="aturan">
+# iGROW Schema
+
+(isi lengkap ada di repo: hermes-home/igrow/SCHEMA.md)
+
+## Layer
+## Career aktif & kepemilikan
+## Tiap operasi tulis WAJIB diakhiri
+   1. Update _index.md terdekat (raw/ atau wiki/ atau output/), termasuk "Last updated". Tidak ada master index di igrow/.
+   2. Append igrow/log.md: ## [YYYY-MM-DD] op | subjek
+## Frontmatter page wiki/
+## Body note
+## Data file
+## Tag taxonomy
+## Link
+## Threshold
+## skill-map.md format
+## Honest gaps
+## DILARANG KERAS
+</script>
+
+<script type="text/plain" id="src-taxonomy" data-path="igrow/taxonomy.md" data-writer="Hermes, hanya kalau kamu setuju tag baru" data-when="jarang" data-kind="daftar tag">
+# Tag Taxonomy
+
+> Daftar tag resmi. Agent-owned, tidak ditimpa deploy. Aturan tambah tag di SCHEMA § Tag taxonomy.
+
+linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve
+</script>
+
+<script type="text/plain" id="src-log" data-path="igrow/log.md" data-writer="semua operasi tulis + lint" data-when="setiap menulis, setiap Minggu" data-kind="jurnal append-only">
+# iGROW Log
+
+> Append-only. Format: `## [YYYY-MM-DD] op | subjek`
+
+## [2026-04-01] init | Struktur igrow/ dibuat (pola wiki varian B)
+## [2026-04-02] update | career-1-acme-sysadmin (career pertama didaftarkan)
+## [2026-04-05] lint | wiki sehat
+## [2026-04-12] lint | wiki sehat
+## [2026-04-19] lint | wiki sehat
+## [2026-04-23] ingest | 2026-04-22-nginx-502-oom
+## [2026-04-26] lint | wiki sehat
+## [2026-05-03] lint | wiki sehat
+## [2026-05-10] lint | wiki sehat
+## [2026-05-12] ingest | ssh-hardening
+## [2026-05-17] lint | wiki sehat
+## [2026-05-24] lint | wiki sehat
+## [2026-05-30] ingest | 2026-05-30-dns-record-hilang
+## [2026-05-31] lint | wiki sehat
+## [2026-06-03] ingest | nginx-reverse-proxy-setup (placeholder terisi; + link balik: 2026-04-22-nginx-502-oom)
+## [2026-06-07] lint | wiki sehat
+## [2026-06-14] lint | wiki sehat
+## [2026-06-14] ingest | k8s-pod-lifecycle, k8s-services
+## [2026-06-21] lint | wiki sehat
+## [2026-06-28] lint | wiki sehat
+## [2026-07-01] update | skill-map (dibuat, target L2)
+## [2026-07-01] review | career-review-2026-Q2
+## [2026-07-05] lint | wiki sehat
+## [2026-07-09] ingest | 2026-07-08-ssl-cert-expired (+ link balik: nginx-reverse-proxy-setup)
+## [2026-07-12] lint | wiki sehat
+## [2026-07-15] ingest | dns-troubleshooting (placeholder terisi)
+## [2026-07-19] lint | wiki sehat
+## [2026-07-24] ingest | jangan-deploy-jumat-sore
+## [2026-07-26] lint | wiki sehat
+## [2026-08-02] lint | wiki sehat
+## [2026-08-09] lint | wiki sehat
+## [2026-08-16] lint | wiki sehat
+## [2026-08-18] ingest | 2026-08-18-disk-full-app
+## [2026-08-21] ingest | prometheus-alert-rules (+ link balik: 2026-08-18-disk-full-app)
+## [2026-08-23] lint | wiki sehat
+## [2026-08-30] lint | wiki sehat
+## [2026-08-30] ingest | grafana-dashboard (+ link balik: prometheus-alert-rules)
+## [2026-09-02] ingest | cpu-spike-triage
+## [2026-09-06] lint | wiki sehat
+## [2026-09-13] lint | wiki sehat
+## [2026-09-15] ingest | 2026-09-14-disk-full-db (+ link balik: 2026-08-18-disk-full-app)
+## [2026-09-20] lint | 1 temuan (privasi 1)
+## [2026-09-20] ingest | 2026-09-19-mysql-backup-cpu-spike (+ link balik: cpu-spike-triage)
+## [2026-09-20] ingest | redis-basics
+## [2026-09-21] ingest | redis-persistence (+ link balik: redis-basics)
+## [2026-09-22] update | 2026-09-14-disk-full-db (redaksi IP)
+## [2026-09-24] ingest | systemctl-status-bisa-bohong (placeholder terisi)
+## [2026-09-27] lint | wiki sehat
+## [2026-10-01] review | career-review-2026-Q3
+## [2026-10-04] lint | wiki sehat
+## [2026-10-08] update | weak-topics (5 gap vs target L2)
+## [2026-10-11] lint | wiki sehat
+## [2026-10-18] lint | wiki sehat
+</script>
+
+<script type="text/plain" id="src-agents-backup" data-path="igrow/AGENTS.backup.md" data-writer="backup.sh (salinan otomatis)" data-when="setiap backup" data-kind="arsip, bukan aturan">
+# iGROW — Aturan Inti
+
+Kamu adalah Hermes, asisten personal untuk iGROW: sistem arsip karier &
+knowledge IT worker. ...
+
+(salinan /opt/data/AGENTS.md supaya ikut ter-backup ke GitHub;
+yang dipakai Hermes tetap AGENTS.md asli di root HERMES_HOME)
+</script>
+
+<script type="text/plain" id="src-raw-index" data-path="igrow/raw/_index.md" data-writer="/study (artikel), capture (screenshot)" data-when="saat ada sumber baru" data-kind="index layer raw">
+# Raw Index
+
+> Sumber immutable.
+> Last updated: 2026-09-21
+
+| File | Summary | Tags | Updated |
+|------|---------|------|---------|
+| articles/2026-06-14-kubernetes-docs.md | Catatan baca dokumentasi Kubernetes: Pod dan Service | kubernetes, networking | 2026-06-14 |
+| articles/2026-09-20-redis-caching.md | Ringkasan materi course Redis caching dari user | storage, performance | 2026-09-20 |
+| articles/2026-09-21-redis-persistence.md | Ringkasan materi Redis persistence (RDB, AOF) dari user | storage | 2026-09-21 |
+| assets/20260708-cert-expired.png | Screenshot peringatan sertifikat (sudah diredaksi user) | security | 2026-07-09 |
+</script>
+
+<script type="text/plain" id="src-raw-k8s" data-path="igrow/raw/articles/2026-06-14-kubernetes-docs.md" data-writer="/study" data-when="2026-06-14 (lalu tidak pernah diubah)" data-kind="sumber mentah, immutable">
+---
+source_url: https://kubernetes.io/docs/concepts/workloads/pods/
+ingested: 2026-06-14
+---
+
+Catatan baca dokumentasi resmi Kubernetes (Pods dan Service), diringkas user:
+- Fase pod: Pending, Running, Succeeded, Failed, Unknown
+- restartPolicy menentukan container di-restart atau tidak
+- Service memberi IP tetap + nama DNS untuk sekumpulan pod
+- Tipe Service: ClusterIP, NodePort, LoadBalancer
+</script>
+
+<script type="text/plain" id="src-raw-redis" data-path="igrow/raw/articles/2026-09-20-redis-caching.md" data-writer="/study" data-when="2026-09-20 (lalu tidak pernah diubah)" data-kind="sumber mentah, immutable">
+---
+source_url: ""
+ingested: 2026-09-20
+---
+
+Ringkasan materi course Redis caching (dari user, sudah dicek redaksi):
+- Pola cache-aside: cek cache dulu, kalau miss ambil dari DB lalu simpan ke cache
+- TTL lewat EXPIRE supaya data basi hilang sendiri
+- INFO stats: bandingkan keyspace_hits dengan keyspace_misses
+</script>
+
+<script type="text/plain" id="src-raw-redis-persist" data-path="igrow/raw/articles/2026-09-21-redis-persistence.md" data-writer="/study" data-when="2026-09-21 (lalu tidak pernah diubah)" data-kind="sumber mentah, immutable">
+---
+source_url: ""
+ingested: 2026-09-21
+---
+
+Ringkasan materi course Redis bagian persistence (dari user):
+- RDB = snapshot berkala ke disk
+- AOF = catat setiap perintah tulis
+- BGSAVE untuk snapshot manual
+</script>
+
+<script type="text/plain" id="src-asset-cert" data-path="igrow/raw/assets/20260708-cert-expired.png" data-writer="capture" data-when="2026-07-09" data-kind="gambar, sudah diredaksi user">
+(file gambar PNG, tidak ditampilkan di sini)
+
+Screenshot peringatan sertifikat dari browser. Domain dan IP sudah di-blur
+user di HP sebelum dikirim; Hermes hanya mengecek, tidak mengedit gambar.
+
+Dirujuk dari note 2026-07-08-ssl-cert-expired.md lewat:
+  sources: [igrow/raw/assets/20260708-cert-expired.png]
+  ![](../../../../../raw/assets/20260708-cert-expired.png)
+</script>
+
+<script type="text/plain" id="src-wiki-index" data-path="igrow/wiki/_index.md" data-writer="semua operasi tulis di wiki/" data-when="setiap menulis" data-kind="daftar semua note (pintu masuk /recall)">
+# Wiki Index
+
+> Konten compiled, agent-owned.
+> Last updated: 2026-10-08
+
+| File | Summary | Tags | Updated |
+|------|---------|------|---------|
+| careers/career-1-acme-sysadmin/about.md | Data career: Sysadmin L1 di PT Acme | - | 2026-04-02 |
+| careers/career-1-acme-sysadmin/skills.md | Skill terpakai di career ini | - | 2026-09-24 |
+| careers/career-1-acme-sysadmin/knowledge/alertmanager-routing.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/backup-scheduling.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/certbot-renewal.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/change-window.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/cpu-spike-triage.md | Urutan cek kalau CPU server tiba-tiba tinggi | linux, performance | 2026-09-02 |
+| careers/career-1-acme-sysadmin/knowledge/disk-usage-check.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/dns-record-management.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/dns-troubleshooting.md | Urutan cek kalau nama host tidak bisa di-resolve | dns, networking | 2026-07-15 |
+| careers/career-1-acme-sysadmin/knowledge/docker-memory-limit.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/fail2ban.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/load-average.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/log-rotation.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/nginx-reverse-proxy-setup.md | Nginx sebagai reverse proxy di depan aplikasi | linux, networking | 2026-06-03 |
+| careers/career-1-acme-sysadmin/knowledge/prometheus-alert-rules.md | Alert rule Prometheus untuk disk dan CPU | monitoring | 2026-08-21 |
+| careers/career-1-acme-sysadmin/knowledge/rollback-plan.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/knowledge/ssh-hardening.md | Mengamankan SSH: key, tanpa root, tanpa password | linux, security | 2026-05-12 |
+| careers/career-1-acme-sysadmin/knowledge/incidents/2026-04-22-nginx-502-oom.md | 2026-04-22: web production 502, app server mati OOM | linux, performance, incident | 2026-04-23 |
+| careers/career-1-acme-sysadmin/knowledge/incidents/2026-05-30-dns-record-hilang.md | 2026-05-30: record A database terhapus dari DNS internal | dns, networking, incident | 2026-05-30 |
+| careers/career-1-acme-sysadmin/knowledge/incidents/2026-07-08-ssl-cert-expired.md | 2026-07-08: sertifikat TLS expired, auto-renew gagal diam-diam | security, incident | 2026-07-09 |
+| careers/career-1-acme-sysadmin/knowledge/incidents/2026-08-18-disk-full-app.md | 2026-08-18: partisi / app server penuh, log tidak dirotasi | linux, storage, incident | 2026-08-18 |
+| careers/career-1-acme-sysadmin/knowledge/incidents/2026-09-14-disk-full-db.md | 2026-09-14: /var penuh 98% di server database, log journald 12GB | linux, storage, incident | 2026-09-22 |
+| careers/career-1-acme-sysadmin/knowledge/incidents/2026-09-19-mysql-backup-cpu-spike.md | 2026-09-19: server production down 2 jam, CPU 100% saat backup MySQL | linux, performance, incident | 2026-09-20 |
+| careers/career-1-acme-sysadmin/lessons-learned/jangan-deploy-jumat-sore.md | Ubah konfigurasi di awal minggu, bukan Jumat sore | devops | 2026-07-24 |
+| careers/career-1-acme-sysadmin/lessons-learned/systemctl-status-bisa-bohong.md | Status "active" belum tentu sehat, cek log juga | linux | 2026-09-24 |
+| self-development/Bootcamp/Redis-Caching/cache-invalidation.md | (placeholder) | - | - |
+| self-development/Bootcamp/Redis-Caching/redis-basics.md | Redis sebagai cache in-memory | storage, performance | 2026-09-20 |
+| self-development/Bootcamp/Redis-Caching/redis-eviction-policy.md | (placeholder) | - | - |
+| self-development/Bootcamp/Redis-Caching/redis-persistence.md | Redis menyimpan data ke disk: RDB dan AOF | storage | 2026-09-21 |
+| self-development/Dokumentasi/Kubernetes-Docs/k8s-pod-lifecycle.md | Fase pod dan kenapa pod restart | kubernetes | 2026-06-14 |
+| self-development/Dokumentasi/Kubernetes-Docs/k8s-probes.md | (placeholder) | - | - |
+| self-development/Dokumentasi/Kubernetes-Docs/k8s-services.md | Service: alamat tetap dan DNS untuk pod | kubernetes, networking | 2026-06-14 |
+| self-development/Project/Homelab-Monitoring/grafana-alerting.md | (placeholder) | - | - |
+| self-development/Project/Homelab-Monitoring/grafana-dashboard.md | Dashboard Grafana untuk homelab | monitoring | 2026-08-30 |
+| roadmap/skill-map.md | Target skill Sysadmin L1 → L2 + role fit | - | 2026-07-01 |
+| roadmap/weak-topics.md | Gap terbaru vs target L2 | - | 2026-10-08 |
+| profile/skills.md | Skill inventory per area (review 2026-Q3) | - | 2026-10-01 |
+| profile/career-summary.md | Ringkasan semua career | - | 2026-10-01 |
+</script>
+
+<script type="text/plain" id="src-about" data-path="igrow/wiki/careers/career-1-acme-sysadmin/about.md" data-writer="kamu, atau alur Daftar Kerjaan Baru" data-when="saat mulai / pindah kerja" data-kind="data career, tanpa frontmatter">
+Company: PT Acme
+Role: Sysadmin L1
+Vendor/Client: Bank XYZ
+Lokasi: Kuala Lumpur
+Period: 2025-07-01 s/d
+Jobdesc: Monitoring dan incident response server Linux, eskalasi ke L2.
+</script>
+
+<script type="text/plain" id="src-skills" data-path="igrow/wiki/careers/career-1-acme-sysadmin/skills.md" data-writer="capture" data-when="setiap cerita yang memperlihatkan skill baru" data-kind="data career, tanpa frontmatter">
+linux: cek memory & OOM (free -h, dmesg), cari folder terbesar (du -sh), cari proses pemakan CPU (top), cek pemakaian disk (df -h), bersihkan log journald (journalctl --vacuum-size), cek jadwal cron (crontab -l), cek log service sejak boot (journalctl -u <service> -b)
+performance: tambah swap sementara (fallocate, swapon), jadwalkan ulang job berat ke jam off-peak (crontab)
+security: amankan SSH (sshd_config, ssh-copy-id), cek masa berlaku sertifikat (openssl x509 -enddate), uji renew sertifikat (certbot renew --dry-run)
+dns: tes resolve (dig), tanya langsung ke server DNS (dig @<DNS-SERVER>), flush cache resolver (resolvectl flush-caches)
+networking: reverse proxy nginx (proxy_pass), teruskan IP asli client (X-Forwarded-For)
+devops: simpan salinan config sebelum mengubah (cp .bak)
+storage: rotasi log aplikasi (logrotate), batasi ukuran log journald (SystemMaxUse)
+monitoring: tulis alert rule Prometheus (expr, for, severity), cek sintaks rule (promtool check rules)
+</script>
+
+<script type="text/plain" id="src-ssh-hard" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/ssh-hardening.md" data-writer="capture" data-when="ditulis 2026-05-12" data-kind="note knowledge">
+---
+title: SSH Hardening
+created: 2026-05-12
+updated: 2026-05-12
+type: knowledge
+tags: [linux, security]
+sources: []
+confidence: high
+---
+
+# SSH Hardening
+
+## Ringkasan
+Langkah dasar mengamankan SSH di server Linux: login pakai key, matikan login root dan password, batasi user yang boleh masuk.
+
+## Detail
+- Pasang public key dulu, baru matikan login password, supaya tidak terkunci di luar
+- PermitRootLogin no: admin masuk sebagai user biasa lalu sudo
+- AllowUsers membatasi siapa saja yang boleh SSH
+
+## Contoh
+```
+ssh-copy-id <ADMIN-USER>@<APP-SERVER-1>       # pasang key dulu
+sudo nano /etc/ssh/sshd_config                # PermitRootLogin no, PasswordAuthentication no, AllowUsers <ADMIN-USER>
+sudo sshd -t && sudo systemctl reload sshd    # cek sintaks, baru reload (sesi lama tetap hidup)
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[fail2ban|Fail2ban]] ([Fail2ban](fail2ban.md))
+- [[nginx-reverse-proxy-setup|Nginx Reverse Proxy Setup]] ([Nginx Reverse Proxy Setup](nginx-reverse-proxy-setup.md))
+</script>
+
+<script type="text/plain" id="src-nginx-rp" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/nginx-reverse-proxy-setup.md" data-writer="capture" data-when="ditulis 2026-06-03 (mengisi placeholder); link balik 2026-07-09" data-kind="note knowledge">
+---
+title: Nginx Reverse Proxy Setup
+created: 2026-06-03
+updated: 2026-06-03
+type: knowledge
+tags: [linux, networking]
+sources: []
+confidence: high
+---
+
+# Nginx Reverse Proxy Setup
+
+## Ringkasan
+Setup nginx sebagai reverse proxy di depan aplikasi: arahkan ke upstream, teruskan IP asli client, dan atur timeout.
+
+## Detail
+- upstream berisi alamat app server, proxy_pass mengarah ke upstream itu
+- Header X-Real-IP / X-Forwarded-For supaya log aplikasi melihat IP client, bukan IP nginx
+- proxy_read_timeout dinaikkan hanya untuk endpoint yang lambat, bukan untuk semua
+
+## Contoh
+```
+upstream app { server <APP-SERVER-1>:8080; }            # app server di belakang nginx
+location / {
+  proxy_pass http://app;
+  proxy_set_header X-Real-IP $remote_addr;              # IP asli client
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+nginx -t && systemctl reload nginx                      # cek config, baru reload
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[ssh-hardening|SSH Hardening]] ([SSH Hardening](ssh-hardening.md))
+- [[2026-04-22-nginx-502-oom|Nginx 502 karena OOM]] ([Nginx 502 karena OOM](incidents/2026-04-22-nginx-502-oom.md))
+- [[2026-07-08-ssl-cert-expired|Sertifikat SSL Expired di Web Production]] ([Sertifikat SSL Expired di Web Production](incidents/2026-07-08-ssl-cert-expired.md))
+</script>
+
+<script type="text/plain" id="src-dns-ts" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/dns-troubleshooting.md" data-writer="capture" data-when="ditulis 2026-07-15 (mengisi placeholder)" data-kind="note knowledge">
+---
+title: DNS Troubleshooting
+created: 2026-07-15
+updated: 2026-07-15
+type: knowledge
+tags: [dns, networking]
+sources: []
+confidence: high
+---
+
+# DNS Troubleshooting
+
+## Ringkasan
+Urutan cek kalau nama host tidak bisa di-resolve: resolver yang dipakai server, isi record di server DNS, lalu cache.
+
+## Detail
+- Lihat resolver yang benar-benar dipakai (dengan systemd-resolved bisa beda dari /etc/resolv.conf)
+- Bandingkan jawaban resolver lokal dengan jawaban langsung dari server DNS
+- Jawaban beda → curigai cache; sama-sama kosong → record-nya yang hilang
+
+## Contoh
+```
+resolvectl status                     # resolver yang dipakai
+dig <HOSTNAME>                        # jawaban lewat resolver lokal
+dig @<DNS-SERVER> <HOSTNAME>          # jawaban langsung dari server DNS
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[2026-05-30-dns-record-hilang|Record DNS Hilang di DNS Internal]] ([Record DNS Hilang di DNS Internal](incidents/2026-05-30-dns-record-hilang.md))
+- [[k8s-services|Kubernetes Services]] ([Kubernetes Services](../../../self-development/Dokumentasi/Kubernetes-Docs/k8s-services.md))
+- [[dns-record-management|DNS Record Management]] ([DNS Record Management](dns-record-management.md))
+</script>
+
+<script type="text/plain" id="src-prom-rules" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/prometheus-alert-rules.md" data-writer="capture" data-when="ditulis 2026-08-21; link balik 2026-08-30" data-kind="note knowledge">
+---
+title: Prometheus Alert Rules
+created: 2026-08-21
+updated: 2026-08-21
+type: knowledge
+tags: [monitoring]
+sources: []
+confidence: high
+---
+
+# Prometheus Alert Rules
+
+## Ringkasan
+Cara menulis alert rule Prometheus untuk disk dan CPU, supaya masalah ketahuan sebelum user komplain.
+
+## Detail
+- expr berisi kondisi; for menahan alert sampai kondisinya bertahan (anti alert sesaat)
+- Alert disk pakai sisa ruang dalam persen, bukan angka GB
+- labels.severity dipakai Alertmanager untuk memilih tujuan notifikasi
+
+## Contoh
+```
+- alert: DiskHampirPenuh
+  expr: node_filesystem_avail_bytes / node_filesystem_size_bytes < 0.10   # sisa < 10%
+  for: 15m                                                               # bertahan 15 menit
+  labels: { severity: warning }
+
+promtool check rules alerts.yml       # cek sintaks sebelum reload Prometheus
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[2026-08-18-disk-full-app|Disk Penuh di App Server]] ([Disk Penuh di App Server](incidents/2026-08-18-disk-full-app.md))
+- [[alertmanager-routing|Alertmanager Routing]] ([Alertmanager Routing](alertmanager-routing.md))
+- [[grafana-dashboard|Grafana Dashboard untuk Homelab]] ([Grafana Dashboard untuk Homelab](../../../self-development/Project/Homelab-Monitoring/grafana-dashboard.md))
+</script>
+
+<script type="text/plain" id="src-cpu-triage" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/cpu-spike-triage.md" data-writer="capture" data-when="ditulis 2026-09-02; link balik 2026-09-20 (updated tetap)" data-kind="note knowledge">
+---
+title: CPU Spike Triage
+created: 2026-09-02
+updated: 2026-09-02
+type: knowledge
+tags: [linux, performance]
+sources: []
+confidence: high
+---
+
+# CPU Spike Triage
+
+## Ringkasan
+Urutan cek kalau CPU server tiba-tiba tinggi: cari prosesnya dulu, baru cari kenapa proses itu jalan.
+
+## Detail
+- Lihat proses teratas berdasarkan CPU, catat PID dan user-nya
+- Proses milik job terjadwal → cek jadwal cron
+- Proses aplikasi → cek log aplikasi di jam yang sama
+
+## Contoh
+```
+top -o %CPU                           # proses pemakan CPU teratas
+ps -o pid,user,etime,cmd -p <PID>     # sejak kapan proses ini jalan
+crontab -l                            # ada job terjadwal di jam itu?
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[load-average|Load Average]] ([Load Average](load-average.md))
+- [[systemctl-status-bisa-bohong|systemctl status Bisa Bohong]] ([systemctl status Bisa Bohong](../lessons-learned/systemctl-status-bisa-bohong.md))
+- [[2026-09-19-mysql-backup-cpu-spike|MySQL Backup CPU Spike Incident]] ([MySQL Backup CPU Spike Incident](incidents/2026-09-19-mysql-backup-cpu-spike.md))
+</script>
+
+<script type="text/plain" id="src-incident-0422" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/incidents/2026-04-22-nginx-502-oom.md" data-writer="capture" data-when="ditulis 2026-04-23; link balik 2026-06-03" data-kind="note incident">
+---
+title: Nginx 502 karena OOM
+created: 2026-04-23
+updated: 2026-04-23
+type: incident
+tags: [linux, performance, incident]
+sources: []
+confidence: high
+---
+
+# Nginx 502 karena OOM
+
+## Ringkasan
+Pada 2026-04-22, web production mengembalikan HTTP 502 karena aplikasi di <APP-SERVER-1> mati kehabisan memory (OOM).
+
+## Symptom
+- Alert HTTP 502 dari monitoring
+- Halaman web production tidak bisa dibuka
+
+## Investigation
+- Cek error log nginx → "connect() failed" ke upstream, berarti aplikasinya yang mati, lanjut cek app server
+- Cek dmesg di app server → proses aplikasi di-kill OOM killer → penyebab ketemu
+- Cek container aplikasi → tidak ada batas memory, memory host habis
+
+## Finding
+Aplikasi bocor memory dan tidak punya batas, sampai OOM killer mematikannya.
+
+## Action
+- Restart service aplikasi
+- Tambah swap sementara 2GB
+
+## Result
+Web normal lagi; perbaikan memory leak dilanjutkan tim aplikasi.
+
+## Lesson Learned
+502 di nginx biasanya berarti upstream yang bermasalah; cek app server dulu, bukan nginx-nya.
+
+## Contoh
+```
+tail -n 50 /var/log/nginx/error.log       # "connect() failed" = upstream mati
+dmesg -T | grep -i "killed process"       # bukti OOM killer
+free -h                                    # sisa memory dan swap
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[docker-memory-limit|Docker Memory Limit]] ([Docker Memory Limit](../docker-memory-limit.md))
+- [[load-average|Load Average]] ([Load Average](../load-average.md))
+- [[nginx-reverse-proxy-setup|Nginx Reverse Proxy Setup]] ([Nginx Reverse Proxy Setup](../nginx-reverse-proxy-setup.md))
+</script>
+
+<script type="text/plain" id="src-incident-0530" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/incidents/2026-05-30-dns-record-hilang.md" data-writer="capture" data-when="ditulis 2026-05-30" data-kind="note incident">
+---
+title: Record DNS Hilang di DNS Internal
+created: 2026-05-30
+updated: 2026-05-30
+type: incident
+tags: [dns, networking, incident]
+sources: []
+confidence: high
+---
+
+# Record DNS Hilang di DNS Internal
+
+## Ringkasan
+Pada 2026-05-30, aplikasi gagal konek ke database karena record A untuk <DB-HOSTNAME> terhapus dari DNS internal saat cleanup.
+
+## Symptom
+- Aplikasi error "could not resolve host"
+- Database sendiri hidup dan bisa di-ping lewat IP
+
+## Investigation
+- Tes resolve dari app server → NXDOMAIN, berarti masalahnya di DNS, bukan di database
+- Tanya langsung ke server DNS internal → record A tidak ada → penyebab ketemu
+- Cek riwayat perubahan → record ikut terhapus saat cleanup record lama
+
+## Finding
+Record A database ikut terhapus saat cleanup record yang tidak dipakai.
+
+## Action
+- Minta tim network mengembalikan record A
+- Flush cache resolver di app server
+
+## Result
+Resolve normal lagi, aplikasi bisa konek ke database.
+
+## Lesson Learned
+Kalau "could not resolve host", tes DNS dulu sebelum menyalahkan database; cleanup DNS perlu daftar record yang masih dipakai.
+
+## Contoh
+```
+dig <DB-HOSTNAME>                     # NXDOMAIN = record tidak ada
+dig @<DNS-SERVER> <DB-HOSTNAME>       # tanya langsung ke server DNS internal
+resolvectl flush-caches               # bersihkan cache setelah record kembali
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[dns-troubleshooting|DNS Troubleshooting]] ([DNS Troubleshooting](../dns-troubleshooting.md))
+- [[dns-record-management|DNS Record Management]] ([DNS Record Management](../dns-record-management.md))
+</script>
+
+<script type="text/plain" id="src-incident-0708" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/incidents/2026-07-08-ssl-cert-expired.md" data-writer="capture" data-when="ditulis 2026-07-09 (+ screenshot)" data-kind="note incident">
+---
+title: Sertifikat SSL Expired di Web Production
+created: 2026-07-09
+updated: 2026-07-09
+type: incident
+tags: [security, incident]
+sources: [igrow/raw/assets/20260708-cert-expired.png]
+confidence: high
+---
+
+# Sertifikat SSL Expired di Web Production
+
+## Ringkasan
+Pada 2026-07-08, website production menampilkan peringatan "koneksi tidak aman" karena sertifikat TLS expired dan auto-renew gagal diam-diam.
+
+## Symptom
+- Browser menampilkan peringatan sertifikat
+- Beberapa integrasi API gagal handshake TLS
+
+![](../../../../../raw/assets/20260708-cert-expired.png)
+
+## Investigation
+- Cek tanggal sertifikat dari luar → expired kemarin, lanjut cek kenapa tidak diperpanjang
+- Cek timer renew di server → jalan, tapi log menunjukkan gagal sejak 3 minggu → penyebab ketemu
+- Baca log renew → challenge HTTP ikut kena redirect yang baru ditambahkan
+
+## Finding
+Redirect baru di nginx ikut membelokkan path challenge, jadi renew gagal tanpa ada yang tahu.
+
+## Action
+- Kecualikan path /.well-known/acme-challenge/ dari redirect
+- Jalankan renew manual, reload nginx
+
+## Result
+Sertifikat baru terpasang, peringatan hilang.
+
+## Lesson Learned
+Auto-renew yang gagal tidak berisik; pasang alert masa berlaku sertifikat, jangan hanya mengandalkan timer.
+
+## Contoh
+```
+openssl s_client -connect <WEB-DOMAIN>:443 </dev/null 2>/dev/null | openssl x509 -noout -enddate   # tanggal expired
+systemctl list-timers | grep certbot      # timer renew jalan?
+certbot renew --dry-run                   # uji renew setelah redirect diperbaiki
+```
+
+## Referensi
+Sesi Telegram (cerita user) + screenshot yang sudah diredaksi user.
+
+## See Also
+- [[nginx-reverse-proxy-setup|Nginx Reverse Proxy Setup]] ([Nginx Reverse Proxy Setup](../nginx-reverse-proxy-setup.md))
+- [[certbot-renewal|Certbot Renewal]] ([Certbot Renewal](../certbot-renewal.md))
+</script>
+
+<script type="text/plain" id="src-incident-0818" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/incidents/2026-08-18-disk-full-app.md" data-writer="capture" data-when="ditulis 2026-08-18; link balik 2026-08-21 dan 2026-09-15" data-kind="note incident">
+---
+title: Disk Penuh di App Server
+created: 2026-08-18
+updated: 2026-08-18
+type: incident
+tags: [linux, storage, incident]
+sources: []
+confidence: high
+---
+
+# Disk Penuh di App Server
+
+## Ringkasan
+Pada 2026-08-18, partisi / di <APP-SERVER-2> penuh 100% karena log aplikasi tidak pernah dirotasi, sehingga aplikasi gagal menulis file.
+
+## Symptom
+- Aplikasi error "No space left on device"
+- Partisi / 100%
+
+## Investigation
+- Cek pemakaian disk → / 100%, lanjut cari folder terbesar
+- Cari folder terbesar → /opt/app/logs 31GB → penyebab ketemu
+- Cek logrotate → belum ada konfigurasi untuk log aplikasi ini
+
+## Finding
+Log aplikasi tidak masuk logrotate, jadi tumbuh terus sejak aplikasi dipasang.
+
+## Action
+- Kompres dan pindahkan log lama
+- Tambah konfigurasi logrotate harian, simpan 14 hari
+
+## Result
+Disk / turun ke 41%, aplikasi normal.
+
+## Lesson Learned
+Setiap aplikasi baru wajib dicek sudah masuk logrotate atau belum.
+
+## Contoh
+```
+df -h /                                    # partisi mana yang penuh
+du -sh /opt/app/* | sort -h | tail -5      # folder terbesar
+logrotate -d /etc/logrotate.d/app          # uji konfigurasi tanpa menjalankan
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[log-rotation|Log Rotation]] ([Log Rotation](../log-rotation.md))
+- [[disk-usage-check|Disk Usage Check]] ([Disk Usage Check](../disk-usage-check.md))
+- [[prometheus-alert-rules|Prometheus Alert Rules]] ([Prometheus Alert Rules](../prometheus-alert-rules.md))
+- [[2026-09-14-disk-full-db|Disk /var Penuh di Server Database]] ([Disk /var Penuh di Server Database](2026-09-14-disk-full-db.md))
+</script>
+
+<script type="text/plain" id="src-incident-0914" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/incidents/2026-09-14-disk-full-db.md" data-writer="capture" data-when="ditulis 2026-09-15; diredaksi 2026-09-22 setelah temuan lint" data-kind="note incident">
+---
+title: Disk /var Penuh di Server Database
+created: 2026-09-15
+updated: 2026-09-22
+type: incident
+tags: [linux, storage, incident]
+sources: []
+confidence: high
+---
+
+# Disk /var Penuh di Server Database
+
+## Ringkasan
+Pada 2026-09-14, partisi /var di server database (<DB-SERVER-1>) penuh 98% karena log journald menumpuk 12GB.
+
+## Symptom
+- Alert disk penuh dari monitoring
+- Partisi /var 98%
+
+## Investigation
+- Cek pemakaian disk → /var 98%, lanjut cari folder terbesar
+- Cek ukuran log journald → 12GB tanpa batas ukuran → penyebab ketemu
+
+## Finding
+Journald belum punya batas ukuran (SystemMaxUse belum diset), log menumpuk berbulan-bulan.
+
+## Action
+- Bersihkan log journald sampai 1GB
+- Set SystemMaxUse=1G di journald.conf
+
+## Result
+Disk /var turun ke 60%.
+
+## Lesson Learned
+Batasi ukuran log sejak awal; disk penuh sering karena log, bukan data.
+
+## Contoh
+```
+df -h /var                        # partisi mana yang penuh
+journalctl --disk-usage           # ukuran log journald
+journalctl --vacuum-size=1G       # bersihkan sampai 1GB
+# /etc/systemd/journald.conf → SystemMaxUse=1G   (batas permanen)
+```
+
+## Referensi
+Sesi Telegram (cerita user). Diredaksi 2026-09-22 setelah temuan lint: IP server diganti <DB-SERVER-1>.
+
+## See Also
+- [[log-rotation|Log Rotation]] ([Log Rotation](../log-rotation.md))
+- [[systemctl-status-bisa-bohong|systemctl status Bisa Bohong]] ([systemctl status Bisa Bohong](../../lessons-learned/systemctl-status-bisa-bohong.md))
+- [[2026-08-18-disk-full-app|Disk Penuh di App Server]] ([Disk Penuh di App Server](2026-08-18-disk-full-app.md))
+</script>
+
+<script type="text/plain" id="src-incident-0919" data-path="igrow/wiki/careers/career-1-acme-sysadmin/knowledge/incidents/2026-09-19-mysql-backup-cpu-spike.md" data-writer="capture" data-when="ditulis 2026-09-20" data-kind="note incident">
+---
+title: MySQL Backup CPU Spike Incident
+created: 2026-09-20
+updated: 2026-09-20
+type: incident
+tags: [linux, performance, incident]
+sources: []
+confidence: high
+---
+
+# MySQL Backup CPU Spike Incident
+
+## Ringkasan
+Pada 2026-09-19, server production down 2 jam karena CPU 100% saat backup MySQL berjalan.
+
+## Symptom
+- Server production tidak responsif
+- CPU usage 100%
+- Terjadi saat jam sibuk (peak hours)
+
+## Investigation
+- Cek top: proses mysqldump makan CPU → curiga job backup, lanjut cek jadwalnya
+- Cek crontab: backup jalan jam 14:00, pas jam sibuk → penyebab ketemu
+
+## Finding
+Backup MySQL terjadwal bentrok dengan jam sibuk, bukan bug aplikasi.
+
+## Action
+- Matikan proses backup
+- Reschedule backup ke jam 03:00 (off-peak)
+
+## Result
+Server kembali normal setelah backup dihentikan.
+
+## Lesson Learned
+Jadwalkan job berat di luar jam sibuk; cek crontab sebelum menyalahkan aplikasi.
+
+## Contoh
+```
+top -o %CPU                  # cari proses yang makan CPU
+crontab -l | grep mysqldump  # cek jadwal backup
+0 3 * * * /usr/local/bin/mysql-backup.sh   # jadwal baru, off-peak
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[backup-scheduling|Backup Scheduling]] ([Backup Scheduling](../backup-scheduling.md))
+- [[cpu-spike-triage|CPU Spike Triage]] ([CPU Spike Triage](../cpu-spike-triage.md))
+</script>
+
+<script type="text/plain" id="src-lesson-jumat" data-path="igrow/wiki/careers/career-1-acme-sysadmin/lessons-learned/jangan-deploy-jumat-sore.md" data-writer="capture" data-when="ditulis 2026-07-24" data-kind="note lesson (refleksi, tanpa satu kejadian spesifik)">
+---
+title: Jangan Ubah Konfigurasi Jumat Sore
+created: 2026-07-24
+updated: 2026-07-24
+type: lesson
+tags: [devops]
+sources: []
+confidence: medium
+---
+
+# Jangan Ubah Konfigurasi Jumat Sore
+
+## Ringkasan
+Perubahan konfigurasi di Jumat sore membuat masalah baru ketahuan saat tim sudah libur. Jadwalkan perubahan di awal minggu, dengan rencana rollback.
+
+## Detail
+- Masalah dari sebuah perubahan sering baru muncul beberapa jam kemudian
+- Di akhir pekan, orang yang bisa memperbaiki sedang tidak siaga
+- Perubahan kecil pun tetap butuh cara kembali ke kondisi lama
+
+## Contoh
+```
+cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak-$(date +%F)   # simpan versi lama sebelum mengubah
+```
+
+## Referensi
+Sesi Telegram (refleksi user).
+
+## See Also
+- [[change-window|Change Window]] ([Change Window](../knowledge/change-window.md))
+- [[rollback-plan|Rollback Plan]] ([Rollback Plan](../knowledge/rollback-plan.md))
+</script>
+
+<script type="text/plain" id="src-lesson" data-path="igrow/wiki/careers/career-1-acme-sysadmin/lessons-learned/systemctl-status-bisa-bohong.md" data-writer="capture" data-when="ditulis 2026-09-24 (mengisi placeholder)" data-kind="note lesson">
+---
+title: systemctl status Bisa Bohong
+created: 2026-09-24
+updated: 2026-09-24
+type: lesson
+tags: [linux]
+sources: []
+confidence: high
+---
+
+# systemctl status Bisa Bohong
+
+## Ringkasan
+Status "active (running)" cuma berarti prosesnya hidup, belum tentu service-nya sehat. Selalu cek log-nya juga.
+
+## Detail
+- systemctl status hanya menampilkan beberapa baris log terakhir
+- Error yang tidak membuat proses mati tetap tercatat di journal
+- Cek log sejak boot terakhir supaya konteksnya lengkap
+
+## Contoh
+```
+systemctl status nginx                # proses hidup?
+journalctl -u nginx -b --no-pager     # error sejak boot terakhir
+```
+
+## Referensi
+Sesi Telegram (cerita user).
+
+## See Also
+- [[cpu-spike-triage|CPU Spike Triage]] ([CPU Spike Triage](../knowledge/cpu-spike-triage.md))
+- [[2026-09-14-disk-full-db|Disk /var Penuh di Server Database]] ([Disk /var Penuh di Server Database](../knowledge/incidents/2026-09-14-disk-full-db.md))
+</script>
+
+<script type="text/plain" id="src-redis-basics" data-path="igrow/wiki/self-development/Bootcamp/Redis-Caching/redis-basics.md" data-writer="/study" data-when="ditulis 2026-09-20; link balik 2026-09-21" data-kind="note learning">
+---
+title: Redis Basics
+created: 2026-09-20
+updated: 2026-09-20
+type: learning
+tags: [storage, performance]
+sources: [igrow/raw/articles/2026-09-20-redis-caching.md]
+confidence: medium
+---
+
+# Redis Basics
+
+## Ringkasan
+Redis dipakai sebagai cache in-memory supaya baca data tidak selalu ke database.
+
+## Detail
+- Pola cache-aside: cek cache dulu; miss → ambil dari DB, lalu simpan ke cache
+- TTL membuat data basi hilang sendiri
+- Efektivitas cache dilihat dari perbandingan hit dan miss
+
+## Contoh
+```
+SET user:42 "{...}" EX 300                # simpan dengan TTL 5 menit
+redis-cli INFO stats | grep keyspace      # keyspace_hits vs keyspace_misses
+```
+
+## Referensi
+igrow/raw/articles/2026-09-20-redis-caching.md (ringkasan materi course dari user).
+
+## See Also
+- [[redis-eviction-policy|Redis Eviction Policy]] ([Redis Eviction Policy](redis-eviction-policy.md))
+- [[cache-invalidation|Cache Invalidation]] ([Cache Invalidation](cache-invalidation.md))
+- [[redis-persistence|Redis Persistence]] ([Redis Persistence](redis-persistence.md))
+</script>
+
+<script type="text/plain" id="src-redis-persist" data-path="igrow/wiki/self-development/Bootcamp/Redis-Caching/redis-persistence.md" data-writer="/study" data-when="ditulis 2026-09-21" data-kind="note learning">
+---
+title: Redis Persistence
+created: 2026-09-21
+updated: 2026-09-21
+type: learning
+tags: [storage]
+sources: [igrow/raw/articles/2026-09-21-redis-persistence.md]
+confidence: medium
+---
+
+# Redis Persistence
+
+## Ringkasan
+Redis menyimpan data ke disk lewat snapshot (RDB) atau log setiap perintah tulis (AOF), supaya data tidak hilang saat restart.
+
+## Detail
+- RDB: snapshot berkala, file kecil, tapi data sejak snapshot terakhir bisa hilang
+- AOF: catat setiap perintah tulis, lebih aman, file lebih besar
+- Keduanya bisa dipakai bersamaan
+
+## Contoh
+```
+CONFIG GET save                   # jadwal snapshot RDB
+CONFIG SET appendonly yes         # aktifkan AOF
+redis-cli BGSAVE                  # paksa snapshot sekarang
+```
+
+## Referensi
+igrow/raw/articles/2026-09-21-redis-persistence.md (ringkasan materi course dari user).
+
+## See Also
+- [[redis-basics|Redis Basics]] ([Redis Basics](redis-basics.md))
+- [[redis-eviction-policy|Redis Eviction Policy]] ([Redis Eviction Policy](redis-eviction-policy.md))
+</script>
+
+<script type="text/plain" id="src-k8s-pod" data-path="igrow/wiki/self-development/Dokumentasi/Kubernetes-Docs/k8s-pod-lifecycle.md" data-writer="/study" data-when="ditulis 2026-06-14" data-kind="note learning">
+---
+title: Kubernetes Pod Lifecycle
+created: 2026-06-14
+updated: 2026-06-14
+type: learning
+tags: [kubernetes]
+sources: [igrow/raw/articles/2026-06-14-kubernetes-docs.md]
+confidence: high
+---
+
+# Kubernetes Pod Lifecycle
+
+## Ringkasan
+Pod berpindah fase dari Pending, Running, sampai Succeeded atau Failed; restart container diatur restartPolicy, sedangkan pod yang rusak diganti controller.
+
+## Detail
+- Pending: belum terjadwal ke node, atau image masih ditarik
+- CrashLoopBackOff = container berulang kali mati, jeda restart makin lama
+- Pod tidak "diperbaiki"; Deployment membuat pod pengganti
+
+## Contoh
+```
+kubectl get pods -o wide              # fase dan node tiap pod
+kubectl describe pod <POD>            # event: kenapa Pending / restart
+kubectl logs <POD> --previous         # log container sebelum restart
+```
+
+## Referensi
+igrow/raw/articles/2026-06-14-kubernetes-docs.md (dokumentasi resmi Kubernetes, bagian Pods).
+
+## See Also
+- [[k8s-services|Kubernetes Services]] ([Kubernetes Services](k8s-services.md))
+- [[k8s-probes|Kubernetes Probes]] ([Kubernetes Probes](k8s-probes.md))
+</script>
+
+<script type="text/plain" id="src-k8s-svc" data-path="igrow/wiki/self-development/Dokumentasi/Kubernetes-Docs/k8s-services.md" data-writer="/study" data-when="ditulis 2026-06-14" data-kind="note learning">
+---
+title: Kubernetes Services
+created: 2026-06-14
+updated: 2026-06-14
+type: learning
+tags: [kubernetes, networking]
+sources: [igrow/raw/articles/2026-06-14-kubernetes-docs.md]
+confidence: high
+---
+
+# Kubernetes Services
+
+## Ringkasan
+Service memberi alamat tetap dan nama DNS untuk sekumpulan pod yang IP-nya berubah-ubah.
+
+## Detail
+- ClusterIP: hanya bisa diakses dari dalam cluster (default)
+- NodePort / LoadBalancer: membuka akses dari luar cluster
+- Nama DNS: <service>.<namespace>.svc.cluster.local
+
+## Contoh
+```
+kubectl get svc -n <NAMESPACE>        # daftar service dan ClusterIP-nya
+kubectl get endpoints <SERVICE>       # pod mana yang ada di belakang service
+kubectl run tmp --rm -it --image=busybox -- nslookup <SERVICE>   # tes DNS service dari dalam cluster
+```
+
+## Referensi
+igrow/raw/articles/2026-06-14-kubernetes-docs.md (dokumentasi resmi Kubernetes, bagian Service).
+
+## See Also
+- [[k8s-pod-lifecycle|Kubernetes Pod Lifecycle]] ([Kubernetes Pod Lifecycle](k8s-pod-lifecycle.md))
+- [[dns-troubleshooting|DNS Troubleshooting]] ([DNS Troubleshooting](../../../careers/career-1-acme-sysadmin/knowledge/dns-troubleshooting.md))
+</script>
+
+<script type="text/plain" id="src-grafana" data-path="igrow/wiki/self-development/Project/Homelab-Monitoring/grafana-dashboard.md" data-writer="/study (proyek pribadi)" data-when="ditulis 2026-08-30" data-kind="note learning">
+---
+title: Grafana Dashboard untuk Homelab
+created: 2026-08-30
+updated: 2026-08-30
+type: learning
+tags: [monitoring]
+sources: []
+confidence: medium
+---
+
+# Grafana Dashboard untuk Homelab
+
+## Ringkasan
+Proyek pribadi: dashboard Grafana untuk server homelab, membaca metrik dari Prometheus + node_exporter.
+
+## Detail
+- Data source Prometheus ditambahkan sekali, panel tinggal memakai query PromQL
+- Panel CPU, memory, disk, dan network sudah cukup untuk mulai
+- Dashboard disimpan sebagai JSON supaya bisa dipasang ulang
+
+## Contoh
+```
+100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)   # CPU terpakai (%)
+node_filesystem_avail_bytes{mountpoint="/"}                                       # sisa disk /
+```
+
+## Referensi
+Sesi Telegram (proyek pribadi user, tanpa sumber mentah).
+
+## See Also
+- [[prometheus-alert-rules|Prometheus Alert Rules]] ([Prometheus Alert Rules](../../../careers/career-1-acme-sysadmin/knowledge/prometheus-alert-rules.md))
+- [[grafana-alerting|Grafana Alerting]] ([Grafana Alerting](grafana-alerting.md))
+</script>
+
+<script type="text/plain" id="src-skill-map" data-path="igrow/wiki/roadmap/skill-map.md" data-writer="career review (dibuat saat belum ada)" data-when="2026-07-01; beku sampai naik level" data-kind="data file">
+---
+title: Skill Map
+type: data
+updated: 2026-07-01
+---
+
+# Skill Map — Sysadmin L1
+## Target L2
+- Linux: performance-troubleshooting, systemd-journald, ssh-hardening, kernel-basics
+- Monitoring: alerting, log-analysis, dashboard
+- Networking: dns, reverse-proxy, routing, vlan
+- Container: kubernetes-basics, docker
+## Role Fit
+- SRE: performance-troubleshooting, systemd-journald, alerting, log-analysis, dashboard, kubernetes-basics, ansible, terraform
+- DevOps: docker, kubernetes-basics, ci-cd, git, ansible, terraform
+- Cloud Engineer: caching, dns, aws-core, iam, vpc, terraform
+- Security Analyst: ssh-hardening, siem, vulnerability-management, iam, incident-forensics
+</script>
+
+<script type="text/plain" id="src-weak-topics" data-path="igrow/wiki/roadmap/weak-topics.md" data-writer="mentor (ditulis ulang tiap analisis)" data-when="2026-10-08" data-kind="data file">
+---
+title: Weak Topics
+type: data
+updated: 2026-10-08
+---
+- log-analysis — Weak: cuma disinggung di 2026-08-18-disk-full-app.md, 2026-09-14-disk-full-db.md
+- docker — Weak: cuma disinggung di 2026-04-22-nginx-502-oom.md
+- kernel-basics — Belum: 0 note, dibutuhkan target L2
+- routing — Belum: 0 note, dibutuhkan target L2
+- vlan — Belum: 0 note, dibutuhkan target L2
+</script>
+
+<script type="text/plain" id="src-profile-skills" data-path="igrow/wiki/profile/skills.md" data-writer="career review" data-when="awal setiap kuartal" data-kind="data file">
+---
+title: Skill Inventory
+type: data
+updated: 2026-10-01
+---
+- Linux       ████████░░   75% (3/4)
+- Monitoring  ███████░░░   67% (2/3)
+- Networking  █████░░░░░   50% (2/4)
+- Container   █████░░░░░   50% (1/2)
+</script>
+
+<script type="text/plain" id="src-career-summary" data-path="igrow/wiki/profile/career-summary.md" data-writer="career review" data-when="awal setiap kuartal" data-kind="data file">
+---
+title: Career Summary
+type: data
+updated: 2026-10-01
+---
+- career-1-acme-sysadmin: Sysadmin L1 · 2025-07-01 s/d sekarang · 6 incident · 5 knowledge · 2 lesson
+</script>
+
+<script type="text/plain" id="src-output-index" data-path="igrow/output/_index.md" data-writer="career review" data-when="awal setiap kuartal" data-kind="index layer output">
+# Output Index
+
+> Laporan turunan (career review, dst).
+> Last updated: 2026-10-01
+
+| File | Summary | Tags | Updated |
+|------|---------|------|---------|
+| career-review-2026-Q2.md | Review 2026-Q2: Networking 2/4, SRE 1/8 (baseline) | - | 2026-07-01 |
+| career-review-2026-Q3.md | Review 2026-Q3: Linux 3/4, SRE 5/8 (naik dari 1/8) | - | 2026-10-01 |
+</script>
+
+<script type="text/plain" id="src-review-q2" data-path="igrow/output/career-review-2026-Q2.md" data-writer="career review (cron 1 Jul 2026 09:00)" data-when="2026-07-01" data-kind="laporan kuartal (pertama, baseline)">
+# Career Review 2026-Q2
+
+Learned: SSH hardening, nginx reverse proxy, Kubernetes Pod & Service
+Experienced: web 502 karena OOM (2026-04-22), record DNS hilang (2026-05-30)
+Improved: - (kuartal pertama)
+Weak (Gap): performance-troubleshooting, docker (Weak) · systemd-journald, kernel-basics, alerting, log-analysis, dashboard, routing, vlan (Belum)
+Pola: tag terbanyak linux (3), networking (3), kubernetes (2); stagnan: -; kesalahan berulang: -
+
+Skill Inventory (target L2):
+- Linux      ███░░░░░░░   25% (1/4): ssh-hardening.md. Kurang: performance-troubleshooting, systemd-journald, kernel-basics.
+- Monitoring ░░░░░░░░░░    0% (0/3). Kurang: alerting, log-analysis, dashboard.
+- Networking █████░░░░░   50% (2/4): 2026-05-30-dns-record-hilang.md, nginx-reverse-proxy-setup.md. Kurang: routing, vlan.
+- Container  █████░░░░░   50% (1/2): k8s-pod-lifecycle.md, k8s-services.md. Kurang: docker.
+
+Role Fit Trend: baseline, belum ada pembanding.
+- Security Analyst 1/5 = 20% · DevOps 1/6 = 17% · Cloud Engineer 1/6 = 17% · SRE 1/8 = 13%
+</script>
+
+<script type="text/plain" id="src-review-q3" data-path="igrow/output/career-review-2026-Q3.md" data-writer="career review (cron 1 Okt 2026 09:00)" data-when="2026-10-01" data-kind="laporan kuartal">
+# Career Review 2026-Q3
+
+Learned: DNS troubleshooting, Prometheus alert rules, Grafana dashboard, CPU spike triage, Redis caching & persistence, systemctl + journald
+Experienced: sertifikat TLS expired (2026-07-08), disk penuh di app server (2026-08-18), /var penuh di server database (2026-09-14), CPU 100% saat backup MySQL (2026-09-19)
+Improved: dns (2026-05-30-dns-record-hilang.md, kini + dns-troubleshooting.md)
+Weak (Gap): log-analysis, docker (Weak) · kernel-basics, routing, vlan (Belum)
+Pola: tag terbanyak linux (5), storage (4), performance (3); stagnan: kubernetes; kesalahan berulang: disk penuh karena log tidak dirotasi (2026-08-18-disk-full-app.md, 2026-09-14-disk-full-db.md)
+
+Skill Inventory (target L2):
+- Linux      ████████░░   75% (3/4): cpu-spike-triage.md, systemctl-status-bisa-bohong.md, ssh-hardening.md. Kurang: kernel-basics.
+- Monitoring ███████░░░   67% (2/3): prometheus-alert-rules.md, grafana-dashboard.md. Kurang: log-analysis.
+- Networking █████░░░░░   50% (2/4): dns-troubleshooting.md, nginx-reverse-proxy-setup.md. Kurang: routing, vlan.
+- Container  █████░░░░░   50% (1/2): k8s-pod-lifecycle.md, k8s-services.md. Kurang: docker.
+
+Role Fit Trend (pembanding: 2026-Q2):
+- SRE 5/8 = 63% (naik dari 1/8 = 13%)
+- Cloud Engineer 2/6 = 33% (naik dari 1/6 = 17%)
+- Security Analyst 1/5 = 20% (tetap)
+- DevOps 1/6 = 17% (tetap)
+</script>
+
+<script type="text/plain" id="src-project-skills" data-path="igrow/project-skills/" data-writer="kamu (repo), tersalin saat deploy" data-when="saat prosedur berubah" data-kind="prosedur, bukan data">
+project-skills/
+├── capture-experience.md   UC1: cerita kerja → note (+ Daftar Kerjaan Baru)
+├── mentor.md               UC2: harus belajar apa / role apa cocok
+├── daily-briefing.md       UC3: berita harian (cron 07:00)
+├── study.md                UC4: /study → note belajar
+├── career-review.md        UC5: review kuartalan (cron awal kuartal)
+└── maintenance/
+    ├── lint.md             cek mingguan (cron Minggu 08:00)
+    ├── lint-privacy.sh     cek pola IP/credential, dipanggil lint
+    ├── backup.md           backup (cron Sen/Rab/Sab 05:00)
+    └── backup.sh           git add, commit, push
+</script>
+
+<script>
+(function () {
+  var body = document.getElementById('file-body');
+  var path = document.getElementById('file-path');
+  var meta = document.getElementById('file-meta');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(id, scroll) {
+    var src = document.getElementById('src-' + id);
+    if (!src) return;
+    body.textContent = src.textContent.replace(/^\n/, '').replace(/\s+$/, '') + '\n';
+    body.scrollTop = 0;
+    path.textContent = src.getAttribute('data-path');
+    meta.textContent = '';
+    [['Ditulis oleh', 'data-writer'], ['Kapan berubah', 'data-when'], ['Jenis', 'data-kind']].forEach(function (pair) {
+      var v = src.getAttribute(pair[1]);
+      if (!v) return;
+      var row = document.createElement('div');
+      var dt = document.createElement('dt'); dt.textContent = pair[0];
+      var dd = document.createElement('dd'); dd.textContent = v;
+      row.appendChild(dt); row.appendChild(dd); meta.appendChild(row);
+    });
+    var buttons = document.querySelectorAll('.tree [data-file]');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].setAttribute('aria-current', buttons[i].getAttribute('data-file') === id ? 'true' : 'false');
+    }
+    var btn = document.querySelector('.tree [data-file="' + id + '"]');
+    var d = btn ? btn.closest('details') : null;
+    while (d) { d.open = true; d = d.parentElement ? d.parentElement.closest('details') : null; }
+    if (scroll) {
+      document.getElementById('explorer').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-file]');
+    if (!b) return;
+    show(b.getAttribute('data-file'), b.classList.contains('jump'));
+  });
+
+  show('incident-0919', false);
+})();
+</script>
+</body>
+</html>

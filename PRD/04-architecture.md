@@ -1,6 +1,6 @@
 # 04 · Architecture
 
-Dokumen ini menjelaskan bentuk sistem di tingkat produk. Langkah instalasi ada di [`docs/build.md`](../docs/build.md), konteks VPS ada di [`docs/vpslab.md`](../docs/vpslab.md), dan aturan format ada di [`SCHEMA.md`](../hermes-home/igrow/SCHEMA.md).
+Dokumen ini menjelaskan bentuk sistem di tingkat produk. Langkah instalasi ada di [`docs/build.md`](../docs/build.md), konteks VPS ada di [`docs/vpslab.md`](../docs/vpslab.md), dan aturan format ada di [`SCHEMA.md`](../hermes-home/igrow/SCHEMA.md). Gambaran visual (arsitektur, alur satu cerita, dan contoh isi `igrow/` setelah sekitar 6 bulan dipakai) ada di [`docs/peta-igrow.html`](../docs/peta-igrow.html); buka di browser. Halaman itu ilustrasi dengan data fiktif, bukan sumber aturan, dan bisa tertinggal kalau aturan berubah.
 
 ## 1. System Context
 

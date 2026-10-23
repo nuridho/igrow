@@ -10,7 +10,7 @@ Bahasa: Bahasa Indonesia (santai di chat, rapi di dokumen). Owner = satu-satunya
 |---|---|---|
 | `hermes-home/` | Runtime Hermes: `AGENTS.md` + `igrow/` (SCHEMA, prosedur UC, maintenance) | **Source of truth.** Di-rsync ke VPS `~/whatsinsidegit/igrow-hermes/hermes-home/`. Jangan dipindah atau di-rename. |
 | `PRD/` | Dokumen produk (01–06), `todo.md`, `backlog.md` | Mulai dari `PRD/README.md` |
-| `docs/` | `build.md` (runbook VPS), `vpslab.md` (infra lab) | Detail teknis & operasional |
+| `docs/` | `build.md` (runbook VPS), `vpslab.md` (infra lab), `peta-igrow.html` (gambaran visual, ilustrasi) | Detail teknis & operasional |
 | `Setup/` | Script init VPS & Docker | |
 | `testing/` | `test-flow.md`: skenario uji **manual** lewat Telegram | Jangan tambah script test (D-18) |
 | `web/` | `portfolio.html`, `igrow-dashboard.html` (dummy), `src/` | |

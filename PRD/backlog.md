@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-23] Peta iGROW disimpan di docs/
+- **Apa:** halaman visual Peta iGROW (diagram arsitektur, alur satu cerita, penjelajah contoh isi `igrow/` setelah sekitar 6 bulan, tabel siapa menulis apa) disimpan sebagai `docs/peta-igrow.html`: HTML mandiri (+ doctype, charset UTF-8, viewport, reset kecil) yang bisa dibuka langsung di browser. Tampilan: putih lembut monokrom, selalu mode terang apa pun tema perangkat; font Plus Jakarta Sans + JetBrains Mono; jalur tulis Hermes → `igrow/` di diagram ditekankan dengan garis tebal. Data dummy ±6 bulan (April–Oktober 2026): 6 incident, 5 knowledge, 2 lesson, 5 note belajar, 1 screenshot, 2 laporan career review (Q2 baseline, Q3 dengan tren), log mingguan, 15 placeholder; konsistensinya (path dual-link, placeholder, tag, index vs note) dicek dengan script di scratchpad. Rujukan ditambah di intro PRD 04 dan baris `docs/` di peta repo `CLAUDE.md`.
+- **Kenapa:** permintaan owner, supaya gambaran sistem tersimpan di repo. Isinya ilustrasi dengan data fiktif (PT Acme, Bank XYZ), bukan sumber aturan.
+- **File:** `docs/peta-igrow.html` (baru), `PRD/04-architecture.md`, `CLAUDE.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak
+
 ## [2026-10-23] Contoh eksekusi mentor diseragamkan (W45)
 - **Apa:** `mentor.md`: contoh eksekusi dipecah dua dengan label tujuan, A (roadmap: pesan user, `weak-topics.md` yang ditulis ulang, baris index, log, balasan) dan B (role fit: pesan user, balasan, tanpa file), + 1 baris untuk prasyarat "data karier belum cukup". Baris `→ OUTPUT` Gap pindah ke alur A sebagai baris pertama balasan; balasan A menyebut kalau `weak-topics.md` ditulis. Todo: W45 dicatat dan dicentang, nomor berikutnya → W46, catatan A6 diperbarui. README (riwayat 1.4).
 - **Kenapa:** W45, dari pengamatan owner: contoh mentor masih format lama dan alur roadmap (yang menulis `weak-topics.md`) tidak punya contoh.
