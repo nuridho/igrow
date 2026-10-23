@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-24] `docs/setup-flow.html`: visual alur `igrow-setup.sh`
+- **Apa:** halaman visual baru: diagram cara script memilih jalur (ada argumen? → penanda `SETUP_DONE`), simulasi terminal Jalur A (setup lengkap) dan Jalur B (menu 1–7/h/0 yang bisa diklik, lengkap penjelasan + contoh output tiap pilihan), serta kasus khusus (perintah langsung, VPS lama tanpa penanda). Teks terminal diambil dari string asli script; nama akun/bot fiktif. Dipublikasikan juga sebagai Artifact privat. `CLAUDE.md` (peta repo) memuat file ini dan aturan: alur/menu/tampilan `igrow-setup.sh` berubah → perbarui file ini. Baris `Setup/` di `CLAUDE.md` dibetulkan (`setupdocker.sh` sudah dihapus).
+- **Kenapa:** permintaan owner: visualisasi dua perilaku menu, disimpan dan ikut diperbarui kalau setup berubah.
+- **File:** `docs/setup-flow.html` (baru), `CLAUDE.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak.
+
 ## [2026-10-24] `igrow-setup.sh`: menu pilihan setelah setup
 - **Apa:** `bash igrow-setup.sh` tanpa argumen sekarang: belum pernah setup → semua langkah (seperti dulu); sudah pernah (penanda baru `SETUP_DONE=1` di `setup.env`, ditulis setelah langkah 9) → menu: 1 Deploy, 2 Status, 3 Update, 4 LLM & Telegram (langkah 6), 5 Tools cron (7), 6 Backup (8; menawarkan hapus token lama dulu, jadi tidak perlu `rm` manual), 7 Setup ulang, h Help, 0 Keluar. Help menjelaskan tiap pilihan (kapan dipakai, apa yang terjadi), lalu menu tampil lagi. Perintah langsung tetap jalan (`deploy`, `status`, `update`, `step N`), plus `all` (semua langkah) dan `help`. Kotak akhir setup menunjuk ke menu. `Setup/README.md` (contoh menu + tabel situasi → pilihan + alias deploy) dan `PRD/07-setup.md` §5 ikut diperbarui.
 - **Kenapa:** permintaan owner: perintah setelah setup terpusat di satu menu, dengan help kalau bingung.

@@ -1,0 +1,458 @@
+<title>Dua Jalur igrow-setup.sh</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: satu kolom sempit; diagram keputusan di atas, lalu terminal per jalur (tab), lalu kasus khusus. */
+:root {
+  --bg: #eef1f4; --surface: #ffffff; --ink: #1b2430; --muted: #5a6573; --line: #d3d9e0;
+  --accent: #2f6fb0; --a: #a8661a; --a-soft: #f6ead9; --b: #18807a; --b-soft: #dcf0ee;
+  --term-bg: #0f1419; --term-fg: #d7dde3; --t-cyan: #56c2d6; --t-mag: #c792ea; --t-green: #8bd17c;
+  --t-yel: #e5c07b; --t-red: #f07178; --t-dim: #6b7785; --term-edge: #0f1419;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12171d; --surface: #1a2129; --ink: #e6ebf0; --muted: #98a4b1; --line: #2c3742;
+  --accent: #6aa6e0; --a: #e3a957; --a-soft: #3a2c19; --b: #52c4bb; --b-soft: #163634; --term-edge: #2c3742;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #12171d; --surface: #1a2129; --ink: #e6ebf0; --muted: #98a4b1; --line: #2c3742;
+  --accent: #6aa6e0; --a: #e3a957; --a-soft: #3a2c19; --b: #52c4bb; --b-soft: #163634; --term-edge: #2c3742;
+  color-scheme: dark }
+
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 920px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 40px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(26px, 4.4vw, 36px); font-weight: 700; letter-spacing: -0.01em; }
+h1 code { font-family: var(--mono); font-weight: 600; font-size: 0.86em; color: var(--accent); }
+h2 { font-size: 20px; font-weight: 600; }
+p { margin: 0; max-width: 66ch; }
+.lede { color: var(--muted); font-size: 16px; margin-top: 10px; }
+.eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+section { display: grid; gap: 16px; }
+code, .mono { font-family: var(--mono); font-size: 0.92em; }
+
+/* ── Diagram keputusan ── */
+.flow { display: grid; gap: 0; justify-items: center; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 24px 16px; overflow-x: auto; }
+.node { border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; background: var(--bg);
+  text-align: center; max-width: 440px; font-size: 14px; }
+.node.cmd { font-family: var(--mono); background: var(--term-bg); color: var(--term-fg); border-color: var(--term-edge); }
+.node.cmd .p { color: var(--t-green); }
+.node.q { border-style: dashed; border-width: 1.5px; }
+.node.q b { display: block; font-weight: 600; }
+.node .sub { color: var(--muted); font-size: 13px; }
+.down { display: grid; justify-items: center; font-size: 12px; color: var(--muted); padding: 4px 0; }
+.down::before { content: ""; width: 1.5px; height: 18px; background: var(--line); }
+.down::after { content: "▼"; font-size: 9px; line-height: 1; color: var(--line); margin-top: -2px; }
+.down span { order: -1; }
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.side { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+.side::before { content: ""; width: 26px; height: 1.5px; background: var(--line); }
+.node.direct { background: transparent; text-align: left; font-size: 13px; max-width: 280px; }
+.branches { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; max-width: 760px; margin-top: 4px; }
+.branch { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 6px; padding: 14px 16px;
+  border-radius: 8px; border: 1.5px solid var(--line); background: var(--surface); min-width: 0; }
+.branch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.branch .tag { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.branch .when { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.branch h3 { font-size: 16px; }
+.branch ol { margin: 0; padding-left: 18px; font-size: 13.5px; color: var(--ink); display: grid; gap: 2px; }
+.branch.a .tag { color: var(--a); } .branch.b .tag { color: var(--b); }
+.branch.a[aria-pressed="true"] { border-color: var(--a); background: var(--a-soft); }
+.branch.b[aria-pressed="true"] { border-color: var(--b); background: var(--b-soft); }
+.loop { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); justify-content: center; text-align: center; }
+.loop .arrow { flex: 1; max-width: 180px; height: 1.5px; background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 10px); }
+.loop code { color: var(--ink); }
+
+/* ── Tab jalur ── */
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.tab { all: unset; cursor: pointer; padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line);
+  font-weight: 600; font-size: 14px; color: var(--muted); background: var(--surface); }
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tab[aria-selected="true"].a { color: var(--a); border-color: var(--a); background: var(--a-soft); }
+.tab[aria-selected="true"].b { color: var(--b); border-color: var(--b); background: var(--b-soft); }
+.envfile { display: grid; gap: 4px; }
+.envfile .label { font-size: 12.5px; color: var(--muted); }
+.envfile pre { margin: 0; font-family: var(--mono); font-size: 13px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 10px 12px; overflow-x: auto; }
+.envfile .hl { padding: 1px 4px; border-radius: 3px; font-weight: 600; }
+.envfile .hl.a { color: var(--a); background: var(--a-soft); }
+.envfile .hl.b { color: var(--b); background: var(--b-soft); }
+.panel { display: grid; gap: 14px; }
+.panel > p { color: var(--muted); }
+
+/* ── Terminal ── */
+.term { background: var(--term-bg); color: var(--term-fg); border: 1px solid var(--term-edge); border-radius: 10px; overflow: hidden; min-width: 0; }
+.term-bar { display: flex; align-items: center; gap: 6px; padding: 9px 12px; border-bottom: 1px solid #222b34; font-family: var(--mono); font-size: 12px; color: var(--t-dim); }
+.term-bar i { width: 10px; height: 10px; border-radius: 50%; background: #2a333d; display: inline-block; }
+.term-bar span { margin-left: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.term pre { margin: 0; padding: 14px 16px 18px; font-family: var(--mono); font-size: 12.5px; line-height: 1.5; overflow-x: auto; white-space: pre; }
+.c { color: var(--t-cyan); } .m { color: var(--t-mag); font-weight: 600; } .g { color: var(--t-green); }
+.y { color: var(--t-yel); } .r { color: var(--t-red); } .d { color: var(--t-dim); } .bo { font-weight: 600; }
+.fold { color: var(--t-dim); font-style: italic; }
+.cursor { display: inline-block; width: 0.6em; background: var(--term-fg); animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
+
+/* Menu interaktif */
+.menu-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.opts { display: grid; gap: 0; padding: 4px 8px 12px; }
+.opt { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 2.2ch 15ch 1fr; gap: 0 8px;
+  font-family: var(--mono); font-size: 12.5px; padding: 4px 8px; border-radius: 4px; color: var(--term-fg); }
+.opt .k { color: var(--t-yel); font-weight: 600; }
+.opt .n { font-weight: 600; }
+.opt .t { color: var(--t-dim); }
+.opt:hover { background: #1c252e; }
+.opt:focus-visible { outline: 1.5px solid var(--t-cyan); }
+.opt[aria-pressed="true"] { background: #1f3a3a; }
+.opt[aria-pressed="true"] .t { color: var(--term-fg); }
+.prompt { font-family: var(--mono); font-size: 12.5px; padding: 6px 16px 14px; color: var(--term-fg); }
+.explain { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
+.explain h3 { font-size: 16px; }
+.explain dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; font-size: 14px; }
+.explain dt { color: var(--muted); font-weight: 500; }
+.explain dd { margin: 0; min-width: 0; }
+.hint { font-size: 13px; color: var(--muted); }
+.ex { font-size: 12px; color: var(--muted); }
+
+/* Kasus khusus */
+.cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.case { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+.case h3 { font-size: 15px; }
+.case p { font-size: 14px; color: var(--muted); }
+.case pre { margin: 0; font-family: var(--mono); font-size: 12.5px; background: var(--bg); border-radius: 6px; padding: 10px 12px; overflow-x: auto; }
+table { border-collapse: collapse; font-size: 13.5px; width: 100%; }
+td { padding: 5px 0; border-top: 1px solid var(--line); vertical-align: top; }
+td:first-child { font-family: var(--mono); font-size: 12.5px; padding-right: 12px; white-space: nowrap; }
+tr:first-child td { border-top: 0; }
+
+@media (max-width: 720px) {
+  .branches, .menu-grid, .cases { grid-template-columns: 1fr; }
+  .wrap { padding-block: 28px 48px; gap: 32px; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Setup/igrow-setup.sh · tanpa argumen</div>
+    <h1>Dua jalur <code>bash igrow-setup.sh</code></h1>
+    <p class="lede">Perintahnya sama, hasilnya tergantung satu baris di file setelan: kalau setup belum pernah selesai, script langsung memasang semuanya; kalau sudah, script menampilkan menu.</p>
+  </header>
+
+  <section aria-labelledby="h-flow">
+    <h2 id="h-flow">Cara script memilih jalur</h2>
+    <div class="flow">
+      <div class="node cmd"><span class="p">nuridho@vps:~$</span> bash igrow-setup.sh</div>
+      <div class="down"></div>
+      <div class="row">
+        <div class="node q"><b>Ada argumen?</b><span class="sub">mis. <code>deploy</code>, <code>status</code>, <code>step 6</code></span></div>
+        <div class="side">ya</div>
+        <div class="node direct">Perintah itu langsung dijalankan. Penanda dan menu <b>tidak dicek</b>.</div>
+      </div>
+      <div class="down"><span>tidak</span></div>
+      <div class="node q"><b>Isi <code>~/.config/igrow/setup.env</code> ada <code>SETUP_DONE=1</code>?</b><span class="sub">penanda ditulis otomatis setelah langkah 9 selesai</span></div>
+      <div class="down"></div>
+      <div class="branches">
+        <button class="branch a" type="button" data-go="a" aria-pressed="true">
+          <span class="tag">Belum ada · Jalur A</span>
+          <h3>Setup lengkap</h3>
+          <ol>
+            <li>Kotak "yang perlu disiapkan" + <code>Mulai?</code></li>
+            <li>Langkah 1–9 berurutan</li>
+            <li>Kotak "iGROW siap"</li>
+            <li>Tulis <code>SETUP_DONE=1</code> ke setup.env</li>
+          </ol>
+        </button>
+        <button class="branch b" type="button" data-go="b" aria-pressed="false">
+          <span class="tag">Sudah ada · Jalur B</span>
+          <h3>Menu pilihan</h3>
+          <ol>
+            <li>Menu 9 pilihan tampil</li>
+            <li>Ketik angka 1–7, <code>h</code>, atau <code>0</code></li>
+            <li>Script menjalankan pilihan itu</li>
+            <li><code>h</code> → penjelasan, lalu menu tampil lagi</li>
+          </ol>
+        </button>
+        <div class="loop"><span class="arrow"></span><span>Selesai Jalur A sekali, berikutnya selalu Jalur B</span><span class="arrow"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-sim">
+    <h2 id="h-sim">Coba lihat tampilannya</h2>
+    <div class="tabs" role="tablist" aria-label="Pilih jalur">
+      <button class="tab a" role="tab" id="tab-a" aria-controls="panel-a" aria-selected="true" type="button">Jalur A · Setup pertama</button>
+      <button class="tab b" role="tab" id="tab-b" aria-controls="panel-b" aria-selected="false" type="button" tabindex="-1">Jalur B · Menu</button>
+    </div>
+
+    <div class="panel" id="panel-a" role="tabpanel" aria-labelledby="tab-a">
+      <div class="envfile">
+        <span class="label">Isi <code>~/.config/igrow/setup.env</code> sebelum script jalan (VPS baru)</span>
+        <pre>REPO_DIR="/home/nuridho/iGROW"
+PROJ="whatsinsidegit"      <span class="d"># dari setupvps.sh</span>
+<span class="hl a">SETUP_DONE=""</span>              <span class="d"># kosong → Jalur A</span></pre>
+      </div>
+      <div class="term" aria-label="Contoh tampilan Jalur A">
+        <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrow-setup.sh</span></div>
+<pre><span class="c bo">     _  ____ ____   _____        __
+    (_)/ ___|  _ \ / _ \ \      / /
+    | | |  _| |_) | | | \ \ /\ / /
+    | | |_| |  _ &lt;| |_| |\ V  V /
+    |_|\____|_| \_\\___/  \_/\_/</span>
+<span class="d">    arsip karier &amp; knowledge base · Hermes + Telegram</span>
+  <span class="c">•</span> Minta sudo sekali untuk install paket…
+
+  <span class="c">┌─ Yang perlu disiapkan (±15 menit)</span>
+  <span class="c">│</span> • Akun GitHub (repo iGROW + repo privat kosong untuk backup)
+  <span class="c">│</span> • Telegram: bot baru dari @BotFather + user ID dari @userinfobot
+  <span class="c">│</span> • API key LLM (OpenRouter / Anthropic / OpenAI / dll)
+  <span class="c">│</span> Langkah yang sudah beres otomatis dilewati. Gagal di tengah? Jalankan ulang saja.
+  <span class="c">└─</span>
+
+  <span class="d">1 Paket · 2 Git · 3 Docker · 4 Repo · 5 Container · 6 LLM &amp; Telegram · 7 Runtime · 8 Backup · 9 Cron</span>
+
+  <span class="y">?</span> Mulai? <span class="d">[Y/n]</span> y
+
+<span class="m">━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">✔</span> Install git rsync curl
+<span class="m">━━ [2/9] Git &amp; GitHub ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">✔</span> SSH ke GitHub tembus (akun contoh-user)
+<span class="m">━━ [3/9] Docker &amp; Compose ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="d">↷ Docker version 27.x, compose v2.x — sudah beres, dilewati</span>
+<span class="m">━━ [4/9] Repo iGROW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">✔</span> Clone git@github.com:contoh-user/iGROW.git
+<span class="m">━━ [5/9] Container Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="y">?</span> Mau install di mana? Nama folder project di /home/nuridho (mis. whatsinsidegit) <span class="d">[whatsinsidegit]</span>:
+  <span class="c">•</span> Folder /home/nuridho/whatsinsidegit sudah ada, dipakai
+  <span class="g">✔</span> Tarik image nousresearch/hermes-agent
+<span class="m">━━ [6/9] Otak (LLM) &amp; Telegram ━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">✔</span> Bot valid: @igrow_contoh_bot
+<span class="m">━━ [7/9] Runtime iGROW &amp; tools ━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">✔</span> Gateway jalan: igrow-hermes
+<span class="m">━━ [8/9] Backup knowledge ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">✔</span> Uji backup.sh (persis seperti cron)
+<span class="m">━━ [9/9] Cron job ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">✔</span> daily-briefing (0 7 * * *)
+  <span class="g">✔</span> backup-knowledge (0 5 * * 1,3,6)
+  <span class="g">✔</span> lint-mingguan (0 8 * * 0)
+  <span class="g">✔</span> career-review (0 9 1 1,4,7,10 *)
+<span class="fold">  (di sini script menulis SETUP_DONE=1 ke setup.env)</span>
+
+<span class="g bo">━━ iGROW siap ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+
+  <span class="c">┌─ Coba sekarang</span>
+  <span class="c">│</span> Telegram → @igrow_contoh_bot → kirim: halo
+  <span class="c">│</span> Lalu ikuti skenario uji: /home/nuridho/iGROW/testing/test-flow.md
+  <span class="c">└─</span>
+
+  <span class="c">┌─ Berikutnya</span>
+  <span class="c">│</span> bash igrow-setup.sh   → menu: deploy, status, update, ganti LLM/token, backup, help
+  <span class="c">│</span> Telegram: /skills pending → cek skill buatan Hermes yang menunggu persetujuan
+  <span class="c">└─</span></pre>
+      </div>
+      <p class="ex">Contoh: tiap langkah diringkas jadi satu baris hasil. Nama akun dan bot fiktif.</p>
+    </div>
+
+    <div class="panel" id="panel-b" role="tabpanel" aria-labelledby="tab-b" hidden>
+      <div class="envfile">
+        <span class="label">Isi <code>~/.config/igrow/setup.env</code> setelah setup pernah selesai</span>
+        <pre>REPO_DIR="/home/nuridho/iGROW"
+PROJ="whatsinsidegit"
+<span class="hl b">SETUP_DONE="1"</span>             <span class="d"># terisi → Jalur B</span></pre>
+      </div>
+      <div class="menu-grid">
+        <div class="term" aria-label="Menu igrow-setup.sh">
+          <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrow-setup.sh</span></div>
+<pre style="padding-bottom:4px"><span class="c">  ┌─ Mau ngapain?</span></pre>
+          <div class="opts" id="opts" role="group" aria-label="Pilihan menu"></div>
+<pre style="padding-top:0;padding-bottom:4px"><span class="c">  └─</span></pre>
+          <div class="prompt"><span class="y">?</span> Pilih (0-7 / h): <span id="typed"></span><span class="cursor" aria-hidden="true">&nbsp;</span></div>
+        </div>
+        <div class="explain" id="explain" aria-live="polite"></div>
+      </div>
+      <p class="hint">Klik salah satu pilihan, atau ketik angkanya di keyboard. Hasil di terminal bawah adalah contoh.</p>
+      <div class="term" aria-label="Contoh hasil pilihan">
+        <div class="term-bar"><i></i><i></i><i></i><span id="out-title">hasil pilihan</span></div>
+        <pre id="out"></pre>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-case">
+    <h2 id="h-case">Kasus yang perlu diingat</h2>
+    <div class="cases">
+      <div class="case">
+        <h3>Perintah langsung selalu melewati menu</h3>
+        <p>Cocok untuk alias di laptop. Penanda <code>SETUP_DONE</code> tidak dicek.</p>
+        <table>
+          <tr><td>deploy</td><td>sama dengan menu 1</td></tr>
+          <tr><td>status</td><td>sama dengan menu 2</td></tr>
+          <tr><td>update</td><td>sama dengan menu 3</td></tr>
+          <tr><td>step 6 / 7 / 8</td><td>sama dengan menu 4 / 5 / 6 (tanpa tawaran hapus token)</td></tr>
+          <tr><td>all</td><td>Jalur A, walaupun penanda sudah ada</td></tr>
+          <tr><td>help</td><td>penjelasan tiap pilihan</td></tr>
+        </table>
+      </div>
+      <div class="case">
+        <h3>VPS yang setupnya dibuat sebelum ada menu</h3>
+        <p>File setelannya belum punya <code>SETUP_DONE</code>, jadi script masih masuk Jalur A. Itu aman karena langkah yang beres dilewati. Supaya langsung ke menu, pilih salah satu, cukup sekali:</p>
+        <pre>bash igrow-setup.sh all
+<span class="d"># atau</span>
+echo 'SETUP_DONE=1' &gt;&gt; ~/.config/igrow/setup.env</pre>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const OPTIONS = [
+  { k: "1", name: "Deploy", short: "pasang aturan terbaru dari repo (habis git push)", runs: "cmd_deploy",
+    when: "Kamu mengubah aturan di hermes-home/ di laptop lalu git push.",
+    what: "git pull repo di VPS, lalu salin aturan ke hermes-home/. Note, raw, output tidak disentuh.",
+    after: "Kirim /new di Telegram supaya sesi baru membaca aturan terbaru.",
+    out: [["m","━━ · Deploy runtime ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  git pull repo → rsync 2 langkah ke hermes-home/. Data di VPS tidak disentuh."],[""],
+      ["g","  ✔ ","git pull (/home/nuridho/iGROW)"],["g","  ✔ ","Runtime terbaru (AGENTS.md, SCHEMA, project-skills)"],["g","  ✔ ","File milik agent yang belum ada (katalog, log, tag)"],["g","  ✔ ","Selesai. Mulai sesi baru di Telegram (/new) supaya aturan terbaru terbaca."]] },
+  { k: "2", name: "Status", short: "cek bot, Hermes, cron, backup terakhir", runs: "cmd_status",
+    when: "Bot diam, atau sekadar mau memastikan semuanya sehat.",
+    what: "Cek container jalan, hermes doctor, daftar cron, waktu backup terakhir. Tidak mengubah apa pun.",
+    after: "Ada yang merah? Pilihan 4–7 biasanya jawabannya.",
+    out: [["m","━━ · Status ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Kesehatan container, Hermes, cron, dan backup."],[""],
+      ["g","  ✔ ","Container igrow-hermes jalan (2026-10-24T05:02)"],["g","  ✔ ","hermes doctor bersih"],[""],
+      ["d","    (daftar cron dari hermes cron list: daily-briefing, backup-knowledge, lint-mingguan, career-review)"],[""],
+      ["g","  ✔ ","Backup terakhir: 2 hari lalu · backup otomatis"],["g","  ✔ ","Runtime repo: a1b2c3d · 3 jam lalu"]] },
+  { k: "3", name: "Update", short: "update Hermes ke versi terbaru", runs: "cmd_update",
+    when: "Hermes rilis versi baru (sesekali saja, mis. sebulan sekali).",
+    what: "Tarik image terbaru, buat ulang container, cek doctor dan cron. Kalau sudah terbaru, tidak ada yang diubah.",
+    after: "Versi baru bermasalah? Di akhir tampil baris image: …@sha256:… untuk balik ke versi lama.",
+    out: [["m","━━ · Update Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Tarik image terbaru → buat ulang container. Data di hermes-home/ tetap."],[""],
+      ["g","  ✔ ","Tarik image terbaru"],["g","  ✔ ","Buat ulang container"],["g","  ✔ ","Hermes 1.4.2 → 1.5.0"],["g","  ✔ ","hermes doctor"],[""],
+      ["c","  ┌─ Kalau versi baru bermasalah, balik ke versi lama"],["c","  │ ","Di /home/nuridho/whatsinsidegit/igrow-hermes/docker-compose.yml, service igrow-hermes:"],
+      ["c","  │ ","  image: nousresearch/hermes-agent@sha256:9f3c…"],["c","  │ ","lalu: cd … && docker compose up -d igrow-hermes"],["c","  └─"],
+      ["g","  ✔ ","Selesai. Kirim /new di Telegram, lalu cek job cron di atas masih lengkap."]] },
+  { k: "4", name: "LLM & Telegram", short: "ganti API key, model, atau token bot", runs: "step6",
+    when: "Ganti provider, API key, atau model LLM, atau ganti token bot Telegram.",
+    what: "Wizard resmi Hermes untuk LLM. Token bot dicek ke Telegram dulu sebelum disimpan.",
+    after: "Gateway di-restart otomatis supaya setelan baru terbaca.",
+    out: [["m","━━ [6/9] Otak (LLM) & Telegram ━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  API key LLM + token bot, disimpan di hermes-home/.env (bukan di repo)."],[""],
+      ["c","  • ","Model sekarang: contoh-provider/contoh-model"],["y","  ? ","Buka wizard LLM resmi Hermes (pilih provider → tempel API key → pilih model)? [y/N]"],
+      ["y","  ? ","Token bot Telegram sudah ada. Ganti? [y/N]"],["g","  ✔ ","Restart gateway (setelan baru dibaca)"]] },
+  { k: "5", name: "Tools cron", short: "ganti tools untuk job cron", runs: "step7",
+    when: "Job cron gagal karena tool-nya mati, atau mau mengubah tools cron.",
+    what: "Aturan dari repo dipasang ulang, layar hermes tools dibuka (platform cron: web, terminal, file), bot di-restart.",
+    after: "Pastikan doctor di akhir bersih.",
+    out: [["m","━━ [7/9] Runtime iGROW & tools ━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Salin hermes-home/ dari repo, kunci approval skill, pilih tools cron, nyalakan bot."],[""],
+      ["g","  ✔ ","Runtime terbaru (AGENTS.md, SCHEMA, project-skills)"],["g","  ✔ ","skills.write_approval = true (skill buatan Hermes menunggu persetujuanmu)"],
+      ["y","  ? ","Buka pengaturan tools sekarang? [Y/n]"],["d","    (layar hermes tools: pilih platform cron → web, terminal, file)"],
+      ["g","  ✔ ","Restart gateway"],["g","  ✔ ","Gateway jalan: igrow-hermes"],["g","  ✔ ","hermes doctor"]] },
+  { k: "6", name: "Backup", short: "sambung ulang / ganti token backup", runs: "step8 (plus tawaran hapus token)",
+    when: "Token backup kedaluwarsa, push backup gagal, atau ganti repo backup.",
+    what: "Jawab y untuk menghapus token lama, masukkan token baru, lalu backup diuji persis seperti cron.",
+    after: "Token lama tidak perlu dihapus manual lagi.",
+    out: [["y","  ? ","Ganti token backup? (token lama dihapus, mis. karena kedaluwarsa) [y/N] y"],["c","  • ","Token lama dihapus"],[""],
+      ["m","━━ [8/9] Backup knowledge ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  igrow/ di-push ke repo GitHub privat. Repo backup sudah berisi → tawarkan restore."],[""],
+      ["y","  ? ","Repo backup GitHub (pemilik/nama), PRIVAT [contoh-user/igrow-backup]:"],["y","  ? ","Fine-grained token (tidak tampil di layar):"],
+      ["g","  ✔ ","Token valid, repo privat"],["g","  ✔ ","Uji backup.sh (persis seperti cron)"]] },
+  { k: "7", name: "Setup ulang", short: "semua langkah; yang sudah beres dilewati", runs: "intro + langkah 1–9",
+    when: "Ada langkah yang dulu gagal, atau ragu setup sudah lengkap.",
+    what: "Langkah 1–9 dijalankan seperti Jalur A. Yang sudah beres dicek lalu dilewati. Aman.",
+    after: "Sama dengan bash igrow-setup.sh all.",
+    out: [["y","  ? ","Mulai? [Y/n] y"],[""],["m","━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  ↷ git version 2.x, rsync, curl — sudah beres, dilewati"],
+      ["m","━━ [2/9] Git & GitHub ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  ↷ Identitas git: nuridho <…> — sudah beres, dilewati"],
+      ["fold","  … langkah 3–8: kebanyakan ↷ dilewati …"],
+      ["m","━━ [9/9] Cron job ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  ↷ daily-briefing — sudah beres, dilewati"],["d","  ↷ backup-knowledge — sudah beres, dilewati"],
+      ["d","  ↷ lint-mingguan — sudah beres, dilewati"],["d","  ↷ career-review — sudah beres, dilewati"],[""],["gb","━━ iGROW siap ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"]] },
+  { k: "h", name: "Help", short: "penjelasan tiap pilihan", runs: "cmd_help",
+    when: "Bingung maksud salah satu pilihan.",
+    what: "Tampil penjelasan pilihan 1–7: kapan dipakai dan apa yang terjadi.",
+    after: "Menu langsung tampil lagi, jadi bisa langsung memilih.",
+    out: [["m","━━ · Help ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Penjelasan tiap pilihan di menu."],[""],
+      ["cb","  1 · Deploy"],["","    Kapan: kamu mengubah aturan di hermes-home/ di laptop lalu git push."],["","    Yang terjadi: git pull repo di VPS → salin aturan ke hermes-home/. Note, raw, output tidak disentuh."],[""],
+      ["cb","  2 · Status"],["","    Kapan: bot diam, atau sekadar mau memastikan semuanya sehat."],[""],
+      ["fold","  … pilihan 3–7 dengan format yang sama …"],[""],
+      ["c","  ┌─ Mau ngapain?"],["fold","  (menu tampil lagi)"]] },
+  { k: "0", name: "Keluar", short: "", runs: "exit 0",
+    when: "Salah buka, atau sudah selesai.",
+    what: "Script berhenti tanpa mengubah apa pun.",
+    after: "",
+    out: [["d","nuridho@vps:~$"]] }
+];
+
+const optsEl = document.getElementById("opts");
+const outEl = document.getElementById("out");
+const outTitle = document.getElementById("out-title");
+const explainEl = document.getElementById("explain");
+const typedEl = document.getElementById("typed");
+
+const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+
+function line(l) {
+  const [cls, a = "", b] = l;
+  if (b !== undefined) return `<span class="${cls}">${esc(a)}</span>${esc(b)}`;
+  const map = { gb: "g bo", cb: "c bo" };
+  return cls ? `<span class="${map[cls] || cls}">${esc(a)}</span>` : esc(a);
+}
+
+OPTIONS.forEach(o => {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "opt";
+  btn.dataset.k = o.k;
+  btn.setAttribute("aria-pressed", "false");
+  btn.innerHTML = `<span class="k">${o.k}</span><span class="n">${esc(o.name)}</span><span class="t">${esc(o.short)}</span>`;
+  btn.addEventListener("click", () => pick(o.k));
+  optsEl.appendChild(btn);
+});
+
+function pick(k) {
+  const o = OPTIONS.find(x => x.k === k);
+  if (!o) return;
+  optsEl.querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === k)));
+  typedEl.textContent = k;
+  outTitle.textContent = `setelah memilih ${k} · ${o.name}`;
+  outEl.innerHTML = o.out.map(line).join("\n");
+  explainEl.innerHTML = `
+    <h3>${o.k} · ${esc(o.name)}</h3>
+    <dl>
+      <dt>Kapan</dt><dd>${esc(o.when)}</dd>
+      <dt>Yang terjadi</dt><dd>${esc(o.what)}</dd>
+      ${o.after ? `<dt>Sesudahnya</dt><dd>${esc(o.after)}</dd>` : ""}
+      <dt>Di script</dt><dd><code>${esc(o.runs)}</code></dd>
+    </dl>`;
+}
+pick("1");
+
+/* Tab jalur + kartu jalur di diagram */
+const tabs = { a: document.getElementById("tab-a"), b: document.getElementById("tab-b") };
+const panels = { a: document.getElementById("panel-a"), b: document.getElementById("panel-b") };
+function show(which, focus) {
+  for (const key of ["a", "b"]) {
+    const on = key === which;
+    tabs[key].setAttribute("aria-selected", String(on));
+    tabs[key].tabIndex = on ? 0 : -1;
+    panels[key].hidden = !on;
+  }
+  document.querySelectorAll(".branch").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.go === which)));
+  if (focus) tabs[which].focus();
+}
+tabs.a.addEventListener("click", () => show("a"));
+tabs.b.addEventListener("click", () => show("b"));
+document.querySelector('[role="tablist"]').addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === "ArrowLeft") show(tabs.a.getAttribute("aria-selected") === "true" ? "b" : "a", true);
+});
+document.querySelectorAll(".branch").forEach(b => b.addEventListener("click", () => {
+  show(b.dataset.go);
+  document.getElementById("h-sim").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+}));
+
+/* Ketik pilihan langsung di keyboard saat Jalur B tampil */
+document.addEventListener("keydown", e => {
+  if (panels.b.hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (OPTIONS.some(o => o.k === k)) pick(k);
+});
+</script>
