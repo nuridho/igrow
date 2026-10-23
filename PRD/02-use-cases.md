@@ -54,8 +54,8 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 **Trigger:** user bercerita soal pekerjaan (bukan `/study`).
 
 **Alur utama:**
-1. Hermes menentukan career aktif dan menyebutkannya di balasan.
-2. Hermes mengklasifikasi cerita menjadi incident, knowledge, atau lesson, dan menuliskan satu baris alasannya.
+1. Hermes menentukan career aktif (nama folder lengkap) dan menyebutkannya di balasan. Kalau ada lebih dari satu career aktif, Hermes bertanya cerita itu masuk career mana.
+2. Hermes mengklasifikasi cerita menjadi incident (ada kejadian spesifik), knowledge (cara kerja/SOP), atau lesson (refleksi tanpa kejadian spesifik), dan menuliskan satu baris alasannya. Pelajaran dari incident tetap di note incident itu (`## Lesson Learned`), bukan note lesson terpisah.
 3. Data sensitif diredaksi.
 4. Note disusun sesuai `SCHEMA.md`, termasuk pencocokan tag ke taxonomy.
 5. Self-check, lalu file ditulis.
@@ -67,7 +67,7 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 |---|---|
 | Incident (ada gejala, investigasi, hasil) | `wiki/careers/<aktif>/knowledge/incidents/YYYY-MM-DD-<slug>.md` (tanggal kejadian, D-29) |
 | Knowledge (SOP, cara kerja, setup, tanpa kejadian) | `wiki/careers/<aktif>/knowledge/<slug>.md` (flat, tanpa subfolder per topik) |
-| Lesson learned | `wiki/careers/<aktif>/lessons-learned/` |
+| Lesson (refleksi tanpa kejadian spesifik) | `wiki/careers/<aktif>/lessons-learned/` |
 | Skill yang terpakai | `wiki/careers/<aktif>/skills.md` |
 | Screenshot (sudah diredaksi) | `raw/assets/YYYYMMDD-deskripsi.png` |
 
@@ -348,7 +348,7 @@ Improved      ↑ Monitoring   ↑ Incident handling
 Weak          ⚠ Kernel basics   ⚠ Routing   ⚠ VLAN   ⚠ Ansible
               ⚠ Networking container   ⚠ Multi-layer diagnosis
 Pola          Tag terbanyak: linux (9), monitoring (6), performance (4)
-              Stagnan: docker · Kesalahan berulang: 2 lesson bertag storage
+              Stagnan: docker · Kesalahan berulang: disk penuh, log tidak dirotasi (2 incident)
 
 Skill Inventory: target L2 (posisi saat ini L1)
 Linux              ███████░░░   67%  (2/3)
@@ -383,7 +383,7 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 - ✅ Role Fit Trend dibandingkan dengan laporan `output/` kuartal sebelumnya. Run pertama ditulis "baseline"; kalau level berubah, tidak dibandingkan.
 - ✅ `SCHEMA.md` dan `career-review.md` memakai definisi skill inventory yang sama.
 - ✅ Target = satu level di atas level yang tertulis di `Role` `about.md` career aktif. Naik level → bar di-reset.
-- ✅ Laporan punya bagian Pola: tag paling sering di note kuartal itu, topik stagnan, dan kesalahan berulang.
+- ✅ Laporan punya bagian Pola: tag paling sering di note kuartal itu (tanpa tag `incident`), topik stagnan, dan kesalahan berulang (≥ 2 incident/lesson dengan akar masalah sama, disebut file-nya).
 
 ## `/recall` · Tanya Knowledge Base
 

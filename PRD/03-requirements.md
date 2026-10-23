@@ -23,7 +23,7 @@ Status:
 | ID | Requirement | Prioritas | UC | Status |
 |---|---|---|---|---|
 | FR-05 | Cerita kerja diklasifikasi (incident / knowledge / lesson) dan ditulis ke folder career aktif sesuai aturan penempatan. | Must | UC1 | ✅ |
-| FR-06 | Career aktif ditentukan dari `about.md` yang belum punya tanggal selesai. | Must | UC1 | ✅ |
+| FR-06 | Career aktif ditentukan dari `about.md` yang belum punya tanggal selesai. Path memakai nama folder career lengkap; lebih dari satu career aktif → Hermes bertanya. | Must | UC1 | ✅ |
 | FR-07 | User bisa mendaftarkan pekerjaan baru. Career lama otomatis ditutup dan folder career baru dibuat. | Must | UC1b | ✅ |
 | FR-08 | Setiap note mematuhi SCHEMA: frontmatter wajib, body template, tag dari taxonomy, minimal 2 dual-link di See Also. | Must | UC1, UC4 | ✅ Ada self-check, tapi kepatuhan agent belum diukur |
 | FR-09 | Setiap operasi tulis diakhiri dengan update `_index.md` terdekat (Last updated) dan entri `log.md`. Tidak ada master index (D-32). | Must | Semua tulis | ✅ |

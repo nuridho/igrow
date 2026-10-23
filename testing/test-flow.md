@@ -73,6 +73,7 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 - File baru: `wiki/careers/career-1-berca-sysadmin/knowledge/incidents/YYYY-MM-DD-<slug>.md` (tanggal = tanggal kejadian "minggu lalu", sama dengan Ringkasan)
 - Frontmatter nvk (`created`, `updated`, `type: incident`, `tags` dari taxonomy, `confidence`)
 - Body alur incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned
+- Pelajaran di cerita ("spike CPU pas window backup itu normal") masuk `## Lesson Learned` note incident itu; **tidak** ada file baru di `lessons-learned/`
 - **NEGATIF TEST:** `grep -ri --exclude=about.md "cimb\|PROD-APP-03\|10.20.30.40" igrow/` → 0 hasil (nama client boleh ada di `about.md`, D-30)
 - `wiki/_index.md` ke-update, `log.md` ada entry `## [tanggal] ingest | ...`
 - Ini note pertama, jadi target See Also pasti belum ada → tiap target tercatat `| <path> | (placeholder) | - | - |` di `wiki/_index.md`
@@ -380,7 +381,7 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 | 4 | Frontmatter | 7 field nvk untuk semua note |
 | 5 | ~~confidence_calc~~ | ⏸️ Phase 5 (fitur testing) |
 | 6 | Honest gaps | /recall & mentor tidak ngarang kalau data kosong |
-| 7 | Career aktif | Semua incident kerja masuk career-1; hobi masuk self-development |
+| 7 | Career aktif | Semua incident kerja masuk folder `career-1-berca-sysadmin/` (tidak ada folder `career-1/` terpisah); hobi masuk self-development |
 | 8 | No duplikat/timpa | Topik sama → file baru; update note → edit in-place |
 | 9 | Konsistensi sesi | Mentor menjawab sama di sesi baru untuk data sama |
 | 10 | Taxonomy coverage | Setelah Fase 1, tag yg kepakai minimal: linux, storage, monitoring, performance, networking, windows-server, vmware, dns, docker, security (10 dari 17) |

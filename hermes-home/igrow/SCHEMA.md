@@ -15,6 +15,7 @@ Aturan main wiki iGROW. **Wajib diikuti.** Kasus yang tidak tercakup aturan mana
 
 ## Career aktif & kepemilikan
 - Career aktif = folder `wiki/careers/career-N-*` yang `about.md`-nya belum punya tanggal selesai. Cerita kerja baru masuk ke career itu.
+- Di semua path dan contoh, `career-N` = nama folder lengkap career itu (mis. `career-1-acme-sysadmin`), bukan nomornya saja: jangan bikin folder `career-1/` baru. Ketemu lebih dari satu career aktif → jangan pilih sendiri, tanya user cerita ini masuk career mana.
 - `about.md` = milik user. Agent hanya boleh menulisnya di alur Daftar Kerjaan Baru (tutup career lama + bikin `about.md` career baru). `Role` wajib memuat level (mis. `Infra Engineer L1`).
 - `skill-map.md` = dibuat agent, beku per level (lihat "skill-map.md format"). User boleh edit manual.
 

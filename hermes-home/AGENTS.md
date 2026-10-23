@@ -38,7 +38,7 @@ wiki/ = executable.
 |------------------------------------|--------------------------------------------------|
 | Incident kerjaan aktif            | igrow/wiki/careers/career-N/knowledge/incidents/ |
 | Knowledge kerjaan (SOP/cara/setup)| igrow/wiki/careers/career-N/knowledge/ (flat .md) |
-| Lesson dari incident              | igrow/wiki/careers/career-N/lessons-learned/     |
+| Lesson (refleksi, tanpa kejadian) | igrow/wiki/careers/career-N/lessons-learned/     |
 | Belajar mandiri (bukan kerjaan)   | igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama> |
 | Artikel/dok belajar (mentah)      | igrow/raw/inbox/ → proses → raw/articles/ (inbox kosong = sudah diproses) |
 | Screenshot/gambar (sudah redact)  | igrow/raw/assets/YYYYMMDD-deskripsi.png          |
