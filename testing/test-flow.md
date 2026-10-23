@@ -70,7 +70,7 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 > "Mau cerita. Minggu lalu ada alert CPU tinggi di server production client CIMB Niaga, hostname PROD-APP-03, IP 10.20.30.40. Saya cek top, ternyata ada proses backup yum-update makan CPU. Saya tunggu selesai, CPU normal lagi. Pelajarannya: spike CPU pas window backup itu normal, jangan panik."
 
 **Expected:**
-- File baru: `wiki/careers/career-1-berca-sysadmin/knowledge/incidents/YYYY-MM-DD-<slug>.md`
+- File baru: `wiki/careers/career-1-berca-sysadmin/knowledge/incidents/YYYY-MM-DD-<slug>.md` (tanggal = tanggal kejadian "minggu lalu", sama dengan Ringkasan)
 - Frontmatter nvk (`created`, `updated`, `type: incident`, `tags` dari taxonomy, `confidence`)
 - Body alur incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned
 - **NEGATIF TEST:** `grep -ri "cimb\|PROD-APP-03\|10.20.30.40" igrow/` → 0 hasil
@@ -119,7 +119,7 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 **Prompt:**
 > "Lagi, alert CPU tinggi. Kali ini ternyata proses logrotate macet. Saya kill, jalankan manual logrotate, selesai."
 
-**Expected:** file **baru terpisah** dari incident CPU 1.1 (beda tanggal/slug), bukan menimpa. Dua file CPU hidup berdampingan.
+**Expected:** file **baru terpisah** dari incident CPU 1.1 (beda tanggal/slug), bukan menimpa. Dua file CPU hidup berdampingan. Kalau incident baru menaut ke incident 1.1, See Also 1.1 dapat link balik ke incident baru, dan `updated:` 1.1 tidak berubah.
 ❌ Gagal kalau: file lama tertimpa.
 **Test:** `grep -l 'CPU' igrow/wiki/careers/*/knowledge/incidents/*.md | wc -l` → harus 2
 

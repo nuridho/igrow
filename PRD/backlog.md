@@ -18,6 +18,18 @@ Format entri:
 
 ---
 
+## [2026-10-23] Status topik, slug unik, link balik (W34, I13, W36)
+- **Apa:** W34: definisi Known/Weak/Belum + Gap pindah ke SCHEMA § skill-map.md format (pencarian hanya di note naratif `careers/` + `self-development/`); `mentor.md` merujuk ke sana, `career-review.md` step 2 "Weak (= Gap)". I13: SCHEMA § Link + aturan slug (kebab-case; incident `YYYY-MM-DD-<slug>` dengan tanggal kejadian, D-29; unik di antara note, file data dikecualikan; slug terpakai → topik sama = edit, topik beda = konteks pembeda, placeholder = note yang ditunggu). W36: SCHEMA § Link + aturan link balik (hanya note yang ditaut; `updated:` note lama tidak diganti karena career review membaca `updated`; dicatat di subjek log); placeholder yang ditulis memasukkan page penautnya ke See Also. `capture-experience.md` + `study.md`: pointer slug di step 2, link balik di step 6, step 7 menyebut note lama yang dapat link balik; contoh capture memakai nama bertanggal, 1 placeholder + 1 link balik, label `[EDIT NOTE LAMA]` + `[LOG]`; contoh study + baris link balik. PRD 02 (tabel lokasi, AC UC1/UC2/UC4), PRD 06 D-29, README riwayat 1.4, test-flow 1.1 + 1.6, roadmap (sisa item + catatan M2.3 dihapus), W35 Act + cek slug ganda, rujukan W29 `SCHEMA.md:104` → `:107`.
+- **Kenapa:** W34, I13, W36; keputusan owner D-29 (nama incident bertanggal).
+- **File:** `hermes-home/igrow/SCHEMA.md`, `hermes-home/igrow/project-skills/{capture-experience,study,mentor,career-review}.md`, `PRD/{README,02-use-cases,05-roadmap,06-risks-decisions,todo,backlog}.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Todo W36: link balik ke note lama
+- **Apa:** item baru W36 di `todo.md` § Review ulang: SCHEMA belum mengatur link balik, jadi note lama tidak pernah menaut ke note baru yang terkait. Act: 1 aturan di SCHEMA § Link (link balik hanya ke note yang ditaut note baru, `updated:` + index ikut, satu entri log), step 6 capture/study merujuk, balasan menyebut note lama yang diperbarui. Ringkasan § Terbuka dan roadmap M2.1 ikut; nomor berikutnya jadi W37.
+- **Kenapa:** dari pertanyaan owner soal jumlah link per note; owner minta dicatat dulu.
+- **File:** `PRD/todo.md`, `PRD/05-roadmap.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak (baru dicatat)
+
 ## [2026-10-23] Label tujuan di contoh eksekusi capture & study
 - **Apa:** contoh eksekusi `capture-experience.md` dan `study.md` dipecah dengan label tujuan: `[PESAN USER — masuk dari Telegram]`, `[FILE DITULIS — <path>; tidak dikirim ke chat]` / `[FILE & INDEX YANG DITULIS]`, `[EDIT INDEX — ...]`, `[BALASAN KE USER — dikirim ke Telegram; hanya bagian ini yang terlihat user]`, + 1 kalimat pengantar ("yang dikirim ke chat HANYA bagian [BALASAN KE USER]"). Label "Input/Output/Balasan" lama dihapus. Contoh study sekarang dibungkus blok kode seperti contoh capture. Step 7 kedua file: "balasan bukan bagian file note". Label pakai `[...]`, bukan heading `##`, supaya tidak tercampur dengan heading di dalam note.
 - **Kenapa:** masukan owner: label "Output" dan "Balasan" bisa membuat model menempel isi note ke chat atau menulis rangkuman ke file. Contoh prosedur lain ikut dicek: `career-review.md` punya risiko yang sama begitu I11 menambah balasan Telegram → Act I11 di `todo.md` + label tujuan; `mentor.md`, `daily-briefing.md`, `lint.md` aman (output contoh = pesan balasan itu sendiri).

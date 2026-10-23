@@ -80,11 +80,14 @@ Body berupa list, bukan narasi:
 Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag baru ditambah di sana DULU, hanya kalau user setuju; lalu cukup append `igrow/log.md` (op: update, subjek `tag <nama>`), tanpa update `_index.md`.
 
 ## Link
+- Slug = nama file note tanpa `.md`: huruf kecil, angka, dan `-` (kebab-case). Incident: `YYYY-MM-DD-<slug>`, tanggal = tanggal kejadian di Ringkasan (pakai tanggal perkiraan kalau "sekitar"). Knowledge, lesson, learning: slug topik saja.
+- Slug unik di antara semua note di `wiki/` (file data `about.md`, `skills.md`, `_index.md`, `roadmap/`, `profile/` tidak dihitung). Sebelum menulis note baru, cek `_index.md` di `wiki/`: slug sudah dipakai note bertopik sama → edit note itu (cerita lanjutan); topik beda → tambah konteks pembeda (sistem, sumber, atau career), mis. `disk-full-nas`; slug tercatat sebagai placeholder → itu note yang ditunggu (aturan placeholder di bawah).
 - Antar-page: `[[slug]]` minimal 2 outbound per page.
 - Section `## See Also` wajib dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
 - Narasi biasa cukup `[[slug]]`.
 - Target belum ada → tetap boleh ditaut (placeholder): slug belum tercatat → tambah baris di `_index.md` terdekat dari path target: `| <path target> | (placeholder) | - | - |`; sudah tercatat → pakai path di baris itu, jangan bikin baris kedua. Tidak masuk master, tidak dihitung Total pages.
-- Menulis note baru → cek `_index.md` dulu: slug-nya ada sebagai placeholder → ganti baris itu dengan baris biasa. Path note beda dari path placeholder → perbaiki juga link `(...)` di page yang menautnya (cari `[[slug`).
+- Menulis note baru → cek `_index.md` dulu: slug-nya ada sebagai placeholder → ganti baris itu dengan baris biasa, dan masukkan page yang menautnya (cari `[[slug`) ke See Also note baru. Path note beda dari path placeholder → perbaiki juga link `(...)` di page penaut itu.
+- Link balik: note baru menaut ke note lama yang sudah ada → tambah dual-link ke note baru di See Also note lama itu (kalau belum ada). Hanya note yang memang ditaut, jangan scan seluruh wiki. Ini bukan perubahan isi: `updated:` note lama dan barisnya di index tidak diganti (career review membaca `updated` sebagai aktivitas kuartal); cukup disebut di subjek log operasi yang sama, mis. `## [2026-09-20] ingest | 2026-09-19-mysql-backup-cpu-spike (+ link balik: cpu-spike-triage)`.
 
 ## Threshold
 - Bikin page: topik muncul 2+ sumber ATAU sentral di 1 sumber.
@@ -103,6 +106,7 @@ Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag 
 - **Beku per level.** Generate ulang HANYA kalau: file belum ada, user naik level, atau `Role` career aktif berubah. Data baru TIDAK memicu generate ulang. Setiap generate ulang → log op `update` + alasannya.
 - **Target Skill Inventory** = `## Target L<n+1>`, n = level di `Role` career aktif. Level tidak tertulis → tanya user 1x. Naik level → bar di-reset ke target baru.
 - **Topik "punya note"** = ada note yang `title` atau `## Ringkasan`-nya membahas topik itu. Cuma disinggung di note lain (mis. di incident) = belum dihitung. Selalu sebut file buktinya.
+- **Status topik** (definisi yang sama untuk mentor dan career review): Known = punya note (aturan di atas) · Weak = belum punya note, tapi disinggung di isi note lain (sebut file-nya) · Belum = tidak muncul di note mana pun. Gap = Weak + Belum. Yang dicari hanya note naratif di `careers/` dan `self-development/`, bukan `skill-map.md` (memuat semua topik target), `profile/`, `about.md`, atau `skills.md`.
 - `% Skill Inventory` per area = topik target yang punya note / total topik target area itu. Selalu tulis X/Y.
 - `% Role Fit` per role = topik role yang punya note / total topik role itu (X/Y). Skill map hanya menyimpan daftar topik; persentase dihitung saat dipakai.
 

@@ -10,7 +10,7 @@ Dipicu cron quarterly (review kuartal yang baru selesai) atau user minta review.
    - Learned: topik yang dapat note baru kuartal ini
    - Experienced: incident/pengalaman kuartal ini
    - Improved: topik yang note-nya bertambah/makin dalam
-   - Weak: topik target skill map yang statusnya Weak/Belum
+   - Weak (= Gap): topik target skill map berstatus Weak atau Belum (definisi status di SCHEMA § skill-map.md format)
    - Pola: 3 tag paling sering di note yang dibuat/diupdate kuartal ini (frontmatter `tags`, `updated` dalam kuartal); topik stagnan (ada note sebelum kuartal ini, 0 note baru); kesalahan berulang (≥ 2 lesson-learned dengan tag sama)
 3. Skill Inventory — hitung, bukan kira-kira (aturan hitung + target level di SCHEMA):
    - Target = `## Target L<n+1>` di skill map.

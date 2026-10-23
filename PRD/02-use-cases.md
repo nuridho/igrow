@@ -65,7 +65,7 @@ Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 seb
 
 | Jenis cerita | Lokasi |
 |---|---|
-| Incident (ada gejala, investigasi, hasil) | `wiki/careers/<aktif>/knowledge/incidents/` |
+| Incident (ada gejala, investigasi, hasil) | `wiki/careers/<aktif>/knowledge/incidents/YYYY-MM-DD-<slug>.md` (tanggal kejadian, D-29) |
 | Knowledge (SOP, cara kerja, setup, tanpa kejadian) | `wiki/careers/<aktif>/knowledge/<slug>.md` (flat, tanpa subfolder per topik) |
 | Lesson learned | `wiki/careers/<aktif>/lessons-learned/` |
 | Skill yang terpakai | `wiki/careers/<aktif>/skills.md` |
@@ -90,11 +90,12 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 ```
 
 **Acceptance criteria:**
-- ✅ Cerita incident menghasilkan file baru di folder `incidents/` career aktif, dengan body alur Symptom / Investigation / Finding / Action / Result / Lesson Learned.
+- ✅ Cerita incident menghasilkan file baru `incidents/YYYY-MM-DD-<slug>.md` (tanggal kejadian) di career aktif, dengan body alur Symptom / Investigation / Finding / Action / Result / Lesson Learned.
 - ✅ Frontmatter lengkap sesuai SCHEMA, tag hanya dari taxonomy, `sources` berisi `[]` atau path `igrow/raw/...`.
-- ✅ Bagian See Also berisi minimal 2 dual-link.
+- ✅ Bagian See Also berisi minimal 2 dual-link. Note lama yang ditaut mendapat link balik di See Also-nya, tanpa mengubah `updated:` note lama itu.
+- ✅ Nama file note unik di seluruh `wiki/` (aturan slug di SCHEMA § Link).
 - ✅ Nama client, IP, hostname, dan credential tidak muncul di file mana pun, termasuk title dan nama file. Self-check sebelum tulis ikut memeriksanya.
-- ✅ Balasan berisi path file, career aktif + alasan pemilihan type/folder, rangkuman 3–5 poin isi note (incident: kejadian / penyebab / tindakan / pelajaran), tag, link placeholder baru, dan jenis data yang diredaksi. Isi note lengkap hanya kalau diminta.
+- ✅ Balasan berisi path file, career aktif + alasan pemilihan type/folder, rangkuman 3–5 poin isi note (incident: kejadian / penyebab / tindakan / pelajaran), tag, link placeholder baru, note lama yang dapat link balik, dan jenis data yang diredaksi. Isi note lengkap hanya kalau diminta.
 - ✅ Waktu relatif ("kemarin", "minggu lalu") ditulis sebagai tanggal absolut. Tanggal kejadian incident ada di kalimat pertama Ringkasan; kalau tidak pasti, ditulis "sekitar <tanggal>".
 - ✅ Setelah menulis: `wiki/_index.md` (+ `raw/_index.md` kalau ada screenshot), master `_index.md` (Total pages + Last updated), dan `log.md` (op `ingest`/`update`) ikut diperbarui.
 - ✅ Kalau cerita baru bertentangan dengan note lama: Hermes bertanya sekali, field `contradictions` diisi, dan note lama tidak dihapus.
@@ -137,7 +138,7 @@ Dengan pemisahan per career, setiap note otomatis punya konteks "dari pekerjaan 
 
 **Alur utama:**
 1. Pastikan `wiki/roadmap/skill-map.md` ada. Kalau belum, generate dulu dari `careers/` dan `self-development/`. Skill map beku per level: tidak di-generate ulang karena ada data baru.
-2. Beri status tiap topik target: Known (punya note), Weak (cuma disinggung di note lain), atau Belum (tidak muncul). Gap = Weak + Belum.
+2. Beri status tiap topik target: Known (punya note), Weak (cuma disinggung di note lain), atau Belum (tidak muncul). Gap = Weak + Belum. Definisinya ada di `SCHEMA.md` § skill-map.md format dan dipakai juga oleh UC5.
 3. Beri jawaban sesuai jenis pertanyaan:
    - **Roadmap:** tabel Known / Weak / Belum, rekomendasi personal, update `weak-topics.md`.
    - **Role fit:** tabel kecocokan role dalam bentuk X/Y topik, 2 role paling cocok dan 2 paling jauh, beserta gap masing-masing.
@@ -263,7 +264,7 @@ Satu folder per sumber belajar, berisi satu atau lebih note per sub-topik. Setia
 - ✅ Sumber mentah (link, PDF, artikel) masuk ke `raw/inbox/`, diproses, lalu dipindah ke `raw/articles/` dengan nama `YYYY-MM-DD-nama.md` setelah note tertulis, dan tercatat di `raw/_index.md`. Inbox kosong berarti semua sudah diproses.
 - ✅ Note ditulis di `wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama>/` dengan `type: learning`.
 - ✅ `sources` merujuk ke `igrow/raw/articles/...`, bukan ke inbox.
-- ✅ Body memakai template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also.
+- ✅ Body memakai template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also. Note lama yang ditaut mendapat link balik (SCHEMA § Link), dan nama file note unik di seluruh `wiki/`.
 - ✅ Balasan berisi path note dan path sumber di `raw/articles/`, tag + alasan, dan rangkuman per note (inti + 2–4 poin yang dipelajari). Isi note lengkap hanya kalau diminta.
 - ✅ Data terlarang (`AGENTS.md` § DILARANG KERAS) diredaksi sebelum sumber masuk `raw/inbox/`, dan note diperiksa lagi di self-check (termasuk title dan nama file).
 - ✅ Index dan log diperbarui (op `ingest`).

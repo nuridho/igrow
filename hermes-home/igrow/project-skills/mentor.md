@@ -8,12 +8,7 @@ Dipakai kalau user tanya roadmap belajar, kelemahan, "harus belajar apa", atau "
 1. Target: `igrow/wiki/roadmap/skill-map.md`. Belum ada → generate dulu (aturan di SCHEMA "skill-map.md format"). Sudah ada → pakai apa adanya; skill map beku per level, data baru BUKAN alasan generate ulang.
 2. Bukti: mulai dari `igrow/_index.md`, lalu note di `careers/*/knowledge/` (termasuk `incidents/`), `careers/*/lessons-learned/`, `self-development/`.
 
-Status tiap topik target (aturan "punya note" di SCHEMA):
-- Known = ada note yang membahas topik itu
-- Weak = cuma disinggung di note lain (mis. incident), belum ada note sendiri
-- Belum = tidak muncul sama sekali
-
-Gap = Weak + Belum.
+Status tiap topik target (Known / Weak / Belum) dan Gap: definisi di SCHEMA § skill-map.md format (sama dengan yang dipakai career review).
 → OUTPUT: "Gap = <topik> (<Weak|Belum>: <file bukti atau 0 note>)" sebelum tulis tabel/rekomendasi.
 
 ## Output

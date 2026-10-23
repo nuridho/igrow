@@ -1,15 +1,15 @@
 # To-Do — iGROW (hermes-home)
 
 > Fokus: hanya item yang menyentuh `hermes-home/` (AGENTS.md, SCHEMA, project-skills, struktur `igrow/`). Item VPS, docs, testing, web, dan migrasi dihapus 2026-10-16; jejaknya ada di git history dan `05-roadmap.md`.
-> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W36 / I14 / A11.
+> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W37 / I14 / A11.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres. Item `[x]` Act-nya lampau, Impact-nya sudah berlaku.
 > Isi list = bug + kontradiksi di runtime. Kosmetik sengaja tidak dicatat. `FIN` di item lama = `archive/iGROW_FINAL.md`.
 > Item selesai → centang di sini + catat di [`backlog.md`](backlog.md).
 
 ## Terbuka
 
-- **W27–W32, W34, I11–I13**: sisa temuan review runtime 2026-10-22. Kerjakan W27–W30 sebelum cron dibuat (kena di run cron pertama). Detail di § Review runtime.
-- **W35**: temuan review ulang 2026-10-23 (lint belum memeriksa path markdown di dual-link). Paling hemat dikerjakan bareng I12 (sama-sama `lint.md`). Detail di § Review ulang.
+- **W27–W32, I11, I12**: sisa temuan review runtime 2026-10-22. Kerjakan W27–W30 sebelum cron dibuat (kena di run cron pertama). Detail di § Review runtime.
+- **W35**: temuan review ulang 2026-10-23 (lint belum memeriksa path markdown di dual-link dan slug ganda). Paling hemat bareng I12 (sama-sama `lint.md`). Detail di § Review ulang.
 
 ## Audit runtime (2026-10-10)
 
@@ -116,8 +116,8 @@
 - [ ] **W28** `daily-briefing.md:9` hanya berbunyi "web research berita terbaru". Tidak ada kewajiban menyebut sumber dan tidak ada fallback kalau search gagal atau hasilnya kosong, sehingga agent bisa mengisi briefing dari ingatan model, termasuk CVE-ID yang tidak ada.
   - Act: step 1 → "berita terbit ≤ 48 jam terakhir". Tiap item di format + baris `Sumber: <URL>` (contoh eksekusi ikut diperbarui). CVE-ID hanya ditulis kalau tercantum di sumber. Kurang dari 5 item yang bersumber → kirim yang ada saja, jangan ditambal. Search gagal/kosong → balas "Briefing <tanggal> gagal: <alasan>", jangan isi dari ingatan. Prasyarat VPS (roadmap M2.2): toolset web aktif untuk platform `cron` di `hermes tools`.
   - Impact: setiap item bisa dicek ke sumbernya; tidak ada berita atau CVE karangan. Evaluasi OQ-07 (2 minggu) punya data sumber untuk dinilai.
-- [ ] **W29** `SCHEMA.md:104`: level tidak tertulis di `Role` → "tanya user 1x". Aturan ini ikut berlaku di career review yang dipicu cron, padahal sesi cron tidak bisa menerima jawaban: agent berhenti di pertanyaan (laporan tidak ditulis) atau menebak level.
-  - Act: `career-review.md` + 1 aturan (tanpa syarat "dipicu cron", karena dokumentasi Hermes tidak menyebut sesi cron diberi tahu bahwa tidak ada yang menjawab): "Prosedur ini tidak bertanya ke user. Level tidak tertulis di `Role` → jangan tebak: lewati Skill Inventory dan pembuatan skill map baru (Role Fit tetap jalan kalau skill map sudah ada), tulis 'Level belum tertulis di about.md' di laporan." Override ini disebut juga di SCHEMA:104 ("kecuali career review"). Di chat, user tinggal melengkapi `about.md` lalu minta review ulang.
+- [ ] **W29** `SCHEMA.md:107`: level tidak tertulis di `Role` → "tanya user 1x". Aturan ini ikut berlaku di career review yang dipicu cron, padahal sesi cron tidak bisa menerima jawaban: agent berhenti di pertanyaan (laporan tidak ditulis) atau menebak level.
+  - Act: `career-review.md` + 1 aturan (tanpa syarat "dipicu cron", karena dokumentasi Hermes tidak menyebut sesi cron diberi tahu bahwa tidak ada yang menjawab): "Prosedur ini tidak bertanya ke user. Level tidak tertulis di `Role` → jangan tebak: lewati Skill Inventory dan pembuatan skill map baru (Role Fit tetap jalan kalau skill map sudah ada), tulis 'Level belum tertulis di about.md' di laporan." Override ini disebut juga di SCHEMA:107 ("kecuali career review"). Di chat, user tinggal melengkapi `about.md` lalu minta review ulang.
   - Impact: career review otomatis selalu menghasilkan laporan; level yang hilang terlihat di laporan, bukan ditebak.
 - [ ] **W30** `career-review.md:22` menamai laporan `career-review-<YYYY>-Q<n>.md` tanpa menyebut tahun mana yang dipakai. Cron 1 Januari 2027 mereview Q4 2026, tapi agent bisa memakai tahun run dan menulis `career-review-2027-Q4.md`.
   - Act: step 5 → "`<YYYY>-Q<n>` = tahun dan kuartal yang direview, bukan tanggal run (cron 1 Jan 2027 → `career-review-2026-Q4.md`). Review manual di tengah kuartal = kuartal berjalan; file yang sama ditimpa run berikutnya untuk kuartal itu." Step 1 "laporan terakhir" → "laporan kuartal sebelumnya (Q<n-1>)", supaya sama dengan step 4 dan tidak membandingkan dengan laporan manual kuartal yang sama.
@@ -132,9 +132,10 @@
   - Act: step 2 + "pindahkan file raw ke `igrow/raw/articles/` sebelum menulis note (`sources` menunjuk ke sana)"; step 6 → "update `raw/_index.md` (kalau ada file raw) + `wiki/_index.md` + master + log.md (op: ingest)". Celah yang sama di `capture-experience.md` step 6: screenshot ke `raw/assets/` juga tidak dicatat → + "`raw/_index.md` kalau ada screenshot".
   - Impact: semua file `raw/` (artikel dan screenshot) tercatat di index terdekat; "inbox kosong = sudah diproses" bisa dipercaya (FR-10).
   - Tambahan saat dikerjakan: pemindahan inbox → articles digeser ke step 6 (setelah note tertulis, bukan sebelum), supaya "inbox kosong = sudah diproses" benar juga kalau sesi gagal di tengah; `sources` sejak awal menunjuk path tujuan di `articles/`. Step 1 + "tidak ada sumber mentah → `sources: []`". Contoh study melanggar aturan sendiri (input tanpa materi tapi ada file raw) → input sekarang membawa materi, + baris Index. Pemeriksaan orphan untuk `raw/` dititipkan ke I12. PRD 02 UC1/UC4 + test-flow 2.1 diselaraskan.
-- [ ] **W34** Status Known / Weak / Belum hanya didefinisikan di `mentor.md:12-14`, tapi `career-review.md:13` ikut memakainya (Weak = "Weak/Belum"). Prompt cron UC5 hanya menunjuk `career-review.md`, jadi definisinya tidak terbaca di sesi itu.
+- [x] **W34** Status Known / Weak / Belum hanya didefinisikan di `mentor.md:12-14`, tapi `career-review.md:13` ikut memakainya (Weak = "Weak/Belum"). Prompt cron UC5 hanya menunjuk `career-review.md`, jadi definisinya tidak terbaca di sesi itu.
   - Act: pindahkan definisi ke `SCHEMA.md` § skill-map.md format (di bawah aturan "Topik punya note"); `mentor.md` dan `career-review.md` merujuk ke sana.
   - Impact: UC2 dan UC5 memberi status yang sama untuk topik yang sama (NFR-05); satu aturan satu sumber.
+  - Tambahan saat dikerjakan: definisi dipertegas, pencarian hanya di note naratif `careers/` + `self-development/`. Tanpa batas ini semua topik terhitung Weak, karena `skill-map.md` memuat semua nama topik target. Gap = Weak + Belum ikut pindah ke SCHEMA. `career-review.md` step 2 "Weak (= Gap)" (baris yang sama, rujukan W30 `:22` aman). PRD 02 UC2 merujuk SCHEMA.
 - [x] **A10** Self-check sebelum tulis (`capture-experience.md:46`, `study.md:18`) hanya memeriksa format. Privasi, aturan yang paling fatal kalau dilanggar, tidak ikut dicek, padahal cerita incident dan bagian `## Contoh` (command, config) paling sering membawa IP dan hostname.
   - Act: self-check + 1 poin: "Bebas data DILARANG KERAS (`AGENTS.md`)? Periksa terutama Symptom, Investigation, dan Contoh; ada → redact dulu." `study.md` step 1 + "redact sebelum dump ke `raw/inbox/`", karena `raw/` immutable dan step 1 terjadi sebelum self-check.
   - Impact: privasi diperiksa di checkpoint yang sama dengan format, sebelum file ditulis (NFR-02), tidak baru ketahuan saat cek privasi kuartalan.
@@ -153,17 +154,22 @@
 - [ ] **I12** Lint belum memeriksa dua hal yang murah dicek: file yang tertinggal di `raw/inbox/` (indikator "inbox kosong = sudah diproses" tidak pernah dipantau) dan pola data terlarang. Cek privasi saat ini hanya manual per kuartal (`05-roadmap.md` § 5).
   - Act: `lint.md` + cek 6: file di `raw/inbox/` selain `.gitkeep` = belum diproses. + cek 7: cari pola IPv4 dan penugasan nilai (`password`/`token`/`secret`/`api_key` diikuti `:` atau `=` lalu isi) di `raw/` dan `wiki/` saja (bukan `project-skills/`/SCHEMA yang memang menyebut kata itu); + cek 1 (orphan) ikut memeriksa `raw/articles/` dan `raw/assets/` terhadap `raw/_index.md` (aturan W33); laporkan path + nomor baris saja, JANGAN kutip nilainya (laporan lint dikirim ke Telegram). Pola penugasan, bukan kata lepas, supaya note belajar soal JWT token tidak muncul tiap minggu; sisa false positive (mis. contoh CIDR) boleh, karena lint hanya melapor. Prasyarat VPS: toolset file/terminal aktif untuk platform `cron`. AC PRD 02 M1 ("lima pemeriksaan") ikut diperbarui.
   - Impact: kebocoran data ketahuan paling lambat seminggu, bukan sekuartal; sumber yang lupa diproses ikut terlihat.
-- [ ] **I13** Slug note belum diwajibkan unik. Dengan beberapa career, nama file yang sama (mis. `disk-full.md` di career-1 dan career-2) membuat `[[slug]]`, `contradictions`, dan penanda placeholder (W23) bisa menunjuk dua file.
+- [x] **I13** Slug note belum diwajibkan unik. Dengan beberapa career, nama file yang sama (mis. `disk-full.md` di career-1 dan career-2) membuat `[[slug]]`, `contradictions`, dan penanda placeholder (W23) bisa menunjuk dua file.
   - Act: SCHEMA § Link + 1 baris: "Slug = nama file tanpa `.md`, kebab-case, unik di seluruh `wiki/`. Cek `_index.md` dulu; bentrok → tambah konteks (mis. `disk-full-career-2`)."
   - Impact: setiap wikilink menunjuk tepat satu file; cek broken wikilink di lint tidak ambigu.
+  - Tambahan saat dikerjakan: incident memakai `YYYY-MM-DD-<slug>` dengan tanggal kejadian (keputusan owner D-29; incident bisa terulang). File data dikecualikan dari aturan unik, karena `about.md`/`skills.md` memang ada di tiap career. Slug yang sudah dipakai: topik sama → edit note itu (cerita lanjutan), topik beda → konteks pembeda, tercatat sebagai placeholder → itu note yang ditunggu. Contoh capture + nama file bertanggal. Cek slug ganda di lint dititipkan ke W35. Test-flow 1.1 kini sesuai runtime; catatan roadmap M2.3 soal nama incident dihapus. Rujukan W29 `SCHEMA.md:104` → `:107`.
 
 ## Review ulang (2026-10-23)
 
-> Celah yang ketemu saat mereview hasil pengerjaan W22–W26 dan I8.
+> Celah yang ketemu saat mereview hasil pengerjaan W22–W26 dan I8, dan dari pertanyaan owner soal jumlah link per note.
 
 - [ ] **W35** Lint cek 2 hanya memeriksa `[[slug]]`. Bagian markdown dual-link `(../path/slug.md)` tidak dicek di mana pun, padahal path relatif mudah salah hitung `../`, dan aturan placeholder W23 ("path beda → perbaiki link `(...)`") bergantung padanya. Link rusak baru ketahuan saat dibuka di GitHub (`igrow-backup`) atau dashboard Phase 4.
-  - Act: `lint.md` cek 2 + "path `(...)` di dual-link harus menunjuk file yang ada (relatif dari file note); target placeholder → path sama dengan baris placeholder di `_index.md`". Contoh output lint + 1 baris temuan path.
+  - Act: `lint.md` cek 2 + "path `(...)` di dual-link harus menunjuk file yang ada (relatif dari file note); target placeholder → path sama dengan baris placeholder di `_index.md`". Contoh output lint + 1 baris temuan path. + cek slug ganda: dua note naratif dengan nama file sama di `wiki/` = temuan (aturan I13; file data seperti `about.md`/`skills.md` dilewati).
   - Impact: dual-link benar di kedua sisi, jadi wiki tetap bisa dinavigasi tanpa Obsidian (G5: knowledge portable).
+- [x] **W36** SCHEMA § Link hanya mengatur link keluar dari note baru (min 2). Tidak ada aturan menambah link balik di note lama, jadi note lama membeku dengan link saat pertama ditulis. Contoh: note A (Januari) menaut ke B dan C; note D (Juni) yang sangat terkait menaut ke A, tapi A tidak pernah menaut ke D. Membuka note lama tidak membawa ke pengetahuan yang lebih baru, padahal wiki dipakai buat belajar ulang.
+  - Act: SCHEMA § Link + 1 aturan: "Note baru menaut ke note lama yang sudah ada → tambah link balik (dual-link) di See Also note lama itu kalau belum ada; `updated:` note lama dan kolom Updated di `_index.md` ikut diganti; cukup dicatat di entri log operasi yang sama." Batasi ke note yang memang ditaut note baru, bukan scan seluruh wiki. Placeholder yang baru ditulis ikut aturan ini (note penautnya sudah menaut, cukup dicek). Step 6 `capture-experience.md` + `study.md` merujuk ke aturan ini; contoh few-shot dicek ulang dari sudut pandang model (bagian file vs index vs balasan) sesuai CLAUDE.md aturan 6. Balasan step 7 menyebut note lama yang ikut diperbarui.
+  - Impact: hubungan antar-note dua arah; membuka note lama membawa ke note yang lebih baru, jadi wiki makin berguna untuk belajar ulang seiring bertambahnya isi.
+  - Tambahan saat dikerjakan: beda dari Act, link balik **tidak** mengubah `updated:` note lama maupun barisnya di index. Career review membaca `updated` untuk Pola kuartal (tag paling sering di note yang diupdate), jadi note yang sering ditaut akan terlihat aktif padahal isinya tidak berubah. Jejaknya cukup di subjek log (`+ link balik: <slug>`). Placeholder yang ditulis: page penautnya masuk See Also note baru (penaut sudah menaut, jadi dua arah). Contoh capture kini memperlihatkan 1 placeholder + 1 link balik + baris log, dengan label `[EDIT NOTE LAMA]` dan `[LOG]`; contoh study + baris `Link balik ditambahkan di:`. PRD 02 AC UC1/UC4 + test-flow 1.6.
 
 ## Critical
 

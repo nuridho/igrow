@@ -50,6 +50,7 @@ Skala: **H** (tinggi), **M** (sedang), **L** (rendah).
 | D-26 | 2026-10-16 | Topik dihitung "punya note" kalau ada note yang judul atau Ringkasan-nya membahas topik itu. Role Fit disimpan sebagai daftar topik, persentasenya dihitung saat dipakai. | Pembilang skill inventory dan role fit bisa diaudit sampai ke file. | Penilaian bebas oleh LLM. |
 | D-27 | 2026-10-23 | Backup selalu lapor ke Telegram tiap run: berhasil, tidak ada perubahan, atau gagal. | Owner ingin konfirmasi setiap run. Tidak ada pesan di hari backup jadi tanda cron/Hermes mati. Tidak perlu trik `[SILENT]`. | Diam kalau tidak ada perubahan (`[SILENT]`, W22 lama). |
 | D-28 | 2026-10-23 | Taxonomy tag dipindah ke `igrow/taxonomy.md`, agent-owned, tidak ditimpa deploy (W26). | Agent boleh langsung memakai tag yang disetujui user, tanpa menunggu deploy, dan tag itu tidak hilang saat rsync. Deploy jadi 2 langkah (exclude + `--ignore-existing`) supaya file itu tetap sampai ke VPS. | Agent tidak edit SCHEMA (tag baru baru bisa dipakai setelah deploy); tarik SCHEMA dari VPS sebelum deploy (gampang lupa). |
+| D-29 | 2026-10-23 | Nama file incident = `YYYY-MM-DD-<slug>.md` (tanggal kejadian); knowledge, lesson, learning = slug topik saja. | Incident bisa terulang (CPU spike berkali-kali), jadi nama unik otomatis dan folder `incidents/` urut kronologis. Sesuai harapan test-flow 1.1. | Slug biasa + konteks pembeda karangan agent (mis. `cpu-spike-logrotate-2`). |
 
 Tanggal "—" berarti keputusan diambil sebelum ada pencatatan tanggal.
 
