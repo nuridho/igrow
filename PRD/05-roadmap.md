@@ -24,7 +24,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 - [x] Rapikan `SCHEMA.md`: duplikat kepemilikan, definisi skill inventory (W1), skill map sebagai `type: data` (W2), dan SCHEMA jadi wajib. Selesai 2026-10-16 (W9).
 - [x] Kerjakan item todo hasil review PRD 2026-10-17 (W22–W26, I8). Selesai 2026-10-23.
-- [ ] Kerjakan item todo hasil review runtime 2026-10-22 (W27–W35, I9–I13; A10 selesai 2026-10-23) sebelum deploy ulang, supaya cukup sekali deploy.
+- [ ] Kerjakan item todo hasil review runtime 2026-10-22 (sisa: W27–W32, W34, W35, I11–I13) sebelum deploy ulang, supaya cukup sekali deploy.
 - [ ] Deploy ulang `hermes-home/` ke VPS (2 langkah rsync, PRD 04 §7): contoh few-shot yang sudah diperbaiki (C2), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`). Setelah deploy, pastikan `igrow/taxonomy.md` ada di VPS (tersalin oleh langkah 2).
 - [ ] Hapus sisa session-export di VPS: cron job (kalau sudah dibuat), file prosedurnya, dan folder `log/sessions/archive/`.
 

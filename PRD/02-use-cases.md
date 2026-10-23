@@ -94,8 +94,9 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 - ✅ Frontmatter lengkap sesuai SCHEMA, tag hanya dari taxonomy, `sources` berisi `[]` atau path `igrow/raw/...`.
 - ✅ Bagian See Also berisi minimal 2 dual-link.
 - ✅ Nama client, IP, hostname, dan credential tidak muncul di file mana pun, termasuk title dan nama file. Self-check sebelum tulis ikut memeriksanya.
-- ✅ Balasan Hermes menyebut career aktif dan alasan pemilihan type atau folder.
-- ✅ Setelah menulis: `wiki/_index.md`, master `_index.md` (Total pages + Last updated), dan `log.md` (op `ingest`/`update`) ikut diperbarui.
+- ✅ Balasan berisi path file, career aktif + alasan pemilihan type/folder, rangkuman 3–5 poin isi note (incident: kejadian / penyebab / tindakan / pelajaran), tag, link placeholder baru, dan jenis data yang diredaksi. Isi note lengkap hanya kalau diminta.
+- ✅ Waktu relatif ("kemarin", "minggu lalu") ditulis sebagai tanggal absolut. Tanggal kejadian incident ada di kalimat pertama Ringkasan; kalau tidak pasti, ditulis "sekitar <tanggal>".
+- ✅ Setelah menulis: `wiki/_index.md` (+ `raw/_index.md` kalau ada screenshot), master `_index.md` (Total pages + Last updated), dan `log.md` (op `ingest`/`update`) ikut diperbarui.
 - ✅ Kalau cerita baru bertentangan dengan note lama: Hermes bertanya sekali, field `contradictions` diisi, dan note lama tidak dihapus.
 - ✅ Kalau tidak ada tag yang cocok (< 60%): Hermes bertanya sekali dengan 3 opsi terdekat.
 - ✅ Cerita lanjutan tentang incident yang sama memperbarui file lama (`updated:` diganti, `created:` tetap), bukan membuat duplikat.
@@ -259,11 +260,11 @@ wiki/self-development/Bootcamp/kodekloud-systemd/
 Satu folder per sumber belajar, berisi satu atau lebih note per sub-topik. Setiap note memakai template lengkap SCHEMA. Note tidak dipecah per jenis isi seperti `concepts.md` / `commands.md` / `references.md`, karena Contoh dan Referensi sudah menjadi section di setiap note ([D-20](06-risks-decisions.md#2-decision-log)).
 
 **Acceptance criteria:**
-- ✅ Sumber mentah (link, PDF, artikel) masuk ke `raw/inbox/`, diproses, lalu dipindah ke `raw/articles/` dengan nama `YYYY-MM-DD-nama.md`. Inbox kosong berarti semua sudah diproses.
+- ✅ Sumber mentah (link, PDF, artikel) masuk ke `raw/inbox/`, diproses, lalu dipindah ke `raw/articles/` dengan nama `YYYY-MM-DD-nama.md` setelah note tertulis, dan tercatat di `raw/_index.md`. Inbox kosong berarti semua sudah diproses.
 - ✅ Note ditulis di `wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama>/` dengan `type: learning`.
 - ✅ `sources` merujuk ke `igrow/raw/articles/...`, bukan ke inbox.
 - ✅ Body memakai template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also.
-- ✅ Hermes menyebut tag yang dipilih beserta alasannya.
+- ✅ Balasan berisi path note dan path sumber di `raw/articles/`, tag + alasan, dan rangkuman per note (inti + 2–4 poin yang dipelajari). Isi note lengkap hanya kalau diminta.
 - ✅ Data terlarang (`AGENTS.md` § DILARANG KERAS) diredaksi sebelum sumber masuk `raw/inbox/`, dan note diperiksa lagi di self-check (termasuk title dan nama file).
 - ✅ Index dan log diperbarui (op `ingest`).
 

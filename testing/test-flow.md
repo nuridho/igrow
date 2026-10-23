@@ -76,6 +76,8 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 - **NEGATIF TEST:** `grep -ri "cimb\|PROD-APP-03\|10.20.30.40" igrow/` → 0 hasil
 - `wiki/_index.md` + master `igrow/_index.md` ke-update, `log.md` ada entry `## [tanggal] ingest | ...`
 - Ini note pertama, jadi target See Also pasti belum ada → tiap target tercatat `| <path> | (placeholder) | - | - |` di `wiki/_index.md`, tidak masuk master
+- "Minggu lalu" → Ringkasan diawali tanggal kejadian ("sekitar <tanggal>"), bukan kata "minggu lalu"; `created` = tanggal tulis
+- Balasan: path file, career aktif + alasan, rangkuman (kejadian / penyebab / tindakan / pelajaran), tags, jenis data yang diredaksi (tanpa menyebut nilainya). Bukan isi note lengkap
 - `career-1-berca-sysadmin/skills.md` terisi/ke-update
 **Test:** `ls igrow/wiki/careers/career-1-berca-sysadmin/knowledge/incidents/ && cat igrow/wiki/careers/career-1-berca-sysadmin/skills.md`
 
@@ -254,8 +256,9 @@ systemctl status nginx && journalctl -u nginx -b -p err
 - Sumber mentah → `raw/inbox/YYYY-MM-DD-kodekloud-systemd.md` → diproses → `raw/articles/YYYY-MM-DD-kodekloud-systemd.md` (immutable)
 - Note → `wiki/self-development/Bootcamp/kodekloud-systemd/`, `type: learning`, `sources: [igrow/raw/articles/...]`
 - Body ikut template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also (min 2 dual-link)
-- _index + log (op: ingest)
-**Test:** `ls igrow/raw/articles/ && head -8 igrow/wiki/self-development/Bootcamp/kodekloud-systemd/*.md`
+- `raw/_index.md` + `wiki/_index.md` + master + log (op: ingest); `raw/inbox/` kosong lagi setelah selesai
+- Balasan: path note + path sumber, tag + alasan, rangkuman per note (inti + poin yang dipelajari)
+**Test:** `ls igrow/raw/inbox/ igrow/raw/articles/ && cat igrow/raw/_index.md && head -8 igrow/wiki/self-development/Bootcamp/kodekloud-systemd/*.md`
 
 ## 2.2 /study tanpa sumber
 **Prompt:**

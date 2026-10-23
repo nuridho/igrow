@@ -18,6 +18,24 @@ Format entri:
 
 ---
 
+## [2026-10-23] Label tujuan di contoh eksekusi capture & study
+- **Apa:** contoh eksekusi `capture-experience.md` dan `study.md` dipecah dengan label tujuan: `[PESAN USER — masuk dari Telegram]`, `[FILE DITULIS — <path>; tidak dikirim ke chat]` / `[FILE & INDEX YANG DITULIS]`, `[EDIT INDEX — ...]`, `[BALASAN KE USER — dikirim ke Telegram; hanya bagian ini yang terlihat user]`, + 1 kalimat pengantar ("yang dikirim ke chat HANYA bagian [BALASAN KE USER]"). Label "Input/Output/Balasan" lama dihapus. Contoh study sekarang dibungkus blok kode seperti contoh capture. Step 7 kedua file: "balasan bukan bagian file note". Label pakai `[...]`, bukan heading `##`, supaya tidak tercampur dengan heading di dalam note.
+- **Kenapa:** masukan owner: label "Output" dan "Balasan" bisa membuat model menempel isi note ke chat atau menulis rangkuman ke file. Contoh prosedur lain ikut dicek: `career-review.md` punya risiko yang sama begitu I11 menambah balasan Telegram → Act I11 di `todo.md` + label tujuan; `mentor.md`, `daily-briefing.md`, `lint.md` aman (output contoh = pesan balasan itu sendiri).
+- **File:** `hermes-home/igrow/project-skills/capture-experience.md`, `hermes-home/igrow/project-skills/study.md`, `PRD/todo.md`, `PRD/backlog.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Balasan capture & study memuat rangkuman isi (revisi I10)
+- **Apa:** step 7 `capture-experience.md` dan `study.md` + Rangkuman dari isi note yang sudah diredaksi: capture 3–5 poin (incident: kejadian + tanggal / penyebab / tindakan / pelajaran; knowledge & lesson: inti + poin utama), study per note (1 kalimat inti + 2–4 poin, command penting boleh disebut). Blok `Balasan:` di kedua contoh eksekusi ditulis ulang (path, alasan, rangkuman, tags, placeholder, redaksi). PRD 02 AC UC1/UC4 dan test-flow 1.1/2.1 diselaraskan. Isi note lengkap tetap hanya kalau diminta.
+- **Kenapa:** masukan owner: balasan terlalu singkat, owner ingin tahu isi yang dicatat tanpa membuka file.
+- **File:** `hermes-home/igrow/project-skills/capture-experience.md`, `hermes-home/igrow/project-skills/study.md`, `PRD/02-use-cases.md`, `PRD/todo.md`, `PRD/backlog.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Alur raw study, tanggal kejadian, isi balasan (W33, I9, I10)
+- **Apa:** W33: `study.md` step 6 memindahkan file raw `inbox/` → `articles/` setelah note tertulis lalu meng-update `raw/_index.md`; `sources` menunjuk path tujuan; tanpa sumber mentah → `sources: []`; contoh study diperbaiki (input membawa materi, + baris Index). `capture-experience.md` step 6 + `raw/_index.md` kalau ada screenshot. I9: capture step 2 + aturan waktu relatif → tanggal absolut ("sekitar <tanggal>" kalau tidak pasti), tanggal kejadian di kalimat pertama Ringkasan; contoh Ringkasan + baris index diawali 2026-09-19. I10: step 7 "Balas ringkas" di kedua file (career aktif/topik + alasan, path, tags, placeholder baru, jenis data yang diredaksi; isi note hanya kalau diminta) + blok `Balasan:` di kedua contoh. PRD 02 AC UC1/UC4, test-flow 1.1 + 2.1, I12 Act (+ orphan `raw/`). Rujukan baris todo terbuka aman (W31 `:16`, W32 `:10` di atas baris yang disisipi).
+- **Kenapa:** W33, I9, I10.
+- **File:** `hermes-home/igrow/project-skills/study.md`, `hermes-home/igrow/project-skills/capture-experience.md`, `PRD/02-use-cases.md`, `PRD/05-roadmap.md`, `PRD/todo.md`, `PRD/backlog.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
 ## [2026-10-23] Note tetap jelas konteks & flow-nya setelah redaksi
 - **Apa:** `AGENTS.md` cara redact + 1 poin: placeholder konsisten (nilai sama → placeholder sama, beda → beda nama) dan info non-sensitif (OS, versi, service, port, environment) tetap ditulis. SCHEMA § Body note: tiap command di Contoh diberi komentar (apa & kenapa) dan urut sesuai flow; Investigation incident ditulis per langkah (cek apa → hasil → kenapa lanjut). Few-shot capture: Investigation jadi flow (jumlah baris tetap). PRD 03 §3.1 + 1 baris Salah/Benar. Semua rujukan baris todo tetap (edit di baris yang sama atau di akhir `AGENTS.md`).
 - **Kenapa:** masukan owner: redaksi boleh, tapi konteks dan flow harus tetap jelas karena note dipakai buat belajar ulang.
