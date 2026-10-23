@@ -18,7 +18,7 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    Period: <tanggal mulai, YYYY-MM-DD> s/d
    Jobdesc: <1-3 kalimat>
    ```
-5. Tulis `skills.md` kosong (placeholder untuk UC1 nanti).
+5. Tulis `skills.md` kosong (diisi saat capture).
 6. Career baru = aktif (about.md tanpa tanggal selesai).
 7. Tutup: update wiki/_index.md + log.md (op: update), lalu balas: folder career baru + period career lama yang ditutup. Tanggal terakhir diisi otomatis (user skip) → sebut di balasan bahwa itu sehari sebelum tanggal mulai dan bisa dikoreksi.
 
@@ -30,7 +30,7 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    - Incident (ada kejadian spesifik: symptom + investigation + result) → `igrow/wiki/careers/career-N/knowledge/incidents/YYYY-MM-DD-<slug>.md` (tanggal kejadian; aturan slug di SCHEMA § Link)
    - Knowledge umum (SOP, cara kerja, setup — tanpa kejadian) → `igrow/wiki/careers/career-N/knowledge/<slug>.md` (FLAT, JANGAN bikin subfolder per topik — topik lewat tags)
    - Lesson (pelajaran/refleksi tanpa satu kejadian spesifik, mis. "saya baru sadar …") → `igrow/wiki/careers/career-N/lessons-learned/<slug>.md`. Pelajaran dari incident cukup di `## Lesson Learned` note incident itu, JANGAN dibuat note lesson terpisah.
-   - Skill terpakai → update `igrow/wiki/careers/career-N/skills.md`
+   - Skill yang terlihat di cerita → tambah ke `igrow/wiki/careers/career-N/skills.md` (format SCHEMA: 1 baris per tag; yang sudah tercatat tidak ditulis ulang)
    - Screenshot → `igrow/raw/assets/YYYYMMDD-deskripsi.png` (WAJIB redact); rujuk dari note via `sources: [igrow/raw/assets/...]` + `![](../../raw/assets/...)` di body
    - Cerita lanjutan untuk incident/knowledge yang sudah ada (cek `_index.md`) → EDIT file lama: `updated:` diganti, `created:` tetap, op `update`. JANGAN bikin file baru.
    - Waktu relatif ("kemarin", "minggu lalu") → tanggal absolut, dihitung dari tanggal cerita; tidak pasti → "sekitar <tanggal>", jangan dibuat seolah pasti. Incident: tanggal kejadian di kalimat pertama `## Ringkasan` (`created` = tanggal tulis, bukan tanggal kejadian).
@@ -50,8 +50,8 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    - Tags ⊂ `igrow/taxonomy.md`?
    - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
    - Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
-6. Tutup dgn aturan wajib SCHEMA: tambah link balik di note lama yang ditaut (SCHEMA § Link), update wiki/_index.md (+ baris placeholder kalau ada), `raw/_index.md` (kalau ada screenshot), log.md (op: ingest/update; subjek ikut menyebut note lama yang dapat link balik).
-7. Balas ke user (format bagian [BALASAN KE USER] di Contoh Eksekusi; balasan bukan bagian file note): path file + career aktif + alasan type/folder (baris `→ OUTPUT` + reasoning step 2); **Rangkuman** 3–5 poin dari isi note yang sudah diredaksi (incident: kejadian + tanggal / penyebab / tindakan / pelajaran; knowledge & lesson: inti + poin utama); tags, link placeholder baru (kalau ada), note lama yang dapat link balik (kalau ada), jenis data yang diredaksi (sebut jenisnya, bukan nilainya). Isi note lengkap hanya kalau user minta.
+6. Tutup dgn aturan wajib SCHEMA: tambah link balik di note lama yang ditaut (SCHEMA § Link), update wiki/_index.md (baris note baru, kolom Updated baris `skills.md` kalau berubah, + baris placeholder kalau ada), `raw/_index.md` (kalau ada screenshot), log.md (op: ingest/update; subjek ikut menyebut note lama yang dapat link balik).
+7. Balas ke user (format bagian [BALASAN KE USER] di Contoh Eksekusi; balasan bukan bagian file note): path file + career aktif + alasan type/folder (baris `→ OUTPUT` + reasoning step 2); **Rangkuman** 3–5 poin dari isi note yang sudah diredaksi (incident: kejadian + tanggal / penyebab / tindakan / pelajaran; knowledge & lesson: inti + poin utama); tags, skill baru di `skills.md` (kalau ada), link placeholder baru (kalau ada), note lama yang dapat link balik (kalau ada), jenis data yang diredaksi (sebut jenisnya, bukan nilainya). Isi note lengkap hanya kalau user minta.
 
 ## Larangan
 Ikut DILARANG KERAS di AGENTS.md — redact data client sebelum nulis.
@@ -62,8 +62,8 @@ Tanya klarifikasi singkat (1x), catat apa adanya, lalu isi field `contradictions
 di frontmatter (SCHEMA). Lesson lama TIDAK dihapus — dua-duanya hidup, kontradiksi terdokumentasi.
 
 ## Contoh Eksekusi
-Blok di bawah dibagi per tujuan (lihat label `[...]`): pesan masuk, file yang ditulis, note lama yang diedit, index, log, dan balasan. Yang dikirim ke chat HANYA bagian [BALASAN KE USER]: isi file tidak ditempel ke chat, dan rangkuman balasan tidak ditulis ke file.
-Kondisi wiki sebelum pesan ini: `cpu-spike-triage` sudah ada, `backup-scheduling` belum. Polanya berlaku untuk note apa pun: target See Also yang sudah ada → tambah link balik di note itu; yang belum ada → baris placeholder di index. Nama note di contoh hanya ilustrasi.
+Blok di bawah dibagi per tujuan (lihat label `[...]`): pesan masuk, file yang ditulis, note lama yang diedit, file data `skills.md`, index, log, dan balasan. Yang dikirim ke chat HANYA bagian [BALASAN KE USER]: isi file tidak ditempel ke chat, dan rangkuman balasan tidak ditulis ke file.
+Kondisi wiki sebelum pesan ini: `cpu-spike-triage` sudah ada, `backup-scheduling` belum, dan `skills.md` career aktif baru berisi `linux: cari proses pemakan CPU (top)`. Polanya berlaku untuk note apa pun: target See Also yang sudah ada → tambah link balik di note itu; yang belum ada → baris placeholder di index. Nama note di contoh hanya ilustrasi.
 ````
 [PESAN USER — masuk dari Telegram]
 "Kemarin server production down 2 jam. CPU 100% gara-gara backup MySQL jalan pas jam sibuk. Akhirnya matiin backup, server normal lagi."
@@ -123,9 +123,14 @@ Sesi Telegram (cerita user).
 [EDIT NOTE LAMA — wiki/careers/career-1-acme-sysadmin/knowledge/cpu-spike-triage.md (sudah ada); 1 baris link balik di See Also, `updated:` tidak diganti; tidak dikirim ke chat]
 - [[2026-09-19-mysql-backup-cpu-spike|MySQL Backup CPU Spike Incident]] ([MySQL Backup CPU Spike Incident](incidents/2026-09-19-mysql-backup-cpu-spike.md))
 
-[EDIT INDEX — baris baru di wiki/_index.md (backup-scheduling belum ada → placeholder; cpu-spike-triage sudah punya baris, tidak diubah); tidak dikirim ke chat]
+[EDIT FILE DATA — wiki/careers/career-1-acme-sysadmin/skills.md; isi sesudah diedit: skill baru ditambahkan, yang sudah ada tidak ditulis ulang; tidak dikirim ke chat]
+linux: cari proses pemakan CPU (top), cek jadwal cron (crontab -l)
+performance: jadwalkan ulang job berat ke jam off-peak (crontab)
+
+[EDIT INDEX — wiki/_index.md: 2 baris baru (incident + placeholder backup-scheduling yang belum ada); baris skills.md yang sudah ada cuma kolom Updated yang diganti; baris cpu-spike-triage tidak diubah; tidak dikirim ke chat]
 | careers/career-1-acme-sysadmin/knowledge/incidents/2026-09-19-mysql-backup-cpu-spike.md | 2026-09-19: server production down 2 jam, CPU 100% saat backup MySQL | linux, performance, incident | 2026-09-20 |
 | careers/career-1-acme-sysadmin/knowledge/backup-scheduling.md | (placeholder) | - | - |
+| careers/career-1-acme-sysadmin/skills.md | Skill terpakai di career ini | - | 2026-09-20 |
 
 [LOG — append igrow/log.md; tidak dikirim ke chat]
 ## [2026-09-20] ingest | 2026-09-19-mysql-backup-cpu-spike (+ link balik: cpu-spike-triage)
@@ -142,6 +147,7 @@ Rangkuman:
 - Pelajaran: jadwalkan job berat di luar jam sibuk; cek crontab sebelum menyalahkan aplikasi
 
 Tags: linux, performance, incident
+Skill baru di skills.md: linux: cek jadwal cron (crontab -l) · performance: jadwalkan ulang job berat ke jam off-peak (crontab)
 Link placeholder baru: backup-scheduling
 Link balik ditambahkan di: cpu-spike-triage
 Diredaksi: tidak ada

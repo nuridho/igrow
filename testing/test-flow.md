@@ -79,7 +79,7 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 - Ini note pertama, jadi target See Also pasti belum ada → tiap target tercatat `| <path> | (placeholder) | - | - |` di `wiki/_index.md`
 - "Minggu lalu" → Ringkasan diawali tanggal kejadian ("sekitar <tanggal>"), bukan kata "minggu lalu"; `created` = tanggal tulis
 - Balasan: path file, career aktif + alasan, rangkuman (kejadian / penyebab / tindakan / pelajaran), tags, jenis data yang diredaksi (tanpa menyebut nilainya). Bukan isi note lengkap
-- `career-1-berca-sysadmin/skills.md` terisi/ke-update
+- `career-1-berca-sysadmin/skills.md` terisi: 1 baris per tag (mis. `linux: cek proses pemakan CPU (top)`), dan balasan menyebut skill barunya
 **Test:** `ls igrow/wiki/careers/career-1-berca-sysadmin/knowledge/incidents/ && cat igrow/wiki/careers/career-1-berca-sysadmin/skills.md`
 
 ❌ Gagal kalau: satu pun data sensitif lolos, atau aturan wajib SCHEMA (index+log) dilewat.

@@ -95,6 +95,7 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 - ✅ Bagian See Also berisi minimal 2 dual-link. Note lama yang ditaut mendapat link balik di See Also-nya, tanpa mengubah `updated:` note lama itu.
 - ✅ Nama file note unik di seluruh `wiki/` (aturan slug di SCHEMA § Link).
 - ✅ Nama client, IP, hostname, dan credential tidak muncul di file mana pun, termasuk title dan nama file (satu pengecualian: nama client di `Vendor/Client` `about.md`, D-30). Self-check sebelum tulis ikut memeriksanya.
+- ✅ Skill yang terlihat di cerita ditambahkan ke `skills.md` career aktif (1 baris per tag, tanpa duplikat; format di SCHEMA), dan balasan menyebut skill barunya.
 - ✅ Balasan berisi path file, career aktif + alasan pemilihan type/folder, rangkuman 3–5 poin isi note (incident: kejadian / penyebab / tindakan / pelajaran), tag, link placeholder baru, note lama yang dapat link balik, dan jenis data yang diredaksi. Isi note lengkap hanya kalau diminta.
 - ✅ Waktu relatif ("kemarin", "minggu lalu") ditulis sebagai tanggal absolut. Tanggal kejadian incident ada di kalimat pertama Ringkasan; kalau tidak pasti, ditulis "sekitar <tanggal>".
 - ✅ Setelah menulis: `wiki/_index.md` (+ `raw/_index.md` kalau ada screenshot) dan `log.md` (op `ingest`/`update`) ikut diperbarui.

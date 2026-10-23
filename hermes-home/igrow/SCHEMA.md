@@ -38,7 +38,7 @@ contradictions: [slug-lain]       # opsional; HANYA slug note yang isinya berten
 ```
 - Note naratif (`knowledge`, `incident`, `lesson`, `learning`) → 7 field wajib di atas.
 - Data file (`roadmap/`, `profile/`) → `type: data`, frontmatter minimal (lihat "Data file").
-- `about.md` & `careers/*/skills.md` → plain `Key: value`, TANPA frontmatter.
+- `about.md` & `careers/*/skills.md` → plain `Key: value`, TANPA frontmatter. `skills.md`: 1 baris per tag taxonomy (selain `incident`), `<tag>: <skill> (<command kalau ada>), <skill>`; skill = kemampuan konkret yang terlihat di note career itu; yang sudah tercatat tidak ditulis ulang.
 
 ## Body note (wiki/careers/, wiki/self-development/)
 ```markdown
