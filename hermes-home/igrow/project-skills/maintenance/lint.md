@@ -32,12 +32,12 @@ data terlarang di catatan kerja — BUKAN menilai ulang isi konten.
 
 ## Fallback
 - `wiki/` dan `raw/` belum berisi apa pun selain `_index.md` dan `.gitkeep` → lapor "wiki kosong, belum ada yang di-lint" ke log + Telegram, jangan anggap error.
-- `_index.md` (master atau layer) atau `igrow/taxonomy.md` hilang → lapor sebagai temuan tersendiri ("index hilang: <path>" / "taxonomy hilang"; tanpa taxonomy, cek 4 dilewati), jangan skip cek yang lain diam-diam.
+- `_index.md` layer (`wiki/`, `raw/`, `output/`) atau `igrow/taxonomy.md` hilang → lapor sebagai temuan tersendiri ("index hilang: <path>" / "taxonomy hilang"; tanpa taxonomy, cek 4 dilewati), jangan skip cek yang lain diam-diam.
 - Script privasi tidak bisa dijalankan atau exit non-zero → temuan "cek privasi gagal: <inti pesan error>"; cek lain tetap jalan.
 
 ## Tutup
 Satu-satunya file yang ditulis lint: append 1 baris ke `igrow/log.md` (op: lint) berisi jumlah temuan per
-jenis, tanpa path. Ini bukan operasi tulis page: `_index.md` dan master tidak diubah.
+jenis, tanpa path. Ini bukan operasi tulis page: `_index.md` tidak diubah.
 Jawaban akhir = isi pesan Telegram (dikirim otomatis oleh cron; jangan pakai tool kirim pesan). Temuan privasi
 ditulis paling atas. Semua bersih → cukup "wiki sehat".
 

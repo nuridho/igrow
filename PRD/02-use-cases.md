@@ -97,7 +97,7 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 - ✅ Nama client, IP, hostname, dan credential tidak muncul di file mana pun, termasuk title dan nama file (satu pengecualian: nama client di `Vendor/Client` `about.md`, D-30). Self-check sebelum tulis ikut memeriksanya.
 - ✅ Balasan berisi path file, career aktif + alasan pemilihan type/folder, rangkuman 3–5 poin isi note (incident: kejadian / penyebab / tindakan / pelajaran), tag, link placeholder baru, note lama yang dapat link balik, dan jenis data yang diredaksi. Isi note lengkap hanya kalau diminta.
 - ✅ Waktu relatif ("kemarin", "minggu lalu") ditulis sebagai tanggal absolut. Tanggal kejadian incident ada di kalimat pertama Ringkasan; kalau tidak pasti, ditulis "sekitar <tanggal>".
-- ✅ Setelah menulis: `wiki/_index.md` (+ `raw/_index.md` kalau ada screenshot), master `_index.md` (Total pages + Last updated), dan `log.md` (op `ingest`/`update`) ikut diperbarui.
+- ✅ Setelah menulis: `wiki/_index.md` (+ `raw/_index.md` kalau ada screenshot) dan `log.md` (op `ingest`/`update`) ikut diperbarui.
 - ✅ Kalau cerita baru bertentangan dengan note lama: Hermes bertanya sekali, field `contradictions` diisi, dan note lama tidak dihapus.
 - ✅ Kalau tidak ada tag yang cocok (< 60%): Hermes bertanya sekali dengan 3 opsi terdekat.
 - ✅ Cerita lanjutan tentang incident yang sama memperbarui file lama (`updated:` diganti, `created:` tetap), bukan membuat duplikat.
@@ -378,7 +378,7 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 - ✅ Laporan ditulis ke `output/career-review-<YYYY>-Q<n>.md`.
 - ✅ Setiap persentase menampilkan pembilang dan penyebut ("Linux = 4/5 topik = 80%").
 - ✅ `wiki/profile/skills.md` dan `wiki/profile/career-summary.md` diperbarui.
-- ⚠ Index `output/`, index `wiki/` (untuk file `profile/`), master index, dan log diperbarui (op `review`). Runtime baru memperbarui index `output/` ([W24](todo.md)).
+- ✅ Index `output/`, index `wiki/` (untuk file `profile/` dan skill map yang baru dibuat), dan log diperbarui (op `review`).
 - ✅ Data yang sama menghasilkan angka yang sama: skill map beku per level, dan aturan pencocokan topik ↔ note tertulis di SCHEMA dengan file bukti per topik.
 - ✅ Role Fit Trend dibandingkan dengan laporan `output/` kuartal sebelumnya. Run pertama ditulis "baseline"; kalau level berubah, tidak dibandingkan.
 - ✅ `SCHEMA.md` dan `career-review.md` memakai definisi skill inventory yang sama.
@@ -390,7 +390,7 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 **User story:** Sebagai IT worker, saya ingin bertanya "dulu pernah kena X nggak?" dan dijawab dari catatan saya sendiri, supaya pengalaman lama bisa dipakai ulang.
 
 **Acceptance criteria:**
-- ✅ Hermes membaca `igrow/_index.md` terlebih dahulu sebelum memindai folder.
+- ✅ Hermes membaca `wiki/_index.md` (ringkasan + tag tiap note) terlebih dahulu sebelum memindai folder.
 - ✅ Kalau ketemu: baca page terkait, jawab dari isinya, dan sebutkan path page yang dipakai.
 - ✅ Kalau tidak ketemu: jawab jujur "belum ada catatan", lalu tawarkan riset atau menulis note baru.
 

@@ -507,7 +507,7 @@ whatsinsidegit/
         │
         └── igrow/              # ⭐ knowledge base ASLI — nama custom, aman ditambahkan
             ├── SCHEMA.md           #   aturan format/frontmatter/tag — dibaca Hermes sebelum tulis
-            ├── _index.md           #   master katalog
+            ├── taxonomy.md         #   daftar tag resmi (agent-owned, tidak ditimpa deploy)
             ├── log.md              #   jurnal aksi append-only
             ├── raw/                #   sumber IMMUTABLE (inbox/, articles/)
             ├── wiki/               #   semua konten compiled: careers/, self-development/,

@@ -78,7 +78,7 @@ hermes-home/                    → /opt/data (HERMES_HOME)
 ├── .env, config.yaml, SOUL.md  milik Hermes (hasil `hermes setup`), tidak di-backup
 ├── (sessions/ memories/ skills/ cron/ ...)   state internal Hermes
 └── igrow/                      ★ aset portable, di-backup ke Git
-    ├── SCHEMA.md · _index.md · log.md · AGENTS.backup.md (salinan dari backup.sh)
+    ├── SCHEMA.md · taxonomy.md · log.md · AGENTS.backup.md (salinan dari backup.sh)
     ├── raw/            inbox/ → articles/, assets/      (immutable)
     ├── wiki/
     │   ├── careers/career-N-{company}-{role}/
@@ -125,7 +125,7 @@ flowchart TD
     J --> K{"Self-check lolos?"}
     K -- Tidak --> L["Perbaiki"] --> K
     K -- Ya --> M["Tulis / edit note"]
-    M --> N["Update _index.md terdekat<br/>+ master _index.md + log.md"]
+    M --> N["Update _index.md terdekat<br/>+ log.md"]
     N --> Z(["Balas ke Telegram"])
     H -- Tidak --> Z
     D --> Z

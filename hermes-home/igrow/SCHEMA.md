@@ -19,9 +19,8 @@ Aturan main wiki iGROW. **Wajib diikuti.** Kasus yang tidak tercakup aturan mana
 - `skill-map.md` = dibuat agent, beku per level (lihat "skill-map.md format"). User boleh edit manual.
 
 ## Tiap operasi tulis WAJIB diakhiri
-1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/), termasuk "Last updated".
-2. Update master `igrow/_index.md` (termasuk "Total pages" + "Last updated").
-3. Append `igrow/log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, lint, review.
+1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/), termasuk "Last updated". Tidak ada master index di `igrow/`.
+2. Append `igrow/log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, lint, review.
 
 ## Frontmatter page wiki/
 ```yaml
@@ -85,14 +84,14 @@ Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag 
 - Antar-page: `[[slug]]` minimal 2 outbound per page.
 - Section `## See Also` wajib dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
 - Narasi biasa cukup `[[slug]]`.
-- Target belum ada → tetap boleh ditaut (placeholder): slug belum tercatat → tambah baris di `_index.md` terdekat dari path target: `| <path target> | (placeholder) | - | - |`; sudah tercatat → pakai path di baris itu, jangan bikin baris kedua. Tidak masuk master, tidak dihitung Total pages.
+- Target belum ada → tetap boleh ditaut (placeholder): slug belum tercatat → tambah baris di `_index.md` terdekat dari path target: `| <path target> | (placeholder) | - | - |`; sudah tercatat → pakai path di baris itu, jangan bikin baris kedua.
 - Menulis note baru → cek `_index.md` dulu: slug-nya ada sebagai placeholder → ganti baris itu dengan baris biasa, dan masukkan page yang menautnya (cari `[[slug`) ke See Also note baru. Path note beda dari path placeholder → perbaiki juga link `(...)` di page penaut itu.
 - Link balik: note baru menaut ke note lama yang sudah ada → tambah dual-link ke note baru di See Also note lama itu (kalau belum ada). Hanya note yang memang ditaut, jangan scan seluruh wiki. Ini bukan perubahan isi: `updated:` note lama dan barisnya di index tidak diganti (career review membaca `updated` sebagai aktivitas kuartal); cukup disebut di subjek log operasi yang sama, mis. `## [2026-09-20] ingest | 2026-09-19-mysql-backup-cpu-spike (+ link balik: cpu-spike-triage)`.
 
 ## Threshold
 - Bikin page: topik muncul 2+ sumber ATAU sentral di 1 sumber.
 - Split page >200 baris.
-- Master `_index.md` >200 baris → split index per subfolder wiki/.
+- `wiki/_index.md` >200 baris → pecah per subfolder (`careers/_index.md`, `self-development/_index.md`, …); `wiki/_index.md` tetap ada sebagai penunjuk ke index-index itu.
 
 ## skill-map.md format
 ```markdown

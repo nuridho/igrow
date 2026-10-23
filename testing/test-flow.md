@@ -74,8 +74,8 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 - Frontmatter nvk (`created`, `updated`, `type: incident`, `tags` dari taxonomy, `confidence`)
 - Body alur incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned
 - **NEGATIF TEST:** `grep -ri --exclude=about.md "cimb\|PROD-APP-03\|10.20.30.40" igrow/` → 0 hasil (nama client boleh ada di `about.md`, D-30)
-- `wiki/_index.md` + master `igrow/_index.md` ke-update, `log.md` ada entry `## [tanggal] ingest | ...`
-- Ini note pertama, jadi target See Also pasti belum ada → tiap target tercatat `| <path> | (placeholder) | - | - |` di `wiki/_index.md`, tidak masuk master
+- `wiki/_index.md` ke-update, `log.md` ada entry `## [tanggal] ingest | ...`
+- Ini note pertama, jadi target See Also pasti belum ada → tiap target tercatat `| <path> | (placeholder) | - | - |` di `wiki/_index.md`
 - "Minggu lalu" → Ringkasan diawali tanggal kejadian ("sekitar <tanggal>"), bukan kata "minggu lalu"; `created` = tanggal tulis
 - Balasan: path file, career aktif + alasan, rangkuman (kejadian / penyebab / tindakan / pelajaran), tags, jenis data yang diredaksi (tanpa menyebut nilainya). Bukan isi note lengkap
 - `career-1-berca-sysadmin/skills.md` terisi/ke-update
@@ -256,7 +256,7 @@ systemctl status nginx && journalctl -u nginx -b -p err
 - Sumber mentah → `raw/inbox/YYYY-MM-DD-kodekloud-systemd.md` → diproses → `raw/articles/YYYY-MM-DD-kodekloud-systemd.md` (immutable)
 - Note → `wiki/self-development/Bootcamp/kodekloud-systemd/`, `type: learning`, `sources: [igrow/raw/articles/...]`
 - Body ikut template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also (min 2 dual-link)
-- `raw/_index.md` + `wiki/_index.md` + master + log (op: ingest); `raw/inbox/` kosong lagi setelah selesai
+- `raw/_index.md` + `wiki/_index.md` + log (op: ingest); `raw/inbox/` kosong lagi setelah selesai
 - Balasan: path note + path sumber, tag + alasan, rangkuman per note (inti + poin yang dipelajari)
 **Test:** `ls igrow/raw/inbox/ igrow/raw/articles/ && cat igrow/raw/_index.md && head -8 igrow/wiki/self-development/Bootcamp/kodekloud-systemd/*.md`
 
@@ -365,7 +365,7 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 - Laporan Learned / Experienced / Improved / Weak / Recommended
 - Skill inventory bar: % dihitung counting (topik score ≥5 ÷ target skill-map), bukan tebakan
 - File: `output/career-review-2025-Q3.md`, `wiki/profile/skills.md` + `career-summary.md` ke-update
-- _index output + master + log (op: review)
+- _index output + wiki + log (op: review)
 **Test:** `ls igrow/output/ && cat igrow/wiki/profile/skills.md && grep review igrow/log.md`
 
 ---
@@ -376,7 +376,7 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 |---|---|---|
 | 1 | Redaksi data sensitif | Nama client/hostname/IP/credential tidak pernah masuk file mana pun, kecuali nama client di `about.md` (`grep -ri --exclude=about.md "cimb\|PROD-APP\|APP-DB\|10.20.30\|P@ssw0rd" igrow/`) |
 | 2 | Struktur varian B | Konten di `wiki/`, sumber mentah di `raw/`, laporan di `output/` |
-| 3 | Aturan wajib SCHEMA | Tiap operasi tulis: _index terdekat + master _index + log.md |
+| 3 | Aturan wajib SCHEMA | Tiap operasi tulis: _index terdekat + log.md |
 | 4 | Frontmatter | 7 field nvk untuk semua note |
 | 5 | ~~confidence_calc~~ | ⏸️ Phase 5 (fitur testing) |
 | 6 | Honest gaps | /recall & mentor tidak ngarang kalau data kosong |

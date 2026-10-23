@@ -26,7 +26,7 @@ Status:
 | FR-06 | Career aktif ditentukan dari `about.md` yang belum punya tanggal selesai. | Must | UC1 | ✅ |
 | FR-07 | User bisa mendaftarkan pekerjaan baru. Career lama otomatis ditutup dan folder career baru dibuat. | Must | UC1b | ✅ |
 | FR-08 | Setiap note mematuhi SCHEMA: frontmatter wajib, body template, tag dari taxonomy, minimal 2 dual-link di See Also. | Must | UC1, UC4 | ✅ Ada self-check, tapi kepatuhan agent belum diukur |
-| FR-09 | Setiap operasi tulis diakhiri dengan update `_index.md` terdekat (Last updated), master `_index.md` (Total pages + Last updated), dan entri `log.md`. | Must | Semua tulis | ✅ |
+| FR-09 | Setiap operasi tulis diakhiri dengan update `_index.md` terdekat (Last updated) dan entri `log.md`. Tidak ada master index (D-32). | Must | Semua tulis | ✅ |
 | FR-10 | `raw/` bersifat immutable dan punya satu jalur: `inbox/` → diproses → `articles/`. | Must | UC4 | ✅ |
 | FR-11 | Cerita yang bertentangan dengan note lama tidak menimpa diam-diam. Pertentangannya dicatat di field `contradictions`. | Should | UC1 | ✅ |
 | FR-12 | Cerita lanjutan tentang hal yang sama memperbarui note lama (in-place), bukan membuat duplikat. | Should | UC1 | ✅ |

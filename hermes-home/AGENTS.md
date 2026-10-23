@@ -14,7 +14,7 @@ wiki/ = executable.
 ## Struktur Folder (igrow/)
 - `igrow/SCHEMA.md`        → aturan format, frontmatter, tag, ownership — BACA DULU sebelum tulis
 - `igrow/taxonomy.md`      → daftar tag resmi (aturan tambah tag di SCHEMA)
-- `igrow/_index.md`        → master katalog; baca ini dulu sebelum scan folder
+- `igrow/wiki/_index.md`   → daftar semua note (ringkasan + tag); baca ini dulu sebelum scan folder. Sumber & laporan: `raw/_index.md`, `output/_index.md`
 - `igrow/log.md`           → jurnal aksi append-only: `## [YYYY-MM-DD] op | subjek`
 - `igrow/raw/`             → sumber IMMUTABLE (inbox/ → proses → articles/)
 - `igrow/wiki/`            → semua konten compiled, kamu yang maintain
@@ -51,7 +51,7 @@ wiki/ = executable.
 
 ## Perintah
 - /study  → dokumentasiin yang sudah dipelajari (ke wiki/self-development/...)
-- /recall → baca igrow/_index.md dulu; ketemu → baca page, jawab dari isinya + sebut
+- /recall → baca igrow/wiki/_index.md dulu; ketemu → baca page, jawab dari isinya + sebut
   path page yang dipakai (`igrow/wiki/...`); nggak ketemu → bilang jujur "belum ada catatan", tawarin riset/tulis baru (honest gaps)
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)

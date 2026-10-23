@@ -20,7 +20,7 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    ```
 5. Tulis `skills.md` kosong (placeholder untuk UC1 nanti).
 6. Career baru = aktif (about.md tanpa tanggal selesai).
-7. Tutup: update wiki/_index.md + master + log.md (op: update), lalu balas: folder career baru + period career lama yang ditutup. Tanggal terakhir diisi otomatis (user skip) → sebut di balasan bahwa itu sehari sebelum tanggal mulai dan bisa dikoreksi.
+7. Tutup: update wiki/_index.md + log.md (op: update), lalu balas: folder career baru + period career lama yang ditutup. Tanggal terakhir diisi otomatis (user skip) → sebut di balasan bahwa itu sehari sebelum tanggal mulai dan bisa dikoreksi.
 
 ## Langkah
 1. Tentukan career aktif: `igrow/wiki/careers/*/about.md` yg belum ada tanggal selesai.
@@ -50,7 +50,7 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    - Tags ⊂ `igrow/taxonomy.md`?
    - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
    - Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
-6. Tutup dgn aturan wajib SCHEMA: tambah link balik di note lama yang ditaut (SCHEMA § Link), update wiki/_index.md (+ baris placeholder kalau ada), `raw/_index.md` (kalau ada screenshot), master _index.md, log.md (op: ingest/update; subjek ikut menyebut note lama yang dapat link balik).
+6. Tutup dgn aturan wajib SCHEMA: tambah link balik di note lama yang ditaut (SCHEMA § Link), update wiki/_index.md (+ baris placeholder kalau ada), `raw/_index.md` (kalau ada screenshot), log.md (op: ingest/update; subjek ikut menyebut note lama yang dapat link balik).
 7. Balas ke user (format bagian [BALASAN KE USER] di Contoh Eksekusi; balasan bukan bagian file note): path file + career aktif + alasan type/folder (baris `→ OUTPUT` + reasoning step 2); **Rangkuman** 3–5 poin dari isi note yang sudah diredaksi (incident: kejadian + tanggal / penyebab / tindakan / pelajaran; knowledge & lesson: inti + poin utama); tags, link placeholder baru (kalau ada), note lama yang dapat link balik (kalau ada), jenis data yang diredaksi (sebut jenisnya, bukan nilainya). Isi note lengkap hanya kalau user minta.
 
 ## Larangan

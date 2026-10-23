@@ -21,7 +21,7 @@ Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
    - Tags ⊂ `igrow/taxonomy.md`?
    - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
    - Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
-6. Tutup dgn aturan wajib SCHEMA: pindahkan file raw dari `raw/inbox/` ke `igrow/raw/articles/` (nama sama; baru setelah note tertulis, jadi inbox kosong = sudah diproses), lalu tambah link balik di note lama yang ditaut (SCHEMA § Link), update `raw/_index.md` (kalau ada file raw) + wiki/_index.md (+ baris placeholder kalau ada) + master + log.md (op: ingest; subjek ikut menyebut note lama yang dapat link balik).
+6. Tutup dgn aturan wajib SCHEMA: pindahkan file raw dari `raw/inbox/` ke `igrow/raw/articles/` (nama sama; baru setelah note tertulis, jadi inbox kosong = sudah diproses), lalu tambah link balik di note lama yang ditaut (SCHEMA § Link), update `raw/_index.md` (kalau ada file raw) + wiki/_index.md (+ baris placeholder kalau ada) + log.md (op: ingest; subjek ikut menyebut note lama yang dapat link balik).
 7. Balas ke user (format bagian [BALASAN KE USER] di Contoh Eksekusi; balasan bukan bagian file note): path note + path sumber di `raw/articles/` + topik & alasan (baris `→ OUTPUT` step 3); **Rangkuman** per note dari isi yang sudah diredaksi: 1 kalimat inti + 2–4 poin yang dipelajari (command penting boleh disebut); link placeholder baru (kalau ada), note lama yang dapat link balik (kalau ada), jenis data yang diredaksi (sebut jenisnya, bukan nilainya). Isi note lengkap hanya kalau user minta.
 
 ## Perintah
@@ -40,7 +40,7 @@ Blok di bawah berisi 3 bagian dengan tujuan berbeda (lihat label `[...]`). Yang 
 - wiki/self-development/Bootcamp/Redis-Caching/redis-basics.md
   Frontmatter: type: learning, tags: [storage, performance], sources: [igrow/raw/articles/2026-09-20-redis-caching.md]
   Body: Ringkasan / Detail / Contoh / Referensi / See Also
-- Index: raw/_index.md (articles/2026-09-20-redis-caching.md) + wiki/_index.md + master; log.md op ingest
+- Index: raw/_index.md (articles/2026-09-20-redis-caching.md) + wiki/_index.md; log.md op ingest
 
 [BALASAN KE USER — dikirim ke Telegram; hanya bagian ini yang terlihat user]
 Tersimpan: wiki/self-development/Bootcamp/Redis-Caching/redis-basics.md

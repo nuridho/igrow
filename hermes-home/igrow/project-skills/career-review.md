@@ -21,7 +21,7 @@ Dipicu cron quarterly (review kuartal yang baru selesai) atau user minta review.
    - Level berubah sejak laporan lalu → tulis "target berubah, tidak dibandingkan".
 5. Tulis laporan ke `igrow/output/career-review-<YYYY>-Q<n>.md`.
 6. Update `wiki/profile/skills.md` + `wiki/profile/career-summary.md` (format di SCHEMA).
-7. Tutup dgn aturan wajib SCHEMA: update `output/_index.md` (laporan) + `wiki/_index.md` (file `profile/` dan `roadmap/skill-map.md` kalau baru dibuat di step 1) + master + log.md (op: review).
+7. Tutup dgn aturan wajib SCHEMA: update `output/_index.md` (laporan) + `wiki/_index.md` (file `profile/` dan `roadmap/skill-map.md` kalau baru dibuat di step 1) + log.md (op: review).
 
 ## Contoh Eksekusi
 
