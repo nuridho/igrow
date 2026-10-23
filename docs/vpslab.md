@@ -3,7 +3,7 @@
 Project infrastruktur pribadi dan lab berbasis Docker untuk self-hosting, Linux, Docker, observability ringan, automation, dan eksperimen project pribadi.
 
 > **Prinsip utama:** Jangan menambah service hanya karena bisa. Setiap service harus punya fungsi yang jelas — dan harus proporsional dengan spesifikasi VPS.
-
+a
 ---
 
 ## 1. Tujuan Project
