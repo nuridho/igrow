@@ -5,6 +5,7 @@
 #   bash igrow-setup.sh step 6     → ulang satu langkah (mis. ganti API key LLM / token bot)
 #   bash igrow-setup.sh deploy     → tarik repo terbaru + pasang ulang runtime (data di VPS tidak disentuh)
 #   bash igrow-setup.sh status     → cek kesehatan: container, doctor, cron, backup terakhir
+#   bash igrow-setup.sh update     → update image Hermes + cek doctor & cron (cara balik ke versi lama ditampilkan)
 # Penjelasan tiap langkah: PRD/07-setup.md. Secret hanya diketik saat diminta; tidak ditulis ke repo maupun log.
 set -uo pipefail
 
@@ -261,7 +262,7 @@ step5() {
 # Dibuat oleh Setup/igrow-setup.sh — penjelasan di PRD/07-setup.md
 services:
   igrow-hermes:
-    image: nousresearch/hermes-agent:latest   # pin versi (mis. :vYYYY.M.D) kalau mau stabil
+    image: nousresearch/hermes-agent:latest   # pin versi (mis. :X.Y.Z) kalau mau stabil
     container_name: igrow-hermes
     restart: unless-stopped
     command: gateway run                      # bot standby, bukan chat interaktif
@@ -419,6 +420,7 @@ Lalu ikuti skenario uji: $REPO_DIR/testing/test-flow.md"
   box "Perintah berguna" "bash $0 status     → cek kesehatan
 bash $0 deploy     → pasang aturan terbaru dari repo (setelah git push dari laptop)
 bash $0 step 6     → ganti API key LLM / token bot
+bash $0 update     → update Hermes ke versi terbaru
 Telegram: /skills pending → cek skill buatan Hermes yang menunggu persetujuan"
 }
 
@@ -444,7 +446,31 @@ cmd_status() {
   ok "Runtime repo: $(git -C "$REPO_DIR" log -1 --format='%h · %cr' 2>/dev/null || echo '?')"
 }
 
-usage() { sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_update() { # docs resmi: compose pull → up -d; Hermes memigrasi config sendiri (config.yaml & .env dibackup dulu)
+  banner; step_head "·" "Update Hermes" "Tarik image terbaru → buat ulang container. Data di hermes-home/ tetap."
+  load_docker; find_container; need_compose
+  [ -n "$CNAME" ] || die "Container igrow-hermes tidak ditemukan (bash $0 step 5)"
+  local old new pin oldv newv
+  old=$(dk inspect -f '{{.Image}}' "$CNAME")
+  pin=$(dk image inspect -f '{{index .RepoDigests 0}}' "$old" 2>/dev/null)   # dibaca sebelum pull: untuk balik versi
+  oldv=$(hmq --version 2>/dev/null | tail -n1)
+  run "Tarik image terbaru" dc pull igrow-hermes || die "Gagal menarik image"
+  new=$(dk image inspect -f '{{.Id}}' "$(dk inspect -f '{{.Config.Image}}' "$CNAME")")
+  if [ "$old" = "$new" ]; then skip "Hermes ${oldv:-?} sudah versi terbaru"; return; fi
+  run "Buat ulang container" dc up -d igrow-hermes || die "Container gagal dibuat ulang"
+  find_container; sleep 5
+  running || { dc logs --tail 30 igrow-hermes >>"$LOG" 2>&1; die "Gateway berhenti setelah update, lihat log"; }
+  newv=$(hmq --version 2>/dev/null | tail -n1)
+  ok "Hermes ${oldv:-?} → ${newv:-?}"
+  run "hermes doctor" hmq doctor || warn "Doctor menemukan masalah, lihat log"
+  printf '\n'; hmq cron list 2>&1 | sed 's/^/    /'
+  [ -n "$pin" ] && box "Kalau versi baru bermasalah, balik ke versi lama" "Di $COMPOSE_DIR/docker-compose.yml, service igrow-hermes:
+  image: $pin
+lalu: cd $COMPOSE_DIR && docker compose up -d igrow-hermes"
+  ok "Selesai. Kirim /new di Telegram, lalu cek job cron di atas masih lengkap."
+}
+
+usage() { sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; }
 
 case "${1:-all}" in
   all)    banner; preflight; intro
@@ -454,5 +480,6 @@ case "${1:-all}" in
           banner; preflight; "step$2" ;;
   deploy) cmd_deploy ;;
   status) cmd_status ;;
+  update) cmd_update ;;
   *)      usage ;;
 esac

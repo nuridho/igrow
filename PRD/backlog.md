@@ -18,6 +18,18 @@ Format entri:
 
 ---
 
+## [2026-10-24] `Setup/README.md` jadi panduan pakai lengkap
+- **Apa:** `Setup/README.md` ditulis ulang dari ringkasan 1 tabel menjadi panduan pakai kedua script: analogi + diagram alur, cara jalankan, yang ditanya, tabel per langkah (apa yang terjadi + kenapa perlu untuk `setupvps.sh`; yang kamu lakukan vs yang script lakukan untuk `igrow-setup.sh`), hal setelah selesai (tes login, tunnel NPM, reboot), daftar yang disiapkan beserta cara mendapatkannya, jadwal cron, perintah setelah setup per situasi, lokasi file, pindah VPS. Bagian "kenapa" dan troubleshooting tetap dirujuk ke `PRD/07-setup.md` §4 dan §7.
+- **Kenapa:** permintaan owner: README terlalu ringkas setelah isi `setupdocker.sh` dihapus; minta detail tapi tetap mudah dimengerti, terutama `igrow-setup.sh`.
+- **File:** `Setup/README.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak.
+
+## [2026-10-24] `igrow-setup.sh update`: update image Hermes
+- **Apa:** perintah baru `bash igrow-setup.sh update`: catat image ID + digest container sekarang, `docker compose pull igrow-hermes`, kalau image berubah `up -d`, cek gateway jalan, tampilkan `hermes --version` lama → baru, `hermes doctor`, `hermes cron list`, dan kotak berisi `image: nousresearch/hermes-agent@sha256:…` untuk balik ke versi lama. Kalau sudah terbaru, tidak ada yang diubah. Komentar pin versi di compose yang dibuat langkah 5 dibetulkan dari `:vYYYY.M.D` jadi `:X.Y.Z` (format tag resmi). Ditambahkan ke header usage, kotak "Perintah berguna", `PRD/07-setup.md` (tabel perintah), `Setup/README.md`.
+- **Kenapa:** saran tambahan setup yang dipilih owner. Image memakai `:latest` dan belum ada cara rapi untuk update + memastikan cron masih utuh. Fakta dicek ke dokumentasi resmi Hermes (Docker: `docker compose pull` → `up -d`, migrasi config otomatis dengan backup `config.yaml`/`.env`, `--version`, tag `latest`/`stable`/`X.Y.Z`, pin dengan digest).
+- **File:** `Setup/igrow-setup.sh`, `Setup/README.md`, `PRD/{07-setup,backlog}.md`
+- **Deploy VPS:** tidak untuk runtime. Salin ulang `Setup/igrow-setup.sh` ke VPS supaya perintah `update` tersedia.
+
 ## [2026-10-24] `setupvps.sh` ditulis ulang dengan TUI
 - **Apa:** `Setup/setupvps.sh` memakai tampilan yang sama dengan `igrow-setup.sh`: banner, header `[n/9]`, spinner, status ✔/↷/!/✘, ringkasan akhir dalam kotak. Output perintah masuk `/var/log/setupvps.log` (mode 600); kalau gagal, 12 baris terakhir ditampilkan. Semua pertanyaan (nama folder project, password user baru dua kali) diajukan di awal, lalu langkah 1–9 jalan sendiri. Langkah yang sudah beres dilewati (user, hostname, timezone, swap, Docker, NPM). Perubahan perilaku: cek root + apt di awal; user dibuat dengan `adduser --disabled-password` + `chpasswd` (password tidak tampil di daftar proses); `apt-get upgrade` non-interaktif (`--force-confold`) supaya tidak ada prompt yang menggantung di balik spinner; NPM dijalankan dengan `docker compose -f`.
 - **Kenapa:** permintaan owner: TUI setup VPS dibuat lebih rapi.

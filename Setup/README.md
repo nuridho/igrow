@@ -1,24 +1,159 @@
-# Setup Folder — VPS Init Scripts
+# Setup: Dari VPS Kosong sampai Bot iGROW Jalan
 
-Isinya:
+Folder ini berisi 2 script. Bayangkan pindah ke rumah baru:
 
-| File | Fungsi |
-|------|--------|
-| `setupvps.sh` | Init VPS (aman diulang): user `nuridho` (sudo + docker), hostname, fail2ban, update keamanan otomatis, timezone, swap 2 GB, Docker (log dibatasi 10 MB × 3 per container), folder project `~/<nama>` (nama diisi user, dibuat kalau belum ada; NPM di `~/<nama>/proxy/`, nama jadi default pertanyaan `igrow-setup.sh`), Nginx Proxy Manager + web dummy, UFW (SSH/80/443, langsung aktif), hardening sshd (root ditutup, `AllowUsers nuridho`, key root disalin ke nuridho) |
-| `igrow-setup.sh` | Pasang iGROW (Phase 2) dari nol: git + SSH GitHub, Docker, container Hermes, LLM + Telegram, runtime, backup, cron. Juga `deploy` (aturan terbaru dari repo) dan `status`. Penjelasan: [`PRD/07-setup.md`](../PRD/07-setup.md) |
+| Script | Analogi | Dijalankan sebagai | Berapa kali |
+|---|---|---|---|
+| `setupvps.sh` | Menyiapkan rumahnya: kunci pintu, pagar, listrik | `root` | Sekali, di VPS baru |
+| `igrow-setup.sh` | Memindahkan penghuninya (iGROW) dan mengisi perabot | `nuridho` (user biasa) | Sekali untuk pasang, lalu dipakai terus untuk `deploy`, `status`, `update` |
 
-## Workflow
+```text
+Laptop                       VPS
+──────                       ───
+scp setupvps.sh     ───────▶ [root]    bash setupvps.sh     → user, Docker, firewall, SSH aman
+scp igrow-setup.sh  ───────▶ [nuridho] bash igrow-setup.sh  → Hermes + Telegram + backup + cron
+                                                             ✔ chat bot "halo" di Telegram
+```
+
+Kedua script **aman diulang**. Langkah yang sudah beres dicek lalu dilewati (`↷ sudah beres`). Contoh: internet putus di langkah 6, cukup jalankan lagi; langkah 1–5 dilewati dan script lanjut dari langkah 6.
+
+Tampilannya sama: setiap langkah punya judul `[n/9]`, perintah panjang jalan dengan spinner, hasilnya `✔` (berhasil), `↷` (dilewati), `!` (peringatan), atau `✘` (gagal, 12 baris terakhir errornya langsung tampil).
+
+---
+
+## 1. `setupvps.sh`: Siapkan VPS
+
+### Cara jalankan
 
 ```bash
-# 1. Init VPS (sebagai root, sebelum user nuridho ada)
 scp Setup/setupvps.sh root@<vps>:~/
-ssh -t root@<vps> bash setupvps.sh   # -t: script bertanya (folder project, password user)
+ssh -t root@<vps> bash setupvps.sh
+```
 
-# 2. Pasang iGROW sebagai nuridho
+`-t` wajib, karena script bertanya di awal. Total ±10 menit.
+
+### Yang ditanya (semua di awal, setelah itu jalan sendiri)
+
+| Pertanyaan | Contoh | Dipakai untuk |
+|---|---|---|
+| Nama folder project | `whatsinsidegit` | Folder `/home/nuridho/whatsinsidegit/`: rumah semua project (NPM, iGROW, dst). Belum ada → dibuat, sudah ada → dipakai. Cukup nama, tanpa `/`. |
+| Password user `nuridho` (2×) | | Dipakai saat `sudo`. Hanya ditanya kalau user belum ada. |
+
+### Apa yang terjadi
+
+| # | Langkah | Yang dilakukan | Kenapa perlu |
+|---|---|---|---|
+| 1 | User | Buat user `nuridho` (sudo), folder project, catat nama folder untuk `igrow-setup.sh` | Kerja sehari-hari jangan pakai root. Nama folder dicatat supaya nanti tinggal Enter. |
+| 2 | Hostname | `labs.nuridho` | Nama mesin di prompt dan log |
+| 3 | Paket & update | Upgrade sistem, pasang fail2ban, ufw, curl, update keamanan otomatis | fail2ban memblokir IP yang mencoba-coba password. Tambalan keamanan terpasang sendiri tiap hari, tanpa reboot otomatis. |
+| 4 | Timezone | `Asia/Jakarta` | Jam cron (briefing 07:00) mengikuti WIB |
+| 5 | Swap | File swap 2 GB (dilewati kalau sudah ada swap) | RAM penuh → sistem melambat, bukan mematikan Hermes |
+| 6 | Docker | Pasang Docker + Compose, batasi log 10 MB × 3 per container, `nuridho` masuk grup docker | Tanpa batas, log container bisa memenuhi disk dalam beberapa minggu |
+| 7 | Nginx Proxy Manager | NPM + web dummy di `~/<folder>/proxy/` (dilewati kalau port 80 sudah dipakai) | Pintu masuk web + SSL. Web dummy jadi contoh yang bisa langsung diproxy. |
+| 8 | Firewall | UFW hanya membuka SSH, 80, 443, lalu langsung aktif | SSH dibuka duluan, jadi sesi yang sedang jalan tidak putus |
+| 9 | SSH | Root tidak bisa login lagi, hanya `nuridho`. Key SSH root disalin ke `nuridho` kalau `nuridho` belum punya | Bot penyerang hampir selalu mencoba login sebagai root |
+
+### Setelah selesai
+
+1. **Jangan tutup sesi root dulu.** Buka terminal baru, coba `ssh nuridho@<vps>`. Kalau berhasil, baru tutup sesi root.
+2. **Buka admin NPM** lewat tunnel (port 81 sengaja tidak dibuka ke internet):
+   ```bash
+   ssh -L 8181:localhost:81 nuridho@<vps>
+   ```
+   Lalu buka `http://localhost:8181` di browser laptop → login pertama → *Proxy Host*: domain kamu → forward ke `web:80` → aktifkan SSL.
+3. Kalau muncul peringatan reboot (biasanya setelah update kernel): `sudo reboot`, setelah poin 1 berhasil.
+4. Lanjut ke `igrow-setup.sh` di bawah.
+
+> **Penting untuk container lain nanti:** port yang dibuka Docker **menembus UFW**. Menulis `ports: "8080:8080"` berarti port 8080 terbuka ke internet walaupun UFW tidak mengizinkan. Pakai `127.0.0.1:8080:8080`, atau lewatkan lewat NPM.
+
+Log lengkap: `/var/log/setupvps.log`.
+
+---
+
+## 2. `igrow-setup.sh`: Pasang iGROW
+
+### Siapkan dulu (bisa sambil jalan)
+
+| Yang disiapkan | Cara dapat | Dipakai di langkah |
+|---|---|---|
+| Akun GitHub yang bisa akses repo iGROW | | 2, 4 |
+| Bot Telegram | Telegram → **@BotFather** → `/newbot` → ikuti → copy token | 6 |
+| User ID Telegram kamu | Telegram → **@userinfobot** → copy angka `Id` (angka, bukan @username) | 6 |
+| API key LLM | Dari provider yang kamu pakai (OpenRouter, Anthropic, OpenAI, dll) | 6 |
+| Repo GitHub **privat** kosong untuk backup | github.com/new → mis. `igrow-backup` → Private → tanpa README | 8 |
+| Fine-grained token untuk repo backup | GitHub → Settings → Developer settings → Fine-grained tokens → *Only select repositories*: repo backup saja → *Contents: Read and write* | 8 |
+
+Tidak perlu hafal: script menampilkan petunjuk ini lagi tepat sebelum memintanya.
+
+### Cara jalankan
+
+```bash
 scp Setup/igrow-setup.sh nuridho@<vps>:~/
 ssh -t nuridho@<vps> bash igrow-setup.sh
 ```
 
-Admin NPM (port 81) sengaja hanya terbuka di `127.0.0.1`, karena port Docker menembus UFW. Akses lewat tunnel: `ssh -L 8181:localhost:81 nuridho@<vps>` → `http://localhost:8181`. Web dummy diproxy dengan forward ke `web:80`.
+Jalankan sebagai `nuridho`, **bukan root** (script menolak root). Sudo diminta sekali di awal. Total ±15 menit, kebanyakan menunggu install dan menyalin token. Setelah langkah 4, script juga ada di repo hasil clone: `bash ~/iGROW/Setup/igrow-setup.sh <perintah>`.
 
-Portainer, Glance, Homepage dari `setupdocker.sh` lama tidak dibawa; ambil dari `git log` kalau perlu lagi.
+### Apa yang terjadi
+
+| # | Langkah | Yang kamu lakukan | Yang script lakukan |
+|---|---|---|---|
+| 1 | Paket dasar | — | Pasang `git`, `rsync`, `curl`, `ssh-keygen` kalau belum ada |
+| 2 | Git & GitHub | Isi nama + email commit. Tempel SSH key yang ditampilkan ke GitHub → Settings → SSH and GPG keys, lalu Enter | Buat SSH key VPS, tunggu sampai GitHub menerima key-nya |
+| 3 | Docker | — | Pasang Docker kalau belum ada (sudah dipasang `setupvps.sh` → dilewati) |
+| 4 | Repo iGROW | Isi URL SSH repo (default sudah ditebak), folder clone (default `~/iGROW`) | Clone repo, atau `git pull` kalau sudah ada |
+| 5 | Container Hermes | Isi **nama folder project** (default dari `setupvps.sh`, tinggal Enter) dan timezone (default `Asia/Jakarta`) | Buat `~/<folder>/igrow-hermes/` berisi `docker-compose.yml` + `hermes-home/` (folder data), tarik image Hermes. Container `igrow-hermes` sudah ada → dilewati, folder datanya dipakai. |
+| 6 | LLM & Telegram | Di wizard resmi Hermes: pilih provider → tempel API key → pilih model. Lalu tempel token bot dan user ID | Cek token ke Telegram dulu (salah → diminta ulang), simpan ke `hermes-home/.env`. Hanya user ID kamu yang dilayani bot. |
+| 7 | Runtime | Jawab "approval memory?" (default tidak). Di layar tools: pilih platform `cron`, nyalakan `web`, `terminal`, `file` | Salin aturan iGROW dari repo ke `hermes-home/`, kunci approval skill, nyalakan bot, jalankan `hermes doctor` |
+| 8 | Backup | Isi nama repo backup, buat repo + token (petunjuk tampil), tempel token | Cek repo benar-benar privat (publik → ditolak), push pertama, uji `backup.sh` persis seperti cron. Repo backup sudah berisi data → menawarkan restore. |
+| 9 | Cron | — | Buat 4 jadwal (tabel di bawah), uji cek privasi |
+
+Setelah selesai: buka Telegram, kirim `halo` ke bot. Lalu ikuti skenario uji di `testing/test-flow.md`.
+
+**Jadwal otomatis** (WIB, hasilnya dikirim ke chat Telegram kamu):
+
+| Job | Kapan | Isinya |
+|---|---|---|
+| `daily-briefing` | Tiap hari 07:00 | Maks 5 berita infra/IT ≤ 24 jam terakhir, lengkap dengan sumber |
+| `backup-knowledge` | Senin, Rabu, Sabtu 05:00 | `igrow/` di-push ke repo backup |
+| `lint-mingguan` | Minggu 08:00 | Cek struktur knowledge base + cek privasi. Hanya melapor, tidak mengubah file. |
+| `career-review` | Tanggal 1 Jan/Apr/Jul/Okt 09:00 | Review karier kuartal yang baru selesai, dari data `wiki/` |
+
+### Perintah setelah setup
+
+| Situasinya | Perintah |
+|---|---|
+| Kamu mengubah aturan di `hermes-home/` di laptop dan sudah `git push` | `bash igrow-setup.sh deploy` → lalu kirim `/new` di Telegram supaya sesi baru membaca aturan terbaru |
+| Bot diam / mau memastikan semuanya sehat | `bash igrow-setup.sh status` → container, `hermes doctor`, daftar cron, waktu backup terakhir |
+| Hermes rilis versi baru | `bash igrow-setup.sh update` → tarik image terbaru, cek doctor + cron, dan tampilkan baris untuk balik ke versi lama kalau versi baru bermasalah |
+| Ganti API key LLM atau token bot | `bash igrow-setup.sh step 6` |
+| Ganti tools cron | `bash igrow-setup.sh step 7` |
+| Token backup kedaluwarsa | Hapus `hermes-home/.git-credentials`, lalu `bash igrow-setup.sh step 8` |
+| Lupa perintahnya | `bash igrow-setup.sh help` |
+
+### Di mana file-filenya
+
+| Apa | Lokasi |
+|---|---|
+| Repo iGROW (spec, aturan) | `~/iGROW/` |
+| Compose Hermes | `~/<folder>/igrow-hermes/docker-compose.yml` + `.env` (UID/GID/TZ, bukan secret) |
+| Folder data Hermes (`/opt/data` di container) | `~/<folder>/igrow-hermes/hermes-home/` |
+| Knowledge base iGROW | `hermes-home/igrow/` (yang di-backup ke GitHub) |
+| API key LLM + token bot | `hermes-home/.env` (mode 600) |
+| Token backup GitHub | `hermes-home/.git-credentials` (mode 600, di luar `igrow/`, jadi tidak ikut ter-push) |
+| Jawaban setup (path, nama repo, nama bot; bukan secret) | `~/.config/igrow/setup.env` |
+| Log setup | `~/.config/igrow/setup.log` |
+
+Secret hanya diketik saat diminta dan tidak pernah masuk repo, log, maupun daftar proses.
+
+### Pindah VPS
+
+Sewa VPS baru, jalankan kedua script dari awal. Di langkah 8, script melihat repo backup sudah berisi data dan menawarkan restore: semua note, raw, dan output kembali. Yang dibuat ulang: API key + token (langkah 6), tools (7), dan cron (9).
+
+---
+
+## Lebih Lanjut
+
+- Kenapa script dibuat seperti ini (repo di host, bukan di container; cara menyimpan secret; restore): [`PRD/07-setup.md`](../PRD/07-setup.md) §4
+- Masalah umum dan cara mengatasinya: [`PRD/07-setup.md`](../PRD/07-setup.md) §7
+- Portainer, Glance, Homepage dari `setupdocker.sh` lama tidak dibawa; ambil dari `git log` kalau perlu lagi.
