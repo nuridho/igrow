@@ -13,42 +13,52 @@ PROJ='' PW='' IP=''
 # ── Tampilan (sama dengan igrowctl.sh) ───────────────────────────────────
 if [ -t 1 ]; then
   B=$'\e[1m' D=$'\e[2m' R=$'\e[0m' RED=$'\e[31m' GRN=$'\e[32m' YEL=$'\e[33m' CYN=$'\e[36m' MAG=$'\e[35m'
+  if [ "$(tput colors 2>/dev/null || echo 8)" -ge 256 ]; then   # gradasi banner: cyan → biru → ungu
+    GRAD=($'\e[38;5;51m' $'\e[38;5;45m' $'\e[38;5;39m' $'\e[38;5;33m' $'\e[38;5;63m')
+  else GRAD=("$CYN" "$CYN" "$CYN" "$CYN" "$CYN"); fi
 else
-  B='' D='' R='' RED='' GRN='' YEL='' CYN='' MAG=''
+  B='' D='' R='' RED='' GRN='' YEL='' CYN='' MAG='' GRAD=('' '' '' '' '')
 fi
-TOTAL=9
+TOTAL=9 T0=$SECONDS N_OK=0 N_SKIP=0 N_WARN=0
 
-ok()   { printf '  %s✔%s %s\n' "$GRN" "$R" "$*"; }
+ok()   { N_OK=$((N_OK + 1));     printf '  %s✔%s %s\n' "$GRN" "$R" "$*"; }
 info() { printf '  %s•%s %s\n' "$CYN" "$R" "$*"; }
-warn() { printf '  %s!%s %s\n' "$YEL" "$R" "$*"; }
-skip() { printf '  %s↷ %s — sudah beres, dilewati%s\n' "$D" "$*" "$R"; }
+warn() { N_WARN=$((N_WARN + 1)); printf '  %s!%s %s\n' "$YEL" "$R" "$*"; }
+act()  { printf '  %s›%s %s%s%s\n' "$CYN" "$R" "$D" "$*" "$R"; }   # sedang dicek / dikerjakan
+skip() { N_SKIP=$((N_SKIP + 1)); printf '  %s✔%s %s %s(sudah ada)%s\n' "$GRN" "$R" "$*" "$D" "$R"; }
 die()  { printf '\n  %s✘ %s%s\n  %sLog lengkap: %s%s\n\n' "$RED$B" "$*" "$R" "$D" "$LOG" "$R"; exit 1; }
+dur()  { if [ "$1" -ge 60 ]; then printf '%dm%02ds' $(($1 / 60)) $(($1 % 60)); else printf '%ds' "$1"; fi; }
 
 banner() {
   clear 2>/dev/null || true
-  printf '%s' "$CYN$B"
-  cat <<'ART'
-
+  local i=0 l
+  printf '\n'
+  while IFS= read -r l; do printf '%s%s%s\n' "${GRAD[i++]}$B" "$l" "$R"; done <<'ART'
      __     ______  ____
      \ \   / /  _ \/ ___|
       \ \ / /| |_) \___ \
        \ V / |  __/ ___) |
         \_/  |_|   |____/
 ART
-  printf '%s    init VPS · user, Docker, NPM, firewall, SSH%s\n' "$R$D" "$R"
+  printf '%s    init VPS · user, Docker, NPM, firewall, SSH%s\n' "$D" "$R"
 }
 
-step_head() { # step_head <nomor> <judul> <penjelasan>
-  local line
+step_head() { # step_head <nomor|·> <judul> <penjelasan>
+  local line tag="[$1/$TOTAL]"; [[ "$1" =~ ^[0-9]+$ ]] || tag="$1"
   line=$(printf '━%.0s' $(seq 1 $((46 - ${#2}))))
-  printf '\n%s━━ [%s/%s] %s %s%s\n' "$MAG$B" "$1" "$TOTAL" "$2" "$line" "$R"
+  printf '\n%s━━ %s %s %s%s\n' "$MAG$B" "$tag" "$2" "$line" "$R"
   printf '  %s%s%s\n\n' "$D" "$3" "$R"
 }
 
 box() { # box <judul> <isi, boleh multi-baris>
-  printf '\n  %s┌─ %s%s\n' "$CYN" "$1" "$R"
+  printf '\n  %s╭─ %s%s%s\n' "$CYN" "$B" "$1" "$R"
   while IFS= read -r l; do printf '  %s│%s %s\n' "$CYN" "$R" "$l"; done <<<"$2"
-  printf '  %s└─%s\n' "$CYN" "$R"
+  printf '  %s╰─%s\n' "$CYN" "$R"
+}
+
+summary() { # summary → hitungan + waktu sejak T0
+  printf '  %s✔ %d dikerjakan%s  %s✔ %d sudah ada%s  %s! %d peringatan%s  %swaktu %s%s\n' \
+    "$GRN" "$N_OK" "$R" "$D" "$N_SKIP" "$R" "$YEL" "$N_WARN" "$R" "$D" "$(dur $((SECONDS - T0)))" "$R"
 }
 
 ask() { # ask <VAR> <pertanyaan> [default] — wajib terisi
@@ -77,19 +87,21 @@ confirm() { # confirm <teks> [Y|N] → return 0 kalau ya
   read -r ans </dev/tty; [[ "${ans:-$def}" =~ ^[Yy] ]]
 }
 
-run() { # run <label> <perintah…> → output ke log, spinner di layar
-  local label="$1" start; shift
+run() { # run <label> <perintah…> → output ke log; di layar spinner + detik berjalan
+  local label="$1" start t0=$SECONDS e; shift
   printf '\n=== %s · %s\n' "$(date '+%F %T')" "$label" >>"$LOG"
   start=$(wc -l <"$LOG")
   "$@" >>"$LOG" 2>&1 &
   local pid=$! i=0 f=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   while kill -0 "$pid" 2>/dev/null; do
-    [ -t 1 ] && printf '\r  %s%s%s %s' "$CYN" "${f[i++ % 10]}" "$R" "$label"
+    [ -t 1 ] && printf '\r  %s%s%s %s %s%ss%s\e[K' "$CYN" "${f[i++ % 10]}" "$R" "$label" "$D" $((SECONDS - t0)) "$R"
     sleep 0.1
   done
   [ -t 1 ] && printf '\r\e[K'
-  if wait "$pid"; then ok "$label"; return 0; fi
-  printf '  %s✘%s %s\n' "$RED" "$R" "$label"
+  e=$((SECONDS - t0))
+  local t=''; [ "$e" -ge 2 ] && t=" $D$(dur "$e")$R"   # durasi hanya kalau ≥ 2 detik
+  if wait "$pid"; then ok "$label$t"; return 0; fi
+  printf '  %s✘%s %s\n' "$RED" "$R" "$label$t"
   tail -n +$((start + 1)) "$LOG" | tail -n 12 | sed "s/^/    ${D}│${R} /"   # hanya output perintah ini
   return 1
 }
@@ -134,13 +146,15 @@ Semua pertanyaan di awal; setelah itu jalan sendiri."
 # ── Langkah 1–9 ─────────────────────────────────────────────────────────────
 step1() {
   step_head 1 "User $U" "User sehari-hari (sudo + docker). Root nanti ditutup dari SSH."
-  if id "$U" &>/dev/null; then skip "User $U"
+  act "Mengecek user $U…"
+  if id "$U" &>/dev/null; then skip "User $U (grup: $(id -nG "$U" | tr ' ' ','))"
   else
     run "Buat user $U" adduser --disabled-password --gecos "" "$U" || die "Gagal membuat user $U"
     printf '%s:%s\n' "$U" "$PW" | chpasswd || die "Gagal set password $U"
     PW=''; ok "Password $U diset"
   fi
   usermod -aG sudo "$U"
+  act "Menyiapkan folder project…"
   if [ -d "$ROOT" ]; then skip "Folder $ROOT"
   else install -d -o "$U" -g "$U" "$ROOT" && ok "Folder $ROOT dibuat"; fi
   # Default nama folder untuk igrowctl.sh langkah 5 (tetap ditanya, tinggal Enter)
@@ -154,6 +168,7 @@ step1() {
 
 step2() {
   step_head 2 "Hostname" "Nama mesin di prompt dan log."
+  act "Mengecek hostname…"
   if [ "$(hostname)" = "$HOST" ]; then skip "Hostname $HOST"
   else hostnamectl set-hostname "$HOST" && ok "Hostname → $HOST"; fi
   # tanpa baris ini, tiap sudo mengeluh "unable to resolve host"
@@ -163,12 +178,14 @@ step2() {
 step3() {
   step_head 3 "Paket & update" "Upgrade sistem, fail2ban, ufw, dan tambalan keamanan otomatis."
   export DEBIAN_FRONTEND=noninteractive   # jangan ada prompt apt yang menggantung di balik spinner
+  info "Sistem: $(. /etc/os-release && echo "$PRETTY_NAME"), kernel $(uname -r)"
   run "apt update" apt-get update -y || die "apt update gagal"
   run "Upgrade sistem (bisa beberapa menit)" \
     apt-get -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold upgrade || die "Upgrade gagal"
   run "Install fail2ban, ufw, curl, unattended-upgrades" \
     apt-get install -y fail2ban ufw curl unattended-upgrades || die "Install paket gagal"
   run "Aktifkan fail2ban" systemctl enable --now fail2ban || die "fail2ban gagal jalan"
+  ok "$(fail2ban-client --version 2>/dev/null | awk 'NR==1{print $NF}' | sed 's/^/fail2ban /'), $(ufw version 2>/dev/null | awk 'NR==1{print $1" "$2}')"
   printf 'APT::Periodic::Update-Package-Lists "1";\nAPT::Periodic::Unattended-Upgrade "1";\n' \
     >/etc/apt/apt.conf.d/20auto-upgrades
   ok "Tambalan keamanan otomatis tiap hari (tanpa reboot otomatis)"
@@ -176,12 +193,15 @@ step3() {
 
 step4() {
   step_head 4 "Timezone" "Jam sistem, cron, dan log."
+  act "Mengecek timezone…"
   if [ "$(timedatectl show -p Timezone --value)" = "$TZ_NAME" ]; then skip "Timezone $TZ_NAME"
   else timedatectl set-timezone "$TZ_NAME" && ok "Timezone → $TZ_NAME"; fi
 }
 
 step5() {
   step_head 5 "Swap" "Cadangan RAM: kalau memori penuh, sistem melambat, bukan mematikan container."
+  act "Mengecek memori & swap…"
+  info "RAM $(free -h | awk '/^Mem:/{print $2}'), disk kosong $(df -h / | awk 'NR==2{print $4}')"
   if swapon --show | grep -q .; then skip "Swap $(swapon --show=SIZE --noheadings | head -n1 | tr -d ' ')"; return; fi
   # ponytail: 2G tetap; sesuaikan kalau RAM/disk VPS jauh beda
   run "Buat swap 2 GB" sh -c 'fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile' \
@@ -191,7 +211,8 @@ step5() {
 
 step6() {
   step_head 6 "Docker" "Mesin container. Log tiap container dibatasi supaya disk tidak penuh."
-  if [ -f /etc/docker/daemon.json ]; then skip "Batas log Docker (daemon.json sudah ada)"
+  act "Mengecek batas log Docker…"
+  if [ -f /etc/docker/daemon.json ]; then skip "Batas log Docker (/etc/docker/daemon.json)"
   else
     mkdir -p /etc/docker
     printf '{\n  "log-driver": "json-file",\n  "log-opts": { "max-size": "10m", "max-file": "3" }\n}\n' \
@@ -201,17 +222,21 @@ step6() {
       run "Restart Docker" systemctl restart docker || die "Docker gagal restart"
     fi
   fi
+  act "Mengecek Docker & Compose…"
   if command -v docker >/dev/null && docker compose version >/dev/null 2>&1; then
     skip "$(docker --version | cut -d, -f1), compose $(docker compose version --short)"
   else
     run "Install Docker + Compose (get.docker.com)" sh -c 'curl -fsSL https://get.docker.com | sh' || die "Install Docker gagal"
+    ok "$(docker --version | cut -d, -f1), compose $(docker compose version --short)"
   fi
   usermod -aG docker "$U" && ok "$U masuk grup docker (aktif setelah login ulang)"
 }
 
 step7() {
   step_head 7 "Nginx Proxy Manager" "Reverse proxy + SSL untuk web, dengan web dummy sebagai contoh."
-  if ss -ltn 'sport = :80' | grep -q LISTEN; then skip "Port 80 sudah dipakai (NPM lama?)"; return; fi
+  act "Mengecek port 80…"
+  if ss -ltn 'sport = :80' | grep -q LISTEN; then info "Port 80 sudah dipakai (NPM lama?): NPM baru tidak dipasang"; return; fi
+  act "Menyiapkan compose NPM + web dummy di $STACK…"
   mkdir -p "$STACK/web"
   [ -f "$STACK/web/index.html" ] || cat >"$STACK/web/index.html" <<'EOF'
 <!DOCTYPE html>
@@ -253,7 +278,9 @@ EOF
 step8() {
   step_head 8 "Firewall" "Hanya SSH, 80, 443 yang terbuka. SSH dibuka dulu supaya sesi ini tidak putus."
   local port
+  act "Membaca port SSH…"
   port=$(sshd -T 2>/dev/null | awk '/^port /{print $2; exit}'); port=${port:-22}
+  info "Port SSH: $port"
   run "Buka port SSH ($port), 80, 443" sh -c "ufw allow $port/tcp && ufw allow 80/tcp && ufw allow 443/tcp" \
     || die "Gagal menambah aturan UFW"
   run "Aktifkan firewall" ufw --force enable || die "UFW gagal aktif"
@@ -261,11 +288,15 @@ step8() {
 
 step9() {
   step_head 9 "SSH" "Root tidak bisa login lagi; hanya $U."
-  if [ ! -s "/home/$U/.ssh/authorized_keys" ] && [ -s /root/.ssh/authorized_keys ]; then
+  act "Mengecek SSH key $U…"
+  if [ -s "/home/$U/.ssh/authorized_keys" ]; then skip "SSH key $U ($(grep -c . "/home/$U/.ssh/authorized_keys") key)"
+  elif [ -s /root/.ssh/authorized_keys ]; then
     install -d -m 700 -o "$U" -g "$U" "/home/$U/.ssh"
     install -m 600 -o "$U" -g "$U" /root/.ssh/authorized_keys "/home/$U/.ssh/authorized_keys"
     ok "SSH key root disalin ke $U (supaya $U tetap bisa login)"
+  else info "$U belum punya SSH key: login pakai password"
   fi
+  act "Menerapkan aturan SSH…"
   grep -q '^Include /etc/ssh/sshd_config.d' /etc/ssh/sshd_config \
     || warn "sshd_config tidak memuat sshd_config.d/, hardening tidak aktif"
   local hard=/etc/ssh/sshd_config.d/00-hardening.conf   # 00- supaya menang dari file lain (nilai pertama dipakai)
@@ -277,6 +308,7 @@ step9() {
 
 finale() {
   printf '\n%s━━ VPS siap %s%s\n' "$GRN$B" "$(printf '━%.0s' $(seq 1 46))" "$R"
+  summary
   box "1 · Tes login dulu (JANGAN tutup sesi root ini)" "Di terminal baru: ssh $U@$IP"
   box "2 · Cek lewat browser" "http://$IP → halaman bawaan Nginx Proxy Manager = port 80 + firewall beres
 Web dummy baru tampil di domain kamu setelah Proxy Host dibuat (langkah 3)"
@@ -293,5 +325,6 @@ ssh -t $U@$IP bash igrowctl.sh"
 }
 
 banner; preflight; intro
+T0=$SECONDS N_WARN=0   # waktu & hitungan mulai setelah pertanyaan dijawab
 for i in 1 2 3 4 5 6 7 8 9; do "step$i"; done
 finale

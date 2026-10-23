@@ -44,7 +44,7 @@ Setelah langkah 4, script juga ada di repo hasil clone, jadi berikutnya cukup `b
 
 ## 3. Langkah per Langkah
 
-Semua langkah **aman diulang**: yang sudah beres dicek lalu dilewati (`↷ sudah beres`). Gagal di tengah → perbaiki penyebabnya, jalankan ulang script.
+Semua langkah **aman diulang**: yang sudah ada dicek lalu dilewati (tampil `✔ … (sudah ada)`). Gagal di tengah → perbaiki penyebabnya, jalankan ulang script.
 
 | # | Langkah | Yang ditanya | Hasil & lokasi |
 |---|---|---|---|

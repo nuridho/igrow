@@ -102,8 +102,11 @@ code, .mono { font-family: var(--mono); font-size: 0.92em; }
 /* Menu interaktif */
 .menu-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 .opts { display: grid; gap: 0; padding: 4px 8px 12px; }
-.opt { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 2.2ch 15ch 1fr; gap: 0 8px;
+.opt { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 1.5ch 2.2ch 15ch 1fr; gap: 0 8px;
   font-family: var(--mono); font-size: 12.5px; padding: 4px 8px; border-radius: 4px; color: var(--term-fg); }
+.opt .p { color: var(--t-cyan); font-weight: 600; visibility: hidden; }
+.opt[aria-pressed="true"] .p { visibility: visible; }
+.opt[aria-pressed="true"] .k, .opt[aria-pressed="true"] .n { color: var(--t-cyan); }
 .opt .k { color: var(--t-yel); font-weight: 600; }
 .opt .n { font-weight: 600; }
 .opt .t { color: var(--t-dim); }
@@ -111,7 +114,6 @@ code, .mono { font-family: var(--mono); font-size: 0.92em; }
 .opt:focus-visible { outline: 1.5px solid var(--t-cyan); }
 .opt[aria-pressed="true"] { background: #1f3a3a; }
 .opt[aria-pressed="true"] .t { color: var(--term-fg); }
-.prompt { font-family: var(--mono); font-size: 12.5px; padding: 6px 16px 14px; color: var(--term-fg); }
 .explain { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
 .explain h3 { font-size: 16px; }
 .explain dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; font-size: 14px; }
@@ -173,7 +175,7 @@ tr:first-child td { border-top: 0; }
           <h3>Menu pilihan</h3>
           <ol>
             <li>Menu 9 pilihan tampil</li>
-            <li>Ketik angka 1–7, <code>h</code>, atau <code>0</code></li>
+            <li>Pilih dengan ↑/↓ + Enter, atau tekan angka/hurufnya</li>
             <li>Script menjalankan pilihan itu</li>
             <li><code>h</code> → penjelasan, lalu menu tampil lagi</li>
           </ol>
@@ -207,53 +209,135 @@ PROJ="whatsinsidegit"      <span class="d"># dari setupvps.sh</span>
 <span class="d">    arsip karier &amp; knowledge base · Hermes + Telegram</span>
   <span class="c">•</span> Minta sudo sekali untuk install paket…
 
-  <span class="c">┌─ Yang perlu disiapkan (±15 menit)</span>
+  <span class="c">╭─ <span class="bo">Yang perlu disiapkan (±15 menit)</span></span>
   <span class="c">│</span> • Akun GitHub (repo iGROW + repo privat kosong untuk backup)
   <span class="c">│</span> • Telegram: bot baru dari @BotFather + user ID dari @userinfobot
   <span class="c">│</span> • API key LLM (OpenRouter / Anthropic / OpenAI / dll)
   <span class="c">│</span> Langkah yang sudah beres otomatis dilewati. Gagal di tengah? Jalankan ulang saja.
-  <span class="c">└─</span>
+  <span class="c">╰─</span>
 
   <span class="d">1 Paket · 2 Git · 3 Docker · 4 Repo · 5 Container · 6 LLM &amp; Telegram · 7 Runtime · 8 Backup · 9 Cron</span>
 
   <span class="y">?</span> Mulai? <span class="d">[Y/n]</span> y
 
+
+
 <span class="m">━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="g">✔</span> Install git rsync curl
+  <span class="d">git, rsync, curl: alat wajib sebelum yang lain.</span>
+
+  <span class="c">›</span> <span class="d">Mengecek git, rsync, curl, ssh-keygen…</span>
+  <span class="g">✔</span> git version 2.43.0, rsync 3.2.7, curl 8.5.0 <span class="d">(sudah ada)</span>
+
 <span class="m">━━ [2/9] Git &amp; GitHub ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="d">Identitas commit + SSH key, supaya VPS bisa pull &amp; push ke GitHub.</span>
+
+  <span class="c">›</span> <span class="d">Mengecek identitas git…</span>
+  <span class="y">?</span> Nama untuk commit git: nuridho
+  <span class="y">?</span> Email GitHub (boleh alamat noreply GitHub): contoh-user@users.noreply.github.com
+  <span class="g">✔</span> Identitas git: nuridho &lt;contoh-user@users.noreply.github.com&gt;
+  <span class="c">›</span> <span class="d">Mengecek SSH key VPS…</span>
+  <span class="g">✔</span> SSH key baru: /home/nuridho/.ssh/id_ed25519
+  <span class="c">›</span> <span class="d">Mengetes koneksi SSH ke GitHub…</span>
+<span class="fold">  (kotak berisi SSH key → tempel di GitHub → Enter)</span>
   <span class="g">✔</span> SSH ke GitHub tembus (akun contoh-user)
+
 <span class="m">━━ [3/9] Docker &amp; Compose ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="d">↷ Docker version 27.x, compose v2.x — sudah beres, dilewati</span>
+  <span class="d">Mesin untuk menjalankan container Hermes.</span>
+
+  <span class="c">›</span> <span class="d">Mengecek Docker &amp; Compose…</span>
+  <span class="g">✔</span> Docker version 27.3.1, compose 2.29.7 <span class="d">(sudah ada)</span>
+  <span class="c">›</span> <span class="d">Memastikan service Docker aktif &amp; akses user nuridho…</span>
+  <span class="g">✔</span> User nuridho di grup docker <span class="d">(sudah ada)</span>
+  <span class="g">✔</span> Docker siap (service aktif)
+
 <span class="m">━━ [4/9] Repo iGROW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="g">✔</span> Clone git@github.com:contoh-user/iGROW.git
+  <span class="d">Clone repo spec iGROW ke VPS: sumber file runtime hermes-home/.</span>
+
+  <span class="c">›</span> <span class="d">Mengecek repo iGROW di /home/nuridho/iGROW…</span>
+  <span class="y">?</span> URL SSH repo iGROW <span class="d">[git@github.com:contoh-user/iGROW.git]</span>: 
+  <span class="y">?</span> Clone ke folder <span class="d">[/home/nuridho/iGROW]</span>: 
+  <span class="g">✔</span> Clone git@github.com:contoh-user/iGROW.git <span class="d">3s</span>
+  <span class="g">✔</span> Repo: /home/nuridho/iGROW (a1b2c3d · 2 jam lalu)
+  <span class="c">•</span> Sumber runtime: /home/nuridho/iGROW/hermes-home/ (24 file)
+
 <span class="m">━━ [5/9] Container Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="y">?</span> Mau install di mana? Nama folder project di /home/nuridho (mis. whatsinsidegit) <span class="d">[whatsinsidegit]</span>:
+  <span class="d">Compose resmi nousresearch/hermes-agent; data di hermes-home/ = /opt/data.</span>
+
+  <span class="c">›</span> <span class="d">Mencari container igrow-hermes…</span>
+  <span class="c">•</span> Belum ada container igrow-hermes: compose baru akan dibuat
+  <span class="y">?</span> Mau install di mana? Nama folder project di /home/nuridho (mis. whatsinsidegit) <span class="d">[whatsinsidegit]</span>: 
   <span class="c">•</span> Folder /home/nuridho/whatsinsidegit sudah ada, dipakai
-  <span class="g">✔</span> Tarik image nousresearch/hermes-agent
+  <span class="y">?</span> Timezone (jam cron &amp; briefing) <span class="d">[Asia/Jakarta]</span>: 
+  <span class="c">›</span> <span class="d">Menyiapkan folder &amp; environment…</span>
+  <span class="g">✔</span> Folder data: /home/nuridho/whatsinsidegit/igrow-hermes/hermes-home
+  <span class="g">✔</span> Environment compose: UID/GID 1000:1000, TZ Asia/Jakarta (…/igrow-hermes/.env)
+  <span class="g">✔</span> docker-compose.yml dibuat di /home/nuridho/whatsinsidegit/igrow-hermes
+  <span class="g">✔</span> Tarik image nousresearch/hermes-agent <span class="d">48s</span>
+  <span class="c">•</span> Image: nousresearch/hermes-agent:latest (dibuat 2026-10-20)
+
 <span class="m">━━ [6/9] Otak (LLM) &amp; Telegram ━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="d">API key LLM + token bot, disimpan di hermes-home/.env (bukan di repo).</span>
+
+  <span class="c">›</span> <span class="d">Mengecek setelan LLM…</span>
+  <span class="c">•</span> Belum ada setelan LLM
+  <span class="y">?</span> Buka wizard LLM resmi Hermes (pilih provider → tempel API key → pilih model)? <span class="d">[Y/n]</span> y
+<span class="fold">  (wizard resmi Hermes: pilih provider → API key → model)</span>
+  <span class="g">✔</span> LLM tersimpan
+  <span class="c">›</span> <span class="d">Mengecek token bot Telegram…</span>
+  <span class="y">?</span> Token bot <span class="d">(tidak tampil di layar)</span>:
   <span class="g">✔</span> Bot valid: @igrow_contoh_bot
+  <span class="y">?</span> User ID Telegram kamu: 123456789
+  <span class="g">✔</span> Telegram tersimpan: hanya user 123456789 yang dilayani, hasil cron masuk ke chat ini
+
 <span class="m">━━ [7/9] Runtime iGROW &amp; tools ━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="g">✔</span> Gateway jalan: igrow-hermes
+  <span class="d">Salin hermes-home/ dari repo, kunci approval skill, pilih tools cron, nyalakan bot.</span>
+
+  <span class="c">›</span> <span class="d">Menyalin aturan iGROW dari repo ke …/hermes-home…</span>
+  <span class="g">✔</span> Runtime terbaru (AGENTS.md, SCHEMA, project-skills)
+  <span class="g">✔</span> File milik agent yang belum ada (katalog, log, tag)
+  <span class="c">›</span> <span class="d">Mengunci approval skill buatan Hermes…</span>
+  <span class="g">✔</span> skills.write_approval = true (skill buatan Hermes menunggu persetujuanmu) <span class="d">3s</span>
+  <span class="y">?</span> Wajibkan approval juga untuk memory Hermes (memory.write_approval)? <span class="d">[y/N]</span>
+<span class="fold">  (layar hermes tools: platform cron → web, terminal, file)</span>
+  <span class="c">›</span> <span class="d">Menyalakan gateway Telegram…</span>
+  <span class="g">✔</span> Nyalakan gateway (docker compose up -d) <span class="d">6s</span>
+  <span class="g">✔</span> Gateway jalan: igrow-hermes (bot @igrow_contoh_bot)
+  <span class="g">✔</span> hermes doctor <span class="d">4s</span>
+
 <span class="m">━━ [8/9] Backup knowledge ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="g">✔</span> Uji backup.sh (persis seperti cron)
+  <span class="d">igrow/ di-push ke repo GitHub privat. Repo backup sudah berisi → tawarkan restore.</span>
+
+  <span class="c">›</span> <span class="d">Mengecek git di container &amp; sambungan repo backup…</span>
+  <span class="y">?</span> Repo backup GitHub (pemilik/nama), PRIVAT <span class="d">[contoh-user/igrow-backup]</span>: 
+<span class="fold">  (kotak petunjuk: buat repo privat + fine-grained token → Enter)</span>
+  <span class="y">?</span> Fine-grained token <span class="d">(tidak tampil di layar)</span>:
+  <span class="g">✔</span> Token valid, repo privat
+  <span class="g">✔</span> Push pertama ke contoh-user/igrow-backup <span class="d">3s</span>
+  <span class="g">✔</span> Uji backup.sh (persis seperti cron) <span class="d">4s</span>
+
 <span class="m">━━ [9/9] Cron job ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-  <span class="g">✔</span> daily-briefing (0 7 * * *)
-  <span class="g">✔</span> backup-knowledge (0 5 * * 1,3,6)
-  <span class="g">✔</span> lint-mingguan (0 8 * * 0)
-  <span class="g">✔</span> career-review (0 9 1 1,4,7,10 *)
+  <span class="d">Briefing 07:00 · backup Sen/Rab/Sab 05:00 · lint Minggu 08:00 · career review tiap kuartal.</span>
+
+  <span class="c">›</span> <span class="d">Membaca daftar cron yang sudah ada…</span>
+  <span class="g">✔</span> daily-briefing (0 7 * * *) <span class="d">3s</span>
+  <span class="g">✔</span> backup-knowledge (0 5 * * 1,3,6) <span class="d">2s</span>
+  <span class="g">✔</span> lint-mingguan (0 8 * * 0) <span class="d">2s</span>
+  <span class="g">✔</span> career-review (0 9 1 1,4,7,10 *) <span class="d">2s</span>
+  <span class="g">✔</span> Uji lint-privacy.sh (dipakai lint mingguan)
 <span class="fold">  (di sini script menulis SETUP_DONE=1 ke setup.env)</span>
 
-<span class="g bo">━━ iGROW siap ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="g bo">━━ iGROW siap ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+  <span class="g">✔ 33 dikerjakan</span>  <span class="d">✔ 3 sudah ada</span>  <span class="y">! 0 peringatan</span>  <span class="d">waktu 9m12s</span>
 
-  <span class="c">┌─ Coba sekarang</span>
+  <span class="c">╭─ <span class="bo">Coba sekarang</span></span>
   <span class="c">│</span> Telegram → @igrow_contoh_bot → kirim: halo
   <span class="c">│</span> Lalu ikuti skenario uji: /home/nuridho/iGROW/testing/test-flow.md
-  <span class="c">└─</span>
+  <span class="c">╰─</span>
 
-  <span class="c">┌─ Berikutnya</span>
+  <span class="c">╭─ <span class="bo">Berikutnya</span></span>
   <span class="c">│</span> bash igrowctl.sh   → menu: deploy, status, update, ganti LLM/token, backup, help
   <span class="c">│</span> Telegram: /skills pending → cek skill buatan Hermes yang menunggu persetujuan
-  <span class="c">└─</span></pre>
+  <span class="c">╰─</span></pre>
       </div>
       <p class="ex">Contoh: tiap langkah diringkas jadi satu baris hasil. Nama akun dan bot fiktif.</p>
     </div>
@@ -268,14 +352,14 @@ PROJ="whatsinsidegit"
       <div class="menu-grid">
         <div class="term" aria-label="Menu igrowctl.sh">
           <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrowctl.sh</span></div>
-<pre style="padding-bottom:4px"><span class="c">  ┌─ Mau ngapain?</span></pre>
+<pre style="padding-bottom:4px"><span class="c">  ╭─ <span class="bo">Mau ngapain?</span></span>
+<span class="c">  │</span> <span class="d">↑/↓ pilih · Enter jalankan · atau tekan angkanya</span></pre>
           <div class="opts" id="opts" role="group" aria-label="Pilihan menu"></div>
-<pre style="padding-top:0;padding-bottom:4px"><span class="c">  └─</span></pre>
-          <div class="prompt"><span class="y">?</span> Pilih (0-7 / h): <span id="typed"></span><span class="cursor" aria-hidden="true">&nbsp;</span></div>
+<pre style="padding-top:0;padding-bottom:4px"><span class="c">  ╰─</span></pre>
         </div>
         <div class="explain" id="explain" aria-live="polite"></div>
       </div>
-      <p class="hint">Klik salah satu pilihan, atau ketik angkanya di keyboard. Hasil di terminal bawah adalah contoh.</p>
+      <p class="hint">Klik pilihan, pakai ↑/↓, atau tekan angkanya di keyboard. Hasil di terminal bawah adalah contoh.</p>
       <div class="term" aria-label="Contoh hasil pilihan">
         <div class="term-bar"><i></i><i></i><i></i><span id="out-title">hasil pilihan</span></div>
         <pre id="out"></pre>
@@ -315,13 +399,13 @@ const OPTIONS = [
     when: "Kamu mengubah aturan di hermes-home/ di laptop lalu git push.",
     what: "git pull repo di VPS, lalu salin aturan ke hermes-home/. Note, raw, output tidak disentuh.",
     after: "Kirim /new di Telegram supaya sesi baru membaca aturan terbaru.",
-    out: [["m","━━ · Deploy runtime ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  git pull repo → rsync 2 langkah ke hermes-home/. Data di VPS tidak disentuh."],[""],
+    out: [["m","━━ · Deploy runtime ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  git pull repo → rsync 2 langkah ke hermes-home/. Data di VPS tidak disentuh."],[""],
       ["g","  ✔ ","git pull (/home/nuridho/iGROW)"],["g","  ✔ ","Runtime terbaru (AGENTS.md, SCHEMA, project-skills)"],["g","  ✔ ","File milik agent yang belum ada (katalog, log, tag)"],["g","  ✔ ","Selesai. Mulai sesi baru di Telegram (/new) supaya aturan terbaru terbaca."]] },
   { k: "2", name: "Status", short: "cek bot, Hermes, cron, backup terakhir", runs: "cmd_status",
     when: "Bot diam, atau sekadar mau memastikan semuanya sehat.",
     what: "Cek container jalan, hermes doctor, daftar cron, waktu backup terakhir. Tidak mengubah apa pun.",
     after: "Ada yang merah? Pilihan 4–7 biasanya jawabannya.",
-    out: [["m","━━ · Status ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Kesehatan container, Hermes, cron, dan backup."],[""],
+    out: [["m","━━ · Status ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Kesehatan container, Hermes, cron, dan backup."],[""],
       ["g","  ✔ ","Container igrow-hermes jalan (2026-10-24T05:02)"],["g","  ✔ ","hermes doctor bersih"],[""],
       ["d","    (daftar cron dari hermes cron list: daily-briefing, backup-knowledge, lint-mingguan, career-review)"],[""],
       ["g","  ✔ ","Backup terakhir: 2 hari lalu · backup otomatis"],["g","  ✔ ","Runtime repo: a1b2c3d · 3 jam lalu"]] },
@@ -329,52 +413,52 @@ const OPTIONS = [
     when: "Hermes rilis versi baru (sesekali saja, mis. sebulan sekali).",
     what: "Tarik image terbaru, buat ulang container, cek doctor dan cron. Kalau sudah terbaru, tidak ada yang diubah.",
     after: "Versi baru bermasalah? Di akhir tampil baris image: …@sha256:… untuk balik ke versi lama.",
-    out: [["m","━━ · Update Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Tarik image terbaru → buat ulang container. Data di hermes-home/ tetap."],[""],
+    out: [["m","━━ · Update Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Tarik image terbaru → buat ulang container. Data di hermes-home/ tetap."],[""],
       ["g","  ✔ ","Tarik image terbaru"],["g","  ✔ ","Buat ulang container"],["g","  ✔ ","Hermes 1.4.2 → 1.5.0"],["g","  ✔ ","hermes doctor"],[""],
-      ["c","  ┌─ Kalau versi baru bermasalah, balik ke versi lama"],["c","  │ ","Di /home/nuridho/whatsinsidegit/igrow-hermes/docker-compose.yml, service igrow-hermes:"],
-      ["c","  │ ","  image: nousresearch/hermes-agent@sha256:9f3c…"],["c","  │ ","lalu: cd … && docker compose up -d igrow-hermes"],["c","  └─"],
+      ["c","  ╭─ Kalau versi baru bermasalah, balik ke versi lama"],["c","  │ ","Di /home/nuridho/whatsinsidegit/igrow-hermes/docker-compose.yml, service igrow-hermes:"],
+      ["c","  │ ","  image: nousresearch/hermes-agent@sha256:9f3c…"],["c","  │ ","lalu: cd … && docker compose up -d igrow-hermes"],["c","  ╰─"],
       ["g","  ✔ ","Selesai. Kirim /new di Telegram, lalu cek job cron di atas masih lengkap."]] },
   { k: "4", name: "LLM & Telegram", short: "ganti API key, model, atau token bot", runs: "step6",
     when: "Ganti provider, API key, atau model LLM, atau ganti token bot Telegram.",
     what: "Wizard resmi Hermes untuk LLM. Token bot dicek ke Telegram dulu sebelum disimpan.",
     after: "Gateway di-restart otomatis supaya setelan baru terbaca.",
     out: [["m","━━ [6/9] Otak (LLM) & Telegram ━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  API key LLM + token bot, disimpan di hermes-home/.env (bukan di repo)."],[""],
-      ["c","  • ","Model sekarang: contoh-provider/contoh-model"],["y","  ? ","Buka wizard LLM resmi Hermes (pilih provider → tempel API key → pilih model)? [y/N]"],
-      ["y","  ? ","Token bot Telegram sudah ada. Ganti? [y/N]"],["g","  ✔ ","Restart gateway (setelan baru dibaca)"]] },
+      ["act","Mengecek setelan LLM…"],["c","  • ","Model sekarang: contoh-provider/contoh-model"],["y","  ? ","Buka wizard LLM resmi Hermes (pilih provider → tempel API key → pilih model)? [y/N]"],
+      ["act","Mengecek token bot Telegram…"],["y","  ? ","Token bot Telegram sudah ada. Ganti? [y/N]"],["g","  ✔ ","Restart gateway (setelan baru dibaca)"]] },
   { k: "5", name: "Tools cron", short: "ganti tools untuk job cron", runs: "step7",
     when: "Job cron gagal karena tool-nya mati, atau mau mengubah tools cron.",
     what: "Aturan dari repo dipasang ulang, layar hermes tools dibuka (platform cron: web, terminal, file), bot di-restart.",
     after: "Pastikan doctor di akhir bersih.",
     out: [["m","━━ [7/9] Runtime iGROW & tools ━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Salin hermes-home/ dari repo, kunci approval skill, pilih tools cron, nyalakan bot."],[""],
-      ["g","  ✔ ","Runtime terbaru (AGENTS.md, SCHEMA, project-skills)"],["g","  ✔ ","skills.write_approval = true (skill buatan Hermes menunggu persetujuanmu)"],
+      ["act","Menyalin aturan iGROW dari repo ke hermes-home…"],["g","  ✔ ","Runtime terbaru (AGENTS.md, SCHEMA, project-skills)"],["act","Mengunci approval skill buatan Hermes…"],["g","  ✔ ","skills.write_approval = true (skill buatan Hermes menunggu persetujuanmu)"],
       ["y","  ? ","Buka pengaturan tools sekarang? [Y/n]"],["d","    (layar hermes tools: pilih platform cron → web, terminal, file)"],
-      ["g","  ✔ ","Restart gateway"],["g","  ✔ ","Gateway jalan: igrow-hermes"],["g","  ✔ ","hermes doctor"]] },
+      ["act","Menyalakan gateway Telegram…"],["g","  ✔ ","Restart gateway"],["g","  ✔ ","Gateway jalan: igrow-hermes"],["g","  ✔ ","hermes doctor"]] },
   { k: "6", name: "Backup", short: "sambung ulang / ganti token backup", runs: "step8 (plus tawaran hapus token)",
     when: "Token backup kedaluwarsa, push backup gagal, atau ganti repo backup.",
     what: "Jawab y untuk menghapus token lama, masukkan token baru, lalu backup diuji persis seperti cron.",
     after: "Token lama tidak perlu dihapus manual lagi.",
     out: [["y","  ? ","Ganti token backup? (token lama dihapus, mis. karena kedaluwarsa) [y/N] y"],["c","  • ","Token lama dihapus"],[""],
       ["m","━━ [8/9] Backup knowledge ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  igrow/ di-push ke repo GitHub privat. Repo backup sudah berisi → tawarkan restore."],[""],
-      ["y","  ? ","Repo backup GitHub (pemilik/nama), PRIVAT [contoh-user/igrow-backup]:"],["y","  ? ","Fine-grained token (tidak tampil di layar):"],
+      ["act","Mengecek git di container & sambungan repo backup…"],["y","  ? ","Repo backup GitHub (pemilik/nama), PRIVAT [contoh-user/igrow-backup]:"],["y","  ? ","Fine-grained token (tidak tampil di layar):"],
       ["g","  ✔ ","Token valid, repo privat"],["g","  ✔ ","Uji backup.sh (persis seperti cron)"]] },
   { k: "7", name: "Setup ulang", short: "semua langkah; yang sudah beres dilewati", runs: "intro + langkah 1–9",
     when: "Ada langkah yang dulu gagal, atau ragu setup sudah lengkap.",
     what: "Langkah 1–9 dijalankan seperti Jalur A. Yang sudah beres dicek lalu dilewati. Aman.",
     after: "Sama dengan bash igrowctl.sh all.",
-    out: [["y","  ? ","Mulai? [Y/n] y"],[""],["m","━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  ↷ git version 2.x, rsync, curl — sudah beres, dilewati"],
-      ["m","━━ [2/9] Git & GitHub ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  ↷ Identitas git: nuridho <…> — sudah beres, dilewati"],
-      ["fold","  … langkah 3–8: kebanyakan ↷ dilewati …"],
-      ["m","━━ [9/9] Cron job ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  ↷ daily-briefing — sudah beres, dilewati"],["d","  ↷ backup-knowledge — sudah beres, dilewati"],
-      ["d","  ↷ lint-mingguan — sudah beres, dilewati"],["d","  ↷ career-review — sudah beres, dilewati"],[""],["gb","━━ iGROW siap ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"]] },
+    out: [["y","  ? ","Mulai? [Y/n] y"],[""],["m","━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["g","  ✔ ","git version 2.x, rsync, curl (sudah ada)"],
+      ["m","━━ [2/9] Git & GitHub ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["g","  ✔ ","Identitas git: nuridho <…> (sudah ada)"],
+      ["fold","  … langkah 3–8: kebanyakan ✔ (sudah ada) …"],
+      ["m","━━ [9/9] Cron job ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["g","  ✔ ","daily-briefing (sudah ada)"],["g","  ✔ ","backup-knowledge (sudah ada)"],
+      ["g","  ✔ ","lint-mingguan (sudah ada)"],["g","  ✔ ","career-review (sudah ada)"],[""],["gb","━━ iGROW siap ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["g","  ✔ 0 dikerjakan","  ✔ 31 sudah ada  ! 0 peringatan  waktu 1m05s"]] },
   { k: "h", name: "Help", short: "penjelasan tiap pilihan", runs: "cmd_help",
     when: "Bingung maksud salah satu pilihan.",
     what: "Tampil penjelasan pilihan 1–7: kapan dipakai dan apa yang terjadi.",
     after: "Menu langsung tampil lagi, jadi bisa langsung memilih.",
-    out: [["m","━━ · Help ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Penjelasan tiap pilihan di menu."],[""],
+    out: [["m","━━ · Help ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  Penjelasan tiap pilihan di menu."],[""],
       ["cb","  1 · Deploy"],["","    Kapan: kamu mengubah aturan di hermes-home/ di laptop lalu git push."],["","    Yang terjadi: git pull repo di VPS → salin aturan ke hermes-home/. Note, raw, output tidak disentuh."],[""],
       ["cb","  2 · Status"],["","    Kapan: bot diam, atau sekadar mau memastikan semuanya sehat."],[""],
       ["fold","  … pilihan 3–7 dengan format yang sama …"],[""],
-      ["c","  ┌─ Mau ngapain?"],["fold","  (menu tampil lagi)"]] },
+      ["c","  ╭─ Mau ngapain?"],["fold","  (menu tampil lagi)"]] },
   { k: "0", name: "Keluar", short: "", runs: "exit 0",
     when: "Salah buka, atau sudah selesai.",
     what: "Script berhenti tanpa mengubah apa pun.",
@@ -386,12 +470,12 @@ const optsEl = document.getElementById("opts");
 const outEl = document.getElementById("out");
 const outTitle = document.getElementById("out-title");
 const explainEl = document.getElementById("explain");
-const typedEl = document.getElementById("typed");
 
 const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
 
 function line(l) {
   const [cls, a = "", b] = l;
+  if (cls === "act") return `  <span class="c">›</span> <span class="d">${esc(a)}</span>`; // sedang dicek / dikerjakan
   if (b !== undefined) return `<span class="${cls}">${esc(a)}</span>${esc(b)}`;
   const map = { gb: "g bo", cb: "c bo" };
   return cls ? `<span class="${map[cls] || cls}">${esc(a)}</span>` : esc(a);
@@ -403,7 +487,7 @@ OPTIONS.forEach(o => {
   btn.className = "opt";
   btn.dataset.k = o.k;
   btn.setAttribute("aria-pressed", "false");
-  btn.innerHTML = `<span class="k">${o.k}</span><span class="n">${esc(o.name)}</span><span class="t">${esc(o.short)}</span>`;
+  btn.innerHTML = `<span class="p" aria-hidden="true">❯</span><span class="k">${o.k}</span><span class="n">${esc(o.name)}</span><span class="t">${esc(o.short)}</span>`;
   btn.addEventListener("click", () => pick(o.k));
   optsEl.appendChild(btn);
 });
@@ -412,7 +496,6 @@ function pick(k) {
   const o = OPTIONS.find(x => x.k === k);
   if (!o) return;
   optsEl.querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.k === k)));
-  typedEl.textContent = k;
   outTitle.textContent = `setelah memilih ${k} · ${o.name}`;
   outEl.innerHTML = o.out.map(line).join("\n");
   explainEl.innerHTML = `
@@ -448,6 +531,16 @@ document.querySelectorAll(".branch").forEach(b => b.addEventListener("click", ()
   show(b.dataset.go);
   document.getElementById("h-sim").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 }));
+
+/* ↑/↓ saat fokus di menu menggeser pilihan, seperti di terminal */
+optsEl.addEventListener("keydown", e => {
+  if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+  e.preventDefault();
+  const btns = [...optsEl.querySelectorAll(".opt")];
+  const cur = btns.findIndex(b => b.getAttribute("aria-pressed") === "true");
+  const next = btns[(cur + (e.key === "ArrowDown" ? 1 : btns.length - 1)) % btns.length];
+  pick(next.dataset.k); next.focus();
+});
 
 /* Ketik pilihan langsung di keyboard saat Jalur B tampil */
 document.addEventListener("keydown", e => {

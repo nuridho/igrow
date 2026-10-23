@@ -19,32 +19,37 @@ mkdir -p "$CONF_DIR" && chmod 700 "$CONF_DIR" && touch "$LOG" && chmod 600 "$LOG
 # ── Tampilan ────────────────────────────────────────────────────────────────
 if [ -t 1 ]; then
   B=$'\e[1m' D=$'\e[2m' R=$'\e[0m' RED=$'\e[31m' GRN=$'\e[32m' YEL=$'\e[33m' CYN=$'\e[36m' MAG=$'\e[35m'
+  if [ "$(tput colors 2>/dev/null || echo 8)" -ge 256 ]; then   # gradasi banner: cyan → biru → ungu
+    GRAD=($'\e[38;5;51m' $'\e[38;5;45m' $'\e[38;5;39m' $'\e[38;5;33m' $'\e[38;5;63m')
+  else GRAD=("$CYN" "$CYN" "$CYN" "$CYN" "$CYN"); fi
 else
-  B='' D='' R='' RED='' GRN='' YEL='' CYN='' MAG=''
+  B='' D='' R='' RED='' GRN='' YEL='' CYN='' MAG='' GRAD=('' '' '' '' '')
 fi
-TOTAL=9
+TOTAL=9 T0=$SECONDS N_OK=0 N_SKIP=0 N_WARN=0
 
-ok()   { printf '  %s✔%s %s\n' "$GRN" "$R" "$*"; }
+ok()   { N_OK=$((N_OK + 1));     printf '  %s✔%s %s\n' "$GRN" "$R" "$*"; }
 info() { printf '  %s•%s %s\n' "$CYN" "$R" "$*"; }
-warn() { printf '  %s!%s %s\n' "$YEL" "$R" "$*"; }
-skip() { printf '  %s↷ %s — sudah beres, dilewati%s\n' "$D" "$*" "$R"; }
+warn() { N_WARN=$((N_WARN + 1)); printf '  %s!%s %s\n' "$YEL" "$R" "$*"; }
+act()  { printf '  %s›%s %s%s%s\n' "$CYN" "$R" "$D" "$*" "$R"; }   # sedang dicek / dikerjakan
+skip() { N_SKIP=$((N_SKIP + 1)); printf '  %s✔%s %s %s(sudah ada)%s\n' "$GRN" "$R" "$*" "$D" "$R"; }
 die()  { printf '\n  %s✘ %s%s\n  %sLog lengkap: %s%s\n\n' "$RED$B" "$*" "$R" "$D" "$LOG" "$R"; exit 1; }
+dur()  { if [ "$1" -ge 60 ]; then printf '%dm%02ds' $(($1 / 60)) $(($1 % 60)); else printf '%ds' "$1"; fi; }
 
 banner() {
   clear 2>/dev/null || true
-  printf '%s' "$CYN$B"
-  cat <<'ART'
-
+  local i=0 l
+  printf '\n'
+  while IFS= read -r l; do printf '%s%s%s\n' "${GRAD[i++]}$B" "$l" "$R"; done <<'ART'
      _  ____ ____   _____        __
     (_)/ ___|  _ \ / _ \ \      / /
     | | |  _| |_) | | | \ \ /\ / /
     | | |_| |  _ <| |_| |\ V  V /
     |_|\____|_| \_\\___/  \_/\_/
 ART
-  printf '%s    arsip karier & knowledge base · Hermes + Telegram%s\n' "$R$D" "$R"
+  printf '%s    arsip karier & knowledge base · Hermes + Telegram%s\n' "$D" "$R"
 }
 
-step_head() { # step_head <nomor> <judul> <penjelasan>
+step_head() { # step_head <nomor|·> <judul> <penjelasan>
   local line tag="[$1/$TOTAL]"; [[ "$1" =~ ^[0-9]+$ ]] || tag="$1"
   line=$(printf '━%.0s' $(seq 1 $((46 - ${#2}))))
   printf '\n%s━━ %s %s %s%s\n' "$MAG$B" "$tag" "$2" "$line" "$R"
@@ -52,9 +57,14 @@ step_head() { # step_head <nomor> <judul> <penjelasan>
 }
 
 box() { # box <judul> <isi, boleh multi-baris>
-  printf '\n  %s┌─ %s%s\n' "$CYN" "$1" "$R"
+  printf '\n  %s╭─ %s%s%s\n' "$CYN" "$B" "$1" "$R"
   while IFS= read -r l; do printf '  %s│%s %s\n' "$CYN" "$R" "$l"; done <<<"$2"
-  printf '  %s└─%s\n\n' "$CYN" "$R"
+  printf '  %s╰─%s\n\n' "$CYN" "$R"
+}
+
+summary() { # summary → hitungan + waktu sejak T0
+  printf '  %s✔ %d dikerjakan%s  %s✔ %d sudah ada%s  %s! %d peringatan%s  %swaktu %s%s\n' \
+    "$GRN" "$N_OK" "$R" "$D" "$N_SKIP" "$R" "$YEL" "$N_WARN" "$R" "$D" "$(dur $((SECONDS - T0)))" "$R"
 }
 
 ask() { # ask <VAR> <pertanyaan> [default] — wajib terisi
@@ -85,19 +95,21 @@ confirm() { # confirm <teks> [Y|N] → return 0 kalau ya
 
 pause() { printf '  %s↵  Enter kalau sudah…%s' "$D" "$R"; read -r _ </dev/tty; }
 
-run() { # run <label> <perintah…> → output ke log, spinner di layar
-  local label="$1" start; shift
+run() { # run <label> <perintah…> → output ke log; di layar spinner + detik berjalan
+  local label="$1" start t0=$SECONDS e; shift
   printf '\n=== %s · %s\n' "$(date '+%F %T')" "$label" >>"$LOG"
   start=$(wc -l <"$LOG")
   "$@" >>"$LOG" 2>&1 &
   local pid=$! i=0 f=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   while kill -0 "$pid" 2>/dev/null; do
-    [ -t 1 ] && printf '\r  %s%s%s %s' "$CYN" "${f[i++ % 10]}" "$R" "$label"
+    [ -t 1 ] && printf '\r  %s%s%s %s %s%ss%s\e[K' "$CYN" "${f[i++ % 10]}" "$R" "$label" "$D" $((SECONDS - t0)) "$R"
     sleep 0.1
   done
   [ -t 1 ] && printf '\r\e[K'
-  if wait "$pid"; then ok "$label"; return 0; fi
-  printf '  %s✘%s %s\n' "$RED" "$R" "$label"
+  e=$((SECONDS - t0))
+  local t=''; [ "$e" -ge 2 ] && t=" $D$(dur "$e")$R"   # durasi hanya kalau ≥ 2 detik
+  if wait "$pid"; then ok "$label$t"; return 0; fi
+  printf '  %s✘%s %s\n' "$RED" "$R" "$label$t"
   tail -n +$((start + 1)) "$LOG" | tail -n 12 | sed "s/^/    ${D}│${R} /"   # hanya output perintah ini
   return 1
 }
@@ -185,17 +197,23 @@ deploy_runtime() { # PRD 04 §7 — 2 langkah, TANPA --delete (wiki/raw/output h
 # ── Langkah 1–9 ─────────────────────────────────────────────────────────────
 step1() {
   step_head 1 "Paket dasar" "git, rsync, curl: alat wajib sebelum yang lain."
-  local need=() p
+  local need=() p v
+  act "Mengecek git, rsync, curl, ssh-keygen…"
   for p in git rsync curl ssh-keygen; do command -v "$p" >/dev/null || need+=("$p"); done
-  if [ ${#need[@]} -eq 0 ]; then skip "$(git --version), rsync, curl"; return; fi
-  need=("${need[@]/ssh-keygen/openssh-client}")
-  run "apt update" sudo apt-get update -y || die "apt update gagal"
-  run "Install ${need[*]}" sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y "${need[@]}" || die "Install gagal"
+  if [ ${#need[@]} -gt 0 ]; then
+    info "Belum ada: ${need[*]}"
+    need=("${need[@]/ssh-keygen/openssh-client}")
+    run "apt update" sudo apt-get update -y || die "apt update gagal"
+    run "Install ${need[*]}" sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y "${need[@]}" || die "Install gagal"
+  fi
+  v="$(git --version), rsync $(rsync --version | awk 'NR==1{print $3}'), curl $(curl --version | awk 'NR==1{print $2}')"
+  if [ ${#need[@]} -eq 0 ]; then skip "$v"; else ok "$v"; fi
 }
 
 step2() {
   step_head 2 "Git & GitHub" "Identitas commit + SSH key, supaya VPS bisa pull & push ke GitHub."
   local n e key="$HOME/.ssh/id_ed25519"
+  act "Mengecek identitas git…"
   n=$(git config --global user.name || true); e=$(git config --global user.email || true)
   if [ -n "$n" ] && [ -n "$e" ]; then skip "Identitas git: $n <$e>"
   else
@@ -205,11 +223,14 @@ step2() {
     git config --global init.defaultBranch master; git config --global pull.ff only
     ok "Identitas git: $n <$e>"
   fi
-  if [ ! -f "$key" ]; then
+  act "Mengecek SSH key VPS…"
+  if [ -f "$key" ]; then skip "SSH key: $key"
+  else
     mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
     ssh-keygen -t ed25519 -C "igrow-vps" -f "$key" -N "" -q && ok "SSH key baru: $key"
   fi
-  if github_ok; then skip "SSH ke GitHub (akun $GH_USER)"; save_conf; return; fi
+  act "Mengetes koneksi SSH ke GitHub…"
+  if github_ok; then ok "SSH ke GitHub tembus (akun $GH_USER)"; save_conf; return; fi
   box "Tempel key ini di GitHub → Settings → SSH and GPG keys → New SSH key" "$(cat "$key.pub")"
   until { pause; github_ok; }; do warn "Belum tembus. Pastikan key sudah disimpan di GitHub, lalu Enter lagi."; done
   ok "SSH ke GitHub tembus (akun $GH_USER)"
@@ -218,21 +239,26 @@ step2() {
 
 step3() {
   step_head 3 "Docker & Compose" "Mesin untuk menjalankan container Hermes."
+  act "Mengecek Docker & Compose…"
   if command -v docker >/dev/null && docker compose version >/dev/null 2>&1; then
     skip "$(docker --version | cut -d, -f1), compose $(docker compose version --short)"
   else
     run "Install Docker + Compose (get.docker.com)" sh -c 'curl -fsSL https://get.docker.com | sudo sh' || die "Install Docker gagal"
+    ok "$(docker --version | cut -d, -f1), compose $(docker compose version --short)"
   fi
+  act "Memastikan service Docker aktif & akses user $USER…"
   sudo systemctl enable --now docker >>"$LOG" 2>&1 || true
-  if ! id -nG "$USER" | grep -qw docker; then
+  if id -nG "$USER" | grep -qw docker; then skip "User $USER di grup docker"
+  else
     sudo usermod -aG docker "$USER"
     warn "User $USER masuk grup docker: aktif setelah logout/login. Sampai itu, script memakai sudo."
   fi
-  load_docker; ok "Docker siap"
+  load_docker; ok "Docker siap (service aktif)"
 }
 
 step4() {
   step_head 4 "Repo iGROW" "Clone repo spec iGROW ke VPS: sumber file runtime hermes-home/."
+  act "Mengecek repo iGROW di $REPO_DIR…"
   if [ -d "$REPO_DIR/.git" ]; then
     run "git pull ($REPO_DIR)" git -C "$REPO_DIR" pull --ff-only || warn "Pull gagal, lanjut pakai versi lokal"
   else
@@ -242,13 +268,17 @@ step4() {
   fi
   [ -f "$REPO_DIR/hermes-home/AGENTS.md" ] || die "$REPO_DIR bukan repo iGROW (hermes-home/AGENTS.md tidak ada)"
   ok "Repo: $REPO_DIR ($(git -C "$REPO_DIR" log -1 --format='%h · %cr'))"
+  info "Sumber runtime: $REPO_DIR/hermes-home/ ($(find "$REPO_DIR/hermes-home" -type f | wc -l) file)"
   save_conf
 }
 
 step5() {
   step_head 5 "Container Hermes" "Compose resmi nousresearch/hermes-agent; data di hermes-home/ = /opt/data."
-  load_docker; find_container
+  load_docker
+  act "Mencari container igrow-hermes…"
+  find_container
   if [ -n "$CNAME" ]; then skip "Container $CNAME (compose: $COMPOSE_DIR, data: $HH)"; save_conf; return; fi
+  info "Belum ada container igrow-hermes: compose baru akan dibuat"
   while ask PROJ "Mau install di mana? Nama folder project di $HOME (mis. whatsinsidegit)" "$PROJ"; [[ "$PROJ" == */* ]]; do
     warn "Cukup nama folder, tanpa /"; PROJ=''
   done
@@ -256,11 +286,15 @@ step5() {
   HH="$HOME/$PROJ/igrow-hermes/hermes-home"
   ask TZ_NAME "Timezone (jam cron & briefing)" "$TZ_NAME"
   COMPOSE_DIR="$(dirname "$HH")"
-  mkdir -p "$HH"
+  act "Menyiapkan folder & environment…"
+  mkdir -p "$HH" && ok "Folder data: $HH"
   set_kv "$COMPOSE_DIR/.env" HERMES_UID "$(id -u)"
   set_kv "$COMPOSE_DIR/.env" HERMES_GID "$(id -g)"
   set_kv "$COMPOSE_DIR/.env" IGROW_TZ "$TZ_NAME"
-  if ! ls "$COMPOSE_DIR"/{docker-compose,compose}.y*ml >/dev/null 2>&1; then
+  ok "Environment compose: UID/GID $(id -u):$(id -g), TZ $TZ_NAME ($COMPOSE_DIR/.env)"
+  if ls "$COMPOSE_DIR"/{docker-compose,compose}.y*ml >/dev/null 2>&1; then
+    skip "docker-compose.yml di $COMPOSE_DIR"
+  else
     cat >"$COMPOSE_DIR/docker-compose.yml" <<'YML'
 # Dibuat oleh Setup/igrowctl.sh — penjelasan di PRD/07-setup.md
 services:
@@ -279,6 +313,7 @@ YML
     ok "docker-compose.yml dibuat di $COMPOSE_DIR"
   fi
   run "Tarik image nousresearch/hermes-agent" dc pull || die "Gagal menarik image"
+  info "Image: nousresearch/hermes-agent:latest (dibuat $(dk image inspect -f '{{.Created}}' nousresearch/hermes-agent:latest 2>/dev/null | cut -c1-10))"
   save_conf
 }
 
@@ -286,12 +321,15 @@ step6() {
   step_head 6 "Otak (LLM) & Telegram" "API key LLM + token bot, disimpan di hermes-home/.env (bukan di repo)."
   load_docker; find_container; need_compose
   local env="$HH/.env" d=Y tok uid bot
-  if [ -f "$HH/config.yaml" ]; then info "Model sekarang: $(hmq config get model.default 2>/dev/null | tail -n1)"; d=N; fi
+  act "Mengecek setelan LLM…"
+  if [ -f "$HH/config.yaml" ]; then info "Model sekarang: $(hmq config get model.default 2>/dev/null | tail -n1)"; d=N
+  else info "Belum ada setelan LLM"; fi
   if confirm "Buka wizard LLM resmi Hermes (pilih provider → tempel API key → pilih model)?" "$d"; then
     box "Wizard LLM" $'Pilih provider yang kamu punya key-nya (OpenRouter, Anthropic, OpenAI, dll).\nKey diketik di wizard resmi Hermes dan langsung masuk hermes-home/.env.'
     hm setup model || die "Wizard LLM gagal"
     ok "LLM tersimpan"
   fi
+  act "Mengecek token bot Telegram…"
   if [ -n "$(get_kv "$env" TELEGRAM_BOT_TOKEN)" ] && ! confirm "Token bot Telegram sudah ada. Ganti?" N; then
     skip "Telegram${BOT_NAME:+ (@$BOT_NAME)}"
   else
@@ -311,7 +349,9 @@ step6() {
 step7() {
   step_head 7 "Runtime iGROW & tools" "Salin hermes-home/ dari repo, kunci approval skill, pilih tools cron, nyalakan bot."
   load_docker; find_container; need_compose
+  act "Menyalin aturan iGROW dari repo ke $HH…"
   deploy_runtime
+  act "Mengunci approval skill buatan Hermes…"
   if run "skills.write_approval = true (skill buatan Hermes menunggu persetujuanmu)" hmq config set skills.write_approval true; then :
   else warn "Set manual nanti: /skills approval on di Telegram"; fi
   if confirm "Wajibkan approval juga untuk memory Hermes (memory.write_approval)?" N; then
@@ -319,11 +359,12 @@ step7() {
   fi
   box "Tools untuk cron (layar berikut)" $'Pilih platform "cron", nyalakan: web, terminal, file. Simpan, lalu keluar.\nweb = daily briefing · terminal = backup.sh & cek privasi lint · file = baca/tulis igrow/'
   if confirm "Buka pengaturan tools sekarang?" Y; then hm tools || warn "Pengaturan tools ditutup dengan error"; fi
+  act "Menyalakan gateway Telegram…"
   if running; then run "Restart gateway" dc restart igrow-hermes || die "Restart gagal"
   else run "Nyalakan gateway (docker compose up -d)" dc up -d igrow-hermes || die "Gateway gagal start"; fi
   find_container; sleep 5
   running || { dc logs --tail 30 igrow-hermes >>"$LOG" 2>&1; die "Gateway berhenti setelah start, lihat log"; }
-  ok "Gateway jalan: $CNAME"
+  ok "Gateway jalan: $CNAME${BOT_NAME:+ (bot @$BOT_NAME)}"
   run "hermes doctor" hmq doctor || warn "Doctor menemukan masalah, lihat log (atau: bash $0 status)"
 }
 
@@ -331,6 +372,7 @@ step8() {
   step_head 8 "Backup knowledge" "igrow/ di-push ke repo GitHub privat. Repo backup sudah berisi → tawarkan restore."
   load_docker; find_container
   running || die "Gateway belum jalan, jalankan langkah 7 dulu"
+  act "Mengecek git di container & sambungan repo backup…"
   hx git --version >/dev/null 2>&1 || die "git tidak ada di container"
   # Token baru (kedaluwarsa) → hapus hermes-home/.git-credentials lalu ulang langkah ini
   if [ -f "$HH/.git-credentials" ] && hx git rev-parse -q --verify HEAD >/dev/null 2>&1 \
@@ -386,6 +428,7 @@ step9() {
   load_docker; find_container
   running || die "Gateway belum jalan, jalankan langkah 7 dulu"
   local list j name sched prompt
+  act "Membaca daftar cron yang sudah ada…"
   list=$(hmq cron list 2>/dev/null)
   for j in "${JOBS[@]}"; do
     IFS='|' read -r name sched prompt <<<"$j"
@@ -418,6 +461,7 @@ Langkah yang sudah beres otomatis dilewati. Gagal di tengah? Jalankan ulang saja
 
 finale() {
   printf '\n%s━━ iGROW siap %s%s\n' "$GRN$B" "$(printf '━%.0s' $(seq 1 44))" "$R"
+  summary
   box "Coba sekarang" "Telegram → ${BOT_NAME:+@$BOT_NAME }→ kirim: halo
 Lalu ikuti skenario uji: $REPO_DIR/testing/test-flow.md"
   box "Berikutnya" "bash $0   → menu: deploy, status, update, ganti LLM/token, backup, help
@@ -425,44 +469,66 @@ Telegram: /skills pending → cek skill buatan Hermes yang menunggu persetujuan"
 }
 
 all_steps() {
+  T0=$SECONDS N_OK=0 N_SKIP=0 N_WARN=0   # ringkasan akhir hanya menghitung langkah 1–9
   for i in 1 2 3 4 5 6 7 8 9; do "step$i"; done
   SETUP_DONE=1; save_conf
   finale
 }
 
-MENU="1  Deploy         pasang aturan terbaru dari repo (habis git push)
-2  Status         cek bot, Hermes, cron, backup terakhir
-3  Update         update Hermes ke versi terbaru
-4  LLM & Telegram ganti API key, model, atau token bot
-5  Tools cron     ganti tools untuk job cron
-6  Backup         sambung ulang / ganti token backup
-7  Setup ulang    semua langkah; yang sudah beres dilewati
-h  Help           penjelasan tiap pilihan
-0  Keluar"
+MENU_K=(1 2 3 4 5 6 7 h 0)
+MENU_N=("Deploy" "Status" "Update" "LLM & Telegram" "Tools cron" "Backup" "Setup ulang" "Help" "Keluar")
+MENU_D=("pasang aturan terbaru dari repo (habis git push)" "cek bot, Hermes, cron, backup terakhir"
+        "update Hermes ke versi terbaru" "ganti API key, model, atau token bot" "ganti tools untuk job cron"
+        "sambung ulang / ganti token backup" "semua langkah; yang sudah beres dilewati" "penjelasan tiap pilihan" "")
+
+menu_pick() { # menu_pick → MENU_CHOICE; ↑/↓ (atau k/j) + Enter, atau langsung tekan angka/huruf
+  local i=0 n=${#MENU_K[@]} j k rest w
+  w=$(( $(tput cols 2>/dev/null || echo 80) - 28 )); [ "$w" -lt 10 ] && w=10   # deskripsi dipotong: baris tidak boleh melipat
+  printf '\n  %s╭─ %sMau ngapain?%s\n' "$CYN" "$B" "$R"
+  printf '  %s│%s %s↑/↓ pilih · Enter jalankan · atau tekan angkanya%s\n' "$CYN" "$R" "$D" "$R"
+  printf '\e[?25l'; trap 'printf "\e[?25h\n"; exit 130' INT   # kursor disembunyikan selama memilih
+  while :; do
+    for ((j = 0; j < n; j++)); do
+      if [ "$j" -eq "$i" ]; then
+        printf '  %s│%s %s❯ %s  %-15s%s %s\e[K\n' "$CYN" "$R" "$CYN$B" "${MENU_K[j]}" "${MENU_N[j]}" "$R" "${MENU_D[j]:0:w}"
+      else
+        printf '  %s│%s   %s%s%s  %-15s %s%s%s\e[K\n' "$CYN" "$R" "$YEL" "${MENU_K[j]}" "$R" "${MENU_N[j]}" "$D" "${MENU_D[j]:0:w}" "$R"
+      fi
+    done
+    printf '  %s╰─%s\e[K\n' "$CYN" "$R"
+    IFS= read -rsn1 k </dev/tty
+    if [ "$k" = $'\e' ]; then IFS= read -rsn2 -t 0.05 rest </dev/tty; k+="$rest"; fi
+    case "$k" in
+      $'\e[A'|$'\eOA'|k) i=$(( (i + n - 1) % n )) ;;   # \eOA: terminal mode aplikasi
+      $'\e[B'|$'\eOB'|j) i=$(( (i + 1) % n )) ;;
+      '') MENU_CHOICE=${MENU_K[i]}; break ;;
+      q|Q) MENU_CHOICE=0; break ;;
+      H) MENU_CHOICE=h; break ;;
+      *) for ((j = 0; j < n; j++)); do [ "${MENU_K[j]}" = "$k" ] && { MENU_CHOICE=$k; break 2; }; done ;;
+    esac
+    printf '\e[%dA' $((n + 1))   # naik ke baris pertama daftar, gambar ulang
+  done
+  printf '\e[?25h'; trap - INT
+}
 
 menu() {
-  local c
   while :; do
-    box "Mau ngapain?" "$MENU"
-    while :; do
-      ask c "Pilih (0-7 / h)"
-      case "$c" in
-        1) cmd_deploy; return ;;
-        2) cmd_status; return ;;
-        3) cmd_update; return ;;
-        4) preflight; step6; return ;;
-        5) preflight; step7; return ;;
-        6) preflight
-           if confirm "Ganti token backup? (token lama dihapus, mis. karena kedaluwarsa)" N; then
-             rm -f "$HH/.git-credentials"; info "Token lama dihapus"
-           fi
-           step8; return ;;
-        7) preflight; intro; all_steps; return ;;
-        h|H) cmd_help; break ;;   # tampilkan menu lagi
-        0|q|Q) exit 0 ;;
-        *) warn "Pilihan tidak ada. Ketik angka 0-7 atau h." ;;
-      esac
-    done
+    menu_pick
+    case "$MENU_CHOICE" in
+      1) cmd_deploy; return ;;
+      2) cmd_status; return ;;
+      3) cmd_update; return ;;
+      4) preflight; step6; return ;;
+      5) preflight; step7; return ;;
+      6) preflight
+         if confirm "Ganti token backup? (token lama dihapus, mis. karena kedaluwarsa)" N; then
+           rm -f "$HH/.git-credentials"; info "Token lama dihapus"
+         fi
+         step8; return ;;
+      7) preflight; intro; all_steps; return ;;
+      h) cmd_help ;;   # menu tampil lagi di bawah penjelasan
+      0) exit 0 ;;
+    esac
   done
 }
 
@@ -524,7 +590,7 @@ cmd_update() { # docs resmi: compose pull → up -d; Hermes memigrasi config sen
   oldv=$(hmq --version 2>/dev/null | tail -n1)
   run "Tarik image terbaru" dc pull igrow-hermes || die "Gagal menarik image"
   new=$(dk image inspect -f '{{.Id}}' "$(dk inspect -f '{{.Config.Image}}' "$CNAME")")
-  if [ "$old" = "$new" ]; then skip "Hermes ${oldv:-?} sudah versi terbaru"; return; fi
+  if [ "$old" = "$new" ]; then ok "Hermes ${oldv:-?} sudah versi terbaru, tidak ada yang diubah"; return; fi
   run "Buat ulang container" dc up -d igrow-hermes || die "Container gagal dibuat ulang"
   find_container; sleep 5
   running || { dc logs --tail 30 igrow-hermes >>"$LOG" 2>&1; die "Gateway berhenti setelah update, lihat log"; }

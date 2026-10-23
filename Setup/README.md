@@ -15,9 +15,30 @@ scp igrowctl.sh  ───────▶ [nuridho] bash igrowctl.sh  → Hermes
                                                              ✔ chat bot "halo" di Telegram
 ```
 
-Kedua script **aman diulang**. Langkah yang sudah beres dicek lalu dilewati (`↷ sudah beres`). Contoh: internet putus di langkah 6, cukup jalankan lagi; langkah 1–5 dilewati dan script lanjut dari langkah 6.
+Kedua script **aman diulang**. Yang sudah ada dicek lalu dilewati, dan tampil sebagai `✔ … (sudah ada)` lengkap dengan detailnya. Contoh: internet putus di langkah 6, cukup jalankan lagi; langkah 1–5 dilewati dan script lanjut dari langkah 6.
 
-Tampilannya sama: setiap langkah punya judul `[n/9]`, perintah panjang jalan dengan spinner, hasilnya `✔` (berhasil), `↷` (dilewati), `!` (peringatan), atau `✘` (gagal, 12 baris terakhir errornya langsung tampil).
+Tampilan kedua script sama, bash murni tanpa paket tambahan. Tiap langkah menceritakan apa yang sedang dicek, lalu apa yang ditemukan:
+
+```text
+━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  git, rsync, curl: alat wajib sebelum yang lain.
+
+  › Mengecek git, rsync, curl, ssh-keygen…
+  ✔ git version 2.43.0, rsync 3.2.7, curl 8.5.0 (sudah ada)
+
+━━ [5/9] Container Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Compose resmi nousresearch/hermes-agent; data di hermes-home/ = /opt/data.
+
+  › Mencari container igrow-hermes…
+  • Belum ada container igrow-hermes: compose baru akan dibuat
+  › Menyiapkan folder & environment…
+  ✔ Folder data: /home/nuridho/whatsinsidegit/igrow-hermes/hermes-home
+  ✔ Environment compose: UID/GID 1000:1000, TZ Asia/Jakarta (…/igrow-hermes/.env)
+  ⠹ Tarik image nousresearch/hermes-agent 37s         ← spinner + detik berjalan
+  ✔ Tarik image nousresearch/hermes-agent 48s         ← durasi tampil kalau ≥ 2 detik
+```
+
+Arti tanda: `›` sedang dicek/dikerjakan, `•` info yang ditemukan, `✔` berhasil atau sudah ada, `!` peringatan, `✘` gagal (12 baris terakhir errornya langsung tampil). Output lengkap perintah masuk ke file log, jadi layar tetap bersih. Di akhir ada ringkasan: `✔ 21 dikerjakan  ✔ 9 sudah ada  ! 1 peringatan  waktu 6m40s`.
 
 ---
 
@@ -124,21 +145,21 @@ Setelah selesai: buka Telegram, kirim `halo` ke bot. Lalu ikuti skenario uji di 
 
 ### Setelah setup: satu perintah, pilih dari menu
 
-Setelah setup pernah selesai, `bash igrowctl.sh` tidak menjalankan setup lagi, tapi menampilkan menu:
+Setelah setup pernah selesai, `bash igrowctl.sh` tidak menjalankan setup lagi, tapi menampilkan menu. Pilih dengan **↑/↓ lalu Enter** (atau `k`/`j`), atau langsung tekan angka/hurufnya. `q` keluar.
 
 ```text
-  ┌─ Mau ngapain?
-  │ 1  Deploy         pasang aturan terbaru dari repo (habis git push)
-  │ 2  Status         cek bot, Hermes, cron, backup terakhir
-  │ 3  Update         update Hermes ke versi terbaru
-  │ 4  LLM & Telegram ganti API key, model, atau token bot
-  │ 5  Tools cron     ganti tools untuk job cron
-  │ 6  Backup         sambung ulang / ganti token backup
-  │ 7  Setup ulang    semua langkah; yang sudah beres dilewati
-  │ h  Help           penjelasan tiap pilihan
-  │ 0  Keluar
-  └─
-  ? Pilih (0-7 / h):
+  ╭─ Mau ngapain?
+  │ ↑/↓ pilih · Enter jalankan · atau tekan angkanya
+  │ ❯ 1  Deploy          pasang aturan terbaru dari repo (habis git push)
+  │   2  Status          cek bot, Hermes, cron, backup terakhir
+  │   3  Update          update Hermes ke versi terbaru
+  │   4  LLM & Telegram  ganti API key, model, atau token bot
+  │   5  Tools cron      ganti tools untuk job cron
+  │   6  Backup          sambung ulang / ganti token backup
+  │   7  Setup ulang     semua langkah; yang sudah beres dilewati
+  │   h  Help            penjelasan tiap pilihan
+  │   0  Keluar
+  ╰─
 ```
 
 | Situasinya | Pilih |
