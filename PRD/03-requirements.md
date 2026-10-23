@@ -95,7 +95,7 @@ Berlaku untuk seluruh `igrow/`, termasuk `raw/`. Redaksi wajib dilakukan **sebel
 - Nama dan data client/customer (kecuali nama di `Vendor/Client` `about.md`, [D-30](06-risks-decisions.md#2-decision-log))
 - Konfigurasi proprietary
 
-Screenshot dikecualikan: disimpan asli tanpa diedit (§3.2, [D-33](06-risks-decisions.md#2-decision-log)).
+File asli screenshot dan dokumen lampiran (Word/PDF) dikecualikan: disimpan utuh tanpa diedit (§3.2, [D-33](06-risks-decisions.md#2-decision-log), [D-34](06-risks-decisions.md#2-decision-log)). Redaksi berlaku untuk teks hasil olahan.
 
 | Salah ❌ | Benar ✅ |
 |---|---|
@@ -120,7 +120,7 @@ flowchart LR
     A -->|kirim lewat Telegram| C
 ```
 
-Screenshot disimpan asli, tanpa crop atau redaksi ([D-33](06-risks-decisions.md#2-decision-log)), supaya konteksnya utuh saat dibaca ulang. Teks note yang merujuk gambar tetap mengikuti aturan redaksi. Konsekuensinya: gambar asli terkirim ke provider LLM (§3.3) dan ikut ter-backup ke repo GitHub privat, dan cek privasi lint tidak memeriksa gambar. Cara note merujuk ke gambar diatur di `capture-experience.md`.
+Screenshot disimpan asli, tanpa crop atau redaksi ([D-33](06-risks-decisions.md#2-decision-log)), supaya konteksnya utuh saat dibaca ulang. Teks note yang merujuk gambar tetap mengikuti aturan redaksi. Konsekuensinya: gambar asli terkirim ke provider LLM (§3.3) dan ikut ter-backup ke repo GitHub privat, dan cek privasi lint tidak memeriksa gambar. Dokumen lampiran Word/PDF diperlakukan sama ([D-34](06-risks-decisions.md#2-decision-log)): file asli disimpan utuh di `raw/assets/`, isinya (termasuk screenshot di dalamnya) dibaca untuk menulis note yang teksnya diredaksi. Cara note merujuk ke gambar dan dokumen diatur di `capture-experience.md`.
 
 ### 3.3 Data yang Keluar dari VPS
 

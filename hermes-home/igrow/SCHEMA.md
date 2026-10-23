@@ -9,7 +9,7 @@ updated: 2026-10-23
 Aturan main wiki iGROW. **Wajib diikuti.** Kasus yang tidak tercakup aturan mana pun → ikuti aturan terdekat, lalu sebutkan di balasan. Jangan menyimpang dari aturan yang sudah ada.
 
 ## Layer
-- `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest. Slug: `YYYY-MM-DD-nama.md`. Dump file ke `igrow/raw/inbox/`, agent proses → pindah `igrow/raw/articles/` (inbox kosong = semua sudah diproses). Path di frontmatter & body SELALU lengkap dari root: `igrow/raw/...`.
+- `raw/` — sumber asli, IMMUTABLE. Redact SEBELUM ingest (kecuali file asli screenshot/dokumen di `raw/assets/`, disimpan utuh). Slug: `YYYY-MM-DD-nama.md`. Dump file ke `igrow/raw/inbox/`, agent proses → pindah `igrow/raw/articles/` (inbox kosong = semua sudah diproses). Path di frontmatter & body SELALU lengkap dari root: `igrow/raw/...`.
 - `wiki/` — semua konten compiled, agent-owned.
 - `output/` — laporan turunan (career review, dst).
 

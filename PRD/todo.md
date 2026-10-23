@@ -1,7 +1,7 @@
 # To-Do — iGROW (hermes-home)
 
 > Fokus: hanya item yang menyentuh `hermes-home/` (AGENTS.md, SCHEMA, project-skills, struktur `igrow/`). Item VPS, docs, testing, web, dan migrasi dihapus 2026-10-16; jejaknya ada di git history dan `05-roadmap.md`.
-> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W46 / I17 / A11.
+> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W47 / I17 / A11.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres. Item `[x]` Act-nya lampau, Impact-nya sudah berlaku.
 > Isi list = bug + kontradiksi di runtime. Kosmetik sengaja tidak dicatat. `FIN` di item lama = `archive/iGROW_FINAL.md`.
 > Item selesai → centang di sini + catat di [`backlog.md`](backlog.md).
@@ -178,7 +178,7 @@
 
 ## Review menyeluruh (2026-10-23)
 
-> Celah yang ketemu saat membaca ulang seluruh `hermes-home/` setelah W34, I13, dan W36 selesai, lalu dicocokkan dengan PRD, `testing/test-flow.md`, dan dokumentasi resmi Hermes (fitur Skills, cron, Telegram). W44 dari pertanyaan owner soal konteks catatan setelah redaksi; W45 dari pengamatan owner soal contoh eksekusi mentor.
+> Celah yang ketemu saat membaca ulang seluruh `hermes-home/` setelah W34, I13, dan W36 selesai, lalu dicocokkan dengan PRD, `testing/test-flow.md`, dan dokumentasi resmi Hermes (fitur Skills, cron, Telegram). W44 dari pertanyaan owner soal konteks catatan setelah redaksi; W45 dari pengamatan owner soal contoh eksekusi mentor; W46 dari pertanyaan owner soal dokumen Word/PDF.
 
 - [x] **W37** Hermes bebas membuat dan memakai skill buatannya sendiri. Secara default agent menulis skill lewat `skill_manage`, system prompt Hermes memintanya menyimpan alur kerja yang tidak sepele sebagai skill, dan daftar skill masuk system prompt sesi berikutnya (dokumentasi resmi, fitur Skills). `AGENTS.md` tidak mengatur ini. Setelah beberapa capture, Hermes bisa menyimpan salinan prosedur iGROW sebagai skill, lalu sesi berikutnya memakai salinan itu, bukan `project-skills/` terbaru. Aturan yang dideploy belakangan (mis. link balik W36) diam-diam tidak dipakai.
   - Act: `AGENTS.md` § File Referensi + 1 baris: "Prosedur iGROW hanya dari file `igrow/project-skills/` (selalu baca versi di disk). Jangan simpan alur iGROW sebagai skill Hermes; skill yang meniru alur ini diabaikan." Prasyarat VPS (dicatat di roadmap M2.2 saat item ini dikerjakan): `skills.write_approval: true` di `config.yaml`, supaya skill baru menunggu persetujuan owner (`/skills approve` atau `/skills reject`).
@@ -226,6 +226,9 @@
 - [x] **W45** Contoh eksekusi `mentor.md` masih format lama (`Input:` / `Output:`), beda dengan prosedur lain yang sudah memakai label tujuan, dan hanya mencontohkan pertanyaan role fit (alur B). Alur roadmap (A), yang menulis ulang `weak-topics.md` (I14), tidak punya contoh, jadi model yang meniru contoh bisa tidak pernah menulis file itu (pola W42). Baris `→ OUTPUT` Gap juga berlaku untuk kedua alur, padahal di B gap sudah ada di kolom Kurang. Ketemu dari pengamatan owner.
   - Act: contoh dipecah dua dengan label tujuan: A (roadmap: `[PESAN USER]`, `[FILE DITULIS — weak-topics.md]`, `[EDIT INDEX]`, `[LOG]`, `[BALASAN KE USER]`) dan B (role fit: `[PESAN USER]`, `[BALASAN KE USER]`, tanpa file). Baris Gap pindah ke alur A sebagai baris pertama balasan. Balasan A menyebut kalau `weak-topics.md` ditulis. + 1 baris contoh untuk prasyarat (kurang dari 3 note).
   - Impact: semua contoh eksekusi memakai format yang sama; alur roadmap punya contoh lengkap, termasuk penulisan `weak-topics.md`.
+- [x] **W46** Belum ada alur untuk dokumen lampiran (Word/PDF), padahal incident yang kompleks akan dikirim sebagai dokumen berisi teks + screenshot. Capture tidak mengenal dokumen, `/study` mengubah PDF jadi teks yang diredaksi tanpa menyimpan file aslinya, dan pengecualian D-33 hanya untuk screenshot. Ketemu dari pertanyaan owner.
+  - Act (keputusan owner, D-34): file asli dokumen disimpan utuh di `raw/assets/` tanpa redaksi; redaksi hanya untuk teks hasil olahan. `capture-experience.md` step 2 + baris dokumen lampiran (simpan asli, baca isi termasuk gambar, note teks diredaksi + `sources` + link di Referensi, path disebut di balasan; tidak terbaca → file tetap disimpan, minta intinya, jangan menebak). `study.md` step 1: file lampiran disimpan asli dulu. `AGENTS.md` (tabel penempatan + pengecualian DILARANG KERAS, baris yang sama) dan SCHEMA layer `raw/`. Kemampuan ekstraksi Hermes belum terbukti (skill `ocr-and-documents`, batas 20 MB Bot API): diuji di roadmap M2.2/M2.3.
+  - Impact: dokumen kompleks bisa dicatat tanpa kehilangan aslinya; note tetap bisa dicari, file utuh selalu bisa dibuka untuk belajar ulang.
 
 ## Critical
 

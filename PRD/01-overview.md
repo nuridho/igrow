@@ -44,7 +44,7 @@ Hal-hal berikut **sengaja tidak** dikerjakan:
 
 - **Bukan produk multi-user.** iGROW dirancang untuk satu orang. Tidak ada login, role, atau sharing.
 - **Tidak membangun bot dari nol.** Infrastruktur agent (gateway, memory, cron, tools) memakai image resmi Hermes.
-- **Tidak menyimpan data client.** Yang didokumentasikan adalah pengalaman, bukan data perusahaan atau client (lihat [03 · Kebijakan Data](03-requirements.md#3-kebijakan-data)). Pengecualian: nama client di `Vendor/Client` `about.md` sebagai konteks karier ([D-30](06-risks-decisions.md#2-decision-log)), dan screenshot yang disimpan asli ([D-33](06-risks-decisions.md#2-decision-log)).
+- **Tidak menyimpan data client.** Yang didokumentasikan adalah pengalaman, bukan data perusahaan atau client (lihat [03 · Kebijakan Data](03-requirements.md#3-kebijakan-data)). Pengecualian: nama client di `Vendor/Client` `about.md` sebagai konteks karier ([D-30](06-risks-decisions.md#2-decision-log)), dan file asli screenshot serta dokumen lampiran ([D-33](06-risks-decisions.md#2-decision-log), [D-34](06-risks-decisions.md#2-decision-log)).
 - **Dashboard tidak punya aksi.** Semua perintah lewat Telegram. Dashboard hanya untuk melihat data.
 - **Session history Hermes bukan sumber kebenaran.** Yang dianggap aset hanya file di `igrow/`. Memory dan skill internal agent tidak dimigrasikan.
 - **Bukan pengganti dokumentasi resmi kantor.** iGROW adalah catatan pribadi yang sudah diredaksi, bukan SOP perusahaan.
@@ -61,7 +61,7 @@ Hal-hal berikut **sengaja tidak** dikerjakan:
 | **Konteks kerja** | Kerja shift, sering di depan dashboard monitoring. Akses utama ke iGROW lewat HP (Telegram). |
 | **Tujuan** | Naik ke L2. Punya portofolio pengalaman yang bisa dibawa saat pindah kerja. |
 | **Frustrasi** | Lupa detail incident minggu lalu. Bingung harus belajar apa. Tidak punya bukti konkret saat ditanya "apa saja yang sudah kamu kerjakan?". |
-| **Batasan** | Terikat aturan kerahasiaan client. Tidak boleh menyimpan IP, hostname, credential, atau data client (nama client hanya dicatat di `about.md`, D-30; screenshot disimpan asli, D-33). |
+| **Batasan** | Terikat aturan kerahasiaan client. Tidak boleh menyimpan IP, hostname, credential, atau data client (nama client hanya dicatat di `about.md`, D-30; file asli screenshot dan dokumen disimpan utuh, D-33/D-34). |
 
 ### Persona sekunder: "Diri sendiri, 3 tahun lagi"
 
@@ -76,7 +76,7 @@ Berperan sebagai *compiler* (cerita mentah → note wiki) sekaligus *query engin
 1. **Knowledge adalah aset, agent hanya antarmuka.** Kalau harus memilih antara kemudahan agent dan portabilitas data, pilih portabilitas.
 2. **Hitung, jangan kira-kira.** Angka (skill inventory, role fit) berasal dari menghitung file, dan pembilang serta penyebutnya selalu ditampilkan.
 3. **Jujur soal kekosongan (honest gaps).** Lebih baik "belum ada catatan" daripada jawaban karangan.
-4. **Dokumentasikan pengalaman, bukan data client.** Redaksi dilakukan sebelum data masuk, termasuk ke `raw/`, kecuali screenshot yang disimpan asli (D-33).
+4. **Dokumentasikan pengalaman, bukan data client.** Redaksi dilakukan sebelum data masuk, termasuk ke `raw/`, kecuali file asli screenshot dan dokumen lampiran (D-33, D-34).
 5. **Satu aktivitas, banyak nilai.** Satu cerita incident mengisi archive (UC1), menjadi bahan mentor (UC2), dan dihitung di career review (UC5).
 6. **Ringan dan proporsional.** Semua harus muat di VPS 2 core / 4 GB RAM. Tidak menambah service hanya karena bisa.
 7. **Satu sumber kebenaran per aturan.** Aturan ditulis di satu file, lalu file lain merujuk ke sana.

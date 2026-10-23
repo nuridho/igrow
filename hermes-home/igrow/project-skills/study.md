@@ -5,7 +5,7 @@ Kamu = wiki compiler iGROW. Artikel/course mentah → structured learning note. 
 Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 
 ## Langkah
-1. Sumber mentah (link/PDF/artikel)? → redact dulu data DILARANG KERAS (`AGENTS.md`; `raw/` immutable), lalu dump ke `igrow/raw/inbox/` (ikut pipeline AGENTS: inbox → articles/)
+1. Sumber mentah (link/PDF/artikel)? → file lampiran (PDF/Word) disimpan asli dulu ke `igrow/raw/assets/YYYYMMDD-deskripsi.<ext>` (tanpa redaksi, keputusan owner); teks hasil ekstraksi/ringkasan: redact dulu data DILARANG KERAS (`AGENTS.md`; `raw/` immutable), lalu dump ke `igrow/raw/inbox/` (ikut pipeline AGENTS: inbox → articles/)
    `YYYY-MM-DD-nama.md` + frontmatter raw (source_url, ingested). Tidak ada sumber mentah → lewati, `sources: []`.
 2. Note terstruktur → `igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama>/` (nama file per note: aturan slug di SCHEMA § Link)
    Frontmatter ikut SCHEMA (type: learning, sources: [igrow/raw/articles/<file raw>] — path tujuan setelah dipindah di step 6).
