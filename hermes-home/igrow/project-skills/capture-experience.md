@@ -44,6 +44,7 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
 4. See Also: minimal 2 link (dual-link format). Target belum ada → placeholder (SCHEMA § Link).
 
 5. Self-check sebelum tulis file — ada yang kurang → STOP, perbaiki dulu:
+   - Bebas data DILARANG KERAS (`AGENTS.md`), termasuk di title dan nama file? Paling rawan: Symptom, Investigation, Contoh (command/config/log). Ada → redact cara `AGENTS.md`: nilainya diganti placeholder, command/config tetap utuh.
    - Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
    - Tags ⊂ `igrow/taxonomy.md`?
    - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
@@ -84,8 +85,8 @@ Server production down 2 jam karena CPU 100% saat backup MySQL berjalan.
 - Terjadi saat jam sibuk (peak hours)
 
 ## Investigation
-- Cek top: proses mysqldump menghabiskan CPU
-- Backup schedule: berjalan jam 14:00 (peak traffic)
+- Cek `top`: proses mysqldump makan CPU → curiga job backup, lanjut cek jadwalnya
+- Cek crontab: backup jalan jam 14:00, pas jam sibuk → penyebab ketemu
 
 ## Finding
 Backup MySQL terjadwal bentrok dengan jam sibuk, bukan bug aplikasi.

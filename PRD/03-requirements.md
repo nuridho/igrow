@@ -99,6 +99,9 @@ Berlaku untuk seluruh `igrow/`, termasuk `raw/`. Redaksi wajib dilakukan **sebel
 | Salah ❌ | Benar ✅ |
 |---|---|
 | `client ABC server PROD-DB-07 (10.x.x.x) mengalami...` | `production server mengalami high CPU` |
+| Command dengan IP, user, dan password asli | Command yang sama, nilainya diganti placeholder: `mysql -h <IP-DB> -u <DB-USER> -p<PASSWORD> <DB-NAME>` |
+| Command atau log dibuang dari note | Command/config/log tetap ada (note dipakai untuk belajar ulang); hanya nilai sensitifnya yang diganti |
+| Placeholder asal (`<X>`, `***`) atau dua server berbeda sama-sama `<SERVER>` | Placeholder berperan dan konsisten (`<APP-SERVER-1>`, `<APP-SERVER-2>`); OS, versi, service, port, environment tetap ditulis; tiap command diberi keterangan |
 
 Di runtime, daftar ini berlaku lewat `AGENTS.md` § DILARANG KERAS (dimuat di setiap sesi). Ubah keduanya bersamaan.
 

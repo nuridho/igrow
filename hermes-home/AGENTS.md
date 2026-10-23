@@ -71,3 +71,8 @@ wiki/ = executable.
 Credential/password, API key/token, IP internal, hostname sensitif, serial number,
 nama & data client/customer, raw log client, konfigurasi proprietary,
 screenshot yang belum di-redact.
+
+Cara redact (note dipakai buat belajar ulang → JANGAN hapus command/config/log):
+- Command/config: ganti nilainya saja dengan placeholder yang menjelaskan peran, mis. `mysql -h <IP-DB> -u <DB-USER> -p<PASSWORD> <DB-NAME>`.
+- Log: kutip baris yang relevan saja (bukan dump mentah), nilai sensitif → placeholder. Narasi: nama → generik (`server production`, `client A`).
+- Konteks tetap jelas: nilai yang sama → placeholder yang sama di seluruh note, beda nilai → beda nama (`<APP-SERVER-1>`, `<APP-SERVER-2>`). Info non-sensitif tetap ditulis: OS, versi, nama service, port, environment.

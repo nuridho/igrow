@@ -8,7 +8,7 @@
 
 ## Terbuka
 
-- **W27–W34, A10, I9–I13**: temuan review runtime 2026-10-22. Kerjakan W27–W30 sebelum cron dibuat (kena di run cron pertama), lalu A10 (privasi). Detail di § Review runtime.
+- **W27–W34, I9–I13**: temuan review runtime 2026-10-22. Kerjakan W27–W30 sebelum cron dibuat (kena di run cron pertama). Detail di § Review runtime.
 - **W35**: temuan review ulang 2026-10-23 (lint belum memeriksa path markdown di dual-link). Paling hemat dikerjakan bareng I12 (sama-sama `lint.md`). Detail di § Review ulang.
 
 ## Audit runtime (2026-10-10)
@@ -134,10 +134,11 @@
 - [ ] **W34** Status Known / Weak / Belum hanya didefinisikan di `mentor.md:12-14`, tapi `career-review.md:13` ikut memakainya (Weak = "Weak/Belum"). Prompt cron UC5 hanya menunjuk `career-review.md`, jadi definisinya tidak terbaca di sesi itu.
   - Act: pindahkan definisi ke `SCHEMA.md` § skill-map.md format (di bawah aturan "Topik punya note"); `mentor.md` dan `career-review.md` merujuk ke sana.
   - Impact: UC2 dan UC5 memberi status yang sama untuk topik yang sama (NFR-05); satu aturan satu sumber.
-- [ ] **A10** Self-check sebelum tulis (`capture-experience.md:46`, `study.md:18`) hanya memeriksa format. Privasi, aturan yang paling fatal kalau dilanggar, tidak ikut dicek, padahal cerita incident dan bagian `## Contoh` (command, config) paling sering membawa IP dan hostname.
+- [x] **A10** Self-check sebelum tulis (`capture-experience.md:46`, `study.md:18`) hanya memeriksa format. Privasi, aturan yang paling fatal kalau dilanggar, tidak ikut dicek, padahal cerita incident dan bagian `## Contoh` (command, config) paling sering membawa IP dan hostname.
   - Act: self-check + 1 poin: "Bebas data DILARANG KERAS (`AGENTS.md`)? Periksa terutama Symptom, Investigation, dan Contoh; ada → redact dulu." `study.md` step 1 + "redact sebelum dump ke `raw/inbox/`", karena `raw/` immutable dan step 1 terjadi sebelum self-check.
   - Impact: privasi diperiksa di checkpoint yang sama dengan format, sebelum file ditulis (NFR-02), tidak baru ketahuan saat cek privasi kuartalan.
-- [ ] **I9** Contoh few-shot `capture-experience.md:63` diawali "Kemarin server production down…", tapi output-nya tidak menyimpan tanggal kejadian (`created` = tanggal tulis). Model meniru contoh, jadi waktu relatif ("kemarin", "minggu lalu") ikut hilang.
+  - Tambahan saat dikerjakan: poin privasi jadi poin pertama self-check dan ikut memeriksa title + nama file (hostname gampang masuk slug, dan nama file muncul di index/log). Versi `study.md` menyorot Detail + Contoh (dokumentasi internal). AC privasi UC4 di PRD 02 ditambah; AC UC1 + title/nama file. Rujukan I9 `capture-experience.md:63` → `:64`. Revisi owner (2026-10-23): "hapus atau ganti generik" bisa membuat agent membuang command, padahal note dipakai buat belajar ulang → cara redact (ganti nilai dengan placeholder berperan, command/config/log tetap utuh, log dikutip seperlunya) jadi satu sumber di `AGENTS.md` § DILARANG KERAS; self-check merujuk ke sana. Revisi kedua: konteks tetap jelas (placeholder konsisten, info non-sensitif tetap ditulis) di `AGENTS.md`; SCHEMA § Body: command berketerangan + Investigation ditulis sebagai flow; few-shot capture ikut.
+- [ ] **I9** Contoh few-shot `capture-experience.md:64` diawali "Kemarin server production down…", tapi output-nya tidak menyimpan tanggal kejadian (`created` = tanggal tulis). Model meniru contoh, jadi waktu relatif ("kemarin", "minggu lalu") ikut hilang.
   - Act: step 2 + 1 baris: "Waktu relatif → tanggal absolut; incident: tanggal kejadian ditulis di `## Ringkasan`." Contoh: Ringkasan → "Pada 2026-09-19, server production down 2 jam…".
   - Impact: note tetap bisa dipahami bertahun-tahun kemudian (NFR-11), dan tanggal kejadian tidak tertukar dengan tanggal cerita.
 - [ ] **I10** Isi balasan setelah menulis note belum diatur di `capture-experience.md` maupun `study.md`. Contoh eksekusi capture hanya menunjukkan isi note lengkap, jadi agent cenderung menempel seluruh note ke Telegram.

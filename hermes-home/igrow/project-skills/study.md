@@ -5,7 +5,7 @@ Kamu = wiki compiler iGROW. Artikel/course mentah → structured learning note. 
 Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 
 ## Langkah
-1. Sumber mentah (link/PDF/artikel)? → dump ke `igrow/raw/inbox/` (ikut pipeline AGENTS: inbox → articles/)
+1. Sumber mentah (link/PDF/artikel)? → redact dulu data DILARANG KERAS (`AGENTS.md`; `raw/` immutable), lalu dump ke `igrow/raw/inbox/` (ikut pipeline AGENTS: inbox → articles/)
    `YYYY-MM-DD-nama.md` + frontmatter raw (source_url, ingested).
 2. Note terstruktur → `igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama>/`
    Frontmatter ikut SCHEMA (type: learning, sources: [igrow/raw/...]).
@@ -16,6 +16,7 @@ Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
 4. See Also: min 2 dual-link. Target belum ada → placeholder (SCHEMA § Link).
 
 5. Self-check sebelum tulis file — ada yang kurang → STOP, perbaiki dulu:
+   - Bebas data DILARANG KERAS (`AGENTS.md`), termasuk di title dan nama file? Paling rawan: Detail dan Contoh (command/config dari dokumentasi internal). Ada → redact cara `AGENTS.md`: nilainya diganti placeholder, command/config tetap utuh.
    - Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
    - Tags ⊂ `igrow/taxonomy.md`?
    - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)

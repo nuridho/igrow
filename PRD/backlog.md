@@ -18,6 +18,24 @@ Format entri:
 
 ---
 
+## [2026-10-23] Note tetap jelas konteks & flow-nya setelah redaksi
+- **Apa:** `AGENTS.md` cara redact + 1 poin: placeholder konsisten (nilai sama → placeholder sama, beda → beda nama) dan info non-sensitif (OS, versi, service, port, environment) tetap ditulis. SCHEMA § Body note: tiap command di Contoh diberi komentar (apa & kenapa) dan urut sesuai flow; Investigation incident ditulis per langkah (cek apa → hasil → kenapa lanjut). Few-shot capture: Investigation jadi flow (jumlah baris tetap). PRD 03 §3.1 + 1 baris Salah/Benar. Semua rujukan baris todo tetap (edit di baris yang sama atau di akhir `AGENTS.md`).
+- **Kenapa:** masukan owner: redaksi boleh, tapi konteks dan flow harus tetap jelas karena note dipakai buat belajar ulang.
+- **File:** `hermes-home/AGENTS.md`, `hermes-home/igrow/SCHEMA.md`, `hermes-home/igrow/project-skills/capture-experience.md`, `PRD/03-requirements.md`, `PRD/todo.md`, `PRD/backlog.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Redaksi tidak membuang command (revisi A10)
+- **Apa:** `AGENTS.md` § DILARANG KERAS + "Cara redact": command/config → ganti nilainya saja dengan placeholder yang menjelaskan peran (contoh `mysql -h <IP-DB> -u <DB-USER> -p<PASSWORD> <DB-NAME>`); log → kutip baris relevan, nilai → placeholder; narasi → nama generik. Self-check `capture-experience.md` dan `study.md` merujuk ke sana (sebelumnya "hapus atau ganti generik"). PRD 03 §3.1 tabel Salah/Benar + 2 baris contoh command. Ditaruh di akhir `AGENTS.md`, jadi rujukan `AGENTS.md:72` (W31) tidak bergeser.
+- **Kenapa:** masukan owner: note juga dipakai buat belajar ulang, jadi command tidak boleh hilang saat diredaksi.
+- **File:** `hermes-home/AGENTS.md`, `hermes-home/igrow/project-skills/capture-experience.md`, `hermes-home/igrow/project-skills/study.md`, `PRD/03-requirements.md`, `PRD/todo.md`, `PRD/backlog.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Self-check privasi sebelum tulis (A10)
+- **Apa:** self-check `capture-experience.md` dan `study.md` + poin pertama: bebas data DILARANG KERAS (`AGENTS.md`), termasuk di title dan nama file; bagian paling rawan disebut (capture: Symptom/Investigation/Contoh; study: Detail/Contoh); ada → hapus atau ganti generik. `study.md` step 1: redact dulu sebelum dump ke `raw/inbox/` (`raw/` immutable, dan step 1 terjadi sebelum self-check). PRD 02: AC privasi baru di UC4, AC UC1 + title/nama file. Rujukan I9 `capture-experience.md:63` → `:64`. Ringkasan todo § Terbuka dan roadmap tidak lagi menyebut A10.
+- **Kenapa:** A10. Privasi (aturan paling fatal) belum ikut dicek di checkpoint sebelum tulis.
+- **File:** `hermes-home/igrow/project-skills/capture-experience.md`, `hermes-home/igrow/project-skills/study.md`, `PRD/02-use-cases.md`, `PRD/05-roadmap.md`, `PRD/todo.md`, `PRD/backlog.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
 ## [2026-10-23] Review ulang hasil W22–W26 + I8
 - **Apa:** miss yang diperbaiki: (1) diagram Backup & Recovery PRD 04 § 6.3 masih "Selesai tanpa pesan" → 3 pesan sesuai D-27; (2) metrik reliabilitas PRD 01 kini menghitung pesan backup yang tidak datang sebagai gagal; (3) R-02 masih menyebut daftar larangan di SCHEMA; (4) SCHEMA § Link: slug yang sudah jadi placeholder dipakai ulang path-nya, tidak dibuat baris kedua; (5) SCHEMA § Tag taxonomy `log.md` → `igrow/log.md`; (6) `backup.md`: gagal juga mencakup script yang tidak bisa dijalankan dan error git tanpa prefix `ERROR` (`set -e`); (7) larangan `--delete` di deploy (PRD 04 § 7, `CLAUDE.md`); (8) `build.md` prasyarat Job 2 + identitas commit level repo (tanpa ini `git commit` gagal di container); (9) roadmap M2.2: prasyarat backup dijalankan sebagai user gateway + uji `backup.sh` sebelum cron, verifikasi 1 pesan per jadwal; M2.1: cek `taxonomy.md` setelah deploy; baris cleanup `build.md` + token fine-grained; (10) `CLAUDE.md` § Status menunjuk section todo yang sudah tidak ada; (11) PRD versi 1.4; (12) item lama I1 (Impact "no-change tetap diam") diberi catatan bahwa perilaku itu diganti D-27. Temuan baru: W35 (lint belum memeriksa path markdown di dual-link), nomor berikutnya jadi W36.
 - **Kenapa:** permintaan owner (pastikan tidak ada miss sebelum deploy).

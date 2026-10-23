@@ -51,7 +51,7 @@ contradictions: [slug-lain]       # opsional; HANYA slug note yang isinya berten
 Poin berbobot (bullet oke) — padat, bukan narasi kosong.
 
 ## Contoh
-Minimal 1 contoh nyata (command / config / kasus).
+Minimal 1 contoh nyata (command / config / kasus). Tiap command diberi komentar singkat (apa yang dicek & kenapa), urut sesuai flow.
 
 ## Referensi
 Sumber (URL / igrow/raw/... / sesi) — buat napak tilas.
@@ -59,7 +59,7 @@ Sumber (URL / igrow/raw/... / sesi) — buat napak tilas.
 ## See Also
 Min 2 dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
 ```
-Khusus incident di careers/, Detail diganti alur: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
+Khusus incident di careers/, Detail diganti alur: Symptom / Investigation / Finding / Action / Result / Lesson Learned. Investigation ditulis urut per langkah: apa yang dicek → hasilnya → kenapa lanjut ke langkah berikutnya.
 
 ## Data file
 Frontmatter minimal:

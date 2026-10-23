@@ -93,7 +93,7 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 - ✅ Cerita incident menghasilkan file baru di folder `incidents/` career aktif, dengan body alur Symptom / Investigation / Finding / Action / Result / Lesson Learned.
 - ✅ Frontmatter lengkap sesuai SCHEMA, tag hanya dari taxonomy, `sources` berisi `[]` atau path `igrow/raw/...`.
 - ✅ Bagian See Also berisi minimal 2 dual-link.
-- ✅ Nama client, IP, hostname, dan credential tidak muncul di file mana pun.
+- ✅ Nama client, IP, hostname, dan credential tidak muncul di file mana pun, termasuk title dan nama file. Self-check sebelum tulis ikut memeriksanya.
 - ✅ Balasan Hermes menyebut career aktif dan alasan pemilihan type atau folder.
 - ✅ Setelah menulis: `wiki/_index.md`, master `_index.md` (Total pages + Last updated), dan `log.md` (op `ingest`/`update`) ikut diperbarui.
 - ✅ Kalau cerita baru bertentangan dengan note lama: Hermes bertanya sekali, field `contradictions` diisi, dan note lama tidak dihapus.
@@ -264,6 +264,7 @@ Satu folder per sumber belajar, berisi satu atau lebih note per sub-topik. Setia
 - ✅ `sources` merujuk ke `igrow/raw/articles/...`, bukan ke inbox.
 - ✅ Body memakai template SCHEMA: Ringkasan / Detail / Contoh / Referensi / See Also.
 - ✅ Hermes menyebut tag yang dipilih beserta alasannya.
+- ✅ Data terlarang (`AGENTS.md` § DILARANG KERAS) diredaksi sebelum sumber masuk `raw/inbox/`, dan note diperiksa lagi di self-check (termasuk title dan nama file).
 - ✅ Index dan log diperbarui (op `ingest`).
 
 ## UC5 · Career Review (Kuartalan)
