@@ -31,7 +31,7 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    - Knowledge umum (SOP, cara kerja, setup — tanpa kejadian) → `igrow/wiki/careers/career-N/knowledge/<slug>.md` (FLAT, JANGAN bikin subfolder per topik — topik lewat tags)
    - Lesson (pelajaran/refleksi tanpa satu kejadian spesifik, mis. "saya baru sadar …") → `igrow/wiki/careers/career-N/lessons-learned/<slug>.md`. Pelajaran dari incident cukup di `## Lesson Learned` note incident itu, JANGAN dibuat note lesson terpisah.
    - Skill yang terlihat di cerita → tambah ke `igrow/wiki/careers/career-N/skills.md` (format SCHEMA: 1 baris per tag; yang sudah tercatat tidak ditulis ulang)
-   - Screenshot → `igrow/raw/assets/YYYYMMDD-deskripsi.png` (WAJIB redact); rujuk dari note via `sources: [igrow/raw/assets/...]` + `![](../../raw/assets/...)` di body
+   - Screenshot → simpan asli, tanpa diedit atau diredaksi (keputusan owner), ke `igrow/raw/assets/YYYYMMDD-deskripsi.png`. Rujuk dari note via `sources: [igrow/raw/assets/...]` + `![](path)` di body; path relatif dari file note: `../../../../../raw/assets/<file>` dari `knowledge/incidents/`, `../../../../raw/assets/<file>` dari `knowledge/` dan `lessons-learned/`. Info penting di gambar ditulis juga sebagai teks di note, dengan aturan redaksi teks biasa.
    - Cerita lanjutan untuk incident/knowledge yang sudah ada (cek `_index.md`) → EDIT file lama: `updated:` diganti, `created:` tetap, op `update`. JANGAN bikin file baru.
    - Waktu relatif ("kemarin", "minggu lalu") → tanggal absolut, dihitung dari tanggal cerita; tidak pasti → "sekitar <tanggal>", jangan dibuat seolah pasti. Incident: tanggal kejadian di kalimat pertama `## Ringkasan` (`created` = tanggal tulis, bukan tanggal kejadian).
 

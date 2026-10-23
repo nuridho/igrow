@@ -92,9 +92,10 @@ Berlaku untuk seluruh `igrow/`, termasuk `raw/`. Redaksi wajib dilakukan **sebel
 - Hostname sensitif
 - Serial number
 - Raw log client
-- Screenshot yang belum diredaksi
 - Nama dan data client/customer (kecuali nama di `Vendor/Client` `about.md`, [D-30](06-risks-decisions.md#2-decision-log))
 - Konfigurasi proprietary
+
+Screenshot dikecualikan: disimpan asli tanpa diedit (§3.2, [D-33](06-risks-decisions.md#2-decision-log)).
 
 | Salah ❌ | Benar ✅ |
 |---|---|
@@ -110,16 +111,16 @@ Di runtime, daftar ini berlaku lewat `AGENTS.md` § DILARANG KERAS (dimuat di se
 ```mermaid
 flowchart LR
     subgraph hp["Di HP (user)"]
-        A(["Screenshot"]) --> B["Crop / redaksi<br/>identifier"]
+        A(["Screenshot asli"])
     end
     subgraph agent["Hermes"]
-        C["Analisis"] --> D[("igrow/raw/assets/<br/>YYYYMMDD-deskripsi.png")]
-        C --> E["Note di wiki/<br/>merujuk ke gambar"]
+        C["Analisis"] --> D[("igrow/raw/assets/<br/>YYYYMMDD-deskripsi.png<br/>(asli, tidak diedit)")]
+        C --> E["Note di wiki/<br/>merujuk ke gambar<br/>(teks tetap diredaksi)"]
     end
-    B -->|kirim lewat Telegram| C
+    A -->|kirim lewat Telegram| C
 ```
 
-Redaksi dilakukan di HP sebelum dikirim, karena gambar ikut terkirim ke provider LLM (§3.3). Cara note merujuk ke gambar diatur di `capture-experience.md`.
+Screenshot disimpan asli, tanpa crop atau redaksi ([D-33](06-risks-decisions.md#2-decision-log)), supaya konteksnya utuh saat dibaca ulang. Teks note yang merujuk gambar tetap mengikuti aturan redaksi. Konsekuensinya: gambar asli terkirim ke provider LLM (§3.3) dan ikut ter-backup ke repo GitHub privat, dan cek privasi lint tidak memeriksa gambar. Cara note merujuk ke gambar diatur di `capture-experience.md`.
 
 ### 3.3 Data yang Keluar dari VPS
 

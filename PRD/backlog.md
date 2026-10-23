@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-23] Screenshot disimpan asli tanpa redaksi (D-33, W41)
+- **Apa:** keputusan owner: screenshot disimpan asli di `raw/assets/`, tanpa crop atau redaksi; teks note tetap diredaksi. `capture-experience.md` step 2: baris screenshot ditulis ulang (simpan asli, path embed relatif yang benar: 5 kali `../` dari `knowledge/incidents/`, 4 kali dari `knowledge/` dan `lessons-learned/`, info penting di gambar juga ditulis sebagai teks). `AGENTS.md`: tabel penempatan "Screenshot/gambar (asli)" dan DILARANG KERAS mengecualikan screenshot (baris yang sama, tidak menggeser rujukan). PRD 01 (non-goal, batasan persona, prinsip 4), 02 (tabel penempatan, AC privasi UC1), 03 (§3.1 daftar larangan, §3.2 diagram + penjelasan konsekuensi), 06 (D-33, R-02), README (glosarium `raw/`, riwayat 1.4), roadmap (sisa item, prioritas, + skenario screenshot di M2.3), `docs/peta-igrow.html` (deskripsi screenshot), dan todo (W41 dicentang dengan arah baru, § Terbuka) diselaraskan.
+- **Kenapa:** W41 + keputusan owner: screenshot dipakai untuk belajar ulang, jadi harus utuh. Konsekuensi yang diterima: gambar asli terkirim ke provider LLM, ikut ter-backup ke GitHub privat, dan tidak diperiksa lint privasi.
+- **File:** `hermes-home/AGENTS.md`, `hermes-home/igrow/project-skills/capture-experience.md`, `PRD/{README,01-overview,02-use-cases,03-requirements,05-roadmap,06-risks-decisions,todo,backlog}.md`, `docs/peta-igrow.html`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
 ## [2026-10-23] Peta iGROW disimpan di docs/
 - **Apa:** halaman visual Peta iGROW (diagram arsitektur, alur satu cerita, penjelajah contoh isi `igrow/` setelah sekitar 6 bulan, tabel siapa menulis apa) disimpan sebagai `docs/peta-igrow.html`: HTML mandiri (+ doctype, charset UTF-8, viewport, reset kecil) yang bisa dibuka langsung di browser. Tampilan: putih lembut monokrom, selalu mode terang apa pun tema perangkat; font Plus Jakarta Sans + JetBrains Mono; jalur tulis Hermes → `igrow/` di diagram ditekankan dengan garis tebal. Data dummy ±6 bulan (April–Oktober 2026): 6 incident, 5 knowledge, 2 lesson, 5 note belajar, 1 screenshot, 2 laporan career review (Q2 baseline, Q3 dengan tren), log mingguan, 15 placeholder; konsistensinya (path dual-link, placeholder, tag, index vs note) dicek dengan script di scratchpad. Rujukan ditambah di intro PRD 04 dan baris `docs/` di peta repo `CLAUDE.md`.
 - **Kenapa:** permintaan owner, supaya gambaran sistem tersimpan di repo. Isinya ilustrasi dengan data fiktif (PT Acme, Bank XYZ), bukan sumber aturan.

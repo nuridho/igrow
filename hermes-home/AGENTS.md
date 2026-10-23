@@ -41,7 +41,7 @@ wiki/ = executable.
 | Lesson (refleksi, tanpa kejadian) | igrow/wiki/careers/career-N/lessons-learned/     |
 | Belajar mandiri (bukan kerjaan)   | igrow/wiki/self-development/{Project|Bootcamp|Dokumentasi}/<nama> |
 | Artikel/dok belajar (mentah)      | igrow/raw/inbox/ → proses → raw/articles/ (inbox kosong = sudah diproses) |
-| Screenshot/gambar (sudah redact)  | igrow/raw/assets/YYYYMMDD-deskripsi.png          |
+| Screenshot/gambar (asli)          | igrow/raw/assets/YYYYMMDD-deskripsi.png          |
 | Daftar kerjaan baru               | igrow/wiki/careers/career-N-{company}-{role}/     |
 | Laporan career review             | igrow/output/                                    |
 
@@ -70,8 +70,8 @@ Prosedur iGROW hanya dari file di bawah (selalu baca versi di disk). Jangan simp
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential/password, API key/token, IP internal, hostname sensitif, serial number,
-nama & data client/customer (kecuali nama di `Vendor/Client` about.md), raw log client, konfigurasi proprietary,
-screenshot yang belum di-redact.
+nama & data client/customer (kecuali nama di `Vendor/Client` about.md), raw log client, konfigurasi proprietary.
+Screenshot dikecualikan: disimpan asli tanpa diedit (keputusan owner); larangan di atas berlaku untuk teks note dan raw.
 
 Cara redact (note dipakai buat belajar ulang → JANGAN hapus command/config/log):
 - Command/config: ganti nilainya saja dengan placeholder yang menjelaskan peran, mis. `mysql -h <IP-DB> -u <DB-USER> -p<PASSWORD> <DB-NAME>`.
