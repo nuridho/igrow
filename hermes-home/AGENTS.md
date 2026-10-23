@@ -45,17 +45,14 @@ wiki/ = executable.
 | Daftar kerjaan baru               | igrow/wiki/careers/career-N-{company}-{role}/     |
 | Laporan career review             | igrow/output/                                    |
 
-## Tiap operasi tulis WAJIB diakhiri
-1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
-2. Update master `igrow/_index.md` (termasuk "Total pages" + "Last updated").
-3. Append `igrow/log.md`.
+## Tiap operasi tulis WAJIB diakhiri protokol tulis: rujuk `igrow/SCHEMA.md`.
 
 ## Career aktif: rujuk `igrow/SCHEMA.md`.
 
 ## Perintah
 - /study  → dokumentasiin yang sudah dipelajari (ke wiki/self-development/...)
-- /recall → baca igrow/_index.md dulu; ketemu → baca page & jawab; nggak ketemu
-  → bilang jujur "belum ada catatan", tawarin riset/tulis baru (honest gaps)
+- /recall → baca igrow/_index.md dulu; ketemu → baca page, jawab dari isinya + sebut
+  path page yang dipakai (`igrow/wiki/...`); nggak ketemu → bilang jujur "belum ada catatan", tawarin riset/tulis baru (honest gaps)
 
 ## File Referensi (baca isinya kalau relevan sama pesan user)
 
@@ -71,5 +68,6 @@ wiki/ = executable.
 - igrow/project-skills/maintenance/backup.md  → Cron Senin/Rabu/Sabtu 05:00 → push igrow/ ke GitHub
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
-Credential, API key/token, IP internal, hostname sensitif, data client,
+Credential/password, API key/token, IP internal, hostname sensitif, serial number,
+nama & data client/customer, raw log client, konfigurasi proprietary,
 screenshot yang belum di-redact.

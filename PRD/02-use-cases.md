@@ -17,7 +17,7 @@ Legenda status pada acceptance criteria (AC):
 | UC3 | Daily Briefing | Cron setiap hari 07:00 | Ringkasan maks. 5 berita di Telegram | [`daily-briefing.md`](../hermes-home/igrow/project-skills/daily-briefing.md) |
 | UC4 | Study | `/study` atau cerita selesai belajar | Learning note di `self-development/` | [`study.md`](../hermes-home/igrow/project-skills/study.md) |
 | UC5 | Career Review | Cron kuartalan atau permintaan manual | Laporan kuartal + skill inventory | [`career-review.md`](../hermes-home/igrow/project-skills/career-review.md) |
-| — | `/recall` | `/recall <pertanyaan>` | Jawaban dari wiki, atau "belum ada catatan" | [`AGENTS.md`](../hermes-home/AGENTS.md) § Perintah |
+| — | `/recall` | `/recall <pertanyaan>` | Jawaban dari wiki + path page sumbernya, atau "belum ada catatan" | [`AGENTS.md`](../hermes-home/AGENTS.md) § Perintah |
 | M1 | Lint Mingguan | Cron Minggu 08:00 | Laporan kesehatan wiki | [`maintenance/lint.md`](../hermes-home/igrow/project-skills/maintenance/lint.md) |
 | M2 | Backup | Cron Senin, Rabu, Sabtu 05:00 | Commit + push `igrow/` ke GitHub privat | [`maintenance/backup.md`](../hermes-home/igrow/project-skills/maintenance/backup.md) |
 
@@ -379,7 +379,7 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 
 **Acceptance criteria:**
 - ✅ Hermes membaca `igrow/_index.md` terlebih dahulu sebelum memindai folder.
-- ⚠ Kalau ketemu: baca page terkait dan jawab dengan menyebut sumbernya. Runtime belum mewajibkan menyebut sumber ([I8](todo.md)).
+- ✅ Kalau ketemu: baca page terkait, jawab dari isinya, dan sebutkan path page yang dipakai.
 - ✅ Kalau tidak ketemu: jawab jujur "belum ada catatan", lalu tawarkan riset atau menulis note baru.
 
 ---
@@ -392,8 +392,8 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 
 **Acceptance criteria:**
 - ⏳ Cron belum dibuat di VPS.
-- ✅ Ada lima pemeriksaan: page orphan, wikilink rusak (kecuali yang ditandai placeholder), frontmatter tidak lengkap, tag di luar taxonomy, dan entri index yang file-nya sudah tidak ada.
-- ⚠ Penanda `(placeholder)` baru dikenal lint. Prosedur penulis (UC1, UC4) belum mengajarkan cara mencatatnya, jadi link ke note yang belum ditulis akan selalu dilaporkan rusak ([W23](todo.md)).
+- ✅ Ada lima pemeriksaan: page orphan, wikilink rusak (kecuali yang ditandai placeholder), frontmatter tidak lengkap, tag di luar taxonomy, dan index yang tidak cocok dengan filesystem (entri yang file-nya sudah tidak ada, atau placeholder yang file-nya sudah ditulis).
+- ✅ Link ke note yang belum ada dicatat sebagai baris `(placeholder)` di `_index.md` (aturan di SCHEMA § Link), jadi lint hanya melaporkan link yang benar-benar rusak.
 - ✅ Hanya melapor. Tidak ada file note yang diubah.
 - ✅ `about.md`, `careers/*/skills.md`, dan data file tidak dilaporkan, karena frontmatter-nya memang berbeda dari note naratif.
 - ✅ Wiki kosong dilaporkan sebagai "wiki kosong", bukan error. Index yang hilang dilaporkan sebagai temuan tersendiri.

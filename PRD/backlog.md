@@ -18,6 +18,24 @@ Format entri:
 
 ---
 
+## [2026-10-23] Satu sumber untuk protokol tulis dan daftar larangan (W25)
+- **Apa:** protokol tulis lengkap hanya di SCHEMA § "Tiap operasi tulis WAJIB diakhiri" (langkah 1 + "termasuk Last updated", langkah 2 + "Total pages + Last updated" yang sebelumnya hanya ada di AGENTS); `AGENTS.md` → 1 baris rujuk (pola sama dengan "Career aktif"). Daftar DILARANG KERAS lengkap hanya di `AGENTS.md`, ditambah serial number, raw log client, konfigurasi proprietary, dan "nama" client ditulis eksplisit (samakan dengan PRD 03 §3.1); SCHEMA → 1 baris rujuk. PRD 03 §3.1 (⚠ diganti catatan sinkron) + FR-09, PRD 04 tabel lapisan instruksi (protokol tulis pindah ke lapisan SCHEMA). Rujukan W31 `AGENTS.md:74` → `:72`. Roadmap M2.1: review PRD 2026-10-17 selesai; item baru "kerjakan review runtime sebelum deploy ulang".
+- **Kenapa:** W25. Dua salinan sudah mulai beda (Total pages hanya di AGENTS) dan daftar larangan runtime lebih sempit dari kebijakan PRD.
+- **File:** `hermes-home/AGENTS.md`, `hermes-home/igrow/SCHEMA.md`, `PRD/03-requirements.md`, `PRD/04-architecture.md`, `PRD/05-roadmap.md`, `PRD/todo.md`, `PRD/backlog.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Placeholder untuk link ke note yang belum ada (W23)
+- **Apa:** SCHEMA § Link + 2 aturan: (1) target belum ada → baris `| <path target> | (placeholder) | - | - |` di `_index.md` terdekat, tidak masuk master, tidak dihitung Total pages; (2) menulis note baru → cek index, slug placeholder → ganti barisnya (path beda → perbaiki link di page penaut). `capture-experience.md` dan `study.md` step 4 + 6 merujuk ke sana. Contoh few-shot capture: label "Output (file note)" + 3 baris index (note + 2 placeholder). Lint cek 5 melewati baris placeholder dan melaporkan "placeholder basi". PRD 02 M1 (⚠ → ✅), test-flow 1.1 (+ expected placeholder), rujukan W29 `SCHEMA.md:102` → `:104`. Ringkasan todo § Terbuka dan roadmap M2.1 tinggal W25. Temuan sampingan: test-flow 1.1 mengharapkan prefix tanggal di nama file incident yang tidak diatur runtime → dicatat di roadmap M2.3.
+- **Kenapa:** W23. Note pertama mustahil punya 2 link ke note yang sudah ada; tanpa cara mencatat placeholder, lint melaporkan link rusak setiap minggu.
+- **File:** `hermes-home/igrow/SCHEMA.md`, `hermes-home/igrow/project-skills/{capture-experience,study}.md`, `hermes-home/igrow/project-skills/maintenance/lint.md`, `PRD/02-use-cases.md`, `PRD/05-roadmap.md`, `PRD/todo.md`, `PRD/backlog.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] `/recall` menyebut page sumber (I8)
+- **Apa:** `AGENTS.md` § Perintah: `/recall` yang ketemu → jawab dari isi page + sebut path page yang dipakai (`igrow/wiki/...`). Tetap 2 baris (rujukan `AGENTS.md:74` di W31 aman). AC `/recall` di PRD 02 (⚠ → ✅) + tabel perintah, FR-13, dan test-flow 5.1 (+ syarat gagal tanpa path) diselaraskan. Ringkasan § Terbuka di `todo.md` dan roadmap M2.1 tinggal W23 + W25.
+- **Kenapa:** I8. Jawaban recall harus bisa ditelusuri ke file, supaya kelihatan bedanya dengan jawaban dari pengetahuan umum model.
+- **File:** `hermes-home/AGENTS.md`, `PRD/02-use-cases.md`, `PRD/03-requirements.md`, `PRD/05-roadmap.md`, `PRD/todo.md`, `PRD/backlog.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
 ## [2026-10-23] Taxonomy jadi file terpisah (W26, D-28)
 - **Apa:** daftar tag pindah dari `SCHEMA.md` ke file baru `igrow/taxonomy.md` (milik agent, isi awal 16 tag yang sama). SCHEMA § Tag taxonomy jadi aturan + rujukan; tambah tag cukup append `log.md` (op `update`), tanpa update index. Rujukan "taxonomy SCHEMA" di `capture-experience.md`, `study.md`, `daily-briefing.md`, `lint.md` → `taxonomy.md`. Lint melaporkan "taxonomy hilang" kalau file itu tidak ada. `AGENTS.md` § Struktur + 1 baris. Deploy jadi 2 langkah: rsync dengan exclude `_index.md`/`log.md`/`taxonomy.md`, lalu `rsync --ignore-existing` (tanpa langkah kedua, `taxonomy.md` tidak pernah sampai ke VPS). Ini juga menggantikan aturan "setup pertama tanpa exclude". PRD 02/03/04/README/roadmap/D-28, `CLAUDE.md`, dan `test-flow.md` diselaraskan. Rujukan W31 `AGENTS.md:73` → `:74` (baris bergeser).
 - **Kenapa:** W26, keputusan owner D-28.

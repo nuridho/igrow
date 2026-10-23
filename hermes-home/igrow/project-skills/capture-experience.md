@@ -41,14 +41,14 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
 3. Format frontmatter ikut `igrow/SCHEMA.md` (type: incident|lesson|knowledge).
    Body incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
    Tag fuzzy-match ke `igrow/taxonomy.md`. Kalau tidak ada yang cocok (<60% similarity) → tanya user 1x "Tag mana yang cocok: [3 opsi terdekat]?", jangan tebak. Kalau user skip → pakai tag terdekat dan sebutkan di balasan. Tag baru hanya ditambah ke `igrow/taxonomy.md` kalau user setuju (aturan SCHEMA § Tag taxonomy).
-4. See Also: minimal 2 link (dual-link format).
+4. See Also: minimal 2 link (dual-link format). Target belum ada → placeholder (SCHEMA § Link).
 
 5. Self-check sebelum tulis file — ada yang kurang → STOP, perbaiki dulu:
    - Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
    - Tags ⊂ `igrow/taxonomy.md`?
    - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
    - Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
-6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: ingest/update).
+6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md (+ baris placeholder kalau ada), master _index.md, log.md (op: ingest/update).
 
 ## Larangan
 Ikut DILARANG KERAS di AGENTS.md — redact data client sebelum nulis.
@@ -62,7 +62,7 @@ di frontmatter (SCHEMA). Lesson lama TIDAK dihapus — dua-duanya hidup, kontrad
 ````
 Input: "Kemarin server production down 2 jam. CPU 100% gara-gara backup MySQL jalan pas jam sibuk. Akhirnya matiin backup, server normal lagi."
 
-Output:
+Output (file note):
 ---
 title: MySQL Backup CPU Spike Incident
 created: 2026-09-20
@@ -114,4 +114,8 @@ Sesi Telegram (cerita user).
 - [[backup-scheduling|Backup Scheduling]] ([Backup Scheduling](../backup-scheduling.md))
 - [[cpu-spike-triage|CPU Spike Triage]] ([CPU Spike Triage](../cpu-spike-triage.md))
 
+Baris baru di wiki/_index.md (2 target See Also belum ada → placeholder):
+| careers/career-N/knowledge/incidents/mysql-backup-cpu-spike.md | Server production down 2 jam, CPU 100% saat backup MySQL | linux, performance, incident | 2026-09-20 |
+| careers/career-N/knowledge/backup-scheduling.md | (placeholder) | - | - |
+| careers/career-N/knowledge/cpu-spike-triage.md | (placeholder) | - | - |
 ````

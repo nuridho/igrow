@@ -13,14 +13,14 @@ Dipakai kalau user `/study` atau cerita selesai belajar sesuatu.
    Satu folder per sumber belajar, isinya satu atau lebih note per sub-topik (masing-masing template lengkap). JANGAN pecah per jenis isi (concepts/commands/references).
 3. Topik fuzzy-match ke `igrow/taxonomy.md` (konsisten lintas sesi).
    → OUTPUT: "Topik = <tag> (cocok dengan taxonomy: <alasan singkat>)"
-4. See Also: min 2 dual-link.
+4. See Also: min 2 dual-link. Target belum ada → placeholder (SCHEMA § Link).
 
 5. Self-check sebelum tulis file — ada yang kurang → STOP, perbaiki dulu:
    - Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
    - Tags ⊂ `igrow/taxonomy.md`?
    - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
    - Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
-6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md + master + log.md (op: ingest).
+6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md (+ baris placeholder kalau ada) + master + log.md (op: ingest).
 
 ## Perintah
 "/study baru selesai materi X di KodeKloud: ..." → strukturkan.

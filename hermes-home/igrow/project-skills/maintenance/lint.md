@@ -15,7 +15,7 @@ ulang isi konten.
    `about.md` & `careers/*/skills.md` → tanpa frontmatter (JANGAN dilaporkan).
    `type` di luar enum SCHEMA = temuan.
 4. Tag di luar `igrow/taxonomy.md`.
-5. `_index.md` vs filesystem: entri index yang file-nya sudah tidak ada.
+5. `_index.md` vs filesystem: entri index yang file-nya sudah tidak ada (lewati baris `(placeholder)`), dan baris `(placeholder)` yang file-nya ternyata sudah ada (placeholder basi).
 
 ## Fallback
 - `wiki/` kosong / belum ada isi apapun → lapor "wiki kosong, belum ada yang di-lint" ke log + Telegram, jangan anggap error.

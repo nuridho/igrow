@@ -26,7 +26,7 @@ Status:
 | FR-06 | Career aktif ditentukan dari `about.md` yang belum punya tanggal selesai. | Must | UC1 | ✅ |
 | FR-07 | User bisa mendaftarkan pekerjaan baru. Career lama otomatis ditutup dan folder career baru dibuat. | Must | UC1b | ✅ |
 | FR-08 | Setiap note mematuhi SCHEMA: frontmatter wajib, body template, tag dari taxonomy, minimal 2 dual-link di See Also. | Must | UC1, UC4 | ✅ Ada self-check, tapi kepatuhan agent belum diukur |
-| FR-09 | Setiap operasi tulis diakhiri dengan update `_index.md` terdekat, master `_index.md` (Total pages + Last updated), dan entri `log.md`. | Must | Semua tulis | ✅ |
+| FR-09 | Setiap operasi tulis diakhiri dengan update `_index.md` terdekat (Last updated), master `_index.md` (Total pages + Last updated), dan entri `log.md`. | Must | Semua tulis | ✅ |
 | FR-10 | `raw/` bersifat immutable dan punya satu jalur: `inbox/` → diproses → `articles/`. | Must | UC4 | ✅ |
 | FR-11 | Cerita yang bertentangan dengan note lama tidak menimpa diam-diam. Pertentangannya dicatat di field `contradictions`. | Should | UC1 | ✅ |
 | FR-12 | Cerita lanjutan tentang hal yang sama memperbarui note lama (in-place), bukan membuat duplikat. | Should | UC1 | ✅ |
@@ -35,7 +35,7 @@ Status:
 
 | ID | Requirement | Prioritas | UC | Status |
 |---|---|---|---|---|
-| FR-13 | `/recall` menjawab dari wiki, dan bilang jujur kalau tidak ada catatan. | Must | /recall | ✅ |
+| FR-13 | `/recall` menjawab dari wiki dengan menyebut path page sumbernya, dan bilang jujur kalau tidak ada catatan. | Must | /recall | ✅ |
 | FR-14 | Gap analysis berbasis data pribadi. Kalau data tidak cukup, Hermes menolak membuat roadmap generik. | Must | UC2 | ✅ |
 | FR-15 | Skill map di-generate otomatis dari `about.md`, `careers/`, dan `self-development/`, lalu dibekukan per level. Generate ulang hanya saat naik level atau ganti role. | Must | UC2, UC5 | ✅ |
 | FR-16 | Role fit ditampilkan dalam bentuk pembilang/penyebut, dengan 2 role paling cocok dan 2 paling jauh. | Should | UC2 | ✅ |
@@ -100,7 +100,7 @@ Berlaku untuk seluruh `igrow/`, termasuk `raw/`. Redaksi wajib dilakukan **sebel
 |---|---|
 | `client ABC server PROD-DB-07 (10.x.x.x) mengalami...` | `production server mengalami high CPU` |
 
-⚠ Daftar larangan di runtime (`AGENTS.md`, `SCHEMA.md`) belum memuat serial number, raw log client, dan konfigurasi proprietary ([W25](todo.md)).
+Di runtime, daftar ini berlaku lewat `AGENTS.md` § DILARANG KERAS (dimuat di setiap sesi). Ubah keduanya bersamaan.
 
 ### 3.2 Alur Screenshot
 

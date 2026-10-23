@@ -19,9 +19,9 @@ Aturan main wiki iGROW. **Wajib diikuti.** Kasus yang tidak tercakup aturan mana
 - `skill-map.md` = dibuat agent, beku per level (lihat "skill-map.md format"). User boleh edit manual.
 
 ## Tiap operasi tulis WAJIB diakhiri
-1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/).
-2. Update master `igrow/_index.md`.
-3. Append `log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, lint, review.
+1. Update `_index.md` terdekat (raw/ atau wiki/ atau output/), termasuk "Last updated".
+2. Update master `igrow/_index.md` (termasuk "Total pages" + "Last updated").
+3. Append `igrow/log.md`: `## [YYYY-MM-DD] op | subjek`. Ops: init, ingest, update, lint, review.
 
 ## Frontmatter page wiki/
 ```yaml
@@ -83,6 +83,8 @@ Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag 
 - Antar-page: `[[slug]]` minimal 2 outbound per page.
 - Section `## See Also` wajib dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
 - Narasi biasa cukup `[[slug]]`.
+- Target belum ada → tetap boleh ditaut (placeholder): tambah baris di `_index.md` terdekat dari path target: `| <path target> | (placeholder) | - | - |`. Tidak masuk master, tidak dihitung Total pages.
+- Menulis note baru → cek `_index.md` dulu: slug-nya ada sebagai placeholder → ganti baris itu dengan baris biasa. Path note beda dari path placeholder → perbaiki juga link `(...)` di page yang menautnya (cari `[[slug`).
 
 ## Threshold
 - Bikin page: topik muncul 2+ sumber ATAU sentral di 1 sumber.
@@ -107,5 +109,5 @@ Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag 
 ## Honest gaps
 Wiki gak punya jawaban → bilang jujur + usulkan ingest apa.
 
-## DILARANG KERAS (berlaku juga raw/)
-Credential, API key/token, IP internal, hostname sensitif, data client, screenshot tanpa redact.
+## DILARANG KERAS
+Daftar lengkap di `AGENTS.md` § DILARANG KERAS (berlaku juga raw/: redact SEBELUM ingest).

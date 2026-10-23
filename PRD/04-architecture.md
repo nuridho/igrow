@@ -62,8 +62,8 @@ Semua service berjalan di satu VPS memakai Docker Compose, di belakang Nginx Pro
 
 | Lapisan | File | Kapan dimuat | Isi |
 |---|---|---|---|
-| 1. Aturan inti | `hermes-home/AGENTS.md` | Otomatis di setiap sesi Telegram. Sesi cron hanya kalau job dibuat dengan `--workdir /opt/data` | Struktur folder, aturan penempatan, protokol tulis, larangan data sensitif, daftar prosedur |
-| 2. Aturan format | `igrow/SCHEMA.md` + `igrow/taxonomy.md` | Sebelum setiap operasi tulis | Frontmatter, body template, aturan tag, link, threshold, format skill map. Daftar tag di `taxonomy.md` (D-28) |
+| 1. Aturan inti | `hermes-home/AGENTS.md` | Otomatis di setiap sesi Telegram. Sesi cron hanya kalau job dibuat dengan `--workdir /opt/data` | Struktur folder, aturan penempatan, larangan data sensitif, daftar prosedur |
+| 2. Aturan format | `igrow/SCHEMA.md` + `igrow/taxonomy.md` | Sebelum setiap operasi tulis | Protokol tulis, frontmatter, body template, aturan tag, link, threshold, format skill map. Daftar tag di `taxonomy.md` (D-28) |
 | 3. Prosedur per UC | `igrow/project-skills/*.md` | Hanya saat relevan | Langkah detail, fallback, self-check, contoh eksekusi |
 
 **Catatan penting:** `AGENTS.md` harus diletakkan di root `HERMES_HOME`, bukan di dalam `igrow/`. Di mode gateway, working directory Hermes selalu `/opt/data` (issue resmi `NousResearch/hermes-agent#5200`). Perilaku ini sudah teruji di Phase 2.

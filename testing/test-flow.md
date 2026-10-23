@@ -75,6 +75,7 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 - Body alur incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned
 - **NEGATIF TEST:** `grep -ri "cimb\|PROD-APP-03\|10.20.30.40" igrow/` → 0 hasil
 - `wiki/_index.md` + master `igrow/_index.md` ke-update, `log.md` ada entry `## [tanggal] ingest | ...`
+- Ini note pertama, jadi target See Also pasti belum ada → tiap target tercatat `| <path> | (placeholder) | - | - |` di `wiki/_index.md`, tidak masuk master
 - `career-1-berca-sysadmin/skills.md` terisi/ke-update
 **Test:** `ls igrow/wiki/careers/career-1-berca-sysadmin/knowledge/incidents/ && cat igrow/wiki/careers/career-1-berca-sysadmin/skills.md`
 
@@ -343,7 +344,7 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 # FASE 5 — Recall, Briefing, Review
 
 ## 5.1 /recall — ada
-**Prompt:** "apa pelajaran dari incident CPU kemarin?" → jawab dari note 1.1/1.6.
+**Prompt:** "apa pelajaran dari incident CPU kemarin?" → jawab dari note 1.1/1.6 dan menyebut path note-nya (`igrow/wiki/...`). **Gagal kalau** tidak ada path sumber.
 
 ## 5.2 /recall — honest gap
 **Prompt:** "apa pengalaman saya soal Kubernetes?" → jujur "belum ada catatan", tawarin riset/tulis baru. **Gagal kalau ngarang.**
