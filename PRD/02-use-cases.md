@@ -188,7 +188,7 @@ flowchart LR
 
 **Prasyarat:** fitur ini butuh bahan. Urutannya: rutin capture (UC1) dan study (UC4) dulu, baru minta gap analysis (UC2/UC5). Skill map dibuat otomatis, jadi kekosongan data karier adalah satu-satunya alasan jawaban menjadi tipis.
 
-**Konsistensi nama topik:** kalau topik yang sama ditulis dengan nama berbeda setiap kali, hasil gap analysis terpecah. Mitigasinya: tag dari taxonomy SCHEMA dan fuzzy-match nama topik. Aturan pencocokannya ada di SCHEMA: topik dihitung punya note kalau ada note yang judul atau Ringkasan-nya membahas topik itu. Yang cuma disinggung di note lain dihitung Weak.
+**Konsistensi nama topik:** kalau topik yang sama ditulis dengan nama berbeda setiap kali, hasil gap analysis terpecah. Mitigasinya: tag dari taxonomy (`igrow/taxonomy.md`) dan fuzzy-match nama topik. Aturan pencocokannya ada di SCHEMA: topik dihitung punya note kalau ada note yang judul atau Ringkasan-nya membahas topik itu. Yang cuma disinggung di note lain dihitung Weak.
 
 ## UC3 · Daily Briefing
 

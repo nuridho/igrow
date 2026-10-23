@@ -23,13 +23,14 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 **Target:** sebelum data nyata diisi.
 
 - [x] Rapikan `SCHEMA.md`: duplikat kepemilikan, definisi skill inventory (W1), skill map sebagai `type: data` (W2), dan SCHEMA jadi wajib. Selesai 2026-10-16 (W9).
-- [ ] Kerjakan item todo hasil review PRD 2026-10-17 (W22–W26, I8) sebelum deploy ulang, supaya cukup sekali deploy.
-- [ ] Deploy ulang `hermes-home/` ke VPS: contoh few-shot yang sudah diperbaiki (C2), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`).
+- [ ] Kerjakan item todo hasil review PRD 2026-10-17 (W23, W25, I8) sebelum deploy ulang, supaya cukup sekali deploy.
+- [ ] Deploy ulang `hermes-home/` ke VPS (2 langkah rsync, PRD 04 §7): contoh few-shot yang sudah diperbaiki (C2), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`).
 - [ ] Hapus sisa session-export di VPS: cron job (kalau sudah dibuat), file prosedurnya, dan folder `log/sessions/archive/`.
 
 ### M2.2 · Automation Aktif
 
 - [ ] Siapkan prasyarat backup: `git init` di `igrow/`, remote repo privat `igrow-backup`, dan token dengan scope minimal.
+- [ ] Cek toolset platform `cron` di `hermes tools`: web (daily briefing), terminal (backup, cek privasi lint I12), file (semua job). Kalau config cron tidak terbaca, Hermes menggagalkan run, bukan memakai semua tool (dokumentasi resmi, fitur cron).
 - [ ] Buat 4 cron job (`daily-briefing`, `backup-knowledge`, `lint-mingguan`, `career-review`) dengan `--deliver telegram` dan `--workdir /opt/data`. Pastikan `hermes cron list` menampilkan 4 job.
 - [ ] Verifikasi minggu pertama: briefing tiba setiap pagi, backup menghasilkan commit, dan lint mengirim laporan.
 
@@ -47,9 +48,9 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 | Horizon | Item | Sumber |
 |---|---|---|
 | **Now** | Cron + prasyarat backup | build.md checklist Phase 2 |
-| **Now** | Kerjakan todo hasil review PRD (W22–W26, I8), lalu deploy ulang runtime | §2 M2.1, [`todo.md`](todo.md) |
+| **Now** | Kerjakan todo hasil review PRD (W23, W25, I8), lalu deploy ulang runtime | §2 M2.1, [`todo.md`](todo.md) |
 | **Next** | Perbarui test-flow, lalu uji dengan data nyata | §2 M2.3 |
-| **Next** | Bersihkan `build.md`: ganti blok salinan "Bikin 14 file inti" dengan 1 instruksi rsync (exclude `_index.md` + `log.md`), hapus kalimat fallback push via `igrow.nuridho.com`, ganti "(via SSH)" di tabel cron jadi HTTPS + token | `docs/build.md` |
+| **Next** | Bersihkan `build.md`: ganti blok salinan "Bikin 14 file inti" dengan instruksi deploy 2 langkah (rujuk PRD 04 §7), hapus kalimat fallback push via `igrow.nuridho.com`, ganti "(via SSH)" di tabel cron jadi HTTPS + token | `docs/build.md` |
 | **Later** | Phase 3 (Dozzle), Phase 4 (dashboard) | vpslab.md |
 | **Later** | Export PDF career review, perintah koreksi note (`/cek` / `/audit`) | FR-25, FR-26 |
 | **Later** | Evaluasi migrasi `project-skills/` ke sistem Skill resmi Hermes | OQ-06 |

@@ -13,6 +13,7 @@ wiki/ = executable.
 
 ## Struktur Folder (igrow/)
 - `igrow/SCHEMA.md`        → aturan format, frontmatter, tag, ownership — BACA DULU sebelum tulis
+- `igrow/taxonomy.md`      → daftar tag resmi (aturan tambah tag di SCHEMA)
 - `igrow/_index.md`        → master katalog; baca ini dulu sebelum scan folder
 - `igrow/log.md`           → jurnal aksi append-only: `## [YYYY-MM-DD] op | subjek`
 - `igrow/raw/`             → sumber IMMUTABLE (inbox/ → proses → articles/)

@@ -14,12 +14,12 @@ ulang isi konten.
    (`contradictions` opsional); data file (`roadmap/`, `profile/`) → title/type/updated;
    `about.md` & `careers/*/skills.md` → tanpa frontmatter (JANGAN dilaporkan).
    `type` di luar enum SCHEMA = temuan.
-4. Tag di luar taxonomy SCHEMA.
+4. Tag di luar `igrow/taxonomy.md`.
 5. `_index.md` vs filesystem: entri index yang file-nya sudah tidak ada.
 
 ## Fallback
 - `wiki/` kosong / belum ada isi apapun → lapor "wiki kosong, belum ada yang di-lint" ke log + Telegram, jangan anggap error.
-- `_index.md` (master atau subfolder) hilang → lapor sebagai temuan tersendiri ("index hilang: <path>"), jangan skip cek yang lain diam-diam.
+- `_index.md` (master atau subfolder) atau `igrow/taxonomy.md` hilang → lapor sebagai temuan tersendiri ("index hilang: <path>" / "taxonomy hilang"; tanpa taxonomy, cek 4 dilewati), jangan skip cek yang lain diam-diam.
 
 ## Tutup
 Append ringkasan ke `igrow/log.md` (op: lint). Kirim ke Telegram; semua

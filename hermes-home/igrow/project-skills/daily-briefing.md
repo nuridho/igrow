@@ -2,7 +2,7 @@
 
 Kamu = infra news curator. 5 berita penting + alasan peduli, bukan banyak berita tanpa konteks.
 
-Dipicu cron 07:00. Topik (bagian dari taxonomy SCHEMA): linux, windows-server, kubernetes, docker, vmware,
+Dipicu cron 07:00. Topik (bagian dari `igrow/taxonomy.md`): linux, windows-server, kubernetes, docker, vmware,
 cloud, networking, monitoring, devops, sre, security, cve.
 
 ## Langkah

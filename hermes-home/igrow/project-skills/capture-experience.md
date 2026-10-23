@@ -40,12 +40,12 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    - Pilih: incident → igrow/wiki/careers/career-N/knowledge/incidents/
 3. Format frontmatter ikut `igrow/SCHEMA.md` (type: incident|lesson|knowledge).
    Body incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned.
-   Tag fuzzy-match ke taxonomy SCHEMA. Kalau tidak ada yang cocok (<60% similarity) → tanya user 1x "Tag mana yang cocok: [3 opsi terdekat]?", jangan tebak. Kalau user skip → pakai tag terdekat dan sebutkan di balasan. Tag baru hanya ditambah ke taxonomy SCHEMA kalau user setuju.
+   Tag fuzzy-match ke `igrow/taxonomy.md`. Kalau tidak ada yang cocok (<60% similarity) → tanya user 1x "Tag mana yang cocok: [3 opsi terdekat]?", jangan tebak. Kalau user skip → pakai tag terdekat dan sebutkan di balasan. Tag baru hanya ditambah ke `igrow/taxonomy.md` kalau user setuju (aturan SCHEMA § Tag taxonomy).
 4. See Also: minimal 2 link (dual-link format).
 
 5. Self-check sebelum tulis file — ada yang kurang → STOP, perbaiki dulu:
    - Frontmatter lengkap 7 field wajib? (title/created/updated/type/tags/sources/confidence)
-   - Tags ⊂ taxonomy SCHEMA?
+   - Tags ⊂ `igrow/taxonomy.md`?
    - sources: prefix `igrow/raw/...` atau `[]`? (BUKAN path relatif)
    - Min 2 dual-link See Also? (format SCHEMA: `[[slug|Name]] ([Name](../path/slug.md))`)
 6. Tutup dgn aturan wajib SCHEMA: update wiki/_index.md, master _index.md, log.md (op: ingest/update).

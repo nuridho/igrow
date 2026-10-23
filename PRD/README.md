@@ -55,7 +55,8 @@ Blueprint awal (`iGROW_FINAL.md`) sudah diarsipkan di `archive/`. Seluruh isinya
 | **`igrow/`** | Subfolder `HERMES_HOME` yang berisi seluruh data iGROW. Hanya folder ini yang dianggap aset portable. |
 | **`AGENTS.md`** | Aturan inti yang otomatis dimuat Hermes di setiap sesi. |
 | **Project skill** | File markdown prosedur per use case di `igrow/project-skills/`. Dibaca Hermes saat relevan. Bukan sistem Skill resmi Hermes. |
-| **`SCHEMA.md`** | Aturan format wiki: frontmatter, taxonomy tag, link, dan threshold. |
+| **`SCHEMA.md`** | Aturan format wiki: frontmatter, aturan tag, link, dan threshold. |
+| **`taxonomy.md`** | Daftar tag resmi. Milik agent, tidak ditimpa deploy (D-28). |
 | **UC** | Use case (UC1–UC5, plus UC1b Daftar Kerjaan Baru). M1/M2 adalah job maintenance (lint, backup), bukan UC. |
 | **Career aktif** | Folder `wiki/careers/career-N-*` yang `about.md`-nya belum punya tanggal selesai. |
 | **`raw/`** | Sumber mentah yang immutable (artikel, screenshot yang sudah diredaksi). |

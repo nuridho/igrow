@@ -18,6 +18,18 @@ Format entri:
 
 ---
 
+## [2026-10-23] Taxonomy jadi file terpisah (W26, D-28)
+- **Apa:** daftar tag pindah dari `SCHEMA.md` ke file baru `igrow/taxonomy.md` (milik agent, isi awal 16 tag yang sama). SCHEMA § Tag taxonomy jadi aturan + rujukan; tambah tag cukup append `log.md` (op `update`), tanpa update index. Rujukan "taxonomy SCHEMA" di `capture-experience.md`, `study.md`, `daily-briefing.md`, `lint.md` → `taxonomy.md`. Lint melaporkan "taxonomy hilang" kalau file itu tidak ada. `AGENTS.md` § Struktur + 1 baris. Deploy jadi 2 langkah: rsync dengan exclude `_index.md`/`log.md`/`taxonomy.md`, lalu `rsync --ignore-existing` (tanpa langkah kedua, `taxonomy.md` tidak pernah sampai ke VPS). Ini juga menggantikan aturan "setup pertama tanpa exclude". PRD 02/03/04/README/roadmap/D-28, `CLAUDE.md`, dan `test-flow.md` diselaraskan. Rujukan W31 `AGENTS.md:73` → `:74` (baris bergeser).
+- **Kenapa:** W26, keputusan owner D-28.
+- **File:** `hermes-home/AGENTS.md`, `hermes-home/igrow/SCHEMA.md`, `hermes-home/igrow/taxonomy.md` (baru), `hermes-home/igrow/project-skills/{capture-experience,study,daily-briefing}.md`, `hermes-home/igrow/project-skills/maintenance/lint.md`, `PRD/{README,02-use-cases,03-requirements,04-architecture,05-roadmap,06-risks-decisions,todo,backlog}.md`, `CLAUDE.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu, ikut deploy ulang M2.1 (2 langkah, PRD 04 §7). Setelahnya pastikan `/opt/data/igrow/taxonomy.md` ada.
+
+## [2026-10-23] Review ulang item todo terbuka
+- **Apa:** 18 item terbuka di `todo.md` dicocokkan ulang dengan `hermes-home/` dan dokumentasi resmi Hermes (fitur cron). Act dipertajam: W23 (format baris placeholder + few-shot), W25 (3 jenis data terlarang yang tertinggal + Total pages ikut pindah), W28 (jendela 48 jam, item < 5, prasyarat toolset web), W29 (aturan tanpa deteksi cron, skill map ikut dilewati), W30 (review manual + pembanding Q<n-1>), W32 (default tanggal selesai), W33 (screenshot capture), I11, I12 (pola penugasan, bukan kata lepas). Roadmap M2.2 + cek toolset platform `cron`. W26: owner memilih taxonomy file terpisah (D-28), Act ditulis ulang.
+- **Kenapa:** permintaan owner (pastikan item siap diterapkan). Dokumentasi Hermes: sesi cron tidak diberi tahu bahwa tidak ada yang menjawab; toolset cron dikonfigurasi terpisah dan run gagal kalau config tidak terbaca.
+- **File:** `PRD/todo.md`, `PRD/05-roadmap.md`, `PRD/06-risks-decisions.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak
+
 ## [2026-10-23] Career review mencatat file wiki ke index (W24)
 - **Apa:** `career-review.md` step 7 sekarang juga memperbarui `wiki/_index.md` untuk file `wiki/profile/` dan `wiki/roadmap/skill-map.md` (kalau baru dibuat di step 1), selain `output/_index.md`, master, dan `log.md`.
 - **Kenapa:** W24. Tanpa ini, lint melaporkan file hasil UC5 sebagai orphan.

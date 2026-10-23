@@ -136,4 +136,5 @@ Yang **tidak** ikut di-backup ke GitHub: `.env` (token Telegram, API key LLM), `
 | `skill-map.md` | Agent (auto-generate, beku per level) | User boleh mengedit, tapi tidak wajib. Generate ulang hanya saat naik level atau ganti role. |
 | `raw/*` | Immutable | Tidak diedit setelah masuk. |
 | `wiki/*`, `output/*` | Agent | User jarang mengedit langsung. |
-| `AGENTS.md`, `SCHEMA.md`, `project-skills/*` | User (via repo ini) | Dideploy dari `hermes-home/` di repo ini. ⚠ Agent boleh menambah tag ke taxonomy `SCHEMA.md` di VPS (kalau user setuju), dan deploy berikutnya menimpanya ([W26](todo.md)). |
+| `AGENTS.md`, `SCHEMA.md`, `project-skills/*` | User (via repo ini) | Dideploy dari `hermes-home/` di repo ini; deploy menimpa versi VPS. |
+| `taxonomy.md` | Agent | Tag baru hanya kalau user setuju. Tidak ditimpa deploy; repo hanya menyediakan isi awal (D-28). |

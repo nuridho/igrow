@@ -1,7 +1,7 @@
 ---
 title: iGROW Schema
 created: 2026-08-25
-updated: 2026-10-16
+updated: 2026-10-23
 ---
 
 # iGROW Schema
@@ -30,7 +30,7 @@ title: Judul
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 type: knowledge | incident | lesson | learning | data
-tags: [dari taxonomy]
+tags: [dari igrow/taxonomy.md]
 sources: [igrow/raw/articles/xxxx.md]   # selalu ada; `[]` kalau murni cerita user
 confidence: high | medium | low   # dukungan SUMBER (bukan penguasaanmu)
 contradictions: [slug-lain]       # opsional; HANYA slug note yang isinya bertentangan
@@ -76,8 +76,8 @@ Body berupa list, bukan narasi:
 - `profile/skills.md` → `- Area  ███████░░░  NN% (X/Y)` (bar 10 blok, angka sama dengan Skill Inventory career review terakhir)
 - `profile/career-summary.md` → 1 baris per career: `- <folder career>: <Role> · <Period> · N incident · N knowledge · N lesson` (Role & Period dari `about.md`, career aktif = `s/d sekarang`; N = hitung file: `knowledge/incidents/`, `knowledge/` tanpa `incidents/`, `lessons-learned/`)
 
-## Tag taxonomy (tag baru ditambah di sini DULU, hanya kalau user setuju)
-linux, networking, monitoring, incident, docker, kubernetes, cloud, security, storage, performance, dns, windows-server, vmware, devops, sre, cve
+## Tag taxonomy
+Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag baru ditambah di sana DULU, hanya kalau user setuju; lalu cukup append `log.md` (op: update, subjek `tag <nama>`), tanpa update `_index.md`.
 
 ## Link
 - Antar-page: `[[slug]]` minimal 2 outbound per page.

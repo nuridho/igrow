@@ -108,9 +108,9 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 **Prompt:**
 > "Tadi ada alert HTTP 502 dari monitoring. Saya cek nginx error log, ternyata upstream app server mati karena OOM — memory habis. Saya restart service-nya, tambah swap sementara, normal."
 
-**Expected:** tags minimal 2 (misal `[linux, performance]`), semuanya dari taxonomy SCHEMA. Detail menyebut nginx + OOM.
-❌ Gagal kalau: tag di luar taxonomy SCHEMA.
-**Test:** `head -15 <file-502>` → bandingkan tags: dengan list di igrow/SCHEMA.md
+**Expected:** tags minimal 2 (misal `[linux, performance]`), semuanya dari `igrow/taxonomy.md`. Detail menyebut nginx + OOM.
+❌ Gagal kalau: tag di luar `igrow/taxonomy.md`.
+**Test:** `head -15 <file-502>` → bandingkan tags: dengan list di igrow/taxonomy.md
 
 ## 1.6 Topik sama lagi (bukan duplikat)
 **Prompt:**

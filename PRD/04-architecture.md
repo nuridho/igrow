@@ -63,7 +63,7 @@ Semua service berjalan di satu VPS memakai Docker Compose, di belakang Nginx Pro
 | Lapisan | File | Kapan dimuat | Isi |
 |---|---|---|---|
 | 1. Aturan inti | `hermes-home/AGENTS.md` | Otomatis di setiap sesi Telegram. Sesi cron hanya kalau job dibuat dengan `--workdir /opt/data` | Struktur folder, aturan penempatan, protokol tulis, larangan data sensitif, daftar prosedur |
-| 2. Aturan format | `igrow/SCHEMA.md` | Sebelum setiap operasi tulis | Frontmatter, body template, taxonomy tag, link, threshold, format skill map |
+| 2. Aturan format | `igrow/SCHEMA.md` + `igrow/taxonomy.md` | Sebelum setiap operasi tulis | Frontmatter, body template, aturan tag, link, threshold, format skill map. Daftar tag di `taxonomy.md` (D-28) |
 | 3. Prosedur per UC | `igrow/project-skills/*.md` | Hanya saat relevan | Langkah detail, fallback, self-check, contoh eksekusi |
 
 **Catatan penting:** `AGENTS.md` harus diletakkan di root `HERMES_HOME`, bukan di dalam `igrow/`. Di mode gateway, working directory Hermes selalu `/opt/data` (issue resmi `NousResearch/hermes-agent#5200`). Perilaku ini sudah teruji di Phase 2.
@@ -203,7 +203,9 @@ Yang tidak bisa dipulihkan dari backup: memory dan skill internal Hermes, serta 
 ## 7. Deployment
 
 - **Konfigurasi container:** `image: nousresearch/hermes-agent:latest`, `command: gateway run`, environment `HERMES_UID`/`HERMES_GID`/`TZ`, dan satu volume `./igrow-hermes/hermes-home:/opt/data`. Tidak ada `env_file:`; secret ditulis oleh `hermes setup`. `HERMES_HOME` tidak bisa dipindah lewat env var; path-nya tetap `/opt/data`.
-- **Deploy runtime:** `rsync -a --exclude '_index.md' --exclude 'log.md'` dari `hermes-home/` di repo ini ke VPS, supaya katalog dan log di VPS tidak tertimpa template kosong. Saat setup pertama, jalankan tanpa exclude.
+- **Deploy runtime** dari `hermes-home/` di repo ini ke VPS, 2 langkah:
+  1. `rsync -a --exclude '_index.md' --exclude 'log.md' --exclude 'taxonomy.md'`: aturan diperbarui, file milik agent (katalog, log, daftar tag) tidak tertimpa template repo.
+  2. `rsync -a --ignore-existing`: file milik agent yang belum ada di VPS (setup pertama, atau file baru seperti `taxonomy.md`) tersalin sekali; yang sudah ada tidak disentuh.
 - ⚠ Blok "Bikin 14 file inti" di `docs/build.md` sudah basi dibanding `hermes-home/`. Jangan dipakai untuk setup baru (pembersihannya ada di [05 · Roadmap](05-roadmap.md#3-prioritas-backlog)).
 
 ## 8. Domain

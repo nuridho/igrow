@@ -37,7 +37,7 @@ Bahasa: Bahasa Indonesia (santai di chat, rapi di dokumen). Owner = satu-satunya
 - `AGENTS.md` harus di root `HERMES_HOME` (`/opt/data`), bukan di `igrow/`, karena working directory gateway terkunci ke `/opt/data` (issue #5200).
 - `project-skills/` = markdown biasa yang dirujuk dari `AGENTS.md`, **bukan** sistem Skill resmi Hermes (`SKILL.md`).
 - `hermes cron create`: argumen prompt bersifat **positional** (tidak ada `--prompt`), wajib `--deliver telegram`, dan wajib `--workdir /opt/data` (tanpa itu sesi cron tidak memuat `AGENTS.md`). Jawaban cron yang berisi `[SILENT]` tidak dikirim; jawaban kosong justru dicatat sebagai gagal kirim.
-- Deploy runtime: `rsync -a --exclude '_index.md' --exclude 'log.md'` supaya katalog dan log di VPS tidak tertimpa. Saat setup pertama, jalankan tanpa exclude.
+- Deploy runtime = 2 langkah: (1) `rsync -a --exclude '_index.md' --exclude 'log.md' --exclude 'taxonomy.md'` supaya file milik agent (katalog, log, daftar tag) di VPS tidak tertimpa; (2) `rsync -a --ignore-existing` supaya file milik agent yang belum ada di VPS (setup pertama, atau file baru) tersalin sekali tanpa menimpa yang sudah ada.
 - Blok "Bikin 14 file inti" di `docs/build.md` sudah basi (tugas pembersihannya ada di `PRD/05-roadmap.md`). Salin dari `hermes-home/`, bukan dari blok itu.
 - Fakta CLI atau perilaku Hermes dicek ke dokumentasi resmi (hermes-agent.nousresearch.com), bukan dari ingatan.
 
