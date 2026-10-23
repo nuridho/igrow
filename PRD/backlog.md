@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-23] Backup tetap push tiap run; weak-topics ditulis ulang (W38, I14)
+- **Apa:** W38: `backup.sh` hanya membuat commit kalau ada perubahan baru, tapi `git push` tetap jalan di setiap run; laporan "pushed" kalau ada commit yang belum di GitHub (`git rev-list --count @{u}..HEAD`, termasuk commit tertunda dari run yang gagal), "no changes" kalau nol, "ERROR" kalau push gagal. Diuji dengan remote git lokal (7 skenario). I14: `mentor.md` menulis ulang `weak-topics.md` dari Gap semua topik target skill map (topik yang sudah Known hilang; isi sama → tidak ditulis). PRD 02 (AC M2, alur UC2), PRD 04 §6.3 (diagram backup), README (riwayat 1.4), roadmap (sisa item, prioritas), todo (W38, I14 dicentang, § Terbuka) diselaraskan.
+- **Kenapa:** W38: commit yang gagal di-push tertutup laporan "tidak ada perubahan", dan token kedaluwarsa baru ketahuan saat ada perubahan. I14: topik yang sudah dikuasai tidak pernah hilang dari `weak-topics.md`.
+- **File:** `hermes-home/igrow/project-skills/maintenance/backup.sh`, `hermes-home/igrow/project-skills/mentor.md`, `PRD/{README,02-use-cases,04-architecture,05-roadmap,todo,backlog}.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
 ## [2026-10-23] Prosedur iGROW tidak disimpan sebagai skill/memory Hermes (W37)
 - **Apa:** `AGENTS.md` § File Referensi + 1 baris: "Prosedur iGROW hanya dari file di bawah (selalu baca versi di disk). Jangan simpan alur atau data iGROW (mis. career aktif, aturan, tag) sebagai skill/memory Hermes; yang sudah tersimpan diabaikan." Roadmap M2.2 + item VPS: `skills.write_approval: true` (cek `/skills pending` sesekali; `memory.write_approval` opsional). PRD 04 (catatan lapisan instruksi), PRD 06 R-12, README (riwayat 1.4), `CLAUDE.md` (fakta teknis), dan todo (W37 dicentang, rujukan W44 `AGENTS.md:78` → `:79`, § Terbuka, sisa item) diselaraskan.
 - **Kenapa:** W37. Dokumentasi resmi Hermes: agent menulis skill dan memory sendiri secara default (termasuk lewat background review) dan memuatnya di setiap sesi, sehingga salinan prosedur lama bisa dipakai menggantikan `project-skills/` terbaru.

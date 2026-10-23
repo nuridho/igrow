@@ -15,15 +15,15 @@ fi
 [ -f /opt/data/AGENTS.md ] && cp /opt/data/AGENTS.md AGENTS.backup.md
 
 git add -A
-if git diff --cached --quiet; then
-  echo "backup: no changes, skipping" >&2
-  exit 0
+if ! git diff --cached --quiet; then
+  git commit -m "backup $(date +%F)"
 fi
 
-git commit -m "backup $(date +%F)"
-
+# Push tetap jalan walau tidak ada perubahan baru: commit yang dulu gagal di-push ikut terkirim,
+# dan remote + token teruji di setiap run. ahead = jumlah commit yang belum ada di GitHub.
+ahead=$(git rev-list --count '@{u}..HEAD' 2>/dev/null || echo 1)
 if git push; then
-  echo "backup: pushed successfully"
+  if [ "$ahead" -gt 0 ]; then echo "backup: pushed successfully"; else echo "backup: no changes (GitHub sudah sama)"; fi
 else
   echo "ERROR: git push gagal" >&2
   exit 1

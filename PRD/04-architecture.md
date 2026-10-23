@@ -173,12 +173,15 @@ Command pembuatan job ada di [`docs/build.md`](../docs/build.md) § Setup 4 Cron
 flowchart TD
     subgraph backup["Backup · cron Sen/Rab/Sab 05:00 · selalu 1 pesan Telegram (D-27)"]
         b1(["cron backup-knowledge"]) --> b2["backup.sh<br/>salin AGENTS.md → igrow/AGENTS.backup.md"]
-        b2 --> b3{"git add -A<br/>ada perubahan?"}
-        b3 -- Tidak --> b4(["Telegram: tidak ada perubahan"])
-        b3 -- Ya --> b5["commit + push"]
-        b5 --> b6{"Berhasil?"}
+        b2 --> b3{"git add -A<br/>ada perubahan baru?"}
+        b3 -- Ya --> b5["commit"]
+        b3 -- Tidak --> b9
+        b5 --> b9["push<br/>(tetap jalan walau tidak ada perubahan baru)"]
+        b9 --> b6{"Berhasil?"}
         b6 -- Tidak --> b7(["Telegram: gagal + pesan error"])
-        b6 -- Ya --> b8(["Telegram: berhasil di-push"])
+        b6 -- Ya --> b10{"Ada commit<br/>yang terkirim?"}
+        b10 -- Ya --> b8(["Telegram: berhasil di-push"])
+        b10 -- Tidak --> b4(["Telegram: tidak ada perubahan"])
     end
     b6 -- Ya --> gh[("GitHub privat<br/>igrow-backup")]
     subgraph recovery["Recovery · manual"]

@@ -15,7 +15,7 @@ Status tiap topik target (Known / Weak / Belum) dan Gap: definisi di SCHEMA § s
 
 ### A. Jika user tanya "harus belajar apa" / roadmap
 - Tabel per topik target: Status (Known/Weak/Belum) · Bukti (nama note/incident + tanggal, atau "0 note") · Experience (incident terkait yang pernah dialami, kalau ada) · Kenapa gap (dibutuhkan level target tapi Weak/Belum)
-- Update `wiki/roadmap/weak-topics.md` (format di SCHEMA) kalau ada temuan baru
+- Tulis ulang `wiki/roadmap/weak-topics.md` (format di SCHEMA) dari Gap semua topik target skill map, bukan hanya area yang ditanya: topik yang sudah Known hilang dari daftar. Isinya sama dengan versi lama → tidak ditulis (tanpa update index dan log).
 - Rekomendasi personal dari Experience ("kamu sudah pernah kena X, mulai dari Y") + sebut note/incident dasarnya. BUKAN roadmap generik.
 
 ### B. Jika user tanya "role apa cocok" / kecocokan karier

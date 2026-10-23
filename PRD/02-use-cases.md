@@ -143,7 +143,7 @@ Dengan pemisahan per career, setiap note otomatis punya konteks "dari pekerjaan 
 1. Pastikan `wiki/roadmap/skill-map.md` ada. Kalau belum, generate dulu dari `careers/` dan `self-development/`. Skill map beku per level: tidak di-generate ulang karena ada data baru.
 2. Beri status tiap topik target: Known (punya note), Weak (cuma disinggung di note lain), atau Belum (tidak muncul). Gap = Weak + Belum. Definisinya ada di `SCHEMA.md` § skill-map.md format dan dipakai juga oleh UC5.
 3. Beri jawaban sesuai jenis pertanyaan:
-   - **Roadmap:** tabel Known / Weak / Belum, rekomendasi personal, update `weak-topics.md`.
+   - **Roadmap:** tabel Known / Weak / Belum, rekomendasi personal, dan `weak-topics.md` ditulis ulang dari Gap terbaru (topik yang sudah Known hilang dari daftar).
    - **Role fit:** tabel kecocokan role dalam bentuk X/Y topik, 2 role paling cocok dan 2 paling jauh, beserta gap masing-masing.
 
 **Contoh:**
@@ -420,6 +420,6 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 
 **Acceptance criteria:**
 - ⏳ Cron dan prasyarat repo (`git init`, remote, token) belum terkonfirmasi di VPS.
-- ✅ `backup.sh` menyalin `/opt/data/AGENTS.md` ke `igrow/AGENTS.backup.md`, lalu menjalankan `git add -A`, commit, dan push seluruh `igrow/`.
-- ✅ Setiap run selalu dilaporkan ke Telegram dalam 1 baris: berhasil di-push, tidak ada perubahan, atau gagal + pesan error (D-27).
+- ✅ `backup.sh` menyalin `/opt/data/AGENTS.md` ke `igrow/AGENTS.backup.md`, lalu menjalankan `git add -A`, commit (kalau ada perubahan baru), dan push seluruh `igrow/`. Push tetap jalan walau tidak ada perubahan baru, sehingga commit yang dulu gagal di-push ikut terkirim dan token teruji di setiap run.
+- ✅ Setiap run selalu dilaporkan ke Telegram dalam 1 baris: berhasil di-push, tidak ada perubahan, atau gagal + pesan error (D-27). "Tidak ada perubahan" berarti GitHub sudah sama dengan VPS.
 - ✅ Yang di-backup hanya `igrow/` + salinan `AGENTS.md`. State internal Hermes (`.env`, memory, sessions) tidak ikut.
