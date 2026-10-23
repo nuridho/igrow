@@ -18,6 +18,18 @@ Format entri:
 
 ---
 
+## [2026-10-24] `setupvps.sh` ditulis ulang dengan TUI
+- **Apa:** `Setup/setupvps.sh` memakai tampilan yang sama dengan `igrow-setup.sh`: banner, header `[n/9]`, spinner, status ✔/↷/!/✘, ringkasan akhir dalam kotak. Output perintah masuk `/var/log/setupvps.log` (mode 600); kalau gagal, 12 baris terakhir ditampilkan. Semua pertanyaan (nama folder project, password user baru dua kali) diajukan di awal, lalu langkah 1–9 jalan sendiri. Langkah yang sudah beres dilewati (user, hostname, timezone, swap, Docker, NPM). Perubahan perilaku: cek root + apt di awal; user dibuat dengan `adduser --disabled-password` + `chpasswd` (password tidak tampil di daftar proses); `apt-get upgrade` non-interaktif (`--force-confold`) supaya tidak ada prompt yang menggantung di balik spinner; NPM dijalankan dengan `docker compose -f`.
+- **Kenapa:** permintaan owner: TUI setup VPS dibuat lebih rapi.
+- **File:** `Setup/setupvps.sh`, `PRD/backlog.md`
+- **Deploy VPS:** tidak.
+
+## [2026-10-24] `setupvps.sh`: update otomatis, swap, batas log Docker, peringatan reboot
+- **Apa:** `Setup/setupvps.sh` ditambah: `unattended-upgrades` + `20auto-upgrades` (tambalan keamanan harian, tanpa reboot otomatis); swap file 2 GB kalau belum ada swap (masuk `/etc/fstab`); `/etc/docker/daemon.json` dengan batas log `json-file` 10 MB × 3 per container, ditulis sebelum Docker dipasang (kalau Docker sudah ada, daemon di-restart); di akhir, peringatan reboot kalau `/var/run/reboot-required` ada. Langkah jadi 9. `Setup/README.md` ikut diperbarui.
+- **Kenapa:** saran tambahan setup VPS yang dipilih owner (1, 2, 3, 5): disk tidak penuh oleh log, Hermes tidak mati kehabisan RAM, tambalan keamanan tidak bergantung pada setup ulang.
+- **File:** `Setup/setupvps.sh`, `Setup/README.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak. Untuk VPS yang sudah jalan, poin-poin ini bisa dipasang manual; menjalankan ulang `setupvps.sh` juga me-restart Docker (semua container ikut restart).
+
 ## [2026-10-24] Folder induk project ditentukan user
 - **Apa:** nama folder project (dulu tetap `whatsinsidegit`) sekarang diisi user, cukup namanya, tanpa `/`. Foldernya selalu `~/<nama>`: dibuat kalau belum ada, dipakai kalau sudah ada. `Setup/setupvps.sh` bertanya di awal, memasang NPM + web dummy di `~/<nama>/proxy/`, dan menulis `PROJ=<nama>` ke `~nuridho/.config/igrow/setup.env` (hanya kalau file belum ada). `Setup/igrow-setup.sh` langkah 5 bertanya "Mau install di mana?" (default dari setup.env) dan folder data otomatis `~/<nama>/igrow-hermes/hermes-home`, menggantikan pertanyaan path `hermes-home` lengkap (variabel baru `PROJ` di setup.env). `Setup/README.md` dan `PRD/07-setup.md` langkah 5 ikut diperbarui. `whatsinsidegit` di `docs/build.md`, `CLAUDE.md`, `PRD/README.md` dibiarkan karena itu path VPS yang sedang jalan.
 - **Kenapa:** permintaan owner: nama folder project diisi user saat setup.
