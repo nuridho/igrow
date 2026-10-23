@@ -49,7 +49,7 @@ Status:
 |---|---|---|---|---|
 | FR-20 | Daily briefing setiap hari 07:00, maksimal 5 item dengan alasan relevansi. Item CVE menyertakan teknologi terdampak dan severity. | Should | UC3 | ⏳ Cron belum dibuat |
 | FR-21 | Lint struktur wiki setiap minggu, hanya melapor. | Should | M1 | ⏳ Cron belum dibuat |
-| FR-22 | Backup `igrow/` + salinan `AGENTS.md` ke repo GitHub privat setiap Senin, Rabu, dan Sabtu 05:00. Diam kalau tidak ada perubahan, lapor kalau gagal. | Must | M2 | ⏳ Cron + prasyarat repo · ⚠ "Diam" butuh jawaban `[SILENT]` ([W22](todo.md)) |
+| FR-22 | Backup `igrow/` + salinan `AGENTS.md` ke repo GitHub privat setiap Senin, Rabu, dan Sabtu 05:00. Setiap run selalu lapor: berhasil, tidak ada perubahan, atau gagal (D-27). | Must | M2 | ⏳ Cron + prasyarat repo |
 | FR-23 | Semua output cron dikirim ke Telegram (`--deliver telegram`). | Must | UC3, UC5, M1, M2 | ⏳ |
 
 ### 1.5 Fitur Mendatang

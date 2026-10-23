@@ -1,7 +1,7 @@
 # To-Do — iGROW (hermes-home)
 
 > Fokus: hanya item yang menyentuh `hermes-home/` (AGENTS.md, SCHEMA, project-skills, struktur `igrow/`). Item VPS, docs, testing, web, dan migrasi dihapus 2026-10-16; jejaknya ada di git history dan `05-roadmap.md`.
-> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W27 / I9 / A10.
+> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W35 / I14 / A11.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres. Item `[x]` Act-nya lampau, Impact-nya sudah berlaku.
 > Isi list = bug + kontradiksi di runtime. Kosmetik sengaja tidak dicatat. `FIN` di item lama = `archive/iGROW_FINAL.md`.
 > Item selesai → centang di sini + catat di [`backlog.md`](backlog.md).
@@ -9,7 +9,7 @@
 ## Terbuka
 
 - **W22–W26, I8**: temuan review PRD 2026-10-17. Kerjakan sebelum deploy ulang. Detail di § Review PRD.
-- **A7, A8, A9** (Advanced Prompting Tier 3): diparkir, kerjakan hanya kalau Tier 1–2 terbukti kurang. Detail di bawah.
+- **W27–W34, A10, I9–I13**: temuan review runtime 2026-10-22. Kerjakan W27–W30 sebelum cron dibuat (kena di run cron pertama), lalu A10 (privasi). Detail di § Review runtime.
 
 ## Audit runtime (2026-10-10)
 
@@ -84,13 +84,13 @@
 
 > Celah runtime yang ketemu saat mencocokkan PRD dengan `hermes-home/` dan dokumentasi resmi Hermes (fitur cron).
 
-- [ ] **W22** `maintenance/backup.md` step 3 "jangan kirim pesan" tidak punya mekanisme. Cron Hermes selalu mengirim jawaban akhir agent, kecuali jawaban yang berisi `[SILENT]`; jawaban kosong malah dicatat sebagai gagal kirim.
-  - Act: step 3 → "Exit 0 + output 'no changes' → balas persis `[SILENT]`."
-  - Impact: backup tanpa perubahan benar-benar diam (M2, FR-22); Telegram hanya menerima error atau hasil push.
+- [x] **W22** `maintenance/backup.md` step 3 "jangan kirim pesan" tidak punya mekanisme. Cron Hermes selalu mengirim jawaban akhir agent, kecuali jawaban yang berisi `[SILENT]`; jawaban kosong malah dicatat sebagai gagal kirim.
+  - Act: diganti keputusan owner (D-27): backup selalu lapor. Step 2–3 jadi satu step: balas 1 baris sesuai hasil script (berhasil di-push / tidak ada perubahan / gagal + pesan error).
+  - Impact: setiap run backup menghasilkan 1 pesan Telegram; tidak ada pesan di hari backup = tanda cron/Hermes bermasalah.
 - [ ] **W23** Penanda `(placeholder)` untuk wikilink ke note yang belum ada cuma dikenal `lint.md`. SCHEMA, `capture-experience.md`, dan `study.md` mewajibkan min 2 link, tapi tidak mengajarkan cara mencatat placeholder (contoh few-shot capture sendiri menaut ke `backup-scheduling` dan `cpu-spike-triage` yang belum ada).
   - Act: SCHEMA § Link + 1 baris: "Link ke note yang belum ada → catat slug-nya di `_index.md` terdekat dengan tanda `(placeholder)`." `lint.md` cek 5 (entri index tanpa file) ikut melewati entri bertanda `(placeholder)`.
   - Impact: lint mingguan hanya melaporkan link yang benar-benar rusak, sehingga laporan "wiki sehat" (metrik 01 §7) bisa tercapai.
-- [ ] **W24** `career-review.md` step 7 cuma memperbarui `output/_index.md`, padahal step 6 menulis `wiki/profile/` (dan step 1 bisa membuat `wiki/roadmap/skill-map.md`). File itu tidak tercatat di `wiki/_index.md`, sehingga lint melaporkannya sebagai orphan.
+- [x] **W24** `career-review.md` step 7 cuma memperbarui `output/_index.md`, padahal step 6 menulis `wiki/profile/` (dan step 1 bisa membuat `wiki/roadmap/skill-map.md`). File itu tidak tercatat di `wiki/_index.md`, sehingga lint melaporkannya sebagai orphan.
   - Act: step 7 → "update `output/_index.md` + `wiki/_index.md` (file `profile/`/`roadmap/` yang ditulis) + master + log.md (op: review)".
   - Impact: semua file hasil UC5 tercatat di index terdekat sesuai protokol tulis; tidak ada orphan palsu.
 - [ ] **W25** Aturan ganda di `AGENTS.md` dan `SCHEMA.md` mulai beda: protokol tulis (hanya AGENTS yang menyebut "Total pages" + "Last updated") dan daftar DILARANG KERAS (dua salinan). Kedua daftar larangan juga lebih sempit dari kebijakan data PRD 03 §3.1: belum ada serial number, raw log client, dan konfigurasi proprietary.
@@ -102,6 +102,53 @@
 - [ ] **I8** `/recall` di `AGENTS.md` § Perintah tidak meminta agent menyebut page sumber jawabannya, padahal AC `/recall` di PRD 02 mengharapkannya.
   - Act: "ketemu → baca page & jawab" → "ketemu → baca page & jawab + sebut page-nya".
   - Impact: jawaban recall bisa ditelusuri ke file (persona "diri sendiri, 3 tahun lagi").
+
+## Review runtime (2026-10-22)
+
+> Celah yang ketemu saat membaca ulang seluruh `hermes-home/` setelah A7–A9 dihapus. Kerjakan W27–W30 dulu karena keempatnya kena di run cron pertama, saat tidak ada yang memantau; lalu A10 (privasi).
+
+- [ ] **W27** `daily-briefing.md:10` meminta satu baris `→ OUTPUT: "Pilih <berita> karena ..."` per item sebelum format akhir. Cron mengirim jawaban akhir agent apa adanya (lihat W22), jadi briefing di Telegram diawali 5 baris alasan yang isinya sama dengan `Why it matters`.
+  - Act: hapus baris `→ OUTPUT:` di step 1 (A6 untuk UC3 dibatalkan); alasan relevansi cukup di `Why it matters`. AC PRD 02 UC3 "Sebelum format akhir, Hermes menulis satu baris alasan pemilihan per item" ikut dihapus.
+  - Impact: pesan briefing hanya berisi 5 item; FR-20 (alasan relevansi per item) tetap terpenuhi lewat `Why it matters`.
+- [ ] **W28** `daily-briefing.md:9` hanya berbunyi "web research berita terbaru". Tidak ada kewajiban menyebut sumber dan tidak ada fallback kalau search gagal atau hasilnya kosong, sehingga agent bisa mengisi briefing dari ingatan model, termasuk CVE-ID yang tidak ada.
+  - Act: tiap item di format + baris `Sumber: <URL>` (contoh eksekusi ikut diperbarui). CVE-ID hanya ditulis kalau tercantum di sumber. Search gagal/kosong → balas "Briefing <tanggal> gagal: <alasan>", jangan isi dari ingatan.
+  - Impact: setiap item bisa dicek ke sumbernya; tidak ada berita atau CVE karangan. Evaluasi OQ-07 (2 minggu) punya data sumber untuk dinilai.
+- [ ] **W29** `SCHEMA.md:102`: level tidak tertulis di `Role` → "tanya user 1x". Aturan ini ikut berlaku di career review yang dipicu cron, padahal sesi cron tidak bisa menerima jawaban: agent berhenti di pertanyaan (laporan tidak ditulis) atau menebak level.
+  - Act: `career-review.md` step 3 + 1 baris: "Dipicu cron + level tidak tertulis → jangan tanya. Tulis di laporan 'Level belum tertulis di about.md, Skill Inventory dilewati', lalu kerjakan bagian lain." SCHEMA:102 tetap berlaku untuk sesi chat.
+  - Impact: career review otomatis selalu menghasilkan laporan; level yang hilang terlihat di laporan, bukan ditebak.
+- [ ] **W30** `career-review.md:22` menamai laporan `career-review-<YYYY>-Q<n>.md` tanpa menyebut tahun mana yang dipakai. Cron 1 Januari 2027 mereview Q4 2026, tapi agent bisa memakai tahun run dan menulis `career-review-2027-Q4.md`.
+  - Act: step 5 → "`<YYYY>-Q<n>` = tahun dan kuartal yang direview, bukan tanggal run (cron 1 Jan 2027 → `career-review-2026-Q4.md`)."
+  - Impact: laporan otomatis pertama (syarat Phase 2 selesai) bernama benar, dan Role Fit Trend kuartal berikutnya menemukan laporan pembanding yang benar (FR-19).
+- [ ] **W31** Template `about.md` di `capture-experience.md:16` berisi `Vendor/Client: <nama>`, padahal data client termasuk DILARANG KERAS (`AGENTS.md:73`) dan AC PRD 02 UC1 meminta nama client tidak muncul di file mana pun. Contoh `about.md` di PRD 02 UC1b sudah memakai `client A (anonim)`.
+  - Act: template → `Vendor/Client: <anonim, mis. client A>`; step 1 + "nama client asli tidak ditulis".
+  - Impact: alur Daftar Kerjaan Baru tidak menyimpan nama client; runtime sama dengan contoh PRD.
+- [ ] **W32** `capture-experience.md:10` menutup career lama dengan `Period: <start> s/d <hari ini>`. Kalau kerjaan baru didaftarkan beberapa minggu setelah pindah, tanggal selesai career lama salah dan period-nya tumpang-tindih dengan career baru.
+  - Act: step 1 + tanya tanggal selesai kerjaan lama (masih di ronde yang sama); step 2 pakai tanggal itu. AC PRD 02 UC1b (`s/d <hari ini>`) ikut diubah.
+  - Impact: period tiap career akurat, termasuk di `profile/career-summary.md`.
+- [ ] **W33** `study.md` menulis sumber mentah ke `raw/inbox/` (step 1), tapi tidak menyebut kapan file itu dipindah ke `raw/articles/`, dan step 6 hanya meng-update `wiki/_index.md`. `raw/_index.md` tidak pernah terisi (FR-09), dan lint tidak menangkapnya karena hanya memeriksa `wiki/`.
+  - Act: step 2 + "pindahkan file raw ke `igrow/raw/articles/` sebelum menulis note (`sources` menunjuk ke sana)"; step 6 → "update `raw/_index.md` + `wiki/_index.md` + master + log.md (op: ingest)".
+  - Impact: semua file `raw/` tercatat di index terdekat; "inbox kosong = sudah diproses" bisa dipercaya (FR-10).
+- [ ] **W34** Status Known / Weak / Belum hanya didefinisikan di `mentor.md:12-14`, tapi `career-review.md:13` ikut memakainya (Weak = "Weak/Belum"). Prompt cron UC5 hanya menunjuk `career-review.md`, jadi definisinya tidak terbaca di sesi itu.
+  - Act: pindahkan definisi ke `SCHEMA.md` § skill-map.md format (di bawah aturan "Topik punya note"); `mentor.md` dan `career-review.md` merujuk ke sana.
+  - Impact: UC2 dan UC5 memberi status yang sama untuk topik yang sama (NFR-05); satu aturan satu sumber.
+- [ ] **A10** Self-check sebelum tulis (`capture-experience.md:46`, `study.md:18`) hanya memeriksa format. Privasi, aturan yang paling fatal kalau dilanggar, tidak ikut dicek, padahal cerita incident dan bagian `## Contoh` (command, config) paling sering membawa IP dan hostname.
+  - Act: self-check + 1 poin: "Bebas data DILARANG KERAS (`AGENTS.md`)? Periksa terutama Symptom, Investigation, dan Contoh; ada → redact dulu." `study.md` step 1 + "redact sebelum dump ke `raw/inbox/`", karena `raw/` immutable dan step 1 terjadi sebelum self-check.
+  - Impact: privasi diperiksa di checkpoint yang sama dengan format, sebelum file ditulis (NFR-02), tidak baru ketahuan saat cek privasi kuartalan.
+- [ ] **I9** Contoh few-shot `capture-experience.md:63` diawali "Kemarin server production down…", tapi output-nya tidak menyimpan tanggal kejadian (`created` = tanggal tulis). Model meniru contoh, jadi waktu relatif ("kemarin", "minggu lalu") ikut hilang.
+  - Act: step 2 + 1 baris: "Waktu relatif → tanggal absolut; incident: tanggal kejadian ditulis di `## Ringkasan`." Contoh: Ringkasan → "Pada 2026-09-19, server production down 2 jam…".
+  - Impact: note tetap bisa dipahami bertahun-tahun kemudian (NFR-11), dan tanggal kejadian tidak tertukar dengan tanggal cerita.
+- [ ] **I10** Isi balasan setelah menulis note belum diatur di `capture-experience.md` maupun `study.md`. Contoh eksekusi capture hanya menunjukkan isi note lengkap, jadi agent cenderung menempel seluruh note ke Telegram.
+  - Act: + 1 baris di kedua file: "Balasan = career aktif/topik + alasan (baris `→ OUTPUT`) + path file + tags. Isi note lengkap hanya kalau user minta." Contoh eksekusi + baris `Balasan:`.
+  - Impact: chat ringkas dan hemat token output; AC PRD 02 UC1 (menyebut career aktif + alasan) dan UC4 (menyebut tag + alasan) tetap terpenuhi.
+- [ ] **I11** `career-review.md` tidak mengatur isi pesan Telegram setelah laporan ditulis (`lint.md:25` sudah). Jawaban akhir cron jadi bebas: bisa laporan lengkap, bisa cuma "sudah".
+  - Act: + step 8: "Balas ringkasan 3–5 baris (Skill Inventory per area, Role Fit Trend, 1 langkah berikutnya) + path laporan."
+  - Impact: pesan review kuartalan enak dibaca di HP; detail tetap di file `output/` (FR-23).
+- [ ] **I12** Lint belum memeriksa dua hal yang murah dicek: file yang tertinggal di `raw/inbox/` (indikator "inbox kosong = sudah diproses" tidak pernah dipantau) dan pola data terlarang. Cek privasi saat ini hanya manual per kuartal (`05-roadmap.md` § 5).
+  - Act: `lint.md` + cek 6: file di `raw/inbox/` selain `.gitkeep` = belum diproses. + cek 7: grep pola IPv4, `password`, `token`, `secret` di `raw/` dan `wiki/`; laporkan path + nomor baris saja, JANGAN kutip nilainya (laporan lint dikirim ke Telegram). False positive (mis. contoh CIDR di materi belajar) boleh, karena lint hanya melapor. AC PRD 02 M1 ("lima pemeriksaan") ikut diperbarui.
+  - Impact: kebocoran data ketahuan paling lambat seminggu, bukan sekuartal; sumber yang lupa diproses ikut terlihat.
+- [ ] **I13** Slug note belum diwajibkan unik. Dengan beberapa career, nama file yang sama (mis. `disk-full.md` di career-1 dan career-2) membuat `[[slug]]`, `contradictions`, dan penanda placeholder (W23) bisa menunjuk dua file.
+  - Act: SCHEMA § Link + 1 baris: "Slug = nama file tanpa `.md`, kebab-case, unik di seluruh `wiki/`. Cek `_index.md` dulu; bentrok → tambah konteks (mis. `disk-full-career-2`)."
+  - Impact: setiap wikilink menunjuk tepat satu file; cek broken wikilink di lint tidak ambigu.
 
 ## Critical
 
@@ -219,51 +266,9 @@
 
 ### Tier 3 — Effort Besar (DISKUTABEL — kerjakan hanya kalau Tier 1-2 terbukti kurang)
 
-> **Disclaimer:** Tier 3 mengubah pipeline & UX. Multi-turn mustahil untuk cron (UC3/UC5 zero human-in-loop). Chain-of-thought verbose, output 2x lebih panjang.
+> **Disclaimer:** Tier 3 mengubah pipeline & UX. Chain-of-thought verbose, output 2x lebih panjang.
+> A7–A9 dihapus 2026-10-22 (keputusan owner). Idenya tetap tercatat di [`05-roadmap.md`](05-roadmap.md) § 4 Parked. Kode A7–A9 tidak dipakai ulang.
 
 - [x] ~~**A6** Chain-of-thought eksplisit — agent tulis reasoning sebelum SETIAP action~~
   - Act (revisi lazy — bukan refactor 10-substep penuh): 1 baris `→ OUTPUT:` di titik keputusan paling berisiko per UC (bukan tiap step): capture-experience (career aktif), study (topik taxonomy), mentor (gap detection), daily-briefing (kurasi berita), career-review (skill inventory hitung).
   - Impact: transparansi keputusan tanpa 2x output length — reasoning cuma di titik yang sering salah, bukan tiap langkah rutin (career aktif/format frontmatter yang deterministik nggak perlu reasoning verbose).
-- [ ] **A7** Multi-turn simulation — UC kompleks jadi dialog konfirmasi bertahap
-  - Act: refactor capture-experience.md sub-case "Daftar Kerjaan Baru":
-    ```
-    Turn 1 — Agent tanya:
-      1. Nama company?
-      2. Role/title?
-      3. Lokasi (kantor/remote)?
-      4. Start date? (end date opsional)
-      5. Job desc ringkas?
-      6. Vendor/client atau direct?
-    Turn 2 — Agent konfirmasi:
-      "Company: PT Maju Jaya
-       Role: Backend Engineer
-       Lokasi: Jakarta (kantor)
-       Period: 2025-01-15 s/d sekarang
-       Jobdesc: API development, MySQL, Docker
-       Type: Direct hire
-       
-       Benar? (ya/edit)"
-    Turn 3 — Eksekusi:
-      - Buat igrow/wiki/careers/career-N/about.md
-      - Update _index.md career-N entry
-      - Log ke careers/_log.md
-    ```
-    HANYA untuk UC1 sub-case "Daftar Kerjaan Baru" (1-2x/tahun, data kritikal). TIDAK untuk incident/knowledge rutin (10-30x/bulan). TIDAK untuk cron UC3/UC5 (zero human-in-loop).
-  - Impact: error input turun 20% untuk data kritikal (user koreksi sebelum file tertulis). Trade-off: cost 3-4x API call ($0.36 vs $0.09 per operasi), latency 3-4x (3 bolak-balik vs 1 pesan). Telegram UX jadi interview-style.
-  - **Disclaimer**: Multi-turn MUSTAHIL untuk cron job (UC3 daily briefing, UC5 career review = zero human). Hanya applicable untuk UC1/UC2/UC4 yang dipicu manual. Cost naik 300% per operasi. UX berubah dari "cerita → langsung simpan" jadi "cerita → tanya-jawab 3-4 turn → baru simpan".
-- [ ] **A8** Output format constraint — enforce struktur output via regex/schema validation
-  - Act: tambahkan di akhir setiap UC (capture-experience/study/mentor/daily-briefing/career-review) sebelum "Update _index+log":
-    ```
-    Regex validation sebelum tulis file:
-    - Frontmatter: `^---\ntitle: .+\ncreated: \d{4}-\d{2}-\d{2}` (7 field wajib)
-    - Dual-link: min 2x `\[\[[\w-]+\]\]`
-    - sources: `^sources: (igrow/raw/[\w/.-]+|\[\])$`
-    Kalau TIDAK match → STOP, perbaiki format dulu.
-    ```
-  - Impact: format error tertangkap di agent runtime (sebelum tulis), bukan post-hoc di lint cron. Constraint = forcing function 95% error format.
-- [ ] **A9** Negative examples — 1-2 contoh "JANGAN seperti ini" per UC untuk edge case umum
-  - Act: tambahkan di section "## Contoh Eksekusi" setelah contoh positif:
-    - capture-experience: "❌ SALAH: tag `linuxx` (typo), sources `raw/inbox/...` (tanpa prefix `igrow/`), 0 dual-link See Also"
-    - study: "❌ SALAH: folder `wiki/self-dev/docker/` (bukan FLAT), confidence 95 tanpa `sources:` (terlalu tinggi untuk zero-reference)"
-    - mentor: "❌ SALAH: roadmap generik 'belajar cloud' saat careers/ kosong (ngarang, bukan data-driven)"
-  - Impact: model tahu boundary violation konkret, bukan cuma aturan abstrak. Negative example = kurangi false positive 10-15%.

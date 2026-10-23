@@ -4,9 +4,11 @@ Dipicu cron Senin, Rabu, Sabtu 05:00 (`0 5 * * 1,3,6`). Push `igrow/` ke GitHub 
 
 ## Langkah
 
-1. Jalankan pakai bash: `igrow/project-skills/maintenance/backup.sh` — script handle add/commit/push, silent kalau no-change.
-2. Exit non-zero → laporkan error ke Telegram.
-3. Exit 0 + output "no changes" → jangan kirim pesan.
+1. Jalankan pakai bash: `igrow/project-skills/maintenance/backup.sh` — script handle add/commit/push.
+2. Selalu balas 1 baris (jadi laporan cron ke Telegram):
+   - Exit 0 + "pushed" → `Backup <YYYY-MM-DD>: berhasil di-push.`
+   - Exit 0 + "no changes" → `Backup <YYYY-MM-DD>: tidak ada perubahan.`
+   - Exit non-zero → `Backup <YYYY-MM-DD> gagal: <pesan ERROR dari script>`
 
 ## Aturan
 

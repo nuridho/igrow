@@ -156,7 +156,7 @@ sequenceDiagram
     end
 ```
 
-Setiap job berjalan di sesi baru tanpa riwayat chat. Tanpa `--workdir /opt/data`, sesi cron **tidak** memuat `AGENTS.md` (dokumentasi resmi Hermes, fitur cron). Jawaban yang berisi `[SILENT]` tidak dikirim. Mekanisme ini yang membuat backup tanpa perubahan bisa diam, tapi runtime belum memakainya ([W22](todo.md)).
+Setiap job berjalan di sesi baru tanpa riwayat chat. Tanpa `--workdir /opt/data`, sesi cron **tidak** memuat `AGENTS.md` (dokumentasi resmi Hermes, fitur cron). Jawaban yang berisi `[SILENT]` tidak dikirim. Saat ini tidak ada job yang memakainya; backup sengaja selalu lapor (D-27).
 
 | Job | Jadwal (Asia/Kuala_Lumpur) | Prosedur |
 |---|---|---|

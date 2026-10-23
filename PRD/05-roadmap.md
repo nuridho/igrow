@@ -61,9 +61,9 @@ Tidak dikerjakan sampai ada bukti bahwa versi sekarang kurang:
 | Item | Alasan ditunda | Rujukan |
 |---|---|---|
 | Migrasi ke Jev (decision model) + n8n | Spekulatif. Mengubah iGROW dari assistant menjadi workflow app. Wajib POC (≥ 100 pesan anonim) sebelum keputusan go/no-go. | [`parked/jev-full-migration.md`](../parked/jev-full-migration.md) |
-| **A7** Multi-turn confirmation untuk Daftar Kerjaan Baru | Biaya dan latency naik 3–4×. Tidak mungkin dipakai untuk cron. | todo |
-| **A8** Validasi format berbasis regex di prompt | Lint mingguan sudah menangkap error format. | todo |
-| **A9** Negative examples per UC | Kerjakan hanya kalau error yang sama berulang di lint. | todo |
+| **A7** Multi-turn confirmation untuk Daftar Kerjaan Baru | Biaya dan latency naik 3–4×. Tidak mungkin dipakai untuk cron. | D-13 (dihapus dari todo 2026-10-22) |
+| **A8** Validasi format berbasis regex di prompt | Lint mingguan sudah menangkap error format. | D-13 (dihapus dari todo 2026-10-22) |
+| **A9** Negative examples per UC | Kerjakan hanya kalau error yang sama berulang di lint. | D-13 (dihapus dari todo 2026-10-22) |
 
 ## 5. Kalender Operasional
 

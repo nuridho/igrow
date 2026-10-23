@@ -18,6 +18,30 @@ Format entri:
 
 ---
 
+## [2026-10-23] Career review mencatat file wiki ke index (W24)
+- **Apa:** `career-review.md` step 7 sekarang juga memperbarui `wiki/_index.md` untuk file `wiki/profile/` dan `wiki/roadmap/skill-map.md` (kalau baru dibuat di step 1), selain `output/_index.md`, master, dan `log.md`.
+- **Kenapa:** W24. Tanpa ini, lint melaporkan file hasil UC5 sebagai orphan.
+- **File:** `hermes-home/igrow/project-skills/career-review.md`, `PRD/todo.md`, `PRD/backlog.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1: rsync `hermes-home/` dengan exclude `_index.md` + `log.md`)
+
+## [2026-10-23] Backup selalu lapor (W22, D-27)
+- **Apa:** `backup.md` tidak lagi diam saat tidak ada perubahan. Agent selalu membalas 1 baris: berhasil di-push / tidak ada perubahan / gagal + pesan error. Komentar `backup.sh` disesuaikan. W22 dicentang dengan Act baru; D-27 dicatat; FR-22, AC M2, dan § 6.2 architecture diselaraskan.
+- **Kenapa:** keputusan owner, menggantikan rencana `[SILENT]` di W22.
+- **File:** `hermes-home/igrow/project-skills/maintenance/backup.md`, `hermes-home/igrow/project-skills/maintenance/backup.sh`, `PRD/todo.md`, `PRD/02-use-cases.md`, `PRD/03-requirements.md`, `PRD/04-architecture.md`, `PRD/06-risks-decisions.md`, `PRD/backlog.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1: rsync `hermes-home/` dengan exclude `_index.md` + `log.md`)
+
+## [2026-10-22] Todo baru dari review runtime
+- **Apa:** 14 item baru di `todo.md` § Review runtime (2026-10-22): W27–W34, A10, I9–I13. Isinya: daily briefing (alasan dobel di pesan cron, tanpa sumber/fallback), career review cron (bertanya ke user, nama file salah tahun, isi pesan Telegram), nama client di template `about.md`, tanggal selesai career lama, alur raw di study, definisi Known/Weak/Belum, self-check tanpa cek privasi, tanggal kejadian hilang di few-shot, isi balasan setelah tulis note, lint inbox + pola privasi, slug unik. Ringkasan dan prioritas di § Terbuka; nomor berikutnya jadi C9 / W35 / I14 / A11.
+- **Kenapa:** permintaan owner (cari improvement lain setelah A7–A9 dihapus).
+- **File:** `PRD/todo.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak (baru dicatat; deploy saat item dikerjakan)
+
+## [2026-10-22] Hapus A7–A9 dari todo
+- **Apa:** item A7, A8, A9 (Advanced Prompting Tier 3) dan barisnya di § Terbuka dihapus dari `todo.md`. Rujukan di tabel Parked roadmap diganti dari "todo" ke D-13. Kode A7–A9 tidak dipakai ulang (nomor berikutnya tetap A10).
+- **Kenapa:** permintaan owner.
+- **File:** `PRD/todo.md`, `PRD/05-roadmap.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak
+
 ## [2026-10-17] Review menyeluruh PRD + diagram opsional
 - **Apa:** (1) Diagram Mermaid untuk § 6.2 Cron (sequence) dan § 6.3 Backup & Recovery di architecture, gap analysis di use cases, dan alur screenshot di requirements. (2) Review PRD terhadap `hermes-home/` dan dokumentasi resmi Hermes. Yang diperbaiki di PRD: FR-02 (sesi cron hanya memuat `AGENTS.md` kalau job dibuat dengan `--workdir /opt/data`), § 3.3 (memory dan riwayat sesi tetap terkirim ke provider LLM), urutan alur UC1 (self-check sebelum tulis), ambang UC2 (< 3 note, bukan "kosong"), sumber bukti gap (`lessons-learned/`, bukan `skills.md`), isi laporan UC5 (+ Pola), contoh `skill-map.md` disesuaikan dengan format SCHEMA (+ `## Role Fit`), contoh laporan UC5 (Weak/Recommended konsisten dengan skill map, + Pola dan Role Fit Trend baseline), metrik backup mingguan → Sen/Rab/Sab, item test-flow di roadmap dilengkapi, versi PRD 1.3. AC yang ternyata belum didukung runtime diberi ⚠ dan dicatat sebagai todo W22–W26 + I8. (3) Command cron di `build.md` + fakta teknis cron di `CLAUDE.md` ditambah `--workdir /opt/data` dan `[SILENT]`.
 - **Kenapa:** permintaan owner (diagram opsional + review ulang PRD). Fakta cron dicek ke dokumentasi resmi (hermes-agent.nousresearch.com, fitur cron dan memory).

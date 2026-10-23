@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # backup.sh — push igrow/ ke GitHub repo privat igrow-backup.
 # Dipicu via cron `hermes cron create` → baca backup.md → jalankan script ini.
-# Exit 0 = sukses atau silent (no-change). Exit non-zero = error.
+# Exit 0 = pushed atau no changes. Exit non-zero = error. Ketiganya dilaporkan ke Telegram.
 set -euo pipefail
 
 cd /opt/data/igrow || { echo "ERROR: cannot cd to igrow"; exit 1; }

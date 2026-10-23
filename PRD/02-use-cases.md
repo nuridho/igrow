@@ -408,6 +408,5 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 **Acceptance criteria:**
 - ⏳ Cron dan prasyarat repo (`git init`, remote, token) belum terkonfirmasi di VPS.
 - ✅ `backup.sh` menyalin `/opt/data/AGENTS.md` ke `igrow/AGENTS.backup.md`, lalu menjalankan `git add -A`, commit, dan push seluruh `igrow/`.
-- ⚠ Kalau tidak ada perubahan, tidak ada pesan yang dikirim. Hermes hanya menahan jawaban cron yang berisi `[SILENT]`, dan `backup.md` belum memakainya ([W22](todo.md)).
-- ✅ Kalau gagal (exit non-zero), error dikirim ke Telegram.
+- ✅ Setiap run selalu dilaporkan ke Telegram dalam 1 baris: berhasil di-push, tidak ada perubahan, atau gagal + pesan error (D-27).
 - ✅ Yang di-backup hanya `igrow/` + salinan `AGENTS.md`. State internal Hermes (`.env`, memory, sessions) tidak ikut.
