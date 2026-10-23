@@ -104,12 +104,13 @@ run() { # run <label> <perintah…> → output ke log, spinner di layar
 [ -f "$CONF" ] && . "$CONF"
 : "${REPO_DIR:=$HOME/iGROW}"
 : "${REPO_URL:=}"
-: "${HH:=}"   # HERMES_HOME di host → /opt/data di container; tanpa default, ditanya di langkah 5
+: "${PROJ:=}"   # nama folder project di $HOME (mis. whatsinsidegit); ditanya di langkah 5
+: "${HH:=}"     # HERMES_HOME di host = ~/$PROJ/igrow-hermes/hermes-home → /opt/data di container
 : "${TZ_NAME:=Asia/Jakarta}"
 : "${GH_USER:=}"
 : "${BACKUP_REPO:=}"
 : "${BOT_NAME:=}"
-save_conf() { declare -p REPO_DIR REPO_URL HH TZ_NAME GH_USER BACKUP_REPO BOT_NAME | sed 's/^declare -- //' >"$CONF"; }
+save_conf() { declare -p REPO_DIR REPO_URL PROJ HH TZ_NAME GH_USER BACKUP_REPO BOT_NAME | sed 's/^declare -- //' >"$CONF"; }
 
 set_kv() { # set_kv <file> <KEY> <value> → ganti/tambah KEY=value, file mode 600
   local f="$1" tmp; tmp=$(mktemp)
@@ -244,11 +245,13 @@ step5() {
   step_head 5 "Container Hermes" "Compose resmi nousresearch/hermes-agent; data di hermes-home/ = /opt/data."
   load_docker; find_container
   if [ -n "$CNAME" ]; then skip "Container $CNAME (compose: $COMPOSE_DIR, data: $HH)"; save_conf; return; fi
-  ask HH "Folder data Hermes di host (akhiran /hermes-home, mis. ~/igrow/hermes-home)" "$HH"
-  HH=$(realpath -m "${HH/#\~/$HOME}")   # read tidak mengurai ~
+  while ask PROJ "Mau install di mana? Nama folder project di $HOME (mis. whatsinsidegit)" "$PROJ"; [[ "$PROJ" == */* ]]; do
+    warn "Cukup nama folder, tanpa /"; PROJ=''
+  done
+  if [ -d "$HOME/$PROJ" ]; then info "Folder $HOME/$PROJ sudah ada, dipakai"; else info "Folder $HOME/$PROJ dibuat"; fi
+  HH="$HOME/$PROJ/igrow-hermes/hermes-home"
   ask TZ_NAME "Timezone (jam cron & briefing)" "$TZ_NAME"
   COMPOSE_DIR="$(dirname "$HH")"
-  [ "$(basename "$HH")" = hermes-home ] || die "Nama folder data harus hermes-home (dipakai compose: ./hermes-home)"
   mkdir -p "$HH"
   set_kv "$COMPOSE_DIR/.env" HERMES_UID "$(id -u)"
   set_kv "$COMPOSE_DIR/.env" HERMES_GID "$(id -g)"

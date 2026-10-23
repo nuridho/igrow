@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-24] Folder induk project ditentukan user
+- **Apa:** nama folder project (dulu tetap `whatsinsidegit`) sekarang diisi user, cukup namanya, tanpa `/`. Foldernya selalu `~/<nama>`: dibuat kalau belum ada, dipakai kalau sudah ada. `Setup/setupvps.sh` bertanya di awal, memasang NPM + web dummy di `~/<nama>/proxy/`, dan menulis `PROJ=<nama>` ke `~nuridho/.config/igrow/setup.env` (hanya kalau file belum ada). `Setup/igrow-setup.sh` langkah 5 bertanya "Mau install di mana?" (default dari setup.env) dan folder data otomatis `~/<nama>/igrow-hermes/hermes-home`, menggantikan pertanyaan path `hermes-home` lengkap (variabel baru `PROJ` di setup.env). `Setup/README.md` dan `PRD/07-setup.md` langkah 5 ikut diperbarui. `whatsinsidegit` di `docs/build.md`, `CLAUDE.md`, `PRD/README.md` dibiarkan karena itu path VPS yang sedang jalan.
+- **Kenapa:** permintaan owner: nama folder project diisi user saat setup.
+- **File:** `Setup/setupvps.sh`, `Setup/igrow-setup.sh`, `Setup/README.md`, `PRD/{07-setup,backlog}.md`
+- **Deploy VPS:** tidak.
+
 ## [2026-10-24] Zona waktu pindah ke Asia/Jakarta
 - **Apa:** semua `Asia/Kuala_Lumpur` diganti `Asia/Jakarta`: PRD 01 (batasan), 02 (trigger briefing), 03 (NFR-10), 04 (tabel jadwal cron), `docs/build.md` (compose `TZ` + contoh Glance), `Setup/setupvps.sh` (`timedatectl`). "Lokasi: Kuala Lumpur" di contoh lowongan (PRD 02, `test-flow.md`, `peta-igrow.html`) dibiarkan karena itu data contoh, bukan zona waktu.
 - **Kenapa:** keputusan owner: jadwal cron & briefing ikut WIB (UTC+7, sebelumnya UTC+8).

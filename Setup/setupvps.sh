@@ -4,7 +4,12 @@
 set -e
 
 U=nuridho
-STACK=/home/$U/whatsinsidegit/proxy   # compose NPM + web dummy
+PROJ=''
+while [ -z "$PROJ" ] || [[ "$PROJ" == */* ]]; do   # cukup nama folder, tanpa /
+    read -rp "Nama folder project di /home/$U (mis. whatsinsidegit): " PROJ
+done
+ROOT=/home/$U/$PROJ   # belum ada → dibuat, sudah ada → dipakai
+STACK=$ROOT/proxy     # compose NPM + web dummy
 
 echo "=== 1. User $U ==="
 if id "$U" &>/dev/null; then
@@ -13,6 +18,14 @@ else
     adduser "$U"
 fi
 usermod -aG sudo "$U"
+install -d -o "$U" -g "$U" "$ROOT"
+# Default nama folder untuk igrow-setup.sh langkah 5 (tetap ditanya, tinggal Enter)
+CONF=/home/$U/.config/igrow/setup.env
+if [ ! -f "$CONF" ]; then
+    install -d -m 700 -o "$U" -g "$U" "/home/$U/.config" "/home/$U/.config/igrow"
+    printf 'PROJ=%q\n' "$PROJ" > "$CONF"
+    chown "$U:$U" "$CONF"
+fi
 
 echo "=== 2. Set hostname ==="
 hostnamectl set-hostname labs.nuridho
@@ -64,7 +77,7 @@ services:
     volumes:
       - ./web:/usr/share/nginx/html:ro
 EOF
-    chown -R "$U:$U" "/home/$U/whatsinsidegit"
+    chown -R "$U:$U" "$STACK"
     (cd "$STACK" && docker compose up -d)
 fi
 
