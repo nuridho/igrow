@@ -18,6 +18,18 @@ Format entri:
 
 ---
 
+## [2026-10-23] Contoh eksekusi mentor diseragamkan (W45)
+- **Apa:** `mentor.md`: contoh eksekusi dipecah dua dengan label tujuan, A (roadmap: pesan user, `weak-topics.md` yang ditulis ulang, baris index, log, balasan) dan B (role fit: pesan user, balasan, tanpa file), + 1 baris untuk prasyarat "data karier belum cukup". Baris `→ OUTPUT` Gap pindah ke alur A sebagai baris pertama balasan; balasan A menyebut kalau `weak-topics.md` ditulis. Todo: W45 dicatat dan dicentang, nomor berikutnya → W46, catatan A6 diperbarui. README (riwayat 1.4).
+- **Kenapa:** W45, dari pengamatan owner: contoh mentor masih format lama dan alur roadmap (yang menulis `weak-topics.md`) tidak punya contoh.
+- **File:** `hermes-home/igrow/project-skills/mentor.md`, `PRD/{README,todo,backlog}.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Career review: kuartal, tanpa bertanya, isi balasan (W29, W30, I11)
+- **Apa:** `career-review.md` + section `## Aturan`: kuartal yang direview = yang disebut di prompt/pesan (tidak disebut → kuartal berjalan); prosedur tidak bertanya ke user, data kurang (level tidak tertulis, lebih dari satu career aktif) → "dilewati: <alasan>" di laporan dan balasan, Role Fit tetap dihitung kalau skill map ada. Step 1: laporan pembanding = laporan terakhir untuk kuartal sebelum kuartal yang direview. Step 3: baris `→ OUTPUT` jadi baris laporan. Step 4: kuartal pembanding disebut. Step 5: `<YYYY>-Q<n>` = kuartal yang direview, bukan tanggal run; laporan menyebut target level; file kuartal yang sama ditimpa. Step 8 (baru): jawaban akhir = path laporan + 3–5 baris ringkas. Contoh eksekusi dengan label tujuan, kasus 1 Januari 2027 → `career-review-2026-Q4.md`, + baris untuk kasus "dilewati". SCHEMA:107 merujuk ke aturan career review. PRD 02 UC5 (AC), test-flow 5.4 (ditulis ulang + variasi tanpa level), roadmap (sisa item, prioritas, butir 5.4 di M2.3 dihapus), README, todo (W29, W30, I11 dicentang; catatan A6; § Terbuka) diselaraskan.
+- **Kenapa:** W29: sesi cron tidak bisa menjawab pertanyaan, jadi review bisa macet atau menebak level. W30: tahun di nama file bisa salah di pergantian tahun. I11: isi pesan Telegram setelah review belum diatur.
+- **File:** `hermes-home/igrow/project-skills/career-review.md`, `hermes-home/igrow/SCHEMA.md`, `PRD/{README,02-use-cases,05-roadmap,todo,backlog}.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
 ## [2026-10-23] skills.md per career terisi otomatis (W42)
 - **Apa:** SCHEMA (baris `about.md` & `skills.md`) + format `skills.md`: 1 baris per tag taxonomy (selain `incident`), `<tag>: <skill> (<command kalau ada>), <skill>`, tanpa duplikat. `capture-experience.md`: step 2 "skill yang terlihat di cerita → tambah ke `skills.md`", step 6 + kolom Updated baris `skills.md` di `wiki/_index.md`, step 7 + "skill baru di skills.md" di balasan, Daftar Kerjaan Baru step 5 "(diisi saat capture)" menggantikan "placeholder". Contoh eksekusi + bagian `[EDIT FILE DATA]` (isi `skills.md` sesudah diedit), baris `skills.md` di `[EDIT INDEX]`, baris skill baru di balasan, dan kondisi awal `skills.md`. PRD 02 UC1 (AC), test-flow 1.1, README, roadmap (sisa item), todo (W42 dicentang, § Terbuka) diselaraskan.
 - **Kenapa:** W42. Aturan update `skills.md` sudah ada, tapi tanpa format dan tanpa contoh, jadi file itu kemungkinan besar tetap kosong (test-flow 1.1 dan 1.16 gagal).

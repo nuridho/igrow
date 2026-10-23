@@ -376,15 +376,17 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 
 **Acceptance criteria:**
 - ⏳ Laporan otomatis dibuat setiap awal kuartal (cron belum dibuat di VPS).
-- ✅ Laporan ditulis ke `output/career-review-<YYYY>-Q<n>.md`.
+- ✅ Laporan ditulis ke `output/career-review-<YYYY>-Q<n>.md`, dengan tahun dan kuartal yang direview, bukan tanggal run (cron 1 Januari 2027 → `career-review-2026-Q4.md`). Review manual tanpa kuartal = kuartal berjalan; file kuartal yang sama ditimpa.
 - ✅ Setiap persentase menampilkan pembilang dan penyebut ("Linux = 4/5 topik = 80%").
 - ✅ `wiki/profile/skills.md` dan `wiki/profile/career-summary.md` diperbarui.
 - ✅ Index `output/`, index `wiki/` (untuk file `profile/` dan skill map yang baru dibuat), dan log diperbarui (op `review`).
 - ✅ Data yang sama menghasilkan angka yang sama: skill map beku per level, dan aturan pencocokan topik ↔ note tertulis di SCHEMA dengan file bukti per topik.
-- ✅ Role Fit Trend dibandingkan dengan laporan `output/` kuartal sebelumnya. Run pertama ditulis "baseline"; kalau level berubah, tidak dibandingkan.
+- ✅ Role Fit Trend dibandingkan dengan laporan terakhir untuk kuartal sebelum kuartal yang direview (biasanya kuartal sebelumnya), dan kuartal pembandingnya disebut. Run pertama ditulis "baseline"; kalau level berubah, tidak dibandingkan.
 - ✅ `SCHEMA.md` dan `career-review.md` memakai definisi skill inventory yang sama.
 - ✅ Target = satu level di atas level yang tertulis di `Role` `about.md` career aktif. Naik level → bar di-reset.
 - ✅ Laporan punya bagian Pola: tag paling sering di note kuartal itu (tanpa tag `incident`), topik stagnan, dan kesalahan berulang (≥ 2 incident/lesson dengan akar masalah sama, disebut file-nya).
+- ✅ Tidak bertanya ke user, karena bisa jalan dari cron. Level tidak tertulis di `Role`, atau lebih dari satu career aktif → Skill Inventory dilewati dan alasannya ditulis di laporan dan balasan, bukan ditebak.
+- ✅ Pesan Telegram berisi path laporan + 3–5 baris ringkas (Skill Inventory, Role Fit Trend, langkah berikutnya). Isi laporan lengkap tetap di file.
 
 ## `/recall` · Tanya Knowledge Base
 

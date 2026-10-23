@@ -104,7 +104,7 @@ Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag 
 ```
 - Dibuat dari `about.md` career aktif + seluruh `careers/` + `self-development/`.
 - **Beku per level.** Generate ulang HANYA kalau: file belum ada, user naik level, atau `Role` career aktif berubah. Data baru TIDAK memicu generate ulang. Setiap generate ulang → log op `update` + alasannya.
-- **Target Skill Inventory** = `## Target L<n+1>`, n = level di `Role` career aktif. Level tidak tertulis → tanya user 1x. Naik level → bar di-reset ke target baru.
+- **Target Skill Inventory** = `## Target L<n+1>`, n = level di `Role` career aktif. Level tidak tertulis → tanya user 1x (career review tidak bertanya: aturannya di `career-review.md`). Naik level → bar di-reset ke target baru.
 - **Topik "punya note"** = ada note yang `title` atau `## Ringkasan`-nya membahas topik itu. Cuma disinggung di note lain (mis. di incident) = belum dihitung. Selalu sebut file buktinya.
 - **Status topik** (definisi yang sama untuk mentor dan career review): Known = punya note (aturan di atas) · Weak = belum punya note, tapi disinggung di isi note lain (sebut file-nya) · Belum = tidak muncul di note mana pun. Gap = Weak + Belum. Yang dicari hanya note naratif di `careers/` dan `self-development/`, bukan `skill-map.md` (memuat semua topik target), `profile/`, `about.md`, atau `skills.md`.
 - `% Skill Inventory` per area = topik target yang punya note / total topik target area itu. Selalu tulis X/Y.

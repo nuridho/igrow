@@ -363,10 +363,12 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 **Prompt:** "buatkan career review Q3 2025."
 
 **Expected:**
-- Laporan Learned / Experienced / Improved / Weak / Recommended
-- Skill inventory bar: % dihitung counting (topik score ≥5 ÷ target skill-map), bukan tebakan
-- File: `output/career-review-2025-Q3.md`, `wiki/profile/skills.md` + `career-summary.md` ke-update
+- Laporan: Learned / Experienced / Improved / Weak / Pola / Skill Inventory / Role Fit Trend
+- Skill Inventory per area = topik target yang punya note ÷ total topik target skill map (X/Y + file bukti), bukan tebakan
+- File: `output/career-review-2025-Q3.md` (kuartal yang diminta, bukan tanggal hari ini), `wiki/profile/skills.md` + `career-summary.md` ke-update
 - _index output + wiki + log (op: review)
+- Balasan: path laporan + 3–5 baris ringkas (Skill Inventory, Role Fit Trend, langkah berikutnya), bukan isi laporan lengkap. Hermes tidak bertanya apa pun
+- Variasi: hapus level dari `Role` di `about.md`, lalu ulangi → laporan tetap ditulis, Skill Inventory "dilewati: level belum tertulis di about.md"
 **Test:** `ls igrow/output/ && cat igrow/wiki/profile/skills.md && grep review igrow/log.md`
 
 ---
