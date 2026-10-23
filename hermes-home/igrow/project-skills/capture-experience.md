@@ -6,8 +6,8 @@ Dipakai kalau user cerita incident/pengalaman kerja (bukan /study).
 
 ## Daftar Kerjaan Baru
 Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru:
-1. Tanya 1 ronde: company, role (+ level, mis. Infra Engineer L1), vendor/client, lokasi, period start, jobdesc singkat.
-2. Cek career aktif sebelumnya → ubah baris `Period:` di `about.md`-nya jadi `<start> s/d <hari ini>`.
+1. Tanya 1 ronde: company, role (+ level, mis. Infra Engineer L1), vendor/client, lokasi, tanggal mulai, jobdesc singkat. Ada career aktif → di ronde yang sama tanya juga tanggal terakhir di kerjaan lama.
+2. Ada career aktif → tutup: baris `Period:` di `about.md`-nya jadi `<mulai lama> s/d <tanggal terakhir, YYYY-MM-DD>`. User skip → sehari sebelum tanggal mulai kerjaan baru. Tidak ada career aktif → lewati.
 3. Bikin folder baru: `igrow/wiki/careers/career-N-{company}-{role}/` (N = urutan berikutnya).
 4. Tulis `about.md`:
    ```
@@ -15,12 +15,12 @@ Kalau user bilang "daftar kerjaan baru" / "pindah kerjaan" / cerita kerjaan baru
    Role: <role + level, mis. Infra Engineer L1>
    Vendor/Client: <nama> (kalau ada)
    Lokasi: <kota>
-   Period: <start> s/d
+   Period: <tanggal mulai, YYYY-MM-DD> s/d
    Jobdesc: <1-3 kalimat>
    ```
 5. Tulis `skills.md` kosong (placeholder untuk UC1 nanti).
 6. Career baru = aktif (about.md tanpa tanggal selesai).
-7. Tutup: update wiki/_index.md + master + log.md (op: update).
+7. Tutup: update wiki/_index.md + master + log.md (op: update), lalu balas: folder career baru + period career lama yang ditutup. Tanggal terakhir diisi otomatis (user skip) → sebut di balasan bahwa itu sehari sebelum tanggal mulai dan bisa dikoreksi.
 
 ## Langkah
 1. Tentukan career aktif: `igrow/wiki/careers/*/about.md` yg belum ada tanggal selesai.

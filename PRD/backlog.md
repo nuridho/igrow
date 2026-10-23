@@ -18,6 +18,18 @@ Format entri:
 
 ---
 
+## [2026-10-23] Daftar Kerjaan Baru: tanggal terakhir career lama ditanya (W32)
+- **Apa:** `capture-experience.md` § Daftar Kerjaan Baru: step 1 + tanya tanggal terakhir di kerjaan lama (hanya kalau ada career aktif, di ronde yang sama); step 2 menutup career lama dengan tanggal itu (skip → sehari sebelum tanggal mulai kerjaan baru; tidak ada career aktif → dilewati); template `Period` + format YYYY-MM-DD; step 7 + balasan (folder career baru, period career lama, catatan kalau tanggal diisi otomatis). Semua di baris yang sama, rujukan nomor baris tidak bergeser. PRD 02 UC1b (AC), roadmap M2.3 (+ skenario test Daftar Kerjaan Baru), README (riwayat 1.4), todo (W32 dicentang, § Terbuka, sisa item) diselaraskan.
+- **Kenapa:** W32. `s/d <hari ini>` salah kalau kerjaan baru didaftarkan beberapa minggu setelah pindah, dan period-nya tumpang-tindih dengan career baru.
+- **File:** `hermes-home/igrow/project-skills/capture-experience.md`, `PRD/{README,02-use-cases,05-roadmap,todo,backlog}.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Daily briefing hanya info, tidak menulis file (D-31, W43)
+- **Apa:** keputusan owner: briefing tidak pernah menulis ke wiki. `daily-briefing.md` step 4: "Briefing hanya info: JANGAN menulis file apa pun (wiki/, raw/, index, log). Berita yang mau disimpan → hanya kalau user minta, lewat alur `study.md` (`/study <link>`)" (mengganti izin menulis page kalau berita "layak"). PRD 02 UC3 (diagram: panah UC3 → UC4 lewat /study, paragraf, AC), PRD 06 D-31, README (riwayat 1.4), roadmap (sisa item + prioritas), dan todo (W43 dicentang, § Terbuka) diselaraskan.
+- **Kenapa:** W43. Page dari berita akan dihitung "punya note" di Skill Inventory, padahal owner belum mempelajarinya, dan sesi cron menulisnya tanpa ada yang memantau.
+- **File:** `hermes-home/igrow/project-skills/daily-briefing.md`, `PRD/{README,02-use-cases,05-roadmap,06-risks-decisions,todo,backlog}.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
 ## [2026-10-23] Urutan kerja todo: I11 ikut kelompok cron
 - **Apa:** `todo.md` § Terbuka dan tabel prioritas `05-roadmap.md` §3 kini menyebut I11 bersama W29, W30, W38, W43 sebagai item yang dikerjakan sebelum cron dibuat, sama dengan tabel urutan kerja yang disusun ulang.
 - **Kenapa:** I11 (isi pesan career review) ikut kena di run cron pertama, tapi sebelumnya tidak tercantum di daftar "dikerjakan dulu".

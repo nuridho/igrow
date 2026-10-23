@@ -27,7 +27,7 @@ Legenda status pada acceptance criteria (AC):
 flowchart TD
     uc1["UC1 Capture · UC1b Daftar Kerjaan<br/>chat"] -->|tulis| careers[("wiki/careers/career-N/")]
     uc4["UC4 Study<br/>/study"] -->|tulis| selfdev[("wiki/self-development/")]
-    uc3["UC3 Daily Briefing<br/>cron 07:00"] -. "hanya kalau layak jadi page" .-> kb
+    uc3["UC3 Daily Briefing<br/>cron 07:00, info saja"] -. "berita yang mau disimpan: user kirim /study" .-> uc4
     careers --> kb{{"Knowledge Base"}}
     selfdev --> kb
     kb --> uc2["UC2 Mentor<br/>gap & role fit"]
@@ -39,7 +39,7 @@ flowchart TD
     uc5 -->|"laporan + skill inventory"| out[("output/ · wiki/profile/")]
 ```
 
-Daily Briefing (UC3) berdiri sendiri: tidak membaca knowledge base, dan hanya menulis ke wiki kalau ada berita yang layak dijadikan page. Skill map di-generate oleh UC2 atau UC5 kalau belum ada, lalu beku per level.
+Daily Briefing (UC3) berdiri sendiri: tidak membaca knowledge base dan tidak menulis file apa pun. Berita yang mau disimpan masuk lewat `/study` (UC4) atas permintaan user ([D-31](06-risks-decisions.md#2-decision-log)). Skill map di-generate oleh UC2 atau UC5 kalau belum ada, lalu beku per level.
 
 Contoh: satu cerita incident dicatat UC1. Incident itu kemudian dikenali UC2 sebagai pengalaman yang sudah dimiliki, dan dihitung UC5 di review kuartal.
 
@@ -110,8 +110,9 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 **Trigger:** "daftar kerjaan baru", "pindah kerjaan", atau cerita soal tempat kerja baru.
 
 **Acceptance criteria:**
-- ✅ Hermes bertanya satu ronde: company, role beserta level (mis. Infra Engineer L1), vendor/client, lokasi, tanggal mulai, dan jobdesc singkat.
-- ✅ `about.md` career lama diberi tanggal selesai (`Period: <start> s/d <hari ini>`).
+- ✅ Hermes bertanya satu ronde: company, role beserta level (mis. Infra Engineer L1), vendor/client, lokasi, tanggal mulai, dan jobdesc singkat. Kalau ada career aktif, di ronde yang sama Hermes juga menanyakan tanggal terakhir di kerjaan lama.
+- ✅ `about.md` career lama diberi tanggal selesai = tanggal terakhir di kerjaan lama (`Period: <start> s/d <tanggal terakhir>`, format YYYY-MM-DD). User tidak menjawab → sehari sebelum tanggal mulai kerjaan baru, dan Hermes menyebutnya di balasan supaya bisa dikoreksi.
+- ✅ Balasan menyebut folder career baru dan period career lama yang ditutup.
 - ✅ Folder baru `wiki/careers/career-N-{company}-{role}/` dibuat, dengan N = nomor berikutnya.
 - ✅ `about.md` berformat plain `Key: value` tanpa frontmatter, dan `skills.md` dibuat kosong.
 - ✅ Index dan log diperbarui (op `update`).
@@ -239,7 +240,7 @@ Prinsip: lebih baik **5 informasi penting + alasan kenapa perlu peduli** daripad
 - ✅ Pesan hanya berisi briefing, tanpa baris alasan pemilihan atau catatan proses (alasan relevansi sudah ada di Why it matters).
 - ✅ Isi hanya dari berita yang terbit ≤ 24 jam terakhir dan muncul di hasil search hari itu, bukan dari ingatan model. CVE-ID, severity, dan skor CVSS hanya ditulis kalau tercantum di sumber.
 - ✅ Kurang dari 5 item yang bersumber → dikirim yang ada saja. Search gagal → pesan `Briefing <tanggal> gagal: <alasan>`, bukan briefing karangan.
-- ✅ Secara default tidak ada yang ditulis ke `wiki/`. Hanya berita yang layak dijadikan page yang di-ingest (dengan aturan index dan log).
+- ✅ Tidak ada file yang ditulis (wiki, raw, index, maupun log): briefing hanya info. Berita yang mau disimpan masuk lewat `/study <link>` atas permintaan user (D-31).
 - ⚠ Sumber berita berasal dari web research bebas, sehingga kualitasnya bergantung pada tool search Hermes (lihat [OQ-07](06-risks-decisions.md#3-pertanyaan-terbuka)).
 - ✅ Item CVE wajib menyertakan Affected technology dan Severity. Boleh ada 1 item Career (tren teknologi + skill relevan).
 

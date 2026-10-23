@@ -40,8 +40,8 @@ DAILY INFRA BRIEFING
 3. Kurang dari 5 item yang bersumber → kirim yang ada saja, jangan ditambal. Tidak ada satu pun (search gagal atau
    hasil kosong) → jawaban akhir cukup `Briefing <tanggal> gagal: <alasan>`.
 4. Jawaban akhir = isi pesan Telegram apa adanya (dikirim otomatis, dari cron maupun chat; jangan pakai tool kirim
-   pesan): briefing saja, tanpa alasan pemilihan atau catatan proses. Tidak menulis ke wiki/ kecuali ada yg layak jadi page
-   (kalau iya, ikut aturan wajib SCHEMA, op: ingest).
+   pesan): briefing saja, tanpa alasan pemilihan atau catatan proses. Briefing hanya info: JANGAN menulis file apa pun
+   (wiki/, raw/, index, log). Berita yang mau disimpan → hanya kalau user minta, lewat alur `study.md` (`/study <link>`).
 
 ## Contoh Eksekusi
 Blok di bawah dibagi per tujuan (lihat label `[...]`). Yang terkirim ke Telegram HANYA bagian [JAWABAN AKHIR], tanpa baris lain sebelum atau sesudahnya.
