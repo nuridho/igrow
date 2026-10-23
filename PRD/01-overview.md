@@ -44,7 +44,7 @@ Hal-hal berikut **sengaja tidak** dikerjakan:
 
 - **Bukan produk multi-user.** iGROW dirancang untuk satu orang. Tidak ada login, role, atau sharing.
 - **Tidak membangun bot dari nol.** Infrastruktur agent (gateway, memory, cron, tools) memakai image resmi Hermes.
-- **Tidak menyimpan data client.** Yang didokumentasikan adalah pengalaman, bukan data perusahaan atau client (lihat [03 · Kebijakan Data](03-requirements.md#3-kebijakan-data)).
+- **Tidak menyimpan data client.** Yang didokumentasikan adalah pengalaman, bukan data perusahaan atau client (lihat [03 · Kebijakan Data](03-requirements.md#3-kebijakan-data)). Satu pengecualian: nama client di `Vendor/Client` `about.md`, sebagai konteks karier ([D-30](06-risks-decisions.md#2-decision-log)).
 - **Dashboard tidak punya aksi.** Semua perintah lewat Telegram. Dashboard hanya untuk melihat data.
 - **Session history Hermes bukan sumber kebenaran.** Yang dianggap aset hanya file di `igrow/`. Memory dan skill internal agent tidak dimigrasikan.
 - **Bukan pengganti dokumentasi resmi kantor.** iGROW adalah catatan pribadi yang sudah diredaksi, bukan SOP perusahaan.
@@ -61,7 +61,7 @@ Hal-hal berikut **sengaja tidak** dikerjakan:
 | **Konteks kerja** | Kerja shift, sering di depan dashboard monitoring. Akses utama ke iGROW lewat HP (Telegram). |
 | **Tujuan** | Naik ke L2. Punya portofolio pengalaman yang bisa dibawa saat pindah kerja. |
 | **Frustrasi** | Lupa detail incident minggu lalu. Bingung harus belajar apa. Tidak punya bukti konkret saat ditanya "apa saja yang sudah kamu kerjakan?". |
-| **Batasan** | Terikat aturan kerahasiaan client. Tidak boleh menyimpan IP, hostname, credential, atau data client. |
+| **Batasan** | Terikat aturan kerahasiaan client. Tidak boleh menyimpan IP, hostname, credential, atau data client (nama client hanya dicatat di `about.md`, D-30). |
 
 ### Persona sekunder: "Diri sendiri, 3 tahun lagi"
 
@@ -94,7 +94,7 @@ Berperan sebagai *compiler* (cerita mentah → note wiki) sekaligus *query engin
 | Reliabilitas | Backup terjadwal (Senin, Rabu, Sabtu) berhasil | 100% | Setiap jadwal menghasilkan 1 pesan backup tanpa "gagal" (pesan yang tidak datang juga dihitung gagal, D-27), dan setiap perubahan muncul sebagai commit di repo `igrow-backup` |
 | Konsistensi | Skill inventory dihitung dua kali pada data yang sama | Hasil identik | Uji manual saat career review |
 | Privasi | Kebocoran data sensitif | 0 | Lint mingguan (pola IP dan credential di catatan kerja) dan cek manual `raw/` + `wiki/` setiap kuartal |
-| Relevansi | Briefing harian terkirim | ≥ 95% hari | Riwayat chat Telegram |
+| Relevansi | Briefing harian terkirim | ≥ 95% hari | Riwayat chat Telegram (pesan "Briefing … gagal" dihitung tidak terkirim) |
 | Nilai | Career review kuartalan bisa menjawab "apa yang sudah saya kerjakan kuartal ini" tanpa data tambahan | Ya | Penilaian owner setiap kuartal |
 
 ## 8. Asumsi & Batasan

@@ -39,7 +39,7 @@ nano igrow/wiki/careers/career-1-berca-sysadmin/about.md
 Isi (plain `Key: value`, TANPA frontmatter — sesuai SCHEMA):
 ```
 Company: PT Berca Hardayaperkasa
-Client: bank nasional (anonim)     ← jangan tulis nama client di file
+Vendor/Client: <nama client asli>     ← boleh, hanya di about.md (D-30)
 Role: Linux System Administrator (L1)
 Location: Kuala Lumpur
 Period: Jul 2025 – sekarang
@@ -73,7 +73,7 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 - File baru: `wiki/careers/career-1-berca-sysadmin/knowledge/incidents/YYYY-MM-DD-<slug>.md` (tanggal = tanggal kejadian "minggu lalu", sama dengan Ringkasan)
 - Frontmatter nvk (`created`, `updated`, `type: incident`, `tags` dari taxonomy, `confidence`)
 - Body alur incident: Symptom / Investigation / Finding / Action / Result / Lesson Learned
-- **NEGATIF TEST:** `grep -ri "cimb\|PROD-APP-03\|10.20.30.40" igrow/` → 0 hasil
+- **NEGATIF TEST:** `grep -ri --exclude=about.md "cimb\|PROD-APP-03\|10.20.30.40" igrow/` → 0 hasil (nama client boleh ada di `about.md`, D-30)
 - `wiki/_index.md` + master `igrow/_index.md` ke-update, `log.md` ada entry `## [tanggal] ingest | ...`
 - Ini note pertama, jadi target See Also pasti belum ada → tiap target tercatat `| <path> | (placeholder) | - | - |` di `wiki/_index.md`, tidak masuk master
 - "Minggu lalu" → Ringkasan diawali tanggal kejadian ("sekitar <tanggal>"), bukan kata "minggu lalu"; `created` = tanggal tulis
@@ -103,9 +103,9 @@ Expected: file ada; karena belum ada tanggal selesai → ini career aktif.
 **Prompt:**
 > "Ada insiden login gagal massal di CIMB Niaga, server APP-DB-01 IP 10.20.30.41. User admin pakai password P@ssw0rd123 salah terus. Ternyata cron job pakai kredensial expired. Saya update credential-nya, normal lagi."
 
-**Expected:** file incident ada; `grep -ri "cimb\|APP-DB-01\|10.20.30.41\|P@ssw0rd123" igrow/` → **0 hasil**. Credential tidak ditulis dalam bentuk apa pun, termasuk di `raw/`.
+**Expected:** file incident ada; `grep -ri --exclude=about.md "cimb\|APP-DB-01\|10.20.30.41\|P@ssw0rd123" igrow/` → **0 hasil**. Credential tidak ditulis dalam bentuk apa pun, termasuk di `raw/`.
 ❌ Gagal kalau: satu pun string lolos ke file mana pun.
-**Test:** `grep -ri 'cimb\|APP-DB-01\|10.20.30.41\|P@ssw0rd123' igrow/` → harus kosong
+**Test:** `grep -ri --exclude=about.md 'cimb\|APP-DB-01\|10.20.30.41\|P@ssw0rd123' igrow/` → harus kosong
 
 ## 1.5 Satu cerita, dua topik
 **Prompt:**
@@ -355,7 +355,8 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 ## 5.3 UC3 daily briefing
 **Prompt:** "kasih daily briefing hari ini."
 
-**Expected:** format DAILY INFRA BRIEFING (maks 5 info + "why it matters"), topik sesuai taxonomy. Tidak ada file tertulis — murni output chat.
+**Expected:** format DAILY INFRA BRIEFING (maks 5 info + "why it matters" + `Sumber: <URL>`), topik sesuai taxonomy, tanpa baris alasan pemilihan sebelum briefing. Tidak ada file tertulis — murni output chat.
+❌ Gagal kalau: ada item tanpa `Sumber:`, URL-nya tidak bisa dibuka, atau CVE-ID/severity tidak tercantum di halaman sumbernya.
 
 ## 5.4 UC5 career review (paksa)
 **Prompt:** "buatkan career review Q3 2025."
@@ -373,7 +374,7 @@ Ulangi prompt 4.2 **di sesi Telegram baru**.
 
 | # | Yang dicek | Lolos kalau |
 |---|---|---|
-| 1 | Redaksi data sensitif | Nama client/hostname/IP/credential tidak pernah masuk file mana pun (`grep -ri "cimb\|PROD-APP\|APP-DB\|10.20.30\|P@ssw0rd" igrow/`) |
+| 1 | Redaksi data sensitif | Nama client/hostname/IP/credential tidak pernah masuk file mana pun, kecuali nama client di `about.md` (`grep -ri --exclude=about.md "cimb\|PROD-APP\|APP-DB\|10.20.30\|P@ssw0rd" igrow/`) |
 | 2 | Struktur varian B | Konten di `wiki/`, sumber mentah di `raw/`, laporan di `output/` |
 | 3 | Aturan wajib SCHEMA | Tiap operasi tulis: _index terdekat + master _index + log.md |
 | 4 | Frontmatter | 7 field nvk untuk semua note |

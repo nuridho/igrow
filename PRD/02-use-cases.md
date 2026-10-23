@@ -94,7 +94,7 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 - ✅ Frontmatter lengkap sesuai SCHEMA, tag hanya dari taxonomy, `sources` berisi `[]` atau path `igrow/raw/...`.
 - ✅ Bagian See Also berisi minimal 2 dual-link. Note lama yang ditaut mendapat link balik di See Also-nya, tanpa mengubah `updated:` note lama itu.
 - ✅ Nama file note unik di seluruh `wiki/` (aturan slug di SCHEMA § Link).
-- ✅ Nama client, IP, hostname, dan credential tidak muncul di file mana pun, termasuk title dan nama file. Self-check sebelum tulis ikut memeriksanya.
+- ✅ Nama client, IP, hostname, dan credential tidak muncul di file mana pun, termasuk title dan nama file (satu pengecualian: nama client di `Vendor/Client` `about.md`, D-30). Self-check sebelum tulis ikut memeriksanya.
 - ✅ Balasan berisi path file, career aktif + alasan pemilihan type/folder, rangkuman 3–5 poin isi note (incident: kejadian / penyebab / tindakan / pelajaran), tag, link placeholder baru, note lama yang dapat link balik, dan jenis data yang diredaksi. Isi note lengkap hanya kalau diminta.
 - ✅ Waktu relatif ("kemarin", "minggu lalu") ditulis sebagai tanggal absolut. Tanggal kejadian incident ada di kalimat pertama Ringkasan; kalau tidak pasti, ditulis "sekitar <tanggal>".
 - ✅ Setelah menulis: `wiki/_index.md` (+ `raw/_index.md` kalau ada screenshot), master `_index.md` (Total pages + Last updated), dan `log.md` (op `ingest`/`update`) ikut diperbarui.
@@ -122,11 +122,13 @@ Lesson Learned: pola ini kemungkinan workload spike; cek tren sebelum eskalasi
 ```text
 Company: PT ABC
 Role: Infra Engineer L1
-Vendor/Client: client A (anonim)
+Vendor/Client: Bank XYZ
 Lokasi: Kuala Lumpur
 Period: 2025-01-01 s/d
 Jobdesc: Monitoring & incident response, troubleshooting Linux/Windows Server, escalation handling.
 ```
+
+Nama client di `Vendor/Client` ditulis apa adanya sebagai konteks karier ([D-30](06-risks-decisions.md#2-decision-log)); di note, client tetap disebut generik (`client A`).
 
 Dengan pemisahan per career, setiap note otomatis punya konteks "dari pekerjaan mana". Saat resign, folder `career-1-...` menjadi arsip final dan catatan baru masuk ke `career-2-...`.
 
@@ -209,28 +211,34 @@ DAILY INFRA BRIEFING
 1. Linux
    [News] ...
    Why it matters: ...
+   Sumber: ...
 
 2. Kubernetes
    [Release/update] ...
    Why it matters: ...
+   Sumber: ...
 
 3. Security
    [CVE] ...
    Affected technology: ...
    Severity: ...
    Why you should care: ...
+   Sumber: ...
 
 4. Career
    [Technology trend] ...
    Relevant skill: ...
+   Sumber: ...
 ```
 
 Prinsip: lebih baik **5 informasi penting + alasan kenapa perlu peduli** daripada banyak berita.
 
 **Acceptance criteria:**
 - ⏳ Briefing tiba di Telegram sekitar pukul 07:00 setiap hari (cron belum dibuat di VPS).
-- ✅ Maksimal 5 item. Setiap item punya topik, isi berita, dan alasan kenapa penting (item Career: skill yang relevan).
-- ✅ Sebelum format akhir, Hermes menulis satu baris alasan pemilihan per item.
+- ✅ Maksimal 5 item. Setiap item punya topik, isi berita, alasan kenapa penting (item Career: skill yang relevan), dan URL sumber.
+- ✅ Pesan hanya berisi briefing, tanpa baris alasan pemilihan atau catatan proses (alasan relevansi sudah ada di Why it matters).
+- ✅ Isi hanya dari berita yang terbit ≤ 24 jam terakhir dan muncul di hasil search hari itu, bukan dari ingatan model. CVE-ID, severity, dan skor CVSS hanya ditulis kalau tercantum di sumber.
+- ✅ Kurang dari 5 item yang bersumber → dikirim yang ada saja. Search gagal → pesan `Briefing <tanggal> gagal: <alasan>`, bukan briefing karangan.
 - ✅ Secara default tidak ada yang ditulis ke `wiki/`. Hanya berita yang layak dijadikan page yang di-ingest (dengan aturan index dan log).
 - ⚠ Sumber berita berasal dari web research bebas, sehingga kualitasnya bergantung pada tool search Hermes (lihat [OQ-07](06-risks-decisions.md#3-pertanyaan-terbuka)).
 - ✅ Item CVE wajib menyertakan Affected technology dan Severity. Boleh ada 1 item Career (tren teknologi + skill relevan).

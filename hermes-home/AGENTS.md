@@ -69,7 +69,7 @@ wiki/ = executable.
 
 ## DILARANG KERAS (berlaku juga raw/ — redact SEBELUM ingest, raw immutable)
 Credential/password, API key/token, IP internal, hostname sensitif, serial number,
-nama & data client/customer, raw log client, konfigurasi proprietary,
+nama & data client/customer (kecuali nama di `Vendor/Client` about.md), raw log client, konfigurasi proprietary,
 screenshot yang belum di-redact.
 
 Cara redact (note dipakai buat belajar ulang → JANGAN hapus command/config/log):

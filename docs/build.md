@@ -1075,7 +1075,7 @@ Chat ke bot kamu, coba beberapa hal:
 
 | # | Job | Schedule | Yang dikerjakan |
 |---|-----|----------|-----------------|
-| 1 | Daily Briefing | `0 7 * * *` (tiap hari 07:00) | Web research 5 berita infra → kirim ringkasan ke Telegram |
+| 1 | Daily Briefing | `0 7 * * *` (tiap hari 07:00) | Web research maks 5 berita infra (≤ 24 jam, tiap item dengan URL sumber) → ringkasan ke Telegram |
 | 2 | Backup Knowledge | `0 5 * * 1,3,6` (Senin, Rabu, Sabtu 05:00) | Push `igrow/` ke GitHub repo privat `igrow-backup` (via SSH) |
 | 3 | Lint Mingguan | `0 8 * * 0` (tiap Minggu 08:00) | Cek kesehatan wiki (orphan, broken link, dll) → lapor ke Telegram |
 | 4 | Career Review | `0 9 1 1,4,7,10 *` (tgl 1 tiap kuartal, 09:00) | Review kuartalan → laporan ke `output/` + ringkasan ke Telegram |

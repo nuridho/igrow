@@ -18,6 +18,24 @@ Format entri:
 
 ---
 
+## [2026-10-23] Urutan kerja todo: I11 ikut kelompok cron
+- **Apa:** `todo.md` § Terbuka dan tabel prioritas `05-roadmap.md` §3 kini menyebut I11 bersama W29, W30, W38, W43 sebagai item yang dikerjakan sebelum cron dibuat, sama dengan tabel urutan kerja yang disusun ulang.
+- **Kenapa:** I11 (isi pesan career review) ikut kena di run cron pertama, tapi sebelumnya tidak tercantum di daftar "dikerjakan dulu".
+- **File:** `PRD/todo.md`, `PRD/05-roadmap.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak
+
+## [2026-10-23] Nama client boleh di about.md (D-30, W31 tidak jadi)
+- **Apa:** keputusan owner: nama client asli boleh ditulis, tapi hanya di field `Vendor/Client` `about.md`; di note dan file lain client tetap generik (`client A`). `AGENTS.md` § DILARANG KERAS + pengecualian itu (di baris yang sama, tidak menggeser rujukan). W31 ditandai TIDAK JADI dan diringkas (kode tetap); catatan rujukan W31 di Act W37 dan W44 dihapus. PRD 01 (non-goal + batasan persona), 02 (AC UC1 + contoh `about.md` UC1b), 03 §3.1 (daftar disamakan dengan AGENTS: "nama dan data client/customer"), 06 (D-30), README (riwayat 1.4), roadmap (sisa item), dan test-flow (Step 0 `about.md`; negatif test 1.1, 1.4, dan checklist #1 + `--exclude=about.md`) diselaraskan.
+- **Kenapa:** nama client diperlukan sebagai konteks karier. Di note, nama client bercampur dengan detail sistem, jadi tetap generik.
+- **File:** `hermes-home/AGENTS.md`, `PRD/{README,01-overview,02-use-cases,03-requirements,05-roadmap,06-risks-decisions,todo,backlog}.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
+## [2026-10-23] Daily briefing: tanpa baris alasan, berita bersumber, fallback gagal (W27, W28, I15)
+- **Apa:** `daily-briefing.md` ditulis ulang. W27: baris `→ OUTPUT` per item dihapus; jawaban akhir = briefing saja, tanpa alasan pemilihan atau catatan proses. W28: berita terbit ≤ 24 jam dan hanya dari hasil search hari itu (bukan ingatan); tanggal tidak jelas → lewati; tiap item + `Sumber: <URL>` dari hasil search; CVE-ID/severity/CVSS hanya kalau tercantum di sumber (tanpa CVE-ID → `[News]`, severity belum ada → "belum dinilai di sumber"); kurang dari 5 item → kirim yang ada; tidak ada item → `Briefing <tanggal> gagal: <alasan>`. I15 (sisa): step 4 "Jawaban akhir = isi pesan Telegram apa adanya (… jangan pakai tool kirim pesan)". Kalimat wiki (W43) belum diubah, menunggu keputusan owner. Contoh eksekusi dengan label `[PROMPT CRON]` + `[JAWABAN AKHIR]` dan URL placeholder. PRD 01 (metrik briefing terkirim), 02 UC3 (contoh + AC), 03 FR-20, 05 (sisa item, prioritas, verifikasi minggu pertama), 06 OQ-07, README (riwayat 1.4), `docs/build.md` (tabel cron), test-flow 5.3 diselaraskan. Todo: W27, W28, I15 dicentang; catatan di A6; rujukan W43 `daily-briefing.md:35-36` → `:43-44`.
+- **Kenapa:** W27, W28, I15. Batas 24 jam (bukan 48 jam di Act W28) supaya berita kemarin tidak muncul lagi di briefing hari ini.
+- **File:** `hermes-home/igrow/project-skills/daily-briefing.md`, `PRD/{README,01-overview,02-use-cases,03-requirements,05-roadmap,06-risks-decisions,todo,backlog}.md`, `docs/build.md`, `testing/test-flow.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1). Prasyarat tetap: toolset web aktif untuk platform `cron` (roadmap M2.2).
+
 ## [2026-10-23] Catat W44: nilai default/contoh dokumentasi publik di aturan redaksi
 - **Apa:** `todo.md` + W44: `AGENTS.md` § Cara redact belum menyebut bahwa nilai default atau contoh dari dokumentasi publik (mis. docker0 `172.17.0.1`) boleh tetap ditulis, sehingga Hermes bisa meredaksinya di note belajar. Header nomor berikutnya → W45; daftar sisa item di roadmap M2.1 diperbarui. Belum ada file `hermes-home/` yang diubah.
 - **Kenapa:** pertanyaan owner: redaksi harus tetap menjaga konteks, karena catatan dipakai untuk belajar ulang.

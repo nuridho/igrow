@@ -47,7 +47,7 @@ Status:
 
 | ID | Requirement | Prioritas | UC | Status |
 |---|---|---|---|---|
-| FR-20 | Daily briefing setiap hari 07:00, maksimal 5 item dengan alasan relevansi. Item CVE menyertakan teknologi terdampak dan severity. | Should | UC3 | ⏳ Cron belum dibuat |
+| FR-20 | Daily briefing setiap hari 07:00, maksimal 5 item dengan alasan relevansi dan URL sumber, hanya dari berita ≤ 24 jam di hasil search hari itu. Item CVE menyertakan teknologi terdampak dan severity. | Should | UC3 | ⏳ Cron belum dibuat |
 | FR-21 | Lint struktur wiki, raw, dan output setiap minggu, plus pola data terlarang di catatan kerja; hanya melapor. | Should | M1 | ⏳ Cron belum dibuat |
 | FR-22 | Backup `igrow/` + salinan `AGENTS.md` ke repo GitHub privat setiap Senin, Rabu, dan Sabtu 05:00. Setiap run selalu lapor: berhasil, tidak ada perubahan, atau gagal (D-27). | Must | M2 | ⏳ Cron + prasyarat repo |
 | FR-23 | Semua output cron dikirim ke Telegram (`--deliver telegram`). | Must | UC3, UC5, M1, M2 | ⏳ |
@@ -93,7 +93,7 @@ Berlaku untuk seluruh `igrow/`, termasuk `raw/`. Redaksi wajib dilakukan **sebel
 - Serial number
 - Raw log client
 - Screenshot yang belum diredaksi
-- Data customer
+- Nama dan data client/customer (kecuali nama di `Vendor/Client` `about.md`, [D-30](06-risks-decisions.md#2-decision-log))
 - Konfigurasi proprietary
 
 | Salah ❌ | Benar ✅ |
