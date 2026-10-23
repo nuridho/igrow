@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # setupvps.sh — init VPS dari nol: user, hostname, paket + update otomatis, swap, Docker, NPM + web dummy, firewall, sshd.
 # Jalankan sebagai root: bash setupvps.sh   (aman diulang; yang sudah beres dilewati)
-# Lanjutannya: login sebagai user baru → bash igrow-setup.sh
+# Lanjutannya: login sebagai user baru → bash igrowctl.sh
 set -uo pipefail
 
 U=nuridho
 HOST=labs.nuridho
 TZ_NAME=Asia/Jakarta
 LOG=/var/log/setupvps.log
-PROJ='' PW=''
+PROJ='' PW='' IP=''
 
-# ── Tampilan (sama dengan igrow-setup.sh) ───────────────────────────────────
+# ── Tampilan (sama dengan igrowctl.sh) ───────────────────────────────────
 if [ -t 1 ]; then
   B=$'\e[1m' D=$'\e[2m' R=$'\e[0m' RED=$'\e[31m' GRN=$'\e[32m' YEL=$'\e[33m' CYN=$'\e[36m' MAG=$'\e[35m'
 else
@@ -112,6 +112,11 @@ Semua pertanyaan di awal; setelah itu jalan sendiri."
   while ask PROJ "Nama folder project di /home/$U (mis. whatsinsidegit)"; [[ "$PROJ" == */* ]]; do
     warn "Cukup nama folder, tanpa /"
   done
+  local ip; ip=$(curl -fsS -m 5 https://api.ipify.org 2>/dev/null || true)   # tebakan; Enter kalau benar
+  # ponytail: IPv4 saja
+  while ask IP "IP publik VPS (untuk ringkasan & cek URL di akhir)" "$ip"; [[ ! "$IP" =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}$ ]]; do
+    warn "Format IPv4, mis. 203.0.113.10"
+  done
   if ! id "$U" &>/dev/null; then
     local pw2
     while :; do
@@ -138,12 +143,12 @@ step1() {
   usermod -aG sudo "$U"
   if [ -d "$ROOT" ]; then skip "Folder $ROOT"
   else install -d -o "$U" -g "$U" "$ROOT" && ok "Folder $ROOT dibuat"; fi
-  # Default nama folder untuk igrow-setup.sh langkah 5 (tetap ditanya, tinggal Enter)
+  # Default nama folder untuk igrowctl.sh langkah 5 (tetap ditanya, tinggal Enter)
   local conf=/home/$U/.config/igrow/setup.env
   if [ ! -f "$conf" ]; then
     install -d -m 700 -o "$U" -g "$U" "/home/$U/.config" "/home/$U/.config/igrow"
     printf 'PROJ=%q\n' "$PROJ" >"$conf" && chown "$U:$U" "$conf"
-    ok "Nama folder dicatat untuk igrow-setup.sh"
+    ok "Nama folder dicatat untuk igrowctl.sh"
   fi
 }
 
@@ -151,6 +156,8 @@ step2() {
   step_head 2 "Hostname" "Nama mesin di prompt dan log."
   if [ "$(hostname)" = "$HOST" ]; then skip "Hostname $HOST"
   else hostnamectl set-hostname "$HOST" && ok "Hostname → $HOST"; fi
+  # tanpa baris ini, tiap sudo mengeluh "unable to resolve host"
+  grep -qw "$HOST" /etc/hosts || { echo "127.0.1.1 $HOST ${HOST%%.*}" >>/etc/hosts && ok "/etc/hosts memuat $HOST"; }
 }
 
 step3() {
@@ -238,6 +245,9 @@ EOF
   chown -R "$U:$U" "$STACK"
   ok "Compose di $STACK"
   run "Jalankan NPM + web dummy" docker compose -f "$STACK/docker-compose.yml" up -d || die "NPM gagal jalan"
+  # NPM butuh ±30 detik saat pertama; curl tanpa -f: status HTTP apa pun berarti port 80 menjawab
+  run "Tunggu NPM menjawab di port 80" sh -c 'for i in $(seq 1 30); do curl -s -o /dev/null -m 2 http://127.0.0.1 && exit 0; sleep 2; done; exit 1' \
+    || warn "NPM belum menjawab di port 80. Cek: docker logs npm"
 }
 
 step8() {
@@ -267,11 +277,14 @@ step9() {
 
 finale() {
   printf '\n%s━━ VPS siap %s%s\n' "$GRN$B" "$(printf '━%.0s' $(seq 1 46))" "$R"
-  box "1 · Tes login dulu (JANGAN tutup sesi root ini)" "Di terminal baru: ssh $U@<vps>"
-  box "2 · Admin Nginx Proxy Manager" "ssh -L 8181:localhost:81 $U@<vps>
+  box "1 · Tes login dulu (JANGAN tutup sesi root ini)" "Di terminal baru: ssh $U@$IP"
+  box "2 · Cek lewat browser" "http://$IP → halaman bawaan Nginx Proxy Manager = port 80 + firewall beres
+Web dummy baru tampil di domain kamu setelah Proxy Host dibuat (langkah 3)"
+  box "3 · Admin Nginx Proxy Manager" "ssh -L 8181:localhost:81 $U@$IP
 Buka http://localhost:8181 → login pertama
 Proxy Host: domain kamu → forward ke web:80 + SSL"
-  box "3 · Pasang iGROW (sebagai $U)" "bash igrow-setup.sh"
+  box "4 · Pasang iGROW (dari laptop)" "scp Setup/igrowctl.sh $U@$IP:~/
+ssh -t $U@$IP bash igrowctl.sh"
   # ponytail: file ini dibuat Ubuntu; di Debian polos tidak ada → cek manual kalau habis upgrade kernel
   if [ -f /var/run/reboot-required ]; then
     printf '\n'; warn "Ada update (mis. kernel) yang butuh reboot: sudo reboot, setelah langkah 1 berhasil"

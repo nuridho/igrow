@@ -488,7 +488,7 @@ Telegram ──chat──▶ igrow-hermes (image resmi nousresearch/hermes-agent
 
 ### Setup `igrow-hermes`
 
-> **Cara cepat:** `Setup/igrow-setup.sh` mengerjakan seluruh bagian ini (compose, `hermes setup`, Telegram, deploy runtime, prasyarat backup, 4 cron) secara interaktif, dengan penjelasan di `PRD/07-setup.md`. Langkah manual di bawah tetap berlaku sebagai referensi.
+> **Cara cepat:** `Setup/igrowctl.sh` mengerjakan seluruh bagian ini (compose, `hermes setup`, Telegram, deploy runtime, prasyarat backup, 4 cron) secara interaktif, dengan penjelasan di `PRD/07-setup.md`. Langkah manual di bawah tetap berlaku sebagai referensi.
 
 > **`build` vs `image` di compose:** `image:` dipakai kalau software-nya udah jadi, tinggal pakai (kayak `nginx:alpine`, `portainer/portainer-ce`). `build:` dipakai kalau software-nya kode custom yang kamu tulis sendiri.
 >
@@ -1154,7 +1154,7 @@ mkdir -p ~/whatsinsidegit/igrow-web
 
 Upload dashboard versi data dummy, pastiin namanya `index.html` dan **langsung** di `igrow-web/`, bukan di subfolder:
 ```bash
-scp index.html nuridho@43.156.50.9:~/whatsinsidegit/igrow-web/
+scp index.html nuridho@<vps>:~/whatsinsidegit/igrow-web/
 ```
 
 Cek struktur, harus persis begini:
@@ -1186,7 +1186,7 @@ Harus `Up`.
 ```
 Type: A
 Name: igrow
-Value: 43.156.50.9
+Value: <IP publik VPS>
 ```
 
 Cek propagasi:

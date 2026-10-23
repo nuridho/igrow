@@ -1,13 +1,13 @@
 # 07 · Setup: Pasang iGROW dengan Satu Script
 
-Dokumen ini menjelaskan `Setup/igrow-setup.sh`: script yang membawa VPS kosong sampai bot iGROW jalan di Telegram, lengkap dengan backup dan cron. Perintah persisnya ada di script itu sendiri (satu sumber); dokumen ini menjelaskan **alur, apa yang ditanya, di mana hasilnya disimpan, dan kenapa begitu**.
+Dokumen ini menjelaskan `Setup/igrowctl.sh`: script yang membawa VPS kosong sampai bot iGROW jalan di Telegram, lengkap dengan backup dan cron. Perintah persisnya ada di script itu sendiri (satu sumber); dokumen ini menjelaskan **alur, apa yang ditanya, di mana hasilnya disimpan, dan kenapa begitu**.
 
 ## 1. Gambaran Singkat
 
 ```text
 Laptop                          VPS (user biasa + sudo)
 ──────                          ───────────────────────
-scp igrow-setup.sh  ──────────▶ bash igrow-setup.sh
+scp igrowctl.sh  ──────────▶ bash igrowctl.sh
                                   1 Paket      git, rsync, curl
                                   2 Git        identitas + SSH key → GitHub
                                   3 Docker     Docker + Compose
@@ -35,12 +35,12 @@ Waktu: ±15 menit, kebanyakan menunggu install dan menyalin token.
 Salin script ke VPS lalu jalankan:
 
 ```bash
-scp Setup/igrow-setup.sh <user>@<vps>:~/
+scp Setup/igrowctl.sh <user>@<vps>:~/
 ssh <user>@<vps>
-bash igrow-setup.sh
+bash igrowctl.sh
 ```
 
-Setelah langkah 4, script juga ada di repo hasil clone, jadi berikutnya cukup `bash ~/iGROW/Setup/igrow-setup.sh <perintah>`.
+Setelah langkah 4, script juga ada di repo hasil clone, jadi berikutnya cukup `bash ~/iGROW/Setup/igrowctl.sh <perintah>`.
 
 ## 3. Langkah per Langkah
 
@@ -64,7 +64,7 @@ Jadwal cron: daily briefing tiap hari 07:00, backup Senin/Rabu/Sabtu 05:00, lint
 
 ### 4.1 Repo di-clone di host, bukan di dalam container
 
-Ide awalnya: masuk ke container, lalu clone repo di sana. Itu tidak dipakai karena folder data container (`/opt/data`) adalah tempat **data** iGROW tinggal. Kalau repo spec (PRD, docs, web) ikut di-clone ke sana, isinya bercampur dengan data dan ikut ter-backup. Pola yang dipakai sama dengan deploy biasa: repo di host (`~/iGROW`), lalu hanya `hermes-home/` yang disalin ke folder data dengan rsync 2 langkah. Update aturan berikutnya cukup `bash igrow-setup.sh deploy`.
+Ide awalnya: masuk ke container, lalu clone repo di sana. Itu tidak dipakai karena folder data container (`/opt/data`) adalah tempat **data** iGROW tinggal. Kalau repo spec (PRD, docs, web) ikut di-clone ke sana, isinya bercampur dengan data dan ikut ter-backup. Pola yang dipakai sama dengan deploy biasa: repo di host (`~/iGROW`), lalu hanya `hermes-home/` yang disalin ke folder data dengan rsync 2 langkah. Update aturan berikutnya cukup `bash igrowctl.sh deploy`.
 
 ### 4.2 Secret tidak pernah masuk repo atau log
 
@@ -98,16 +98,16 @@ Dokumentasi resmi Hermes mendukung tiga cara mengisi Telegram, dan salah satunya
 
 ## 5. Perintah Harian
 
-`bash igrow-setup.sh` tanpa argumen: kalau setup belum pernah selesai, menjalankan semua langkah. Kalau sudah (penanda `SETUP_DONE=1` di `~/.config/igrow/setup.env`, ditulis setelah langkah 9), menampilkan **menu**: deploy, status, update, LLM & Telegram (langkah 6), tools cron (7), backup (8, bisa sekalian menghapus token lama), setup ulang, dan help (penjelasan tiap pilihan). Contoh tampilan dan tabel "situasi → pilih apa" ada di `Setup/README.md`. Perintah langsung di bawah tetap jalan, untuk alias atau otomatis:
+`bash igrowctl.sh` tanpa argumen: kalau setup belum pernah selesai, menjalankan semua langkah. Kalau sudah (penanda `SETUP_DONE=1` di `~/.config/igrow/setup.env`, ditulis setelah langkah 9), menampilkan **menu**: deploy, status, update, LLM & Telegram (langkah 6), tools cron (7), backup (8, bisa sekalian menghapus token lama), setup ulang, dan help (penjelasan tiap pilihan). Contoh tampilan dan tabel "situasi → pilih apa" ada di `Setup/README.md`. Perintah langsung di bawah tetap jalan, untuk alias atau otomatis:
 
 | Perintah | Kapan dipakai |
 |---|---|
-| `bash igrow-setup.sh all` | Setup pertama, atau melanjutkan setup yang terputus (sama dengan menu "Setup ulang") |
-| `bash igrow-setup.sh deploy` | Setelah aturan di `hermes-home/` diubah dan di-push dari laptop: `git pull` + rsync 2 langkah. Lalu kirim `/new` di Telegram supaya sesi baru membaca aturan terbaru. |
-| `bash igrow-setup.sh status` | Cek kesehatan: container, `hermes doctor`, daftar cron, waktu backup terakhir |
-| `bash igrow-setup.sh update` | Update image Hermes (`docker compose pull` + `up -d`, cara resmi). Menampilkan versi lama → baru, `hermes doctor`, daftar cron, dan baris `image: …@sha256:…` untuk balik ke versi lama kalau versi baru bermasalah. Kalau sudah terbaru, tidak ada yang diubah. |
-| `bash igrow-setup.sh step <1-9>` | Mengulang satu langkah. Contoh: `step 6` untuk ganti API key atau token bot, `step 7` untuk ganti tools cron |
-| `bash igrow-setup.sh help` | Penjelasan tiap pilihan menu |
+| `bash igrowctl.sh all` | Setup pertama, atau melanjutkan setup yang terputus (sama dengan menu "Setup ulang") |
+| `bash igrowctl.sh deploy` | Setelah aturan di `hermes-home/` diubah dan di-push dari laptop: `git pull` + rsync 2 langkah. Lalu kirim `/new` di Telegram supaya sesi baru membaca aturan terbaru. |
+| `bash igrowctl.sh status` | Cek kesehatan: container, `hermes doctor`, daftar cron, waktu backup terakhir |
+| `bash igrowctl.sh update` | Update image Hermes (`docker compose pull` + `up -d`, cara resmi). Menampilkan versi lama → baru, `hermes doctor`, daftar cron, dan baris `image: …@sha256:…` untuk balik ke versi lama kalau versi baru bermasalah. Kalau sudah terbaru, tidak ada yang diubah. |
+| `bash igrowctl.sh step <1-9>` | Mengulang satu langkah. Contoh: `step 6` untuk ganti API key atau token bot, `step 7` untuk ganti tools cron |
+| `bash igrowctl.sh help` | Penjelasan tiap pilihan menu |
 
 ## 6. Di Luar Script
 

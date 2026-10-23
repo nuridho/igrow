@@ -18,6 +18,18 @@ Format entri:
 
 ---
 
+## [2026-10-24] Rename `igrow-setup.sh` → `igrowctl.sh`
+- **Apa:** `Setup/igrow-setup.sh` diganti nama jadi `Setup/igrowctl.sh` (`git mv`, riwayat file terjaga). Isi script tidak berubah selain nama di komentar usage. Semua rujukan diperbarui: `CLAUDE.md`, `PRD/{README,04-architecture,05-roadmap,07-setup}.md`, `docs/build.md`, `docs/setup-flow.html` (dan Artifact-nya, URL tetap), `Setup/{README.md,setupvps.sh}` (teks ringkasan akhir), serta catatan memory. Entri lama di file ini sengaja tetap menyebut `igrow-setup.sh` karena itu riwayat. Lokasi setelan (`~/.config/igrow/setup.env`) dan log tidak berubah, jadi penanda `SETUP_DONE` tetap terbaca.
+- **Kenapa:** script sudah jadi pusat kontrol (setup, deploy, status, update, menu), bukan hanya setup. Pilihan owner: `igrowctl` (konvensi `kubectl`/`systemctl`).
+- **File:** `Setup/igrowctl.sh` (ex `igrow-setup.sh`), `Setup/{README.md,setupvps.sh}`, `CLAUDE.md`, `PRD/{README,04-architecture,05-roadmap,07-setup,backlog}.md`, `docs/{build.md,setup-flow.html}`
+- **Deploy VPS:** tidak untuk runtime. Di VPS: `git pull` repo iGROW (atau `scp Setup/igrowctl.sh`), lalu pakai `bash igrowctl.sh`. File `~/igrow-setup.sh` lama di VPS bisa dihapus.
+
+## [2026-10-24] `setupvps.sh`: input IP VPS, cek NPM, `/etc/hosts`; IP asli dibersihkan dari `build.md`
+- **Apa:** `Setup/setupvps.sh`: (1) menanyakan IP publik VPS di awal, ditebak otomatis lewat `api.ipify.org` (Enter kalau benar, divalidasi format IPv4, tidak disimpan ke file); ringkasan akhir sekarang berisi perintah `ssh`, `scp`, tunnel NPM, dan URL `http://<IP>` dengan IP terisi. (2) Langkah 7 menunggu sampai NPM menjawab di port 80 (maks ±60 detik), kalau tidak → peringatan + `docker logs npm`. (3) Langkah 2 menambah `127.0.1.1 labs.nuridho labs` ke `/etc/hosts` kalau belum ada (menghilangkan pesan `unable to resolve host` di tiap `sudo`). Hostname tetap `labs.nuridho`. `docs/build.md`: IP VPS asli (2 tempat: `scp` dan nilai record DNS A) diganti `<vps>` / `<IP publik VPS>`, sesuai aturan privasi CLAUDE.md. `Setup/README.md` ikut diperbarui.
+- **Kenapa:** permintaan owner: setupvps otomatis, hasil akhirnya bisa langsung dipakai untuk cek URL. IP asli tidak boleh ada di file repo.
+- **File:** `Setup/setupvps.sh`, `Setup/README.md`, `docs/build.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak. Catatan: IP asli tetap ada di riwayat git commit lama.
+
 ## [2026-10-24] `docs/setup-flow.html`: visual alur `igrow-setup.sh`
 - **Apa:** halaman visual baru: diagram cara script memilih jalur (ada argumen? → penanda `SETUP_DONE`), simulasi terminal Jalur A (setup lengkap) dan Jalur B (menu 1–7/h/0 yang bisa diklik, lengkap penjelasan + contoh output tiap pilihan), serta kasus khusus (perintah langsung, VPS lama tanpa penanda). Teks terminal diambil dari string asli script; nama akun/bot fiktif. Dipublikasikan juga sebagai Artifact privat. `CLAUDE.md` (peta repo) memuat file ini dan aturan: alur/menu/tampilan `igrow-setup.sh` berubah → perbarui file ini. Baris `Setup/` di `CLAUDE.md` dibetulkan (`setupdocker.sh` sudah dihapus).
 - **Kenapa:** permintaan owner: visualisasi dua perilaku menu, disimpan dan ikut diperbarui kalau setup berubah.

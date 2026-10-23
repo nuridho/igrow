@@ -1,4 +1,4 @@
-<title>Dua Jalur igrow-setup.sh</title>
+<title>Dua Jalur igrowctl.sh</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -139,15 +139,15 @@ tr:first-child td { border-top: 0; }
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Setup/igrow-setup.sh · tanpa argumen</div>
-    <h1>Dua jalur <code>bash igrow-setup.sh</code></h1>
+    <div class="eyebrow">Setup/igrowctl.sh · tanpa argumen</div>
+    <h1>Dua jalur <code>bash igrowctl.sh</code></h1>
     <p class="lede">Perintahnya sama, hasilnya tergantung satu baris di file setelan: kalau setup belum pernah selesai, script langsung memasang semuanya; kalau sudah, script menampilkan menu.</p>
   </header>
 
   <section aria-labelledby="h-flow">
     <h2 id="h-flow">Cara script memilih jalur</h2>
     <div class="flow">
-      <div class="node cmd"><span class="p">nuridho@vps:~$</span> bash igrow-setup.sh</div>
+      <div class="node cmd"><span class="p">nuridho@vps:~$</span> bash igrowctl.sh</div>
       <div class="down"></div>
       <div class="row">
         <div class="node q"><b>Ada argumen?</b><span class="sub">mis. <code>deploy</code>, <code>status</code>, <code>step 6</code></span></div>
@@ -198,7 +198,7 @@ PROJ="whatsinsidegit"      <span class="d"># dari setupvps.sh</span>
 <span class="hl a">SETUP_DONE=""</span>              <span class="d"># kosong → Jalur A</span></pre>
       </div>
       <div class="term" aria-label="Contoh tampilan Jalur A">
-        <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrow-setup.sh</span></div>
+        <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrowctl.sh</span></div>
 <pre><span class="c bo">     _  ____ ____   _____        __
     (_)/ ___|  _ \ / _ \ \      / /
     | | |  _| |_) | | | \ \ /\ / /
@@ -251,7 +251,7 @@ PROJ="whatsinsidegit"      <span class="d"># dari setupvps.sh</span>
   <span class="c">└─</span>
 
   <span class="c">┌─ Berikutnya</span>
-  <span class="c">│</span> bash igrow-setup.sh   → menu: deploy, status, update, ganti LLM/token, backup, help
+  <span class="c">│</span> bash igrowctl.sh   → menu: deploy, status, update, ganti LLM/token, backup, help
   <span class="c">│</span> Telegram: /skills pending → cek skill buatan Hermes yang menunggu persetujuan
   <span class="c">└─</span></pre>
       </div>
@@ -266,8 +266,8 @@ PROJ="whatsinsidegit"
 <span class="hl b">SETUP_DONE="1"</span>             <span class="d"># terisi → Jalur B</span></pre>
       </div>
       <div class="menu-grid">
-        <div class="term" aria-label="Menu igrow-setup.sh">
-          <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrow-setup.sh</span></div>
+        <div class="term" aria-label="Menu igrowctl.sh">
+          <div class="term-bar"><i></i><i></i><i></i><span>nuridho@vps: bash igrowctl.sh</span></div>
 <pre style="padding-bottom:4px"><span class="c">  ┌─ Mau ngapain?</span></pre>
           <div class="opts" id="opts" role="group" aria-label="Pilihan menu"></div>
 <pre style="padding-top:0;padding-bottom:4px"><span class="c">  └─</span></pre>
@@ -301,7 +301,7 @@ PROJ="whatsinsidegit"
       <div class="case">
         <h3>VPS yang setupnya dibuat sebelum ada menu</h3>
         <p>File setelannya belum punya <code>SETUP_DONE</code>, jadi script masih masuk Jalur A. Itu aman karena langkah yang beres dilewati. Supaya langsung ke menu, pilih salah satu, cukup sekali:</p>
-        <pre>bash igrow-setup.sh all
+        <pre>bash igrowctl.sh all
 <span class="d"># atau</span>
 echo 'SETUP_DONE=1' &gt;&gt; ~/.config/igrow/setup.env</pre>
       </div>
@@ -360,7 +360,7 @@ const OPTIONS = [
   { k: "7", name: "Setup ulang", short: "semua langkah; yang sudah beres dilewati", runs: "intro + langkah 1–9",
     when: "Ada langkah yang dulu gagal, atau ragu setup sudah lengkap.",
     what: "Langkah 1–9 dijalankan seperti Jalur A. Yang sudah beres dicek lalu dilewati. Aman.",
-    after: "Sama dengan bash igrow-setup.sh all.",
+    after: "Sama dengan bash igrowctl.sh all.",
     out: [["y","  ? ","Mulai? [Y/n] y"],[""],["m","━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  ↷ git version 2.x, rsync, curl — sudah beres, dilewati"],
       ["m","━━ [2/9] Git & GitHub ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"],["d","  ↷ Identitas git: nuridho <…> — sudah beres, dilewati"],
       ["fold","  … langkah 3–8: kebanyakan ↷ dilewati …"],

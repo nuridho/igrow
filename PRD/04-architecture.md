@@ -212,7 +212,7 @@ Yang tidak bisa dipulihkan dari backup: memory dan skill internal Hermes, serta 
   2. `rsync -a --ignore-existing`: file milik agent yang belum ada di VPS (setup pertama, atau file baru seperti `taxonomy.md`) tersalin sekali; yang sudah ada tidak disentuh.
 
   Kedua langkah **tanpa** `--delete`: isi `wiki/`, `raw/`, dan `output/` di VPS tidak ada di repo dan akan ikut terhapus.
-- **Otomatis:** `Setup/igrow-setup.sh` menjalankan setup pertama dan deploy 2 langkah di atas (`bash igrow-setup.sh deploy`). Alur dan alasannya: [07 · Setup](07-setup.md).
+- **Otomatis:** `Setup/igrowctl.sh` menjalankan setup pertama dan deploy 2 langkah di atas (`bash igrowctl.sh deploy`). Alur dan alasannya: [07 · Setup](07-setup.md).
 - ⚠ Blok "Bikin 14 file inti" di `docs/build.md` sudah basi dibanding `hermes-home/`. Jangan dipakai untuk setup baru (pembersihannya ada di [05 · Roadmap](05-roadmap.md#3-prioritas-backlog)).
 
 ## 8. Domain

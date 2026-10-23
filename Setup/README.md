@@ -5,13 +5,13 @@ Folder ini berisi 2 script. Bayangkan pindah ke rumah baru:
 | Script | Analogi | Dijalankan sebagai | Berapa kali |
 |---|---|---|---|
 | `setupvps.sh` | Menyiapkan rumahnya: kunci pintu, pagar, listrik | `root` | Sekali, di VPS baru |
-| `igrow-setup.sh` | Memindahkan penghuninya (iGROW) dan mengisi perabot | `nuridho` (user biasa) | Sekali untuk pasang, lalu dipakai terus untuk `deploy`, `status`, `update` |
+| `igrowctl.sh` | Memindahkan penghuninya (iGROW) dan mengisi perabot | `nuridho` (user biasa) | Sekali untuk pasang, lalu dipakai terus untuk `deploy`, `status`, `update` |
 
 ```text
 Laptop                       VPS
 ──────                       ───
 scp setupvps.sh     ───────▶ [root]    bash setupvps.sh     → user, Docker, firewall, SSH aman
-scp igrow-setup.sh  ───────▶ [nuridho] bash igrow-setup.sh  → Hermes + Telegram + backup + cron
+scp igrowctl.sh  ───────▶ [nuridho] bash igrowctl.sh  → Hermes + Telegram + backup + cron
                                                              ✔ chat bot "halo" di Telegram
 ```
 
@@ -37,14 +37,15 @@ ssh -t root@<vps> bash setupvps.sh
 | Pertanyaan | Contoh | Dipakai untuk |
 |---|---|---|
 | Nama folder project | `whatsinsidegit` | Folder `/home/nuridho/whatsinsidegit/`: rumah semua project (NPM, iGROW, dst). Belum ada → dibuat, sudah ada → dipakai. Cukup nama, tanpa `/`. |
+| IP publik VPS | `203.0.113.10` | Script menebak sendiri (tinggal Enter), bisa diketik ulang kalau salah. Hanya dipakai untuk ringkasan di akhir: perintah `ssh`/`scp` dan URL sudah terisi IP-nya, tinggal salin. Tidak disimpan ke file. |
 | Password user `nuridho` (2×) | | Dipakai saat `sudo`. Hanya ditanya kalau user belum ada. |
 
 ### Apa yang terjadi
 
 | # | Langkah | Yang dilakukan | Kenapa perlu |
 |---|---|---|---|
-| 1 | User | Buat user `nuridho` (sudo), folder project, catat nama folder untuk `igrow-setup.sh` | Kerja sehari-hari jangan pakai root. Nama folder dicatat supaya nanti tinggal Enter. |
-| 2 | Hostname | `labs.nuridho` | Nama mesin di prompt dan log |
+| 1 | User | Buat user `nuridho` (sudo), folder project, catat nama folder untuk `igrowctl.sh` | Kerja sehari-hari jangan pakai root. Nama folder dicatat supaya nanti tinggal Enter. |
+| 2 | Hostname | `labs.nuridho`, dan dicatat di `/etc/hosts` | Nama mesin di prompt dan log. Tanpa catatan di `/etc/hosts`, setiap `sudo` memunculkan `unable to resolve host`. |
 | 3 | Paket & update | Upgrade sistem, pasang fail2ban, ufw, curl, update keamanan otomatis | fail2ban memblokir IP yang mencoba-coba password. Tambalan keamanan terpasang sendiri tiap hari, tanpa reboot otomatis. |
 | 4 | Timezone | `Asia/Jakarta` | Jam cron (briefing 07:00) mengikuti WIB |
 | 5 | Swap | File swap 2 GB (dilewati kalau sudah ada swap) | RAM penuh → sistem melambat, bukan mematikan Hermes |
@@ -55,14 +56,16 @@ ssh -t root@<vps> bash setupvps.sh
 
 ### Setelah selesai
 
-1. **Jangan tutup sesi root dulu.** Buka terminal baru, coba `ssh nuridho@<vps>`. Kalau berhasil, baru tutup sesi root.
+1. **Jangan tutup sesi root dulu.** Buka terminal baru, coba `ssh nuridho@<IP>`. Kalau berhasil, baru tutup sesi root.
 2. **Buka admin NPM** lewat tunnel (port 81 sengaja tidak dibuka ke internet):
    ```bash
-   ssh -L 8181:localhost:81 nuridho@<vps>
+   ssh -L 8181:localhost:81 nuridho@<IP>
    ```
    Lalu buka `http://localhost:8181` di browser laptop → login pertama → *Proxy Host*: domain kamu → forward ke `web:80` → aktifkan SSL.
 3. Kalau muncul peringatan reboot (biasanya setelah update kernel): `sudo reboot`, setelah poin 1 berhasil.
-4. Lanjut ke `igrow-setup.sh` di bawah.
+4. Lanjut ke `igrowctl.sh` di bawah.
+
+Kotak ringkasan di akhir script sudah berisi semua perintah ini dengan IP VPS terisi, jadi tidak perlu mengetik ulang. Script juga mengecek sendiri bahwa NPM menjawab di port 80. Dari browser laptop, `http://<IP>` menampilkan halaman bawaan Nginx Proxy Manager kalau port 80 dan firewall beres. Web dummy baru tampil di domain kamu setelah Proxy Host dibuat.
 
 > **Penting untuk container lain nanti:** port yang dibuka Docker **menembus UFW**. Menulis `ports: "8080:8080"` berarti port 8080 terbuka ke internet walaupun UFW tidak mengizinkan. Pakai `127.0.0.1:8080:8080`, atau lewatkan lewat NPM.
 
@@ -70,7 +73,7 @@ Log lengkap: `/var/log/setupvps.log`.
 
 ---
 
-## 2. `igrow-setup.sh`: Pasang iGROW
+## 2. `igrowctl.sh`: Pasang iGROW
 
 ### Siapkan dulu (bisa sambil jalan)
 
@@ -88,11 +91,11 @@ Tidak perlu hafal: script menampilkan petunjuk ini lagi tepat sebelum memintanya
 ### Cara jalankan
 
 ```bash
-scp Setup/igrow-setup.sh nuridho@<vps>:~/
-ssh -t nuridho@<vps> bash igrow-setup.sh
+scp Setup/igrowctl.sh nuridho@<vps>:~/
+ssh -t nuridho@<vps> bash igrowctl.sh
 ```
 
-Jalankan sebagai `nuridho`, **bukan root** (script menolak root). Sudo diminta sekali di awal. Total ±15 menit, kebanyakan menunggu install dan menyalin token. Setelah langkah 4, script juga ada di repo hasil clone: `bash ~/iGROW/Setup/igrow-setup.sh <perintah>`.
+Jalankan sebagai `nuridho`, **bukan root** (script menolak root). Sudo diminta sekali di awal. Total ±15 menit, kebanyakan menunggu install dan menyalin token. Setelah langkah 4, script juga ada di repo hasil clone: `bash ~/iGROW/Setup/igrowctl.sh <perintah>`.
 
 ### Apa yang terjadi
 
@@ -121,7 +124,7 @@ Setelah selesai: buka Telegram, kirim `halo` ke bot. Lalu ikuti skenario uji di 
 
 ### Setelah setup: satu perintah, pilih dari menu
 
-Setelah setup pernah selesai, `bash igrow-setup.sh` tidak menjalankan setup lagi, tapi menampilkan menu:
+Setelah setup pernah selesai, `bash igrowctl.sh` tidak menjalankan setup lagi, tapi menampilkan menu:
 
 ```text
   ┌─ Mau ngapain?
@@ -149,10 +152,10 @@ Setelah setup pernah selesai, `bash igrow-setup.sh` tidak menjalankan setup lagi
 | Ada langkah yang dulu gagal / ragu setup sudah lengkap | **7 Setup ulang** |
 | Bingung maksud pilihannya | **h Help**: penjelasan kapan dipakai dan apa yang terjadi, lalu menu tampil lagi |
 
-Tanpa menu (untuk alias di laptop atau otomatis): `bash igrow-setup.sh deploy | status | update | all | step <1-9> | help`. Contoh alias deploy dari laptop:
+Tanpa menu (untuk alias di laptop atau otomatis): `bash igrowctl.sh deploy | status | update | all | step <1-9> | help`. Contoh alias deploy dari laptop:
 
 ```bash
-alias igrow-deploy='git push && ssh -t nuridho@<vps> bash igrow-setup.sh deploy'
+alias igrow-deploy='git push && ssh -t nuridho@<vps> bash igrowctl.sh deploy'
 ```
 
 ### Di mana file-filenya

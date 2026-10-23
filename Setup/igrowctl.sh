@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# igrow-setup.sh — pasang iGROW di VPS: git, Docker, Hermes, Telegram, backup, cron. Dari nol sampai bot jalan.
+# igrowctl.sh — pasang iGROW di VPS: git, Docker, Hermes, Telegram, backup, cron. Dari nol sampai bot jalan.
 # Jalankan sebagai user biasa yang punya sudo (BUKAN root):
-#   bash igrow-setup.sh            → belum pernah setup: semua langkah · sudah: menu pilihan (deploy, status, update, …)
-#   bash igrow-setup.sh all        → semua langkah; yang sudah beres otomatis dilewati (aman diulang)
-#   bash igrow-setup.sh step 6     → ulang satu langkah (mis. ganti API key LLM / token bot)
-#   bash igrow-setup.sh deploy     → tarik repo terbaru + pasang ulang runtime (data di VPS tidak disentuh)
-#   bash igrow-setup.sh status     → cek kesehatan: container, doctor, cron, backup terakhir
-#   bash igrow-setup.sh update     → update image Hermes + cek doctor & cron (cara balik ke versi lama ditampilkan)
-#   bash igrow-setup.sh help       → penjelasan tiap pilihan menu
+#   bash igrowctl.sh            → belum pernah setup: semua langkah · sudah: menu pilihan (deploy, status, update, …)
+#   bash igrowctl.sh all        → semua langkah; yang sudah beres otomatis dilewati (aman diulang)
+#   bash igrowctl.sh step 6     → ulang satu langkah (mis. ganti API key LLM / token bot)
+#   bash igrowctl.sh deploy     → tarik repo terbaru + pasang ulang runtime (data di VPS tidak disentuh)
+#   bash igrowctl.sh status     → cek kesehatan: container, doctor, cron, backup terakhir
+#   bash igrowctl.sh update     → update image Hermes + cek doctor & cron (cara balik ke versi lama ditampilkan)
+#   bash igrowctl.sh help       → penjelasan tiap pilihan menu
 # Penjelasan tiap langkah: PRD/07-setup.md. Secret hanya diketik saat diminta; tidak ditulis ke repo maupun log.
 set -uo pipefail
 
@@ -262,7 +262,7 @@ step5() {
   set_kv "$COMPOSE_DIR/.env" IGROW_TZ "$TZ_NAME"
   if ! ls "$COMPOSE_DIR"/{docker-compose,compose}.y*ml >/dev/null 2>&1; then
     cat >"$COMPOSE_DIR/docker-compose.yml" <<'YML'
-# Dibuat oleh Setup/igrow-setup.sh — penjelasan di PRD/07-setup.md
+# Dibuat oleh Setup/igrowctl.sh — penjelasan di PRD/07-setup.md
 services:
   igrow-hermes:
     image: nousresearch/hermes-agent:latest   # pin versi (mis. :X.Y.Z) kalau mau stabil
