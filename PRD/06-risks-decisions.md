@@ -7,7 +7,7 @@ Skala: **H** (tinggi), **M** (sedang), **L** (rendah).
 | ID | Risiko | Dampak | Kemungkinan | Mitigasi | Status |
 |---|---|---|---|---|---|
 | R-01 | Agent tidak patuh SCHEMA: tag di luar taxonomy, link tanpa path, salah folder. | M | H | Self-check sebelum menulis, contoh few-shot yang mematuhi aturan (C2 sudah diperbaiki), dan lint mingguan. | Termitigasi sebagian |
-| R-02 | Data sensitif bocor ke provider LLM atau GitHub. | H | M | Redaksi sebelum bercerita, daftar larangan di `AGENTS.md` (dimuat di setiap sesi), repo backup privat, dan cek manual setiap kuartal. Redaksi tetap bergantung pada disiplin user dan kepatuhan agent. | Termitigasi sebagian |
+| R-02 | Data sensitif bocor ke provider LLM atau GitHub. | H | M | Redaksi sebelum bercerita, daftar larangan di `AGENTS.md` (dimuat di setiap sesi), repo backup privat, lint mingguan (pola IP dan credential di catatan kerja), dan cek manual setiap kuartal. Redaksi tetap bergantung pada disiplin user dan kepatuhan agent. | Termitigasi sebagian |
 | R-03 | Skill inventory tidak bisa dibandingkan antar kuartal karena skill map di-generate ulang dan pencocokan topik ↔ note bergantung penilaian LLM. | H | H | Skill map beku per level (D-22) dan aturan pencocokan tertulis di SCHEMA dengan file bukti per topik (D-26). | Termitigasi |
 | R-04 | VPS menjadi single point of failure. Dengan backup 3x seminggu, hingga 3 hari catatan bisa hilang. | M | L | Backup Git ke GitHub setiap Senin, Rabu, Sabtu 05:00 (D-23). | Diterima |
 | R-05 | Update `:latest` Hermes mengubah perilaku (argumen CLI cron, cara memuat `AGENTS.md`). | M | M | Pin versi setelah stabil ([OQ-08](#3-pertanyaan-terbuka)). Setelah update, cek `hermes cron create --help` dan ulangi tes Telegram Phase 2. | Terbuka |

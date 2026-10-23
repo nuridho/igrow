@@ -93,7 +93,7 @@ Berperan sebagai *compiler* (cerita mentah → note wiki) sekaligus *query engin
 | Kualitas data | Minggu dengan laporan lint "wiki sehat" | ≥ 80% | Pesan lint mingguan di Telegram |
 | Reliabilitas | Backup terjadwal (Senin, Rabu, Sabtu) berhasil | 100% | Setiap jadwal menghasilkan 1 pesan backup tanpa "gagal" (pesan yang tidak datang juga dihitung gagal, D-27), dan setiap perubahan muncul sebagai commit di repo `igrow-backup` |
 | Konsistensi | Skill inventory dihitung dua kali pada data yang sama | Hasil identik | Uji manual saat career review |
-| Privasi | Kebocoran data sensitif | 0 | Cek manual `raw/` dan `wiki/` setiap kuartal |
+| Privasi | Kebocoran data sensitif | 0 | Lint mingguan (pola IP dan credential di catatan kerja) dan cek manual `raw/` + `wiki/` setiap kuartal |
 | Relevansi | Briefing harian terkirim | ≥ 95% hari | Riwayat chat Telegram |
 | Nilai | Career review kuartalan bisa menjawab "apa yang sudah saya kerjakan kuartal ini" tanpa data tambahan | Ya | Penilaian owner setiap kuartal |
 

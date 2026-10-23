@@ -63,6 +63,7 @@ di frontmatter (SCHEMA). Lesson lama TIDAK dihapus — dua-duanya hidup, kontrad
 
 ## Contoh Eksekusi
 Blok di bawah dibagi per tujuan (lihat label `[...]`): pesan masuk, file yang ditulis, note lama yang diedit, index, log, dan balasan. Yang dikirim ke chat HANYA bagian [BALASAN KE USER]: isi file tidak ditempel ke chat, dan rangkuman balasan tidak ditulis ke file.
+Kondisi wiki sebelum pesan ini: `cpu-spike-triage` sudah ada, `backup-scheduling` belum. Polanya berlaku untuk note apa pun: target See Also yang sudah ada → tambah link balik di note itu; yang belum ada → baris placeholder di index. Nama note di contoh hanya ilustrasi.
 ````
 [PESAN USER — masuk dari Telegram]
 "Kemarin server production down 2 jam. CPU 100% gara-gara backup MySQL jalan pas jam sibuk. Akhirnya matiin backup, server normal lagi."

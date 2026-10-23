@@ -18,6 +18,30 @@ Format entri:
 
 ---
 
+## [2026-10-23] Catat W44: nilai default/contoh dokumentasi publik di aturan redaksi
+- **Apa:** `todo.md` + W44: `AGENTS.md` § Cara redact belum menyebut bahwa nilai default atau contoh dari dokumentasi publik (mis. docker0 `172.17.0.1`) boleh tetap ditulis, sehingga Hermes bisa meredaksinya di note belajar. Header nomor berikutnya → W45; daftar sisa item di roadmap M2.1 diperbarui. Belum ada file `hermes-home/` yang diubah.
+- **Kenapa:** pertanyaan owner: redaksi harus tetap menjaga konteks, karena catatan dipakai untuk belajar ulang.
+- **File:** `PRD/todo.md`, `PRD/05-roadmap.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak
+
+## [2026-10-23] Lint: path dual-link & gambar, slug ganda, inbox, cek privasi (W35, I12)
+- **Apa:** `lint.md` ditulis ulang. Cakupan `wiki/` + `raw/` + `output/`. Cek 1 orphan + `raw/articles/`, `raw/assets/`, `output/`. Cek 2 link rusak dipecah: `[[slug]]`, path dual-link (harus menunjuk file yang ada dan berakhir di `<slug>.md` yang sama; target placeholder = path baris placeholder-nya), path gambar, + cara resolve path relatif. Cek 5 untuk ketiga index. Cek 6 slug ganda. Cek 7 file tertinggal di `raw/inbox/`. Cek 8 privasi lewat script baru `maintenance/lint-privacy.sh` (IPv4, `key = nilai`, password/token di kalimat, Bearer token, private key; hanya mencetak `path:baris: jenis`; catatan kerja saja, materi belajar dilewati). Fallback + "cek privasi gagal". Tutup: log berisi jumlah temuan per jenis, lint bukan operasi tulis page, temuan privasi paling atas, dan "Jawaban akhir = isi pesan Telegram (… jangan pakai tool kirim pesan)" (bagian `lint.md` dari I15). Contoh eksekusi dengan label tujuan. PRD 01 (metrik privasi), 02 (AC M1), 03 (FR-21), 05 (toolset + uji script, verifikasi minggu pertama, cek privasi kuartalan, sisa item), 06 (R-02), README (riwayat 1.4) diselaraskan. Todo: W35 + I12 dicentang, progres I15 dicatat, rujukan I11 `lint.md:25` → `:41`, catatan lint di W41 diperbarui.
+- **Kenapa:** W35, I12. Script dipilih supaya nilai yang bocor tidak pernah terbaca atau terkutip agent ke Telegram dan log. Cakupan dipersempit supaya contoh dari dokumentasi publik tidak jadi temuan palsu tiap minggu.
+- **File:** `hermes-home/igrow/project-skills/maintenance/lint.md`, `hermes-home/igrow/project-skills/maintenance/lint-privacy.sh` (baru), `PRD/{README,01-overview,02-use-cases,03-requirements,05-roadmap,06-risks-decisions,todo,backlog}.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1; script baru tersalin oleh rsync langkah 1). Setelah deploy, uji `bash igrow/project-skills/maintenance/lint-privacy.sh` sekali (roadmap M2.2).
+
+## [2026-10-23] Review menyeluruh hermes-home: 10 temuan dicatat (W37–W43, I14–I16)
+- **Apa:** seluruh `hermes-home/` dibaca ulang dan dicocokkan dengan PRD, `testing/test-flow.md`, dan dokumentasi resmi Hermes (Skills, cron, Telegram). Temuan dicatat di `todo.md` § Review menyeluruh: skill buatan Hermes bisa menggantikan `project-skills/` (W37); backup melapor "tidak ada perubahan" walau commit sebelumnya belum ter-push (W38); kriteria type lesson + pola kesalahan berulang (W39); isi master `_index.md` (W40, perlu keputusan owner); screenshot + path gambar (W41); format `careers/*/skills.md` (W42); briefing cron boleh menulis wiki (W43, perlu keputusan owner); `weak-topics.md` tidak pernah dikurangi (I14); "Kirim ke Telegram" di prosedur cron (I15); nama folder career aktif (I16). Act W35 + cek path gambar. Header nomor berikutnya → W44 / I17. Daftar sisa item di roadmap M2.1 dan tabel prioritas diperbarui. Belum ada file `hermes-home/` yang diubah.
+- **Kenapa:** permintaan owner: baca ulang dan analisa ulang `hermes-home/`.
+- **File:** `PRD/todo.md`, `PRD/05-roadmap.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak
+
+## [2026-10-23] Kondisi awal di contoh eksekusi capture
+- **Apa:** pengantar Contoh Eksekusi `capture-experience.md` + 1 baris: kondisi wiki sebelum pesan (`cpu-spike-triage` sudah ada, `backup-scheduling` belum), pola umumnya (target See Also yang sudah ada → link balik; belum ada → placeholder), dan penegasan bahwa nama note di contoh hanya ilustrasi. Contoh tetap konkret; `study.md` tidak diubah (semua target See Also-nya belum ada).
+- **Kenapa:** masukan owner: sebelumnya kondisi awal hanya tersirat di label `[EDIT NOTE LAMA]`/`[EDIT INDEX]` di tengah contoh, jadi Hermes bisa salah paham kenapa dua link diperlakukan beda atau mengira nama note di contoh wajib dipakai.
+- **File:** `hermes-home/igrow/project-skills/capture-experience.md`, `PRD/backlog.md`
+- **Deploy VPS:** perlu (ikut deploy ulang M2.1)
+
 ## [2026-10-23] Status topik, slug unik, link balik (W34, I13, W36)
 - **Apa:** W34: definisi Known/Weak/Belum + Gap pindah ke SCHEMA § skill-map.md format (pencarian hanya di note naratif `careers/` + `self-development/`); `mentor.md` merujuk ke sana, `career-review.md` step 2 "Weak (= Gap)". I13: SCHEMA § Link + aturan slug (kebab-case; incident `YYYY-MM-DD-<slug>` dengan tanggal kejadian, D-29; unik di antara note, file data dikecualikan; slug terpakai → topik sama = edit, topik beda = konteks pembeda, placeholder = note yang ditunggu). W36: SCHEMA § Link + aturan link balik (hanya note yang ditaut; `updated:` note lama tidak diganti karena career review membaca `updated`; dicatat di subjek log); placeholder yang ditulis memasukkan page penautnya ke See Also. `capture-experience.md` + `study.md`: pointer slug di step 2, link balik di step 6, step 7 menyebut note lama yang dapat link balik; contoh capture memakai nama bertanggal, 1 placeholder + 1 link balik, label `[EDIT NOTE LAMA]` + `[LOG]`; contoh study + baris link balik. PRD 02 (tabel lokasi, AC UC1/UC2/UC4), PRD 06 D-29, README riwayat 1.4, test-flow 1.1 + 1.6, roadmap (sisa item + catatan M2.3 dihapus), W35 Act + cek slug ganda, rujukan W29 `SCHEMA.md:104` → `:107`.
 - **Kenapa:** W34, I13, W36; keputusan owner D-29 (nama incident bertanggal).

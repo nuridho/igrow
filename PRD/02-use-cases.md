@@ -389,18 +389,19 @@ Recommended Next: 1. Ansible playbook dasar  2. Note routing & VLAN  3. Multi-la
 
 ## M1 · Lint Mingguan
 
-**Tujuan:** menjaga struktur wiki tetap sehat tanpa mengubah isi konten.
+**Tujuan:** menjaga struktur wiki tetap sehat dan menangkap data terlarang yang lolos redaksi, tanpa mengubah isi konten.
 
 **Trigger:** cron setiap Minggu pukul 08:00 (`0 8 * * 0`).
 
 **Acceptance criteria:**
 - ⏳ Cron belum dibuat di VPS.
-- ✅ Ada lima pemeriksaan: page orphan, wikilink rusak (kecuali yang ditandai placeholder), frontmatter tidak lengkap, tag di luar taxonomy, dan index yang tidak cocok dengan filesystem (entri yang file-nya sudah tidak ada, atau placeholder yang file-nya sudah ditulis).
+- ✅ Ada delapan pemeriksaan (rinciannya di `lint.md`): file orphan di `wiki/`, `raw/`, dan `output/`; link rusak, termasuk path dual-link dan path gambar (kecuali yang ditandai placeholder); frontmatter tidak lengkap; tag di luar taxonomy; index yang tidak cocok dengan filesystem; slug ganda; file yang tertinggal di `raw/inbox/`; dan pola IP/credential di catatan kerja.
+- ✅ Cek privasi memakai `lint-privacy.sh`, yang hanya mencetak path, nomor baris, dan jenis temuan, tanpa nilainya. Materi belajar (`self-development/`, `raw/`) tidak ikut dicek, karena wajar berisi contoh IP dan password dari dokumentasi publik.
 - ✅ Link ke note yang belum ada dicatat sebagai baris `(placeholder)` di `_index.md` (aturan di SCHEMA § Link), jadi lint hanya melaporkan link yang benar-benar rusak.
 - ✅ Hanya melapor. Tidak ada file note yang diubah.
 - ✅ `about.md`, `careers/*/skills.md`, dan data file tidak dilaporkan, karena frontmatter-nya memang berbeda dari note naratif.
-- ✅ Wiki kosong dilaporkan sebagai "wiki kosong", bukan error. Index yang hilang dilaporkan sebagai temuan tersendiri.
-- ✅ Ringkasan ditambahkan ke `log.md` (op `lint`) dan dikirim ke Telegram. Kalau semua bersih, cukup "wiki sehat".
+- ✅ Wiki kosong dilaporkan sebagai "wiki kosong", bukan error. Index yang hilang, atau cek privasi yang gagal jalan, dilaporkan sebagai temuan tersendiri.
+- ✅ `log.md` (op `lint`) mencatat jumlah temuan per jenis. Pesan Telegram berisi daftar temuan, dengan temuan privasi paling atas. Kalau semua bersih, cukup "wiki sehat".
 
 ## M2 · Backup
 
