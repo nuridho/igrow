@@ -24,16 +24,16 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 
 - [x] Rapikan `SCHEMA.md`: duplikat kepemilikan, definisi skill inventory (W1), skill map sebagai `type: data` (W2), dan SCHEMA jadi wajib. Selesai 2026-10-16 (W9).
 - [x] Kerjakan item todo hasil review PRD 2026-10-17 (W22–W26, I8). Selesai 2026-10-23.
-- [ ] Kerjakan item todo hasil review runtime 2026-10-22 (W27–W34, A10, I9–I13) sebelum deploy ulang, supaya cukup sekali deploy.
-- [ ] Deploy ulang `hermes-home/` ke VPS (2 langkah rsync, PRD 04 §7): contoh few-shot yang sudah diperbaiki (C2), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`).
+- [ ] Kerjakan item todo hasil review runtime 2026-10-22 (W27–W35, A10, I9–I13) sebelum deploy ulang, supaya cukup sekali deploy.
+- [ ] Deploy ulang `hermes-home/` ke VPS (2 langkah rsync, PRD 04 §7): contoh few-shot yang sudah diperbaiki (C2), `backup.sh` yang ikut membackup `AGENTS.md`, `AGENTS.md` tanpa session-export, dan seluruh hasil audit `hermes-home/` 2026-10-16 (lihat `backlog.md`). Setelah deploy, pastikan `igrow/taxonomy.md` ada di VPS (tersalin oleh langkah 2).
 - [ ] Hapus sisa session-export di VPS: cron job (kalau sudah dibuat), file prosedurnya, dan folder `log/sessions/archive/`.
 
 ### M2.2 · Automation Aktif
 
-- [ ] Siapkan prasyarat backup: `git init` di `igrow/`, remote repo privat `igrow-backup`, dan token dengan scope minimal.
+- [ ] Siapkan prasyarat backup: `git init` di `igrow/`, remote repo privat `igrow-backup`, dan token dengan scope minimal. Jalankan sebagai user yang sama dengan proses gateway (bandingkan `id` di `docker exec` dengan pemilik file yang pernah ditulis Hermes, mis. hasil capture pertama); kalau beda, git menolak repo ("dubious ownership") atau gagal menulis `.git/` saat cron. Identitas commit di level repo (tanpa `--global`). Uji `bash igrow/project-skills/maintenance/backup.sh` sekali sebelum cron dibuat.
 - [ ] Cek toolset platform `cron` di `hermes tools`: web (daily briefing), terminal (backup, cek privasi lint I12), file (semua job). Kalau config cron tidak terbaca, Hermes menggagalkan run, bukan memakai semua tool (dokumentasi resmi, fitur cron).
 - [ ] Buat 4 cron job (`daily-briefing`, `backup-knowledge`, `lint-mingguan`, `career-review`) dengan `--deliver telegram` dan `--workdir /opt/data`. Pastikan `hermes cron list` menampilkan 4 job.
-- [ ] Verifikasi minggu pertama: briefing tiba setiap pagi, backup menghasilkan commit, dan lint mengirim laporan.
+- [ ] Verifikasi minggu pertama: briefing tiba setiap pagi, setiap jadwal backup mengirim 1 pesan (D-27) dan perubahan muncul sebagai commit, dan lint mengirim laporan.
 
 ### M2.3 · Tervalidasi dengan Data Nyata
 
@@ -51,7 +51,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 | **Now** | Cron + prasyarat backup | build.md checklist Phase 2 |
 | **Now** | Kerjakan todo hasil review runtime (W27–W30 dulu, lalu A10, lalu sisanya), lalu deploy ulang runtime | §2 M2.1, [`todo.md`](todo.md) |
 | **Next** | Perbarui test-flow, lalu uji dengan data nyata | §2 M2.3 |
-| **Next** | Bersihkan `build.md`: ganti blok salinan "Bikin 14 file inti" dengan instruksi deploy 2 langkah (rujuk PRD 04 §7), hapus kalimat fallback push via `igrow.nuridho.com`, ganti "(via SSH)" di tabel cron jadi HTTPS + token | `docs/build.md` |
+| **Next** | Bersihkan `build.md`: ganti blok salinan "Bikin 14 file inti" dengan instruksi deploy 2 langkah (rujuk PRD 04 §7), hapus kalimat fallback push via `igrow.nuridho.com`, ganti "(via SSH)" di tabel cron jadi HTTPS + token, token di prasyarat Job 2 jadi fine-grained khusus repo `igrow-backup` (Contents read/write), bukan classic scope `repo` | `docs/build.md` |
 | **Later** | Phase 3 (Dozzle), Phase 4 (dashboard) | vpslab.md |
 | **Later** | Export PDF career review, perintah koreksi note (`/cek` / `/audit`) | FR-25, FR-26 |
 | **Later** | Evaluasi migrasi `project-skills/` ke sistem Skill resmi Hermes | OQ-06 |

@@ -171,13 +171,14 @@ Command pembuatan job ada di [`docs/build.md`](../docs/build.md) § Setup 4 Cron
 
 ```mermaid
 flowchart TD
-    subgraph backup["Backup · cron Sen/Rab/Sab 05:00"]
+    subgraph backup["Backup · cron Sen/Rab/Sab 05:00 · selalu 1 pesan Telegram (D-27)"]
         b1(["cron backup-knowledge"]) --> b2["backup.sh<br/>salin AGENTS.md → igrow/AGENTS.backup.md"]
         b2 --> b3{"git add -A<br/>ada perubahan?"}
-        b3 -- Tidak --> b4(["Selesai tanpa pesan"])
+        b3 -- Tidak --> b4(["Telegram: tidak ada perubahan"])
         b3 -- Ya --> b5["commit + push"]
         b5 --> b6{"Berhasil?"}
-        b6 -- Tidak --> b7(["Error dikirim ke Telegram"])
+        b6 -- Tidak --> b7(["Telegram: gagal + pesan error"])
+        b6 -- Ya --> b8(["Telegram: berhasil di-push"])
     end
     b6 -- Ya --> gh[("GitHub privat<br/>igrow-backup")]
     subgraph recovery["Recovery · manual"]
@@ -206,6 +207,8 @@ Yang tidak bisa dipulihkan dari backup: memory dan skill internal Hermes, serta 
 - **Deploy runtime** dari `hermes-home/` di repo ini ke VPS, 2 langkah:
   1. `rsync -a --exclude '_index.md' --exclude 'log.md' --exclude 'taxonomy.md'`: aturan diperbarui, file milik agent (katalog, log, daftar tag) tidak tertimpa template repo.
   2. `rsync -a --ignore-existing`: file milik agent yang belum ada di VPS (setup pertama, atau file baru seperti `taxonomy.md`) tersalin sekali; yang sudah ada tidak disentuh.
+
+  Kedua langkah **tanpa** `--delete`: isi `wiki/`, `raw/`, dan `output/` di VPS tidak ada di repo dan akan ikut terhapus.
 - ⚠ Blok "Bikin 14 file inti" di `docs/build.md` sudah basi dibanding `hermes-home/`. Jangan dipakai untuk setup baru (pembersihannya ada di [05 · Roadmap](05-roadmap.md#3-prioritas-backlog)).
 
 ## 8. Domain

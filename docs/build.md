@@ -1083,7 +1083,9 @@ Chat ke bot kamu, coba beberapa hal:
 **Prasyarat Job 2 — repo backup (sekali saja):**
 ```bash
 docker exec -it igrow-hermes bash
-cd /opt/data/igrow && git init && git add -A && git commit -m "init"
+cd /opt/data/igrow && git init
+git config user.name "igrow-backup" && git config user.email "igrow-backup@localhost"   # level repo, bukan --global: berlaku untuk user mana pun yang menjalankan backup.sh
+git add -A && git commit -m "init"
 git config --global credential.helper store
 git remote add origin https://<TOKEN>@github.com/nuridho/igrow-backup.git
 git branch -M master

@@ -1,7 +1,7 @@
 # To-Do — iGROW (hermes-home)
 
 > Fokus: hanya item yang menyentuh `hermes-home/` (AGENTS.md, SCHEMA, project-skills, struktur `igrow/`). Item VPS, docs, testing, web, dan migrasi dihapus 2026-10-16; jejaknya ada di git history dan `05-roadmap.md`.
-> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W35 / I14 / A11.
+> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W36 / I14 / A11.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres. Item `[x]` Act-nya lampau, Impact-nya sudah berlaku.
 > Isi list = bug + kontradiksi di runtime. Kosmetik sengaja tidak dicatat. `FIN` di item lama = `archive/iGROW_FINAL.md`.
 > Item selesai → centang di sini + catat di [`backlog.md`](backlog.md).
@@ -9,6 +9,7 @@
 ## Terbuka
 
 - **W27–W34, A10, I9–I13**: temuan review runtime 2026-10-22. Kerjakan W27–W30 sebelum cron dibuat (kena di run cron pertama), lalu A10 (privasi). Detail di § Review runtime.
+- **W35**: temuan review ulang 2026-10-23 (lint belum memeriksa path markdown di dual-link). Paling hemat dikerjakan bareng I12 (sama-sama `lint.md`). Detail di § Review ulang.
 
 ## Audit runtime (2026-10-10)
 
@@ -54,7 +55,7 @@
 - [x] **I1** Backup mingguan = RPO 7 hari
   - Act: jadwal `backup-knowledge` → `0 3 * * *` (harian) di `build.md`, `AGENTS.md`, `backup.md`, PRD.
   - Impact: maksimal 1 hari catatan hilang kalau VPS mati; tanpa pesan tambahan karena no-change tetap diam.
-  - Selesai 2026-10-16: keputusan owner: backup Senin, Rabu, Sabtu 05:00 (`0 5 * * 1,3,6`), RPO ≤ 3 hari (D-23). Diubah di `AGENTS.md`, `backup.md`, `build.md`, PRD.
+  - Selesai 2026-10-16: keputusan owner: backup Senin, Rabu, Sabtu 05:00 (`0 5 * * 1,3,6`), RPO ≤ 3 hari (D-23). Diubah di `AGENTS.md`, `backup.md`, `build.md`, PRD. Bagian "no-change tetap diam" di Impact diganti D-27 (2026-10-23): setiap run selalu lapor.
 - [x] **I2** Op `archive` di `SCHEMA.md:25` tidak dipakai lagi setelah session-export dihapus
   - Act: pakai `archive` untuk penutupan career di UC1b, ATAU hapus dari daftar ops.
   - Impact: daftar ops = ops yang benar-benar dipakai (pola W13).
@@ -151,6 +152,14 @@
 - [ ] **I13** Slug note belum diwajibkan unik. Dengan beberapa career, nama file yang sama (mis. `disk-full.md` di career-1 dan career-2) membuat `[[slug]]`, `contradictions`, dan penanda placeholder (W23) bisa menunjuk dua file.
   - Act: SCHEMA § Link + 1 baris: "Slug = nama file tanpa `.md`, kebab-case, unik di seluruh `wiki/`. Cek `_index.md` dulu; bentrok → tambah konteks (mis. `disk-full-career-2`)."
   - Impact: setiap wikilink menunjuk tepat satu file; cek broken wikilink di lint tidak ambigu.
+
+## Review ulang (2026-10-23)
+
+> Celah yang ketemu saat mereview hasil pengerjaan W22–W26 dan I8.
+
+- [ ] **W35** Lint cek 2 hanya memeriksa `[[slug]]`. Bagian markdown dual-link `(../path/slug.md)` tidak dicek di mana pun, padahal path relatif mudah salah hitung `../`, dan aturan placeholder W23 ("path beda → perbaiki link `(...)`") bergantung padanya. Link rusak baru ketahuan saat dibuka di GitHub (`igrow-backup`) atau dashboard Phase 4.
+  - Act: `lint.md` cek 2 + "path `(...)` di dual-link harus menunjuk file yang ada (relatif dari file note); target placeholder → path sama dengan baris placeholder di `_index.md`". Contoh output lint + 1 baris temuan path.
+  - Impact: dual-link benar di kedua sisi, jadi wiki tetap bisa dinavigasi tanpa Obsidian (G5: knowledge portable).
 
 ## Critical
 

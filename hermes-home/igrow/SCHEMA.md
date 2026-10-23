@@ -77,13 +77,13 @@ Body berupa list, bukan narasi:
 - `profile/career-summary.md` → 1 baris per career: `- <folder career>: <Role> · <Period> · N incident · N knowledge · N lesson` (Role & Period dari `about.md`, career aktif = `s/d sekarang`; N = hitung file: `knowledge/incidents/`, `knowledge/` tanpa `incidents/`, `lessons-learned/`)
 
 ## Tag taxonomy
-Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag baru ditambah di sana DULU, hanya kalau user setuju; lalu cukup append `log.md` (op: update, subjek `tag <nama>`), tanpa update `_index.md`.
+Daftar tag resmi = `igrow/taxonomy.md` (agent-owned, tidak ditimpa deploy). Tag baru ditambah di sana DULU, hanya kalau user setuju; lalu cukup append `igrow/log.md` (op: update, subjek `tag <nama>`), tanpa update `_index.md`.
 
 ## Link
 - Antar-page: `[[slug]]` minimal 2 outbound per page.
 - Section `## See Also` wajib dual-link: `[[slug|Name]] ([Name](../path/slug.md))`.
 - Narasi biasa cukup `[[slug]]`.
-- Target belum ada → tetap boleh ditaut (placeholder): tambah baris di `_index.md` terdekat dari path target: `| <path target> | (placeholder) | - | - |`. Tidak masuk master, tidak dihitung Total pages.
+- Target belum ada → tetap boleh ditaut (placeholder): slug belum tercatat → tambah baris di `_index.md` terdekat dari path target: `| <path target> | (placeholder) | - | - |`; sudah tercatat → pakai path di baris itu, jangan bikin baris kedua. Tidak masuk master, tidak dihitung Total pages.
 - Menulis note baru → cek `_index.md` dulu: slug-nya ada sebagai placeholder → ganti baris itu dengan baris biasa. Path note beda dari path placeholder → perbaiki juga link `(...)` di page yang menautnya (cari `[[slug`).
 
 ## Threshold

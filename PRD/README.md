@@ -4,9 +4,9 @@
 |---|---|
 | **Produk** | iGROW: Personal Career & Knowledge OS untuk IT worker |
 | **Owner** | Nuridho (Product Owner, sekaligus satu-satunya user) |
-| **Versi PRD** | 1.3 |
+| **Versi PRD** | 1.4 |
 | **Status produk** | Phase 1 selesai · Phase 2 berjalan (runtime jalan, automation belum aktif) |
-| **Terakhir diperbarui** | 2026-10-17 |
+| **Terakhir diperbarui** | 2026-10-23 |
 
 ## Ringkasan Eksekutif
 
@@ -55,7 +55,7 @@ Blueprint awal (`iGROW_FINAL.md`) sudah diarsipkan di `archive/`. Seluruh isinya
 | **`igrow/`** | Subfolder `HERMES_HOME` yang berisi seluruh data iGROW. Hanya folder ini yang dianggap aset portable. |
 | **`AGENTS.md`** | Aturan inti yang otomatis dimuat Hermes di setiap sesi. |
 | **Project skill** | File markdown prosedur per use case di `igrow/project-skills/`. Dibaca Hermes saat relevan. Bukan sistem Skill resmi Hermes. |
-| **`SCHEMA.md`** | Aturan format wiki: frontmatter, aturan tag, link, dan threshold. |
+| **`SCHEMA.md`** | Aturan format wiki: protokol tulis, frontmatter, aturan tag, link, dan threshold. |
 | **`taxonomy.md`** | Daftar tag resmi. Milik agent, tidak ditimpa deploy (D-28). |
 | **UC** | Use case (UC1–UC5, plus UC1b Daftar Kerjaan Baru). M1/M2 adalah job maintenance (lint, backup), bukan UC. |
 | **Career aktif** | Folder `wiki/careers/career-N-*` yang `about.md`-nya belum punya tanggal selesai. |
@@ -75,3 +75,4 @@ Blueprint awal (`iGROW_FINAL.md`) sudah diarsipkan di `archive/`. Seluruh isinya
 | 1.1 | 2026-10-16 | `docs/dev-todo.md` dipindah menjadi `todo.md`, ditambah `backlog.md` (riwayat update) dan `CLAUDE.md` di root. |
 | 1.2 | 2026-10-16 | Sisa isi `iGROW_FINAL.md` dipindah ke PRD: contoh output per UC, mekanisme gap, aturan skill inventory, dan skenario migrasi. FIN diarsipkan. |
 | 1.3 | 2026-10-17 | Diagram Mermaid (sistem, alur pesan, cron, backup & recovery, aliran antar-UC, gap analysis, screenshot). Review menyeluruh: status cron dikoreksi (butuh `--workdir`), contoh skill map dan laporan UC5 diselaraskan dengan SCHEMA, temuan runtime dicatat sebagai W22–W26 dan I8. |
+| 1.4 | 2026-10-23 | Todo review PRD 2026-10-17 selesai (W22–W26, I8): backup selalu lapor (D-27), taxonomy jadi `igrow/taxonomy.md` + deploy 2 langkah (D-28), placeholder untuk link ke note yang belum ada, satu sumber untuk protokol tulis dan daftar larangan (+ serial number, raw log client, konfigurasi proprietary), `/recall` menyebut page sumber. Act item todo terbuka dipertajam; diagram backup (§ 6.3 architecture) dan metrik reliabilitas diselaraskan dengan D-27. |

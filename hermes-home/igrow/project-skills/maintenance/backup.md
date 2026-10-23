@@ -8,7 +8,7 @@ Dipicu cron Senin, Rabu, Sabtu 05:00 (`0 5 * * 1,3,6`). Push `igrow/` ke GitHub 
 2. Selalu balas 1 baris (jadi laporan cron ke Telegram):
    - Exit 0 + "pushed" → `Backup <YYYY-MM-DD>: berhasil di-push.`
    - Exit 0 + "no changes" → `Backup <YYYY-MM-DD>: tidak ada perubahan.`
-   - Exit non-zero → `Backup <YYYY-MM-DD> gagal: <pesan ERROR dari script>`
+   - Exit non-zero, atau script tidak bisa dijalankan → `Backup <YYYY-MM-DD> gagal: <inti pesan error dari output>`
 
 ## Aturan
 
