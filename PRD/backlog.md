@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-24] `igrow-setup.sh`: menu pilihan setelah setup
+- **Apa:** `bash igrow-setup.sh` tanpa argumen sekarang: belum pernah setup → semua langkah (seperti dulu); sudah pernah (penanda baru `SETUP_DONE=1` di `setup.env`, ditulis setelah langkah 9) → menu: 1 Deploy, 2 Status, 3 Update, 4 LLM & Telegram (langkah 6), 5 Tools cron (7), 6 Backup (8; menawarkan hapus token lama dulu, jadi tidak perlu `rm` manual), 7 Setup ulang, h Help, 0 Keluar. Help menjelaskan tiap pilihan (kapan dipakai, apa yang terjadi), lalu menu tampil lagi. Perintah langsung tetap jalan (`deploy`, `status`, `update`, `step N`), plus `all` (semua langkah) dan `help`. Kotak akhir setup menunjuk ke menu. `Setup/README.md` (contoh menu + tabel situasi → pilihan + alias deploy) dan `PRD/07-setup.md` §5 ikut diperbarui.
+- **Kenapa:** permintaan owner: perintah setelah setup terpusat di satu menu, dengan help kalau bingung.
+- **File:** `Setup/igrow-setup.sh`, `Setup/README.md`, `PRD/{07-setup,backlog}.md`
+- **Deploy VPS:** tidak untuk runtime. Salin ulang `Setup/igrow-setup.sh` ke VPS. Di VPS yang setupnya sudah jalan sebelum perubahan ini, belum ada penanda `SETUP_DONE`: jalankan `bash igrow-setup.sh all` sekali (langkah yang beres dilewati), atau tambahkan `SETUP_DONE=1` ke `~/.config/igrow/setup.env`.
+
 ## [2026-10-24] `Setup/README.md` jadi panduan pakai lengkap
 - **Apa:** `Setup/README.md` ditulis ulang dari ringkasan 1 tabel menjadi panduan pakai kedua script: analogi + diagram alur, cara jalankan, yang ditanya, tabel per langkah (apa yang terjadi + kenapa perlu untuk `setupvps.sh`; yang kamu lakukan vs yang script lakukan untuk `igrow-setup.sh`), hal setelah selesai (tes login, tunnel NPM, reboot), daftar yang disiapkan beserta cara mendapatkannya, jadwal cron, perintah setelah setup per situasi, lokasi file, pindah VPS. Bagian "kenapa" dan troubleshooting tetap dirujuk ke `PRD/07-setup.md` §4 dan §7.
 - **Kenapa:** permintaan owner: README terlalu ringkas setelah isi `setupdocker.sh` dihapus; minta detail tapi tetap mudah dimengerti, terutama `igrow-setup.sh`.

@@ -98,13 +98,16 @@ Dokumentasi resmi Hermes mendukung tiga cara mengisi Telegram, dan salah satunya
 
 ## 5. Perintah Harian
 
+`bash igrow-setup.sh` tanpa argumen: kalau setup belum pernah selesai, menjalankan semua langkah. Kalau sudah (penanda `SETUP_DONE=1` di `~/.config/igrow/setup.env`, ditulis setelah langkah 9), menampilkan **menu**: deploy, status, update, LLM & Telegram (langkah 6), tools cron (7), backup (8, bisa sekalian menghapus token lama), setup ulang, dan help (penjelasan tiap pilihan). Contoh tampilan dan tabel "situasi → pilih apa" ada di `Setup/README.md`. Perintah langsung di bawah tetap jalan, untuk alias atau otomatis:
+
 | Perintah | Kapan dipakai |
 |---|---|
-| `bash igrow-setup.sh` | Setup pertama, atau melanjutkan setup yang terputus |
+| `bash igrow-setup.sh all` | Setup pertama, atau melanjutkan setup yang terputus (sama dengan menu "Setup ulang") |
 | `bash igrow-setup.sh deploy` | Setelah aturan di `hermes-home/` diubah dan di-push dari laptop: `git pull` + rsync 2 langkah. Lalu kirim `/new` di Telegram supaya sesi baru membaca aturan terbaru. |
 | `bash igrow-setup.sh status` | Cek kesehatan: container, `hermes doctor`, daftar cron, waktu backup terakhir |
 | `bash igrow-setup.sh update` | Update image Hermes (`docker compose pull` + `up -d`, cara resmi). Menampilkan versi lama → baru, `hermes doctor`, daftar cron, dan baris `image: …@sha256:…` untuk balik ke versi lama kalau versi baru bermasalah. Kalau sudah terbaru, tidak ada yang diubah. |
 | `bash igrow-setup.sh step <1-9>` | Mengulang satu langkah. Contoh: `step 6` untuk ganti API key atau token bot, `step 7` untuk ganti tools cron |
+| `bash igrow-setup.sh help` | Penjelasan tiap pilihan menu |
 
 ## 6. Di Luar Script
 

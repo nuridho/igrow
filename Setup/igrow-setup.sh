@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # igrow-setup.sh — pasang iGROW di VPS: git, Docker, Hermes, Telegram, backup, cron. Dari nol sampai bot jalan.
 # Jalankan sebagai user biasa yang punya sudo (BUKAN root):
-#   bash igrow-setup.sh            → semua langkah; yang sudah beres otomatis dilewati (aman diulang)
+#   bash igrow-setup.sh            → belum pernah setup: semua langkah · sudah: menu pilihan (deploy, status, update, …)
+#   bash igrow-setup.sh all        → semua langkah; yang sudah beres otomatis dilewati (aman diulang)
 #   bash igrow-setup.sh step 6     → ulang satu langkah (mis. ganti API key LLM / token bot)
 #   bash igrow-setup.sh deploy     → tarik repo terbaru + pasang ulang runtime (data di VPS tidak disentuh)
 #   bash igrow-setup.sh status     → cek kesehatan: container, doctor, cron, backup terakhir
 #   bash igrow-setup.sh update     → update image Hermes + cek doctor & cron (cara balik ke versi lama ditampilkan)
+#   bash igrow-setup.sh help       → penjelasan tiap pilihan menu
 # Penjelasan tiap langkah: PRD/07-setup.md. Secret hanya diketik saat diminta; tidak ditulis ke repo maupun log.
 set -uo pipefail
 
@@ -111,7 +113,8 @@ run() { # run <label> <perintah…> → output ke log, spinner di layar
 : "${GH_USER:=}"
 : "${BACKUP_REPO:=}"
 : "${BOT_NAME:=}"
-save_conf() { declare -p REPO_DIR REPO_URL PROJ HH TZ_NAME GH_USER BACKUP_REPO BOT_NAME | sed 's/^declare -- //' >"$CONF"; }
+: "${SETUP_DONE:=}"   # 1 = semua langkah pernah selesai → tanpa argumen tampil menu
+save_conf() { declare -p REPO_DIR REPO_URL PROJ HH TZ_NAME GH_USER BACKUP_REPO BOT_NAME SETUP_DONE | sed 's/^declare -- //' >"$CONF"; }
 
 set_kv() { # set_kv <file> <KEY> <value> → ganti/tambah KEY=value, file mode 600
   local f="$1" tmp; tmp=$(mktemp)
@@ -417,11 +420,76 @@ finale() {
   printf '\n%s━━ iGROW siap %s%s\n' "$GRN$B" "$(printf '━%.0s' $(seq 1 44))" "$R"
   box "Coba sekarang" "Telegram → ${BOT_NAME:+@$BOT_NAME }→ kirim: halo
 Lalu ikuti skenario uji: $REPO_DIR/testing/test-flow.md"
-  box "Perintah berguna" "bash $0 status     → cek kesehatan
-bash $0 deploy     → pasang aturan terbaru dari repo (setelah git push dari laptop)
-bash $0 step 6     → ganti API key LLM / token bot
-bash $0 update     → update Hermes ke versi terbaru
+  box "Berikutnya" "bash $0   → menu: deploy, status, update, ganti LLM/token, backup, help
 Telegram: /skills pending → cek skill buatan Hermes yang menunggu persetujuan"
+}
+
+all_steps() {
+  for i in 1 2 3 4 5 6 7 8 9; do "step$i"; done
+  SETUP_DONE=1; save_conf
+  finale
+}
+
+MENU="1  Deploy         pasang aturan terbaru dari repo (habis git push)
+2  Status         cek bot, Hermes, cron, backup terakhir
+3  Update         update Hermes ke versi terbaru
+4  LLM & Telegram ganti API key, model, atau token bot
+5  Tools cron     ganti tools untuk job cron
+6  Backup         sambung ulang / ganti token backup
+7  Setup ulang    semua langkah; yang sudah beres dilewati
+h  Help           penjelasan tiap pilihan
+0  Keluar"
+
+menu() {
+  local c
+  while :; do
+    box "Mau ngapain?" "$MENU"
+    while :; do
+      ask c "Pilih (0-7 / h)"
+      case "$c" in
+        1) cmd_deploy; return ;;
+        2) cmd_status; return ;;
+        3) cmd_update; return ;;
+        4) preflight; step6; return ;;
+        5) preflight; step7; return ;;
+        6) preflight
+           if confirm "Ganti token backup? (token lama dihapus, mis. karena kedaluwarsa)" N; then
+             rm -f "$HH/.git-credentials"; info "Token lama dihapus"
+           fi
+           step8; return ;;
+        7) preflight; intro; all_steps; return ;;
+        h|H) cmd_help; break ;;   # tampilkan menu lagi
+        0|q|Q) exit 0 ;;
+        *) warn "Pilihan tidak ada. Ketik angka 0-7 atau h." ;;
+      esac
+    done
+  done
+}
+
+hitem() { # hitem <judul> <isi> → judul tebal + isi menjorok (lebih rapat dari box)
+  printf '  %s%s%s\n' "$CYN$B" "$1" "$R"
+  while IFS= read -r l; do printf '    %s\n' "$l"; done <<<"$2"; printf '\n'
+}
+
+cmd_help() {
+  step_head "·" "Help" "Penjelasan tiap pilihan di menu."
+  hitem "1 · Deploy" "Kapan: kamu mengubah aturan di hermes-home/ di laptop lalu git push.
+Yang terjadi: git pull repo di VPS → salin aturan ke hermes-home/. Note, raw, output tidak disentuh.
+Sesudahnya: kirim /new di Telegram supaya sesi baru membaca aturan terbaru."
+  hitem "2 · Status" "Kapan: bot diam, atau sekadar mau memastikan semuanya sehat.
+Yang dicek: container jalan, hermes doctor, daftar cron, waktu backup terakhir. Tidak mengubah apa pun."
+  hitem "3 · Update" "Kapan: Hermes rilis versi baru (sesekali saja, mis. sebulan sekali).
+Yang terjadi: tarik image terbaru → buat ulang container → cek doctor & cron.
+Versi baru bermasalah? Di akhir ditampilkan baris untuk balik ke versi lama."
+  hitem "4 · LLM & Telegram (langkah 6)" "Kapan: ganti provider/API key/model LLM, atau ganti token bot Telegram.
+Yang terjadi: wizard resmi Hermes untuk LLM; token bot dicek ke Telegram dulu sebelum disimpan."
+  hitem "5 · Tools cron (langkah 7)" "Kapan: job cron gagal karena tool-nya mati, atau mau mengubah tools cron.
+Yang terjadi: aturan dari repo dipasang ulang, layar hermes tools dibuka (platform cron: web, terminal, file), bot di-restart."
+  hitem "6 · Backup (langkah 8)" "Kapan: token backup kedaluwarsa, push backup gagal, atau ganti repo backup.
+Yang terjadi: jawab Y untuk menghapus token lama → masukkan token baru → backup diuji persis seperti cron."
+  hitem "7 · Setup ulang" "Kapan: ada langkah yang dulu gagal, atau ragu setup sudah lengkap.
+Yang terjadi: langkah 1-9 dijalankan; yang sudah beres dicek lalu dilewati. Aman."
+  hitem "Tanpa menu (untuk alias/otomatis)" "bash $0 deploy | status | update | all | step <1-9> | help"
 }
 
 cmd_deploy() {
@@ -470,16 +538,17 @@ lalu: cd $COMPOSE_DIR && docker compose up -d igrow-hermes"
   ok "Selesai. Kirim /new di Telegram, lalu cek job cron di atas masih lengkap."
 }
 
-usage() { sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'; }
 
-case "${1:-all}" in
-  all)    banner; preflight; intro
-          for i in 1 2 3 4 5 6 7 8 9; do "step$i"; done
-          finale ;;
+case "${1:-}" in
+  '')     banner
+          if [ -n "$SETUP_DONE" ]; then menu; else preflight; intro; all_steps; fi ;;
+  all)    banner; preflight; intro; all_steps ;;
   step)   [[ "${2:-}" =~ ^[1-9]$ ]] || { usage; exit 1; }
           banner; preflight; "step$2" ;;
   deploy) cmd_deploy ;;
   status) cmd_status ;;
   update) cmd_update ;;
+  help|-h|--help) banner; cmd_help ;;
   *)      usage ;;
 esac

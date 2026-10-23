@@ -119,17 +119,41 @@ Setelah selesai: buka Telegram, kirim `halo` ke bot. Lalu ikuti skenario uji di 
 | `lint-mingguan` | Minggu 08:00 | Cek struktur knowledge base + cek privasi. Hanya melapor, tidak mengubah file. |
 | `career-review` | Tanggal 1 Jan/Apr/Jul/Okt 09:00 | Review karier kuartal yang baru selesai, dari data `wiki/` |
 
-### Perintah setelah setup
+### Setelah setup: satu perintah, pilih dari menu
 
-| Situasinya | Perintah |
+Setelah setup pernah selesai, `bash igrow-setup.sh` tidak menjalankan setup lagi, tapi menampilkan menu:
+
+```text
+  ┌─ Mau ngapain?
+  │ 1  Deploy         pasang aturan terbaru dari repo (habis git push)
+  │ 2  Status         cek bot, Hermes, cron, backup terakhir
+  │ 3  Update         update Hermes ke versi terbaru
+  │ 4  LLM & Telegram ganti API key, model, atau token bot
+  │ 5  Tools cron     ganti tools untuk job cron
+  │ 6  Backup         sambung ulang / ganti token backup
+  │ 7  Setup ulang    semua langkah; yang sudah beres dilewati
+  │ h  Help           penjelasan tiap pilihan
+  │ 0  Keluar
+  └─
+  ? Pilih (0-7 / h):
+```
+
+| Situasinya | Pilih |
 |---|---|
-| Kamu mengubah aturan di `hermes-home/` di laptop dan sudah `git push` | `bash igrow-setup.sh deploy` → lalu kirim `/new` di Telegram supaya sesi baru membaca aturan terbaru |
-| Bot diam / mau memastikan semuanya sehat | `bash igrow-setup.sh status` → container, `hermes doctor`, daftar cron, waktu backup terakhir |
-| Hermes rilis versi baru | `bash igrow-setup.sh update` → tarik image terbaru, cek doctor + cron, dan tampilkan baris untuk balik ke versi lama kalau versi baru bermasalah |
-| Ganti API key LLM atau token bot | `bash igrow-setup.sh step 6` |
-| Ganti tools cron | `bash igrow-setup.sh step 7` |
-| Token backup kedaluwarsa | Hapus `hermes-home/.git-credentials`, lalu `bash igrow-setup.sh step 8` |
-| Lupa perintahnya | `bash igrow-setup.sh help` |
+| Kamu mengubah aturan di `hermes-home/` di laptop dan sudah `git push` | **1 Deploy**, lalu kirim `/new` di Telegram supaya sesi baru membaca aturan terbaru |
+| Bot diam / mau memastikan semuanya sehat | **2 Status**: container, `hermes doctor`, daftar cron, waktu backup terakhir. Tidak mengubah apa pun. |
+| Hermes rilis versi baru | **3 Update**: tarik image terbaru, cek doctor + cron, dan tampilkan baris untuk balik ke versi lama kalau versi baru bermasalah |
+| Ganti API key LLM, model, atau token bot | **4 LLM & Telegram** |
+| Job cron gagal karena tool-nya mati | **5 Tools cron** |
+| Token backup kedaluwarsa / push backup gagal | **6 Backup**, jawab `y` saat ditanya "Ganti token backup?" (token lama dihapus otomatis) |
+| Ada langkah yang dulu gagal / ragu setup sudah lengkap | **7 Setup ulang** |
+| Bingung maksud pilihannya | **h Help**: penjelasan kapan dipakai dan apa yang terjadi, lalu menu tampil lagi |
+
+Tanpa menu (untuk alias di laptop atau otomatis): `bash igrow-setup.sh deploy | status | update | all | step <1-9> | help`. Contoh alias deploy dari laptop:
+
+```bash
+alias igrow-deploy='git push && ssh -t nuridho@<vps> bash igrow-setup.sh deploy'
+```
 
 ### Di mana file-filenya
 
@@ -141,7 +165,7 @@ Setelah selesai: buka Telegram, kirim `halo` ke bot. Lalu ikuti skenario uji di 
 | Knowledge base iGROW | `hermes-home/igrow/` (yang di-backup ke GitHub) |
 | API key LLM + token bot | `hermes-home/.env` (mode 600) |
 | Token backup GitHub | `hermes-home/.git-credentials` (mode 600, di luar `igrow/`, jadi tidak ikut ter-push) |
-| Jawaban setup (path, nama repo, nama bot; bukan secret) | `~/.config/igrow/setup.env` |
+| Jawaban setup (path, nama repo, nama bot, penanda setup selesai; bukan secret) | `~/.config/igrow/setup.env` |
 | Log setup | `~/.config/igrow/setup.log` |
 
 Secret hanya diketik saat diminta dan tidak pernah masuk repo, log, maupun daftar proses.
