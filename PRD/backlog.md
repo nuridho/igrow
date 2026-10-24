@@ -20,6 +20,8 @@ Format entri:
 
 ## [2026-10-24] Import catatan lama: peran MSO dan DSM dipisah
 - **Apa:** `import-staging/siap-kirim/` dibagi `mso/` dan `dsm/` (masing-masing `tshoot/sop/lesson/study`), plus `perlu-dicek/` untuk catatan yang perannya belum jelas. `PRD/08-import-catatan-lama.md` mencatat definisi dua peran dan pertanyaan terbuka (§6): cara memisahkan keduanya di wiki Hermes.
+- **Tambahan:** `import-staging/.venv-pdf` (Python 3.12 terkelola `uv` + reportlab + Pillow, di-gitignore) untuk membuat PDF; `python` di PATH adalah venv Hermes Agent tanpa pip, jangan diubah.
+- **Tambahan:** tahap pilah tidak meredaksi apa pun (permintaan owner); redaksi hanya oleh Hermes saat menulis note. PRD 08 §3/§4 dan `import-staging/README.md` disesuaikan.
 - **Kenapa:** permintaan owner: satu tim shift punya dua peran (MSO = Midrange System Operation/server, DSM = Data Storage Management/storage + SANDIR) dan catatannya harus tidak dicampur.
 - **File:** `PRD/08-import-catatan-lama.md`, `PRD/backlog.md`, `import-staging/README.md` (di-gitignore)
 - **Deploy VPS:** tidak.

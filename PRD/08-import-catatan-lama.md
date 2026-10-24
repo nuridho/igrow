@@ -19,8 +19,8 @@ Owner punya catatan kerja setahun, banyak, dan bingung mulai dari mana. iGROW be
 | # | Langkah | Siapa |
 |---|---|---|
 | 1 | Salin catatan lama ke `00-mentah/` (jangan diedit) | Owner |
-| 2 | Pilah per peran dan jenis ke `siap-kirim/{mso,dsm}/{tshoot,sop,lesson,study}`, `siap-kirim/perlu-dicek`, atau `dibuang`; rename; ganti IP/credential/nama client dengan placeholder | Claude Code |
-| 3 | Tulis `triase.md` (file asal → file hasil, jenis, alasan, apa yang diredaksi) | Claude Code |
+| 2 | Pilah per peran dan jenis ke `siap-kirim/{mso,dsm}/{tshoot,sop,lesson,study}`, `siap-kirim/perlu-dicek`, atau `dibuang`; rename. **Isi tidak diredaksi sama sekali** (keputusan owner 2026-10-24) | Claude Code |
+| 3 | Tulis `triase.md` (file asal → file hasil, jenis, alasan, dan bagian mana yang memuat data sensitif sebagai peringatan, bukan diubah) | Claude Code |
 | 4 | Owner periksa `triase.md`, koreksi jenis yang salah | Owner |
 | 5 | Daftarkan kerjaan (`Daftar kerjaan baru`), lalu kirim file ke Hermes 5–10 per sesi | Owner |
 | 6 | Baca balasan Hermes, koreksi lewat chat kalau perlu | Owner |
@@ -29,7 +29,8 @@ Pemetaan jenis ke tipe note dan folder wiki: lihat `capture-experience.md` § La
 
 ## 4. Batasan
 
-- Screenshot dan dokumen lampiran disimpan Hermes **apa adanya tanpa redaksi** (keputusan owner). Jangan kirim yang memuat credential.
+- **Redaksi hanya dikerjakan Hermes**, saat menulis note di wiki (aturan `AGENTS.md` § DILARANG KERAS). Staging dan PDF hasil analisis berisi data asli, jadi folder `import-staging/` jangan pernah di-commit atau dibagikan.
+- Screenshot dan dokumen lampiran (termasuk PDF hasil analisis) disimpan Hermes **apa adanya tanpa redaksi** di `raw/assets/` (keputusan owner), lalu ikut ke repo backup privat. Hanya note-nya yang diredaksi.
 - Dokumen Word/PDF maksimal 20 MB (Bot API publik); hasil scan tanpa teks sulit dibaca.
 - Catatan lama dari beberapa kerjaan: daftarkan kerjaan dari yang terlama; Hermes bertanya kalau ada lebih dari satu career aktif.
 
