@@ -7,6 +7,7 @@
 #   bash igrowctl.sh deploy     → tarik repo terbaru + pasang ulang runtime (data di VPS tidak disentuh)
 #   bash igrowctl.sh status     → cek kesehatan: container, doctor, cron, backup terakhir
 #   bash igrowctl.sh update     → update image Hermes + cek doctor & cron (cara balik ke versi lama ditampilkan)
+#   bash igrowctl.sh uninstall  → Clear Uninstall: hapus semua setelan & data iGROW (paket tetap)
 #   bash igrowctl.sh help       → penjelasan tiap pilihan menu
 # Penjelasan tiap langkah: PRD/07-setup.md. Secret hanya diketik saat diminta; tidak ditulis ke repo maupun log.
 set -uo pipefail
@@ -477,11 +478,12 @@ all_steps() {
   finale
 }
 
-MENU_K=(1 2 3 4 5 6 7 h 0)
-MENU_N=("Deploy" "Status" "Update" "LLM & Telegram" "Tools cron" "Backup" "Setup ulang" "Help" "Keluar")
+MENU_K=(1 2 3 4 5 6 7 8 h 0)
+MENU_N=("Deploy" "Status" "Update" "LLM & Telegram" "Tools cron" "Backup" "Setup ulang" "Clear Uninstall" "Help" "Keluar")
 MENU_D=("pasang aturan terbaru dari repo (habis git push)" "cek bot, Hermes, cron, backup terakhir"
         "update Hermes ke versi terbaru" "ganti API key, model, atau token bot" "ganti tools untuk job cron"
-        "sambung ulang / ganti token backup" "semua langkah; yang sudah beres dilewati" "penjelasan tiap pilihan" "")
+        "sambung ulang / ganti token backup" "semua langkah; yang sudah beres dilewati"
+        "hapus semua setelan & data iGROW (paket tetap)" "penjelasan tiap pilihan" "")
 
 menu_pick() { # menu_pick → MENU_CHOICE; ↑/↓ (atau k/j) + Enter, atau langsung tekan angka/huruf
   local i=0 n=${#MENU_K[@]} j k rest w
@@ -528,6 +530,7 @@ menu() {
          fi
          step8; return ;;
       7) preflight; intro; all_steps; return ;;
+      8) preflight; cmd_uninstall; return ;;
       h) cmd_help ;;   # menu tampil lagi di bawah penjelasan
       0) exit 0 ;;
     esac
@@ -557,7 +560,10 @@ Yang terjadi: aturan dari repo dipasang ulang, layar hermes tools dibuka (platfo
 Yang terjadi: jawab Y untuk menghapus token lama → masukkan token baru → backup diuji persis seperti cron."
   hitem "7 · Setup ulang" "Kapan: ada langkah yang dulu gagal, atau ragu setup sudah lengkap.
 Yang terjadi: langkah 1-9 dijalankan; yang sudah beres dicek lalu dilewati. Aman."
-  hitem "Tanpa menu (untuk alias/otomatis)" "bash $0 deploy | status | update | all | step <1-9> | help"
+  hitem "8 · Clear Uninstall" "Kapan: mau mengulang dari nol, atau selesai testing dan mau membersihkan mesin ini.
+Yang dihapus: container, folder compose + hermes-home (wiki, raw, output, API key, token, cron), clone repo, setelan setup.
+Tidak disentuh: paket (git, rsync, curl, Docker), repo backup di GitHub. Image Docker ditanya dulu. Wajib ketik HAPUS."
+  hitem "Tanpa menu (untuk alias/otomatis)" "bash $0 deploy | status | update | all | step <1-9> | uninstall | help"
 }
 
 cmd_deploy() {
@@ -607,7 +613,52 @@ lalu: cd $COMPOSE_DIR && docker compose up -d igrow-hermes"
   ok "Selesai. Kirim /new di Telegram, lalu cek job cron di atas masih lengkap."
 }
 
-usage() { sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'; }
+cmd_uninstall() { # hapus semua setelan & data iGROW; paket (git, rsync, curl, Docker) dan akun di luar VPS tidak disentuh
+  banner; step_head "·" "Clear Uninstall" "Hapus semua setelan dan data iGROW dari mesin ini. Paket yang sudah terpasang tetap."
+  local app_ok=0 repo_ok=0 repo_skip='' rmi=0 ans list='' ids
+  if command -v docker >/dev/null; then load_docker; find_container; fi
+  # Hanya menghapus lokasi standar buatan langkah 5 (~/<proj>/igrow-hermes), supaya salah path tidak menghapus folder lain
+  if [ -n "$HH" ] && [[ "$COMPOSE_DIR" == "$HOME"/*/igrow-hermes && "$HH" == "$COMPOSE_DIR/hermes-home" && -d "$COMPOSE_DIR" ]]; then app_ok=1
+  elif [ -n "$HH" ] && [ -d "$HH" ]; then warn "Lokasi data tidak standar ($HH): tidak dihapus otomatis, hapus sendiri kalau perlu"; fi
+  if [ -d "$REPO_DIR/.git" ] && [[ "$REPO_DIR" == "$HOME"/* ]]; then
+    if [[ "$(cd "$(dirname "$0")" && pwd)/" == "$REPO_DIR"/* ]]; then repo_skip="script ini dijalankan dari dalamnya"
+    elif [ -n "$(git -C "$REPO_DIR" status --porcelain 2>/dev/null)" ]; then repo_skip="ada perubahan yang belum di-commit"
+    else repo_ok=1; fi
+  fi
+  [ -n "$CNAME" ] && list+="Container $CNAME (dihentikan lalu dihapus)"$'\n'
+  [ "$app_ok" = 1 ] && list+="$COMPOSE_DIR"$'\n'"  = compose, .env, dan hermes-home/: wiki, raw, output, API key LLM, token bot & backup, cron"$'\n'
+  [ "$repo_ok" = 1 ] && list+="Clone repo iGROW: $REPO_DIR"$'\n'
+  [ -d "$CONF_DIR" ] && list+="Setelan & log setup: $CONF_DIR"
+  [ -n "$repo_skip" ] && warn "Clone repo $REPO_DIR dilewati ($repo_skip)"
+  box "Akan DIHAPUS (tidak bisa dibatalkan)" "$list"
+  box "Tidak disentuh" "Paket: git, rsync, curl, Docker + Compose, grup docker, setelan git global
+Repo backup di GitHub (backup yang belum ter-push dari mesin ini ikut hilang)
+Bot Telegram dan API key LLM di sisi penyedianya (cabut sendiri kalau perlu)"
+  ids=$(dk images -q nousresearch/hermes-agent 2>/dev/null | sort -u)
+  if [ -n "$ids" ] && confirm "Hapus juga image Docker nousresearch/hermes-agent? (kalau tidak, install ulang tidak perlu unduh lagi)" N; then rmi=1; fi
+  printf '  %s?%s Ketik %sHAPUS%s untuk melanjutkan (selain itu batal): ' "$YEL" "$R" "$B" "$R"
+  read -r ans </dev/tty
+  [ "$ans" = HAPUS ] || { info "Dibatalkan, tidak ada yang diubah"; return; }
+  printf '\n'
+  if [ -n "$CNAME" ]; then
+    if has_compose; then run "Hentikan & hapus container" dc down --remove-orphans || warn "compose down gagal, lanjut paksa"; fi
+    dk rm -f "$CNAME" >>"$LOG" 2>&1 || true
+  fi
+  if [ "$app_ok" = 1 ]; then
+    run "Hapus $COMPOSE_DIR" sudo rm -rf -- "$COMPOSE_DIR" || warn "Sebagian file tidak terhapus: $COMPOSE_DIR"
+    rmdir "$(dirname "$COMPOSE_DIR")" 2>/dev/null && info "Folder project kosong ikut dihapus: $(dirname "$COMPOSE_DIR")"
+  fi
+  if [ "$repo_ok" = 1 ]; then run "Hapus $REPO_DIR" rm -rf -- "$REPO_DIR" || warn "Gagal menghapus $REPO_DIR"; fi
+  if [ "$rmi" = 1 ]; then
+    # shellcheck disable=SC2086
+    run "Hapus image nousresearch/hermes-agent" dk rmi -f $ids || warn "Image tidak terhapus"
+  fi
+  rm -rf -- "$CONF_DIR"; ok "Setelan setup dihapus ($CONF_DIR)"
+  box "Selesai" "Mulai dari nol lagi: bash $0
+Token bot lama masih valid di @BotFather, dan token backup di GitHub: cabut kalau tidak dipakai lagi."
+}
+
+usage() { sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; }
 
 case "${1:-}" in
   '')     banner
@@ -618,6 +669,7 @@ case "${1:-}" in
   deploy) cmd_deploy ;;
   status) cmd_status ;;
   update) cmd_update ;;
+  uninstall) preflight; cmd_uninstall ;;
   help|-h|--help) banner; cmd_help ;;
   *)      usage ;;
 esac

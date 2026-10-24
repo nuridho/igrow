@@ -157,6 +157,7 @@ Setelah setup pernah selesai, `bash igrowctl.sh` tidak menjalankan setup lagi, t
   │   5  Tools cron      ganti tools untuk job cron
   │   6  Backup          sambung ulang / ganti token backup
   │   7  Setup ulang     semua langkah; yang sudah beres dilewati
+  │   8  Clear Uninstall hapus semua setelan & data iGROW (paket tetap)
   │   h  Help            penjelasan tiap pilihan
   │   0  Keluar
   ╰─
@@ -171,9 +172,10 @@ Setelah setup pernah selesai, `bash igrowctl.sh` tidak menjalankan setup lagi, t
 | Job cron gagal karena tool-nya mati | **5 Tools cron** |
 | Token backup kedaluwarsa / push backup gagal | **6 Backup**, jawab `y` saat ditanya "Ganti token backup?" (token lama dihapus otomatis) |
 | Ada langkah yang dulu gagal / ragu setup sudah lengkap | **7 Setup ulang** |
+| Mau mengulang dari nol, atau selesai testing dan mau membersihkan mesin | **8 Clear Uninstall**: menghapus container, folder compose + `hermes-home/` (wiki, raw, output, API key, token, cron), clone repo, dan setelan setup. Paket (git, rsync, curl, Docker) dan repo backup di GitHub tidak disentuh; image Docker ditanya dulu. Harus mengetik `HAPUS` untuk lanjut. Data yang belum ter-push ke repo backup ikut hilang. |
 | Bingung maksud pilihannya | **h Help**: penjelasan kapan dipakai dan apa yang terjadi, lalu menu tampil lagi |
 
-Tanpa menu (untuk alias di laptop atau otomatis): `bash igrowctl.sh deploy | status | update | all | step <1-9> | help`. Contoh alias deploy dari laptop:
+Tanpa menu (untuk alias di laptop atau otomatis): `bash igrowctl.sh deploy | status | update | all | step <1-9> | uninstall | help`. Contoh alias deploy dari laptop:
 
 ```bash
 alias igrow-deploy='git push && ssh -t nuridho@<vps> bash igrowctl.sh deploy'

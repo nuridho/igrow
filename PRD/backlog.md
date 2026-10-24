@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-24] `igrowctl.sh`: menu 8 "Clear Uninstall" (+ `bash igrowctl.sh uninstall`)
+- **Apa:** fungsi `cmd_uninstall` baru. Menampilkan daftar yang akan dihapus dan yang tidak disentuh, menanyakan apakah image Docker `nousresearch/hermes-agent` ikut dihapus (default tidak), lalu wajib mengetik `HAPUS`. Dihapus: container (`compose down` + `rm -f`), `~/<proj>/igrow-hermes` lengkap dengan `hermes-home/` (wiki, raw, output, API key LLM, token bot dan backup, cron, git backup lokal), folder project kalau jadi kosong, clone repo (dilewati kalau script dijalankan dari dalamnya atau ada perubahan belum di-commit), dan `~/.config/igrow`. Tidak disentuh: paket (git, rsync, curl, Docker + Compose), grup `docker`, setelan git global, repo backup di GitHub, bot Telegram dan API key di sisi penyedia. Pengaman: folder hanya dihapus kalau cocok pola standar langkah 5 (`$HOME/*/igrow-hermes` dengan `hermes-home/` di dalamnya); lokasi lain hanya diperingatkan. Menu jadi 1–8, h, 0; perintah langsung `uninstall`; header `usage` dan Help ikut. `docs/setup-flow.html` (menu, Help, alur `igCmdUninstall`, chip `uninstall`, panel info), `Setup/README.md`, dan `PRD/07-setup.md` diselaraskan.
+- **Kenapa:** permintaan owner: masih tahap testing, perlu cara membersihkan semua setelan iGROW tanpa mencopot paket yang sudah terpasang.
+- **File:** `Setup/igrowctl.sh`, `docs/setup-flow.html`, `Setup/README.md`, `PRD/07-setup.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak untuk runtime. Salin ulang `Setup/igrowctl.sh`. Belum diuji di mesin sungguhan (sintaks `bash -n` dan JS simulator lolos).
+
 ## [2026-10-24] `igrowctl.sh`: banner memuat "by @nuridho"
 - **Apa:** baris di bawah logo banner jadi `arsip karier & knowledge base · Hermes + Telegram · by @nuridho`. Teks yang sama disalin ke simulator `docs/setup-flow.html` (`igBanner`), sesuai aturan sinkron script ↔ simulator.
 - **Kenapa:** permintaan owner.

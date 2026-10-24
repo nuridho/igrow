@@ -371,7 +371,8 @@ const MENU_ITEMS = [
   { k: '5', n: 'Tools cron',     d: 'ganti tools untuk job cron' },
   { k: '6', n: 'Backup',         d: 'sambung ulang / ganti token backup' },
   { k: '7', n: 'Setup ulang',    d: 'semua langkah; yang sudah beres dilewati' },
-  { k: 'h', n: 'Help',           d: 'penjelasan tiap pilihan' },
+  { k: '8', n: 'Clear Uninstall', d: 'hapus semua setelan & data iGROW (paket tetap)' },
+  { k: 'h', n: 'Help',          d: 'penjelasan tiap pilihan' },
   { k: '0', n: 'Keluar',         d: '' },
 ];
 
@@ -699,7 +700,43 @@ function* igCmdHelp() {
     'Yang terjadi: jawab Y untuk menghapus token lama → masukkan token baru → backup diuji persis seperti cron.']);
   yield E.hitem('7 · Setup ulang', ['Kapan: ada langkah yang dulu gagal, atau ragu setup sudah lengkap.',
     'Yang terjadi: langkah 1-9 dijalankan; yang sudah beres dicek lalu dilewati. Aman.']);
-  yield E.hitem('Tanpa menu (untuk alias/otomatis)', ['bash igrowctl.sh deploy | status | update | all | step <1-9> | help']);
+  yield E.hitem('8 · Clear Uninstall', ['Kapan: mau mengulang dari nol, atau selesai testing dan mau membersihkan mesin ini.',
+    'Yang dihapus: container, folder compose + hermes-home (wiki, raw, output, API key, token, cron), clone repo, setelan setup.',
+    'Tidak disentuh: paket (git, rsync, curl, Docker), repo backup di GitHub. Image Docker ditanya dulu. Wajib ketik HAPUS.']);
+  yield E.hitem('Tanpa menu (untuk alias/otomatis)', ['bash igrowctl.sh deploy | status | update | all | step <1-9> | uninstall | help']);
+}
+
+function* igCmdUninstall() {
+  yield* igBanner();
+  yield E.head('·', 'Clear Uninstall', 'Hapus semua setelan dan data iGROW dari mesin ini. Paket yang sudah terpasang tetap.');
+  const conf = IG.home + '/.config/igrow';
+  yield E.box('Akan DIHAPUS (tidak bisa dibatalkan)', fresh() ? [`Setelan & log setup: ${conf}`] : [
+    'Container igrow-hermes (dihentikan lalu dihapus)',
+    IG.compose,
+    '  = compose, .env, dan hermes-home/: wiki, raw, output, API key LLM, token bot & backup, cron',
+    `Clone repo iGROW: ${IG.repo}`,
+    `Setelan & log setup: ${conf}`]);
+  yield E.box('Tidak disentuh', [
+    'Paket: git, rsync, curl, Docker + Compose, grup docker, setelan git global',
+    'Repo backup di GitHub (backup yang belum ter-push dari mesin ini ikut hilang)',
+    'Bot Telegram dan API key LLM di sisi penyedianya (cabut sendiri kalau perlu)']);
+  let rmi = false;
+  if (!fresh()) rmi = yield E.confirm('Hapus juga image Docker nousresearch/hermes-agent? (kalau tidak, install ulang tidak perlu unduh lagi)', 'N', 'N');
+  const ans = yield E.ask('Ketik HAPUS untuk melanjutkan (selain itu batal)', '', 'HAPUS');
+  if (ans !== 'HAPUS') { yield E.info('Dibatalkan, tidak ada yang diubah'); return; }
+  yield E.blank();
+  if (!fresh()) {
+    yield E.run('Hentikan & hapus container', 4);
+    yield E.run(`Hapus ${IG.compose}`, 2);
+    yield E.info(`Folder project kosong ikut dihapus: ${IG.home}/${IG.proj}`);
+    yield E.run(`Hapus ${IG.repo}`, 1);
+    if (rmi) yield E.run('Hapus image nousresearch/hermes-agent', 3);
+  }
+  yield E.ok(`Setelan setup dihapus (${conf})`);
+  yield E.box('Selesai', [
+    'Mulai dari nol lagi: bash igrowctl.sh',
+    'Token bot lama masih valid di @BotFather, dan token backup di GitHub: cabut kalau tidak dipakai lagi.']);
+  W.setupDone = false; W.installed = false; yield E.sync();
 }
 
 function* igMenu() {
@@ -723,6 +760,7 @@ function* igMenu() {
         if (yield* igIntro()) yield* igAllSteps();
         return;
       }
+      case '8': yield* igPreflight(); yield* igCmdUninstall(); return;
       case 'h': yield* igCmdHelp(); break;   // menu tampil lagi di bawah penjelasan
       default: return;
     }
@@ -744,6 +782,7 @@ function* igrowMain() {
   } else if (cmd === 'deploy') yield* igCmdDeploy();
   else if (cmd === 'status') yield* igCmdStatus();
   else if (cmd === 'update') yield* igCmdUpdate();
+  else if (cmd === 'uninstall') { yield* igPreflight(); yield* igCmdUninstall(); }
   else if (cmd === 'help') { yield* igBanner(); yield* igCmdHelp(); }
 }
 
@@ -1178,12 +1217,13 @@ class Player {
     'step 6': ['bash igrowctl.sh step 6', [['Kapan', 'Ganti provider, API key, model, atau token bot.'], ['Yang terjadi', 'Wizard resmi Hermes; token bot dicek ke Telegram dulu sebelum disimpan.']]],
     'step 7': ['bash igrowctl.sh step 7', [['Kapan', 'Job cron gagal karena tool-nya mati, atau mau mengubah tools cron.'], ['Yang terjadi', 'Aturan dari repo dipasang ulang, layar hermes tools dibuka, bot di-restart.']]],
     'step 8': ['bash igrowctl.sh step 8', [['Kapan', 'Token backup kedaluwarsa atau ganti repo backup.'], ['Yang terjadi', 'Menyambung repo backup, push, lalu menguji backup.sh seperti cron.']]],
+    uninstall: ['bash igrowctl.sh uninstall', [['Kapan', 'Mau mengulang dari nol, atau selesai testing dan mau membersihkan mesin ini.'], ['Yang dihapus', 'Container, folder compose + hermes-home (wiki, raw, output, API key, token, cron), clone repo, setelan setup.'], ['Tidak disentuh', 'Paket (git, rsync, curl, Docker) dan repo backup di GitHub. Image Docker ditanya dulu. Wajib ketik HAPUS.']]],
     help:     ['bash igrowctl.sh help', [['Yang terjadi', 'Menampilkan penjelasan tiap pilihan menu, tanpa mengubah apa pun.']]],
   };
   const MENU_INFO = {
     '1': ['1 · Deploy', 'deploy'], '2': ['2 · Status', 'status'], '3': ['3 · Update', 'update'],
     '4': ['4 · LLM & Telegram', 'step 6'], '5': ['5 · Tools cron', 'step 7'], '6': ['6 · Backup', 'step 8'],
-    '7': ['7 · Setup ulang', 'all'], h: ['h · Help', 'help'], '0': ['0 · Keluar', null],
+    '7': ['7 · Setup ulang', 'all'], '8': ['8 · Clear Uninstall', 'uninstall'], h: ['h · Help', 'help'], '0': ['0 · Keluar', null],
   };
   const side = {
     cur: 0, done: false, failed: false, menu: null, sawStep: false,
@@ -1291,7 +1331,7 @@ class Player {
   const syncAuto = seg($('#seg-auto'), () => AUTOS, () => (UI.auto ? 'auto' : 'manual'), v => { UI.auto = v === 'auto'; refresh(false); });
   $('#chk-err').addEventListener('change', e => { UI.err = e.target.checked; renderIdle(); });
 
-  const CMDS = [['', '(tanpa argumen)'], ['all', 'all'], ['deploy', 'deploy'], ['status', 'status'], ['update', 'update'], ['step 6', 'step 6'], ['step 7', 'step 7'], ['step 8', 'step 8'], ['help', 'help']];
+  const CMDS = [['', '(tanpa argumen)'], ['all', 'all'], ['deploy', 'deploy'], ['status', 'status'], ['update', 'update'], ['step 6', 'step 6'], ['step 7', 'step 7'], ['step 8', 'step 8'], ['uninstall', 'uninstall'], ['help', 'help']];
   $('#chips').innerHTML = CMDS.map(([v, l]) => `<button class="chip" type="button" data-v="${esc(v)}" aria-pressed="false">${esc(l)}</button>`).join('');
   $('#chips').addEventListener('click', ev => { const b = ev.target.closest('.chip'); if (!b) return; UI.cmd = b.dataset.v; renderIdle(); startRun(); });
 
