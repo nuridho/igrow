@@ -40,7 +40,7 @@ Yang sudah tercapai: container jalan, `hermes setup` dan pairing Telegram selesa
 ### M2.3 · Tervalidasi dengan Data Nyata
 
 - [ ] Perbarui `testing/test-flow.md` supaya sesuai perilaku sekarang: 4.1/4.2 skill map dibuat otomatis (bukan diisi manual); 4.3/4.4 tidak lagi di-skip (weak-topics dan kesiapan L2 dihitung dari note); 4.7 tanpa `roadmap.md` (D-21); hapus Fase 3 dan checklist #5 (fitur testing sudah dihapus, D-14); checklist #10 taxonomy berisi 16 tag; `about.md` di Step 0 memakai Role + level; + skenario Daftar Kerjaan Baru (tanggal terakhir career lama ditanya, skip → sehari sebelum tanggal mulai, W32); + kasus dua career aktif (Hermes bertanya, bukan memilih sendiri, I16); + skenario screenshot (gambar asli tersimpan di `raw/assets/` dan tampil dari note, D-33); + skenario dokumen Word/PDF berisi screenshot (file asli tersimpan, note dari isinya, D-34).
-- [ ] Isi minimal 10 note nyata (campuran incident, knowledge, dan study).
+- [ ] Isi minimal 10 note nyata (campuran incident, knowledge, dan study). Caranya: [08 · Import Catatan Lama](08-import-catatan-lama.md) (dokumen sementara).
 - [ ] Jalankan test-flow secara manual, termasuk mentor (UC2) dan career review manual (UC5).
 - [x] Putuskan kebijakan skill map: dibekukan per level (D-22).
 

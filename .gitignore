@@ -1,2 +1,5 @@
 __pycache__/
 hermes-home.zip
+
+# Staging import catatan lama (PRD/08): bisa berisi data sensitif, jangan sampai ter-commit
+import-staging/

@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-24] PRD sementara 08: import catatan lama + folder staging
+- **Apa:** `PRD/08-import-catatan-lama.md` baru (dokumen sementara): keputusan, alur 6 langkah, batasan, dan kriteria selesai untuk memasukkan catatan setahun ke Hermes secara bertahap. Baris ditambah di `PRD/README.md` dan di item "Isi minimal 10 note nyata" (M2.3) di `PRD/05-roadmap.md`. Folder staging `import-staging/` (`00-mentah`, `siap-kirim/{tshoot,sop,lesson,study,perlu-dicek}`, `dibuang`, plus `README.md`) ada di dalam repo tetapi **di-gitignore** (permintaan owner; sempat dibuat di luar repo lalu dipindah).
+- **Kenapa:** permintaan owner. Di-gitignore karena repo Publik (D-35) dan catatan mentah bisa memuat IP/credential/nama client.
+- **File:** `PRD/08-import-catatan-lama.md`, `PRD/README.md`, `PRD/05-roadmap.md`, `PRD/backlog.md`, `.gitignore`
+- **Deploy VPS:** tidak.
+
 ## [2026-10-24] Temuan W47: `/study` dan `/recall` ditolak gateway Telegram
 - **Apa:** saat uji di WSL, `/recall apa pengalaman saya soal Kubernetes?` dibalas "Unknown command /recall". Dicatat sebagai W47 di `PRD/todo.md` (nomor berikutnya jadi W48), dengan dua jalan perbaikan untuk diputuskan owner. `testing/test-flow.md`: prompt 2.1 dan 2.2 ditulis tanpa `/` (`study ...`), dan ada aturan baru di "Cara pakai" agar tidak memakai garis miring. `hermes-home/` belum diubah.
 - **Kenapa:** pemicu di `AGENTS.md` § Perintah bukan slash command resmi Hermes, jadi gateway menolaknya sebelum sampai ke model.

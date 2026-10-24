@@ -25,6 +25,7 @@ Pengalaman kerja seorang IT worker (incident yang ditangani, hal yang dipelajari
 | 05 | [Roadmap](05-roadmap.md) | Fase rilis, status saat ini, dan backlog prioritas |
 | 06 | [Risks & Decisions](06-risks-decisions.md) | Risiko, keputusan yang sudah diambil, dan pertanyaan terbuka |
 | 07 | [Setup](07-setup.md) | Cara memasang iGROW di VPS dengan `Setup/igrowctl.sh`, dari nol sampai bot jalan |
+| 08 | [Import Catatan Lama](08-import-catatan-lama.md) | **Sementara.** Cara memilah dan memasukkan catatan setahun ke Hermes secara bertahap |
 
 Urutan baca yang disarankan: 01 → 02 → 05, lalu 03/04/06 sesuai kebutuhan. Mau memasang di VPS: langsung 07.
 
