@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-24] `igrowctl.sh`: `run()` menutup stdin perintah latar
+- **Apa:** `run()` menjalankan perintah di latar (untuk spinner) tanpa mengalihkan stdin. Di langkah 7, `hmq config set memory.write_approval true` (lewat `docker compose run --rm -T`) membuat seluruh script berhenti di shell (`[1]+ Stopped bash igrowctl.sh`) tepat setelah jawaban `y`. Sekarang `"$@" </dev/null`, jadi perintah latar tidak bisa membaca atau mengubah terminal.
+- **Kenapa:** ditemukan saat uji di WSL. Penyebab pastinya belum terbukti (dugaan: docker compose menyentuh terminal dari proses latar); `</dev/null` aman untuk semua pemanggil `run` karena tidak ada yang membaca stdin dari terminal.
+- **File:** `Setup/igrowctl.sh`, `PRD/backlog.md`
+- **Deploy VPS:** tidak untuk runtime. Salin ulang `Setup/igrowctl.sh`. `docs/setup-flow.html` tidak berubah.
+
 ## [2026-10-24] `igrowctl.sh`: langkah 6 salah mengira docker-compose belum ada
 - **Apa:** cek file compose memakai `ls "$DIR"/{docker-compose,compose}.y*ml`. `ls` keluar dengan kode 2 kalau salah satu argumen tidak ada, padahal yang dibuat langkah 5 cuma `docker-compose.yml` (`compose.y*ml` tidak ada) → cek selalu gagal. Efeknya: langkah 6 berhenti dengan "Belum ada docker-compose — jalankan langkah 5", dan menjalankan langkah 5 ulang akan menimpa `docker-compose.yml` yang sudah ada. Diganti fungsi `has_compose` (`compgen -G` per pola), dipakai di `need_compose` dan langkah 5.
 - **Kenapa:** ditemukan saat uji lewat WSL (Ubuntu), langkah 6 gagal tepat setelah langkah 5 sukses. Bukan masalah WSL: terjadi di VPS juga.

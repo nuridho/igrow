@@ -99,7 +99,7 @@ run() { # run <label> <perintah…> → output ke log; di layar spinner + detik 
   local label="$1" start t0=$SECONDS e; shift
   printf '\n=== %s · %s\n' "$(date '+%F %T')" "$label" >>"$LOG"
   start=$(wc -l <"$LOG")
-  "$@" >>"$LOG" 2>&1 &
+  "$@" </dev/null >>"$LOG" 2>&1 &   # stdin ditutup: perintah di latar tidak boleh menyentuh terminal (bisa menghentikan script: "Stopped")
   local pid=$! i=0 f=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   while kill -0 "$pid" 2>/dev/null; do
     [ -t 1 ] && printf '\r  %s%s%s %s %s%ss%s\e[K' "$CYN" "${f[i++ % 10]}" "$R" "$label" "$D" $((SECONDS - t0)) "$R"
