@@ -155,7 +155,8 @@ find_container() { # cari service igrow-hermes (dari compose mana pun, termasuk 
   COMPOSE_DIR=$(dk inspect -f '{{index .Config.Labels "com.docker.compose.project.working_dir"}}' "$CNAME")
   HH=$(dk inspect -f '{{range .Mounts}}{{if eq .Destination "/opt/data"}}{{.Source}}{{end}}{{end}}' "$CNAME")
 }
-need_compose() { ls "$COMPOSE_DIR"/{docker-compose,compose}.y*ml >/dev/null 2>&1 || die "Belum ada docker-compose — jalankan langkah 5"; }
+has_compose() { compgen -G "$COMPOSE_DIR/docker-compose.y*ml" >/dev/null || compgen -G "$COMPOSE_DIR/compose.y*ml" >/dev/null; }   # bukan `ls a b`: exit 2 kalau salah satu tidak ada
+need_compose() { has_compose || die "Belum ada docker-compose — jalankan langkah 5"; }
 running() { [ -n "$CNAME" ] && [ "$(dk inspect -f '{{.State.Running}}' "$CNAME" 2>/dev/null)" = true ]; }
 
 # Perintah hermes: lewat container yang jalan; kalau belum jalan, container sekali pakai.
@@ -293,7 +294,7 @@ step5() {
   set_kv "$COMPOSE_DIR/.env" HERMES_GID "$(id -g)"
   set_kv "$COMPOSE_DIR/.env" IGROW_TZ "$TZ_NAME"
   ok "Environment compose: UID/GID $(id -u):$(id -g), TZ $TZ_NAME ($COMPOSE_DIR/.env)"
-  if ls "$COMPOSE_DIR"/{docker-compose,compose}.y*ml >/dev/null 2>&1; then
+  if has_compose; then
     skip "docker-compose.yml di $COMPOSE_DIR"
   else
     cat >"$COMPOSE_DIR/docker-compose.yml" <<'YML'
