@@ -18,6 +18,14 @@ Format entri:
 
 ---
 
+## [2026-10-24] Import catatan lama: peran MSO dan DSM dipisah
+- **Apa:** `import-staging/siap-kirim/` dibagi `mso/` dan `dsm/` (masing-masing `tshoot/sop/lesson/study`), plus `perlu-dicek/` untuk catatan yang perannya belum jelas. `PRD/08-import-catatan-lama.md` mencatat definisi dua peran dan pertanyaan terbuka (§6): cara memisahkan keduanya di wiki Hermes.
+- **Kenapa:** permintaan owner: satu tim shift punya dua peran (MSO = Midrange System Operation/server, DSM = Data Storage Management/storage + SANDIR) dan catatannya harus tidak dicampur.
+- **File:** `PRD/08-import-catatan-lama.md`, `PRD/backlog.md`, `import-staging/README.md` (di-gitignore)
+- **Deploy VPS:** tidak.
+
+---
+
 ## [2026-10-24] PRD sementara 08: import catatan lama + folder staging
 - **Apa:** `PRD/08-import-catatan-lama.md` baru (dokumen sementara): keputusan, alur 6 langkah, batasan, dan kriteria selesai untuk memasukkan catatan setahun ke Hermes secara bertahap. Baris ditambah di `PRD/README.md` dan di item "Isi minimal 10 note nyata" (M2.3) di `PRD/05-roadmap.md`. Folder staging `import-staging/` (`00-mentah`, `siap-kirim/{tshoot,sop,lesson,study,perlu-dicek}`, `dibuang`, plus `README.md`) ada di dalam repo tetapi **di-gitignore** (permintaan owner; sempat dibuat di luar repo lalu dipindah).
 - **Kenapa:** permintaan owner. Di-gitignore karena repo Publik (D-35) dan catatan mentah bisa memuat IP/credential/nama client.
