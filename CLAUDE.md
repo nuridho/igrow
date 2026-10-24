@@ -28,7 +28,7 @@ Bahasa: Bahasa Indonesia (santai di chat, rapi di dokumen). Owner = satu-satunya
 4. **Rujukan nomor baris** (`build.md:1093`, `SCHEMA.md:93`) di `todo.md` ikut bergeser kalau file target diedit. Setelah mengedit file yang dirujuk, cek ulang rujukan di item `todo.md` yang masih terbuka.
 5. **`AGENTS.md` harus tetap padat.** File ini dimuat di setiap sesi Hermes, jadi setiap baris memakan token. Detail ditaruh di `igrow/project-skills/`.
 6. **Contoh few-shot wajib mematuhi aturan.** Contoh di project skill harus lolos SCHEMA (tag dari taxonomy, dual-link, `sources` ke `igrow/raw/articles/`), karena model meniru contoh lebih kuat daripada aturan.
-7. **Privasi.** Jangan menulis credential, token, IP, hostname sensitif, atau nama client ke file mana pun, termasuk contoh dan dokumen. Contoh selalu pakai data fiktif atau generik.
+7. **Privasi.** Jangan menulis credential, token, IP, hostname sensitif, atau nama client ke file mana pun, termasuk contoh dan dokumen. Contoh selalu pakai data fiktif atau generik. Repo ini **Publik** (D-35): isi file dan seluruh riwayat commit terbaca siapa saja, jadi yang pernah ter-commit tidak bisa ditarik kembali tanpa menulis ulang riwayat.
 8. **Line ending LF** (dikunci `.gitattributes`). Script `.sh` dijalankan dengan `bash script.sh`, karena mode file di git `100644`.
 9. **Commit atau push hanya kalau diminta.**
 

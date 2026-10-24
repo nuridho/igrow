@@ -167,9 +167,19 @@ hx()  { dk exec -u "$(stat -c '%u:%g' "$HH")" -w /opt/data/igrow "$CNAME" "$@"; 
 restart_if_running() { if running; then run "Restart gateway (setelan baru dibaca)" dc restart igrow-hermes; fi; }
 
 # ── Pengecekan eksternal (secret lewat stdin curl, tidak muncul di daftar proses) ──
-github_ok() {
-  local out; out=$(ssh -T -o StrictHostKeyChecking=accept-new -o BatchMode=yes -o ConnectTimeout=10 git@github.com 2>&1)
-  [[ "$out" =~ Hi\ ([^!]+)! ]] && GH_USER="${BASH_REMATCH[1]}"
+repo_url_ok() { # URL HTTPS GitHub yang valid? Pemiliknya langsung jadi GH_USER (default nama repo backup)
+  [[ "$1" =~ ^https://github\.com/([^/]+)/[^/]+$ ]] && GH_USER="${BASH_REMATCH[1]}"
+}
+repo_to_https() { # clone lama lewat SSH → HTTPS (repo iGROW harus Publik, D-35); dipakai langkah 4 dan deploy
+  local cur; cur=$(git -C "$REPO_DIR" remote get-url origin 2>/dev/null || true)
+  if [[ "$cur" == git@github.com:* ]]; then
+    git -C "$REPO_DIR" remote set-url origin "https://github.com/${cur#git@github.com:}" && info "Remote origin dipindah dari SSH ke HTTPS"
+  fi
+}
+ask_repo_url() { # tanya URL repo iGROW sampai valid (repo harus Publik: dibaca tanpa SSH key atau token)
+  while ask REPO_URL "URL HTTPS repo iGROW (repo harus Publik)" "https://github.com/${GH_USER:-nuridho}/igrow.git"; ! repo_url_ok "$REPO_URL"; do
+    warn "Pakai URL HTTPS GitHub, mis. https://github.com/<user>/igrow.git"
+  done
 }
 tg_bot() { # cetak username bot kalau token valid
   local out; out=$(printf 'url = "https://api.telegram.org/bot%s/getMe"\n' "$1" | curl -s -m 15 -K -) || return 1
@@ -198,11 +208,10 @@ deploy_runtime() { # PRD 04 §7 — 2 langkah, TANPA --delete (wiki/raw/output h
 step1() {
   step_head 1 "Paket dasar" "git, rsync, curl: alat wajib sebelum yang lain."
   local need=() p v
-  act "Mengecek git, rsync, curl, ssh-keygen…"
-  for p in git rsync curl ssh-keygen; do command -v "$p" >/dev/null || need+=("$p"); done
+  act "Mengecek git, rsync, curl…"
+  for p in git rsync curl; do command -v "$p" >/dev/null || need+=("$p"); done
   if [ ${#need[@]} -gt 0 ]; then
     info "Belum ada: ${need[*]}"
-    need=("${need[@]/ssh-keygen/openssh-client}")
     run "apt update" sudo apt-get update -y || die "apt update gagal"
     run "Install ${need[*]}" sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y "${need[@]}" || die "Install gagal"
   fi
@@ -211,29 +220,20 @@ step1() {
 }
 
 step2() {
-  step_head 2 "Git & GitHub" "Identitas commit + SSH key, supaya VPS bisa pull & push ke GitHub."
-  local n e key="$HOME/.ssh/id_ed25519"
-  act "Mengecek identitas git…"
-  n=$(git config --global user.name || true); e=$(git config --global user.email || true)
-  if [ -n "$n" ] && [ -n "$e" ]; then skip "Identitas git: $n <$e>"
+  step_head 2 "Git & GitHub" "Setelan git dan cek akses ke repo iGROW lewat HTTPS (repo Publik: tanpa SSH key atau token)."
+  act "Mengecek setelan git…"
+  if [ "$(git config --global pull.ff || true)" = only ] && [ "$(git config --global init.defaultBranch || true)" = master ]; then
+    skip "Setelan git: pull hanya fast-forward, branch awal master"
   else
-    ask n "Nama untuk commit git" "$n"
-    ask e "Email GitHub (boleh alamat noreply GitHub)" "$e"
-    git config --global user.name "$n"; git config --global user.email "$e"
-    git config --global init.defaultBranch master; git config --global pull.ff only
-    ok "Identitas git: $n <$e>"
+    git config --global pull.ff only; git config --global init.defaultBranch master
+    ok "Setelan git: pull hanya fast-forward, branch awal master"
   fi
-  act "Mengecek SSH key VPS…"
-  if [ -f "$key" ]; then skip "SSH key: $key"
-  else
-    mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
-    ssh-keygen -t ed25519 -C "igrow-vps" -f "$key" -N "" -q && ok "SSH key baru: $key"
-  fi
-  act "Mengetes koneksi SSH ke GitHub…"
-  if github_ok; then ok "SSH ke GitHub tembus (akun $GH_USER)"; save_conf; return; fi
-  box "Tempel key ini di GitHub → Settings → SSH and GPG keys → New SSH key" "$(cat "$key.pub")"
-  until { pause; github_ok; }; do warn "Belum tembus. Pastikan key sudah disimpan di GitHub, lalu Enter lagi."; done
-  ok "SSH ke GitHub tembus (akun $GH_USER)"
+  act "Menentukan alamat repo iGROW…"
+  if repo_url_ok "$REPO_URL"; then skip "Alamat repo: $REPO_URL"   # URL SSH dari setup lama tidak lolos → ditanya ulang
+  else ask_repo_url; ok "Alamat repo: $REPO_URL"; fi
+  # GIT_TERMINAL_PROMPT=0: repo privat langsung gagal, bukan menggantung menunggu username
+  run "Cek akses ke repo iGROW (HTTPS, tanpa login)" env GIT_TERMINAL_PROMPT=0 git ls-remote "$REPO_URL" HEAD \
+    || die "Repo tidak terjangkau tanpa login. Cek URL-nya, dan pastikan repo berstatus Publik (GitHub → repo → Settings → Danger Zone → Change visibility)."
   save_conf
 }
 
@@ -258,13 +258,14 @@ step3() {
 
 step4() {
   step_head 4 "Repo iGROW" "Clone repo spec iGROW ke VPS: sumber file runtime hermes-home/."
+  repo_url_ok "$REPO_URL" || ask_repo_url   # langkah ini bisa dijalankan sendiri, tanpa langkah 2
   act "Mengecek repo iGROW di $REPO_DIR…"
   if [ -d "$REPO_DIR/.git" ]; then
-    run "git pull ($REPO_DIR)" git -C "$REPO_DIR" pull --ff-only || warn "Pull gagal, lanjut pakai versi lokal"
+    repo_to_https
+    run "git pull ($REPO_DIR)" env GIT_TERMINAL_PROMPT=0 git -C "$REPO_DIR" pull --ff-only || warn "Pull gagal, lanjut pakai versi lokal"
   else
-    ask REPO_URL "URL SSH repo iGROW" "${REPO_URL:-git@github.com:${GH_USER:-<user>}/iGROW.git}"
     ask REPO_DIR "Clone ke folder" "$REPO_DIR"
-    run "Clone $REPO_URL" git clone "$REPO_URL" "$REPO_DIR" || die "Clone gagal (URL benar? SSH key sudah di GitHub?)"
+    run "Clone $REPO_URL" env GIT_TERMINAL_PROMPT=0 git clone "$REPO_URL" "$REPO_DIR" || die "Clone gagal (URL benar? repo berstatus Publik?)"
   fi
   [ -f "$REPO_DIR/hermes-home/AGENTS.md" ] || die "$REPO_DIR bukan repo iGROW (hermes-home/AGENTS.md tidak ada)"
   ok "Repo: $REPO_DIR ($(git -C "$REPO_DIR" log -1 --format='%h · %cr'))"
@@ -451,7 +452,7 @@ preflight() {
 }
 
 intro() {
-  box "Yang perlu disiapkan (±15 menit)" "• Akun GitHub (repo iGROW + repo privat kosong untuk backup)
+  box "Yang perlu disiapkan (±15 menit)" "• Akun GitHub (repo privat kosong untuk backup; repo iGROW cukup Publik)
 • Telegram: bot baru dari @BotFather + user ID dari @userinfobot
 • API key LLM (OpenRouter / Anthropic / OpenAI / dll)
 Langkah yang sudah beres otomatis dilewati. Gagal di tengah? Jalankan ulang saja."
@@ -561,7 +562,8 @@ Yang terjadi: langkah 1-9 dijalankan; yang sudah beres dicek lalu dilewati. Aman
 cmd_deploy() {
   banner; step_head "·" "Deploy runtime" "git pull repo → rsync 2 langkah ke hermes-home/. Data di VPS tidak disentuh."
   load_docker; find_container
-  run "git pull ($REPO_DIR)" git -C "$REPO_DIR" pull --ff-only || die "Pull gagal"
+  repo_to_https
+  run "git pull ($REPO_DIR)" env GIT_TERMINAL_PROMPT=0 git -C "$REPO_DIR" pull --ff-only || die "Pull gagal"
   deploy_runtime
   ok "Selesai. Mulai sesi baru di Telegram (/new) supaya aturan terbaru terbaca."
 }

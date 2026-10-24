@@ -9,7 +9,7 @@ Laptop                          VPS (user biasa + sudo)
 ──────                          ───────────────────────
 scp igrowctl.sh  ──────────▶ bash igrowctl.sh
                                   1 Paket      git, rsync, curl
-                                  2 Git        identitas + SSH key → GitHub
+                                  2 Git        setelan git + cek repo iGROW (HTTPS, publik)
                                   3 Docker     Docker + Compose
                                   4 Repo       clone repo iGROW (sumber hermes-home/)
                                   5 Container  docker-compose Hermes resmi
@@ -27,7 +27,7 @@ Waktu: ±15 menit, kebanyakan menunggu install dan menyalin token.
 | Siapkan | Dipakai di langkah | Catatan |
 |---|---|---|
 | VPS Ubuntu/Debian + user biasa yang punya sudo | semua | Script menolak jalan sebagai root. User dibuat lewat `Setup/setupvps.sh`. |
-| Akun GitHub, akses ke repo iGROW | 2, 4 | SSH key VPS dibuat otomatis, tinggal ditempel di GitHub. |
+| Repo iGROW berstatus **Publik** di GitHub | 2, 4 | Dibaca lewat HTTPS tanpa SSH key atau token (D-35). Repo privat ditolak dengan pesan jelas. |
 | Repo GitHub **privat** kosong untuk backup (mis. `igrow-backup`) + fine-grained token | 8 | Token: *Only select repositories* → repo backup saja, *Contents: Read and write*. Script menolak repo publik. |
 | Bot Telegram (@BotFather) + user ID kamu (@userinfobot) | 6 | User ID berupa angka, bukan @username. |
 | API key LLM (OpenRouter, Anthropic, OpenAI, dll) | 6 | Diketik di wizard resmi Hermes. |
@@ -48,10 +48,10 @@ Semua langkah **aman diulang**: yang sudah ada dicek lalu dilewati (tampil `✔ 
 
 | # | Langkah | Yang ditanya | Hasil & lokasi |
 |---|---|---|---|
-| 1 | Paket dasar | — | `git`, `rsync`, `curl`, `ssh-keygen` terpasang (apt). |
-| 2 | Git & GitHub | Nama + email commit (kalau belum ada) | `git config --global` di VPS; SSH key `~/.ssh/id_ed25519` (tanpa passphrase, supaya bisa dipakai tanpa interaksi). Script menunggu sampai `ssh -T git@github.com` berhasil. |
+| 1 | Paket dasar | — | `git`, `rsync`, `curl` terpasang (apt). |
+| 2 | Git & GitHub | URL HTTPS repo iGROW (hanya kalau belum tersimpan; default `https://github.com/<user>/igrow.git`) | `git config --global` (`pull.ff only`, branch awal `master`). URL divalidasi (harus `https://github.com/<pemilik>/<repo>`, pemilik dicatat sebagai `GH_USER` untuk default nama repo backup), lalu `git ls-remote` dengan `GIT_TERMINAL_PROMPT=0` memastikan repo terbaca tanpa login. Repo privat → langsung gagal, tidak menunggu username. |
 | 3 | Docker & Compose | — | Docker dari `get.docker.com`, user masuk grup `docker` (aktif setelah login ulang; sampai itu script memakai sudo). |
-| 4 | Repo iGROW | URL SSH repo, folder clone (default `~/iGROW`) | Clone, atau `git pull` kalau sudah ada. |
+| 4 | Repo iGROW | Folder clone (default `~/iGROW`) | Clone lewat HTTPS, atau `git pull` kalau sudah ada. Clone lama yang `origin`-nya masih `git@github.com:…` dipindah ke HTTPS (`remote set-url`); `deploy` melakukan hal yang sama sebelum `git pull`. |
 | 5 | Container Hermes | Nama folder project di home (mis. `whatsinsidegit`; default dari `setupvps.sh` kalau sudah dijalankan). Folder data otomatis `~/<nama>/igrow-hermes/hermes-home`, dibuat kalau belum ada, timezone (default `Asia/Jakarta`) | `docker-compose.yml` + `.env` (UID/GID/TZ) di `~/<nama>/igrow-hermes/`, image ditarik. Kalau container `igrow-hermes` sudah ada (mis. dari compose root lama), langkah ini dilewati dan script memakai compose serta folder data container itu. |
 | 6 | LLM & Telegram | Wizard `hermes setup model`; token bot; user ID | API key oleh wizard resmi. `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USERS`, `TELEGRAM_HOME_CHANNEL` ditulis ke `hermes-home/.env` (mode 600). Token dicek langsung ke Telegram (`getMe`) sebelum disimpan. |
 | 7 | Runtime & tools | Approval memory? (default tidak); layar `hermes tools` | Deploy 2 langkah dari repo (PRD 04 §7) + hapus master `igrow/_index.md` lama (D-32). `skills.write_approval: true` (R-12). Tools platform `cron`: web, terminal, file. Gateway dinyalakan, lalu `hermes doctor`. |
@@ -120,7 +120,7 @@ Dokumentasi resmi Hermes mendukung tiga cara mengisi Telegram, dan salah satunya
 | Gejala | Cek |
 |---|---|
 | `✘` di salah satu langkah | 12 baris terakhir output perintahnya langsung tampil. Log lengkap: `~/.config/igrow/setup.log`. |
-| SSH ke GitHub tidak tembus | Key yang ditempel harus isi `~/.ssh/id_ed25519.pub` (satu baris, diawali `ssh-ed25519`). |
+| Langkah 2 berhenti: "Repo tidak terjangkau tanpa login" | Repo masih privat atau URL salah. Buka URL-nya di jendela incognito: harus terbuka tanpa login. Ubah ke Publik di GitHub → repo → Settings → Danger Zone → Change visibility, lalu jalankan ulang. |
 | Gateway berhenti setelah start | `docker compose logs igrow-hermes` di folder compose. Biasanya API key LLM atau token bot salah → `step 6`. |
 | Cron tidak mengirim pesan | `TELEGRAM_HOME_CHANNEL` terisi? Tools platform `cron` aktif (`step 7`)? `hermes cron list` menampilkan 4 job? |
 | Backup gagal push | Token kedaluwarsa → buat token baru, hapus `hermes-home/.git-credentials`, jalankan `step 8`. |

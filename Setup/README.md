@@ -23,7 +23,7 @@ Tampilan kedua script sama, bash murni tanpa paket tambahan. Tiap langkah mencer
 ━━ [1/9] Paket dasar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   git, rsync, curl: alat wajib sebelum yang lain.
 
-  › Mengecek git, rsync, curl, ssh-keygen…
+  › Mengecek git, rsync, curl…
   ✔ git version 2.43.0, rsync 3.2.7, curl 8.5.0 (sudah ada)
 
 ━━ [5/9] Container Hermes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -100,7 +100,7 @@ Log lengkap: `/var/log/setupvps.log`.
 
 | Yang disiapkan | Cara dapat | Dipakai di langkah |
 |---|---|---|
-| Akun GitHub yang bisa akses repo iGROW | | 2, 4 |
+| Repo iGROW berstatus **Publik** di GitHub | Cek: buka URL repo-nya di jendela incognito, harus bisa dibuka tanpa login. Script membacanya lewat HTTPS, jadi tidak perlu SSH key atau token. | 2, 4 |
 | Bot Telegram | Telegram → **@BotFather** → `/newbot` → ikuti → copy token | 6 |
 | User ID Telegram kamu | Telegram → **@userinfobot** → copy angka `Id` (angka, bukan @username) | 6 |
 | API key LLM | Dari provider yang kamu pakai (OpenRouter, Anthropic, OpenAI, dll) | 6 |
@@ -122,10 +122,10 @@ Jalankan sebagai `nuridho`, **bukan root** (script menolak root). Sudo diminta s
 
 | # | Langkah | Yang kamu lakukan | Yang script lakukan |
 |---|---|---|---|
-| 1 | Paket dasar | — | Pasang `git`, `rsync`, `curl`, `ssh-keygen` kalau belum ada |
-| 2 | Git & GitHub | Isi nama + email commit. Tempel SSH key yang ditampilkan ke GitHub → Settings → SSH and GPG keys, lalu Enter | Buat SSH key VPS, tunggu sampai GitHub menerima key-nya |
+| 1 | Paket dasar | — | Pasang `git`, `rsync`, `curl` kalau belum ada |
+| 2 | Git & GitHub | Isi URL HTTPS repo iGROW (default sudah ditebak, tinggal Enter). Hanya ditanya sekali | Atur git (`pull` hanya fast-forward), lalu cek repo bisa dibaca tanpa login. Repo privat atau URL salah → berhenti dengan pesan jelas, tidak menggantung |
 | 3 | Docker | — | Pasang Docker kalau belum ada (sudah dipasang `setupvps.sh` → dilewati) |
-| 4 | Repo iGROW | Isi URL SSH repo (default sudah ditebak), folder clone (default `~/iGROW`) | Clone repo, atau `git pull` kalau sudah ada |
+| 4 | Repo iGROW | Isi folder clone (default `~/iGROW`) | Clone repo lewat HTTPS, atau `git pull` kalau sudah ada. Clone lama yang masih lewat SSH otomatis dipindah ke HTTPS (juga saat `deploy`) |
 | 5 | Container Hermes | Isi **nama folder project** (default dari `setupvps.sh`, tinggal Enter) dan timezone (default `Asia/Jakarta`) | Buat `~/<folder>/igrow-hermes/` berisi `docker-compose.yml` + `hermes-home/` (folder data), tarik image Hermes. Container `igrow-hermes` sudah ada → dilewati, folder datanya dipakai. |
 | 6 | LLM & Telegram | Di wizard resmi Hermes: pilih provider → tempel API key → pilih model. Lalu tempel token bot dan user ID | Cek token ke Telegram dulu (salah → diminta ulang), simpan ke `hermes-home/.env`. Hanya user ID kamu yang dilayani bot. |
 | 7 | Runtime | Jawab "approval memory?" (default tidak). Di layar tools: pilih platform `cron`, nyalakan `web`, `terminal`, `file` | Salin aturan iGROW dari repo ke `hermes-home/`, kunci approval skill, nyalakan bot, jalankan `hermes doctor` |

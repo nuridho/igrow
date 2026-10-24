@@ -334,8 +334,9 @@ const UI = { tab: 'ig', cmd: '', speed: 10, auto: true, err: false };
 
 const IG = {
   home: '/home/nuridho', repo: '/home/nuridho/iGROW', proj: 'whatsinsidegit',
-  url: 'git@github.com:contoh-user/iGROW.git', gh: 'contoh-user', bot: 'igrow_contoh_bot', uid: '123456789',
-  backup: 'contoh-user/igrow-backup', log: '/home/nuridho/.config/igrow/setup.log',
+  url: 'https://github.com/nuridho/igrow.git', gh: 'nuridho', bot: 'igrow_contoh_bot', uid: '123456789',
+  backup: 'nuridho/igrow-backup', log: '/home/nuridho/.config/igrow/setup.log',
+  cur: '',   // URL repo yang sudah dipilih di run ini (REPO_URL di script)
 };
 IG.compose = IG.home + '/' + IG.proj + '/igrow-hermes';
 IG.hh = IG.compose + '/hermes-home';
@@ -403,7 +404,7 @@ function* igPreflight() { yield E.info('Minta sudo sekali untuk install paket…
 
 function* igIntro() {
   yield E.box('Yang perlu disiapkan (±15 menit)', [
-    '• Akun GitHub (repo iGROW + repo privat kosong untuk backup)',
+    '• Akun GitHub (repo privat kosong untuk backup; repo iGROW cukup Publik)',
     '• Telegram: bot baru dari @BotFather + user ID dari @userinfobot',
     '• API key LLM (OpenRouter / Anthropic / OpenAI / dll)',
     'Langkah yang sudah beres otomatis dilewati. Gagal di tengah? Jalankan ulang saja.',
@@ -415,33 +416,35 @@ function* igIntro() {
 
 function* igStep1() {
   yield E.head(1, 'Paket dasar', 'git, rsync, curl: alat wajib sebelum yang lain.');
-  yield E.act('Mengecek git, rsync, curl, ssh-keygen…');
+  yield E.act('Mengecek git, rsync, curl…');
   if (fresh()) {
-    yield E.info('Belum ada: git rsync ssh-keygen');
+    yield E.info('Belum ada: git rsync');
     yield E.run('apt update', 6);
-    yield E.run('Install git rsync openssh-client', 11);
+    yield E.run('Install git rsync', 11);
     yield E.ok(GIT_V);
   } else yield E.skip(GIT_V);
 }
 
-function* igStep2() {
-  yield E.head(2, 'Git & GitHub', 'Identitas commit + SSH key, supaya VPS bisa pull & push ke GitHub.');
-  yield E.act('Mengecek identitas git…');
-  if (fresh()) {
-    const n = yield E.ask('Nama untuk commit git', '', 'nuridho');
-    const e = yield E.ask('Email GitHub (boleh alamat noreply GitHub)', '', 'contoh-user@users.noreply.github.com');
-    yield E.ok(`Identitas git: ${n} <${e}>`);
-  } else yield E.skip('Identitas git: nuridho <contoh-user@users.noreply.github.com>');
-  yield E.act('Mengecek SSH key VPS…');
-  if (fresh()) yield E.ok('SSH key baru: /home/nuridho/.ssh/id_ed25519');
-  else yield E.skip('SSH key: /home/nuridho/.ssh/id_ed25519');
-  yield E.act('Mengetes koneksi SSH ke GitHub…');
-  if (fresh()) {
-    yield E.box('Tempel key ini di GitHub → Settings → SSH and GPG keys → New SSH key',
-      ['ssh-ed25519 AAAAC3Nza…contoh-fiktif…xyz igrow-vps']);
-    yield E.pause();
+// REPO_URL tersimpan di setup.env hanya setelah setup bermarka; VPS lama menyimpan URL SSH → ditanya ulang
+const urlKnown = () => W.installed && W.setupDone;
+const GH_HTTPS = /^https:\/\/github\.com\/[^/]+\/[^/]+$/;
+function* igAskUrl() {
+  for (;;) {
+    const url = yield E.ask('URL HTTPS repo iGROW (repo harus Publik)', IG.url);
+    if (GH_HTTPS.test(url)) return url;
+    yield E.warn('Pakai URL HTTPS GitHub, mis. https://github.com/<user>/igrow.git');
   }
-  yield E.ok(`SSH ke GitHub tembus (akun ${IG.gh})`);
+}
+
+function* igStep2() {
+  yield E.head(2, 'Git & GitHub', 'Setelan git dan cek akses ke repo iGROW lewat HTTPS (repo Publik: tanpa SSH key atau token).');
+  yield E.act('Mengecek setelan git…');
+  if (fresh()) yield E.ok('Setelan git: pull hanya fast-forward, branch awal master');
+  else yield E.skip('Setelan git: pull hanya fast-forward, branch awal master');
+  yield E.act('Menentukan alamat repo iGROW…');
+  if (urlKnown()) { IG.cur = IG.url; yield E.skip(`Alamat repo: ${IG.url}`); }
+  else { IG.cur = yield* igAskUrl(); yield E.ok(`Alamat repo: ${IG.cur}`); }
+  yield E.run('Cek akses ke repo iGROW (HTTPS, tanpa login)', 1);
 }
 
 function* igStep3() {
@@ -455,14 +458,18 @@ function* igStep3() {
 
 function* igStep4() {
   yield E.head(4, 'Repo iGROW', 'Clone repo spec iGROW ke VPS: sumber file runtime hermes-home/.');
+  if (!IG.cur && !urlKnown()) IG.cur = yield* igAskUrl();   // langkah ini bisa dijalankan sendiri, tanpa langkah 2
+  const url = IG.cur || IG.url;
   yield E.act(`Mengecek repo iGROW di ${IG.repo}…`);
   if (fresh()) {
-    const url = yield E.ask('URL SSH repo iGROW', IG.url);
     yield E.ask('Clone ke folder', IG.repo);
     yield E.run(`Clone ${url}`, 4);
-  } else yield E.run(`git pull (${IG.repo})`, 2);
+  } else {
+    if (!W.setupDone) yield E.info('Remote origin dipindah dari SSH ke HTTPS');   // clone lama masih lewat SSH
+    yield E.run(`git pull (${IG.repo})`, 2);
+  }
   yield E.ok(`Repo: ${IG.repo} (a1b2c3d · 2 jam lalu)`);
-  yield E.info(`Sumber runtime: ${IG.repo}/hermes-home/ (24 file)`);
+  yield E.info(`Sumber runtime: ${IG.repo}/hermes-home/ (23 file)`);
 }
 
 function* igStep5() {
@@ -723,7 +730,7 @@ function* igMenu() {
 }
 
 function* igrowMain() {
-  const cmd = UI.cmd;
+  const cmd = UI.cmd; IG.cur = '';
   if (cmd === '') {
     yield* igBanner();
     if (W.setupDone) yield* igMenu();
@@ -1140,10 +1147,10 @@ class Player {
   };
   const STEP_TEXT = {
     ig: [
-      'Memastikan git, rsync, curl, dan ssh-keygen ada. Yang kurang dipasang lewat apt.',
-      'Mengisi identitas commit, membuat SSH key VPS, lalu menunggu GitHub menerima key-nya. Kamu menempel key di GitHub (Settings → SSH keys).',
+      'Memastikan git, rsync, dan curl ada. Yang kurang dipasang lewat apt.',
+      'Mengatur git (pull hanya fast-forward), menanyakan alamat repo iGROW (HTTPS), dan mengecek repo bisa dibaca tanpa login. Repo harus Publik: tanpa SSH key atau token.',
       'Mengecek Docker + Compose dan akses user. Biasanya sudah dipasang setupvps.sh, jadi dilewati.',
-      'Clone repo spec iGROW, sumber hermes-home/. Kalau sudah ada, cukup git pull.',
+      'Clone repo spec iGROW lewat HTTPS, sumber hermes-home/. Kalau sudah ada, cukup git pull (clone lama yang masih SSH otomatis dipindah ke HTTPS).',
       'Membuat folder project, compose resmi Hermes, dan menarik image. Di sini nama folder dan timezone ditanya.',
       'Wizard resmi Hermes untuk API key LLM, lalu token bot Telegram (dicek ke Telegram dulu) dan user ID kamu.',
       'Menyalin aturan iGROW ke hermes-home/, mengunci approval skill, memilih tools cron, lalu menyalakan bot.',
