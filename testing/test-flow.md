@@ -12,8 +12,9 @@ Cerita fiktif-tapi-natural: **keterima kerja Juli 2025** sebagai **Network Engin
    cd ~/<PROJ>/igrow-hermes/hermes-home     # PROJ ada di ~/.config/igrow/setup.env
    ```
 3. Tiap kasus punya **Harus** (yang diharapkan) dan **Gagal kalau** (tanda ada yang rusak). Catat yang gagal, lalu lanjut. Perbaikannya urusan nanti.
-4. Nomor kasus (1.1, 5.4, dst.) sengaja **tidak diubah** supaya rujukan di `PRD/` dan `backlog.md` tetap valid. Urutan di file ini mengikuti cerita, bukan nomor.
-5. Setelah semua kasus selesai, zip folder `igrow/` untuk di-crosscheck terhadap blok **Harus** dan Checklist Lulus.
+4. **Jangan diawali garis miring.** Gateway Telegram Hermes menolak `/recall` dan `/study` ("Unknown command"), karena hanya perintah bawaan dan skill resmi Hermes yang dikenali. Tulis `study ...` dan `apa pengalaman saya ...` sebagai pesan biasa (gap ini dicatat di `PRD/todo.md` W47).
+5. Nomor kasus (1.1, 5.4, dst.) sengaja **tidak diubah** supaya rujukan di `PRD/` dan `backlog.md` tetap valid. Urutan di file ini mengikuti cerita, bukan nomor.
+6. Setelah semua kasus selesai, zip folder `igrow/` untuk di-crosscheck terhadap blok **Harus** dan Checklist Lulus.
 
 > Frontmatter `created:`/`updated:` terisi **tanggal hari kamu ngetes**, bukan tanggal cerita. Itu expected, bukan bug: yang dites alurnya, bukan mesin waktu.
 
@@ -317,7 +318,7 @@ Seminggu cerita sudah numpuk; sekarang dipakai.
 
 ### 2.1 /study dengan sumber
 **Kirim:**
-> "/study baru selesai modul OSPF dan BGP di Cisco Networking Academy: area, neighbor, route selection. Sumber: https://www.netacad.com/courses (contoh)"
+> "study baru selesai modul OSPF dan BGP di Cisco Networking Academy: area, neighbor, route selection. Sumber: https://www.netacad.com/courses (contoh)"
 
 **Harus:**
 - Sumber mentah → `raw/inbox/YYYY-MM-DD-netacad-ospf-bgp.md` → diproses → `raw/articles/YYYY-MM-DD-netacad-ospf-bgp.md` (immutable)
@@ -328,7 +329,7 @@ Seminggu cerita sudah numpuk; sekarang dipakai.
 
 ### 2.2 /study tanpa sumber
 **Kirim:**
-> "/study bandingkan OSPF dengan BGP kapan pakai yang mana."
+> "study bandingkan OSPF dengan BGP kapan pakai yang mana."
 
 **Harus:** note di `wiki/self-development/Dokumentasi/<nama>/`, `sources: []` (field tetap ada, isi kosong, murni rangkuman). Body tetap ikut template.
 **Gagal kalau:** Hermes ngotot minta URL padahal kamu tidak punya.

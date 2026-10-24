@@ -1,13 +1,16 @@
 # To-Do — iGROW (hermes-home)
 
 > Fokus: hanya item yang menyentuh `hermes-home/` (AGENTS.md, SCHEMA, project-skills, struktur `igrow/`). Item VPS, docs, testing, web, dan migrasi dihapus 2026-10-16; jejaknya ada di git history dan `05-roadmap.md`.
-> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W47 / I17 / A11.
+> Kode item dinomori ulang 2026-10-16 (urut dari atas per huruf; pemetaan lama → baru ada di `backlog.md`). Mulai sekarang permanen — jangan dinomori ulang. Nomor berikutnya: C9 / W48 / I17 / A11.
 > **Act** = yang dikerjakan. **Impact** = yang berubah setelah beres. Item `[x]` Act-nya lampau, Impact-nya sudah berlaku.
 > Isi list = bug + kontradiksi di runtime. Kosmetik sengaja tidak dicatat. `FIN` di item lama = `archive/iGROW_FINAL.md`.
 > Item selesai → centang di sini + catat di [`backlog.md`](backlog.md).
 
 ## Terbuka
 
+- **W47**: `/study` dan `/recall` ditolak gateway Telegram ("Unknown command /recall"). Ditemukan 2026-10-24 saat uji test-flow di WSL. `AGENTS.md` § Perintah dan seluruh project skill memakai `/study` dan `/recall` sebagai pemicu, tapi di Telegram hanya perintah bawaan Hermes dan skill resmi (`SKILL.md`) yang dikenali sebagai slash command; yang lain dibalas "Unknown command".
+  - Act: owner memilih satu jalan, lalu `AGENTS.md`, `study.md`, PRD 02/03, dan `docs/build.md` mengikuti. (a) Pemicu kata biasa tanpa `/` (`study ...`, `apa pengalaman saya ...`): `AGENTS.md` § Perintah ditulis ulang tanpa garis miring; paling kecil, sesuai prinsip project-skills = markdown biasa. (b) Daftarkan jadi slash command resmi: skill bundle atau skill `SKILL.md` per perintah (dokumentasi resmi Skills: "Every installed skill becomes a /skill-name command"); bertentangan dengan keputusan tidak memakai sistem Skill Hermes. Cek dulu `quick_commands` di docs Configuration (belum diverifikasi).
+  - Impact: perintah yang diketik di Telegram benar-benar sampai ke model, bukan ditolak gateway. Sementara itu `test-flow.md` memakai kata biasa.
 - **W44**: temuan review menyeluruh 2026-10-23 (`hermes-home/` dibaca ulang, dicocokkan dengan PRD, test-flow, dan dokumentasi resmi Hermes). Detail di § Review menyeluruh.
 
 ## Audit runtime (2026-10-10)
