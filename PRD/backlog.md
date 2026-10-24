@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-24] Simulator belajar iDRAC9 (pilot), lokal dan di-gitignore
+- **Apa:** `simulator/idrac/index.html` baru: satu file HTML/CSS/JS tanpa dependensi, UI iDRAC9 dibangun ulang (bukan dari screenshot) dengan data fiktif (IP rentang dokumentasi 192.0.2.0/24). Halaman: Dashboard, System, Storage (disk bay 5 predictive failure untuk latihan), Configuration (Power, Virtual Console, BIOS), Maintenance (SEL, Job Queue, System Update, Diagnostics), iDRAC Settings (Network, Users, Services). Alur interaktif: aksi power menulis SEL; perubahan BIOS dan update firmware membuat job "Scheduled" yang baru selesai saat reboot. State di memori (refresh = reset). `.gitignore` ditambah `simulator/`.
+- **Kenapa:** permintaan owner: simulator web untuk belajar (IDRAC, iLO, OneView, OME Modular, OME Global, OneView Global Dashboard), pilot iDRAC dulu. Tidak dipublikasikan dan tidak masuk repo publik karena meniru tampilan produk vendor; layout disusun dari ingatan dan perlu dicocokkan dengan lab Dell Demo Center. Di luar lingkup produk iGROW inti.
+- **File:** `simulator/idrac/index.html` (di-gitignore), `.gitignore`, `PRD/backlog.md`
+- **Deploy VPS:** tidak.
+
 ## [2026-10-24] PRD 08: format PDF per kasus + contoh dummy (sudah dihapus)
 - **Apa:** `PRD/08-import-catatan-lama.md` diberi §4 "Format PDF per kasus": satu kasus satu PDF (nama file, gambar pendamping, bagian Rujukan/Cerita/Lampiran/Cuplikan chat asli, kolom `triase.md`, pembagian peran). Langkah 2, 3, dan 5 di §3 disesuaikan; bagian setelahnya digeser (§5 Batasan, §6 Selesai kalau, §7 Pertanyaan terbuka). Untuk memperagakan format dibuat file dummy di `import-staging/` (`contoh-laporan-dummy.pdf`, folder `contoh/` berisi 3 PDF kasus fiktif + gambar + `triase-contoh.md`), dibuat dengan reportlab; semuanya sudah dihapus atas permintaan owner dan tidak ter-commit (di-gitignore). `import-staging/.venv-pdf` dibiarkan.
 - **Kenapa:** permintaan owner: temuan dipisah per kasus dan masuk 1-1 ke Hermes dengan rujukan file.
