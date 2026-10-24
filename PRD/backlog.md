@@ -18,6 +18,12 @@ Format entri:
 
 ---
 
+## [2026-10-24] PRD 08: format PDF per kasus + contoh dummy (sudah dihapus)
+- **Apa:** `PRD/08-import-catatan-lama.md` diberi §4 "Format PDF per kasus": satu kasus satu PDF (nama file, gambar pendamping, bagian Rujukan/Cerita/Lampiran/Cuplikan chat asli, kolom `triase.md`, pembagian peran). Langkah 2, 3, dan 5 di §3 disesuaikan; bagian setelahnya digeser (§5 Batasan, §6 Selesai kalau, §7 Pertanyaan terbuka). Untuk memperagakan format dibuat file dummy di `import-staging/` (`contoh-laporan-dummy.pdf`, folder `contoh/` berisi 3 PDF kasus fiktif + gambar + `triase-contoh.md`), dibuat dengan reportlab; semuanya sudah dihapus atas permintaan owner dan tidak ter-commit (di-gitignore). `import-staging/.venv-pdf` dibiarkan.
+- **Kenapa:** permintaan owner: temuan dipisah per kasus dan masuk 1-1 ke Hermes dengan rujukan file.
+- **File:** `PRD/08-import-catatan-lama.md`, `PRD/backlog.md`
+- **Deploy VPS:** tidak.
+
 ## [2026-10-24] Import catatan lama: peran MSO dan DSM dipisah
 - **Apa:** `import-staging/siap-kirim/` dibagi `mso/` dan `dsm/` (masing-masing `tshoot/sop/lesson/study`), plus `perlu-dicek/` untuk catatan yang perannya belum jelas. `PRD/08-import-catatan-lama.md` mencatat definisi dua peran dan pertanyaan terbuka (§6): cara memisahkan keduanya di wiki Hermes.
 - **Tambahan:** `import-staging/.venv-pdf` (Python 3.12 terkelola `uv` + reportlab + Pillow, di-gitignore) untuk membuat PDF; `python` di PATH adalah venv Hermes Agent tanpa pip, jangan diubah.
