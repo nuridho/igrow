@@ -46,7 +46,7 @@ banner() {
     | | |_| |  _ <| |_| |\ V  V /
     |_|\____|_| \_\\___/  \_/\_/
 ART
-  printf '%s    arsip karier & knowledge base · Hermes + Telegram%s\n' "$D" "$R"
+  printf '%s    arsip karier & knowledge base · Hermes + Telegram · by @nuridho%s\n' "$D" "$R"
 }
 
 step_head() { # step_head <nomor|·> <judul> <penjelasan>
